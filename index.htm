@@ -292,6 +292,12 @@
           class="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-lg"
         >
           <div class="flex items-center justify-between mb-2">
+            <label for="ignore-foreign-words-checkbox" class="flex items-center gap-2 text-sm font-bold text-slate-300">
+              <input type="checkbox" id="ignore-foreign-words-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+              Bỏ qua tên riêng/từ nước ngoài
+            </label>
+          </div>
+          <div class="flex items-center justify-between mb-2">
             <label
               for="whitelist-input"
               class="flex items-center gap-2 text-sm font-bold text-slate-300"
@@ -584,6 +590,8 @@
       // --- CONFIGURATION ---
 
       let IGNORED_WORDS = new Set();
+      let NAMES_WHITELIST = new Set();
+      let LOCAL_WHITELIST = new Set();
 
       // DOM Elements
       const fileInput = document.getElementById("file-input");
@@ -606,6 +614,7 @@
 
       // New Element: Whitelist Input
       const whitelistInput = document.getElementById("whitelist-input");
+      const ignoreForeignWordsCheckbox = document.getElementById("ignore-foreign-words-checkbox");
 
       // New Element: Reset Button
       const resetBtn = document.getElementById("reset-btn");
@@ -652,6 +661,7 @@
       // --- DICTIONARY AND WHITELIST LOADING ---
       const DICT_URL = "vn-dict.txt";
       const WHITELIST_URL = "whitelist.txt";
+      const NAMES_URL = "names.txt";
 
       async function loadDictionary() {
         try {
@@ -671,8 +681,6 @@
             }
           });
 
-
-
           isDictLoaded = true;
           dictDot.classList.remove("bg-yellow-500", "animate-pulse");
           dictDot.classList.add("bg-green-500");
@@ -686,31 +694,57 @@
         }
       }
 
-      async function loadLocalWhitelist() {
-        try {
-          const response = await fetch(WHITELIST_URL);
-          if (!response.ok)
-            throw new Error(`Fetch failed for ${WHITELIST_URL}`);
-          const text = await response.text();
-          const lines = text.split("\n");
-          lines.forEach((line) => {
-            const cleanLine = line.trim().toLowerCase();
-            if (cleanLine) {
-              IGNORED_WORDS.add(cleanLine);
-            }
-          });
-          console.log(
-            `Đã tải danh sách bỏ qua (cục bộ): ${IGNORED_WORDS.size} từ`
-          );
-        } catch (err) {
-          console.warn("Tải danh sách bỏ qua (cục bộ) thất bại:", err);
+      async function loadIgnoreLists() {
+        const urls = [
+          { url: WHITELIST_URL, set: LOCAL_WHITELIST },
+          { url: NAMES_URL, set: NAMES_WHITELIST },
+        ];
+
+        for (const { url, set } of urls) {
+          try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Fetch failed for ${url}`);
+            const text = await response.text();
+            const lines = text.split("\n");
+            let count = 0;
+            lines.forEach((line) => {
+              const cleanLine = line.trim().toLowerCase();
+              if (cleanLine) {
+                set.add(cleanLine);
+                count++;
+              }
+            });
+            console.log(`Đã tải ${count} từ từ ${url}`);
+          } catch (err) {
+            console.warn(`Tải danh sách bỏ qua (${url}) thất bại:`, err);
+          }
         }
+      }
+      
+      function updateIgnoredWords() {
+        IGNORED_WORDS = new Set();
+        const rawInput = whitelistInput.value;
+        if (rawInput) {
+          const tokens = rawInput
+            .split(/[\n,\t]+/)
+            .map((t) => t.trim().toLowerCase())
+            .filter((t) => t.length > 0);
+          tokens.forEach((t) => IGNORED_WORDS.add(t));
+        }
+
+        LOCAL_WHITELIST.forEach(word => IGNORED_WORDS.add(word)); // Always add whitelist.txt
+        if (ignoreForeignWordsCheckbox.checked) {
+          NAMES_WHITELIST.forEach(word => IGNORED_WORDS.add(word)); // Only add names.txt if checked
+        }
+        
+        filterAndRenderErrors();
       }
 
       // Trigger loads on startup
       loadWhitelist(); // for localStorage
-      Promise.all([loadDictionary(), loadLocalWhitelist()]).then(() => {
+      Promise.all([loadDictionary(), loadIgnoreLists()]).then(() => {
         console.log("Hoàn tất tải từ điển và danh sách bỏ qua.");
+        updateIgnoredWords();
       });
 
       // Setup Event Listeners
@@ -738,26 +772,10 @@
       // Dynamic Whitelist Listener with Persistence
       whitelistInput.addEventListener("input", () => {
         saveWhitelist();
-        filterAndRenderErrors();
+        updateIgnoredWords();
       });
-
-      // Navigation Handlers
-      btnPrev.addEventListener("click", () => {
-        if (currentGroup && currentInstanceIndex > 0) {
-          currentInstanceIndex--;
-          updateContextView();
-        }
-      });
-
-      btnNext.addEventListener("click", () => {
-        if (
-          currentGroup &&
-          currentInstanceIndex < currentGroup.contexts.length - 1
-        ) {
-          currentInstanceIndex++;
-          updateContextView();
-        }
-      });
+      
+      ignoreForeignWordsCheckbox.addEventListener("change", updateIgnoredWords);
 
       // Main Logic
       async function handleFile(file) {
@@ -1070,17 +1088,8 @@
       }
 
       function filterAndRenderErrors() {
-        const rawInput = whitelistInput.value;
-        const userWhitelist = new Set();
-        if (rawInput) {
-          const tokens = rawInput
-            .split(/[\n,\t]+/)
-            .map((t) => t.trim().toLowerCase())
-            .filter((t) => t.length > 0);
-          tokens.forEach((t) => userWhitelist.add(t));
-        }
         const filteredErrors = allDetectedErrors.filter((group) => {
-          return !userWhitelist.has(group.word.toLowerCase());
+          return !IGNORED_WORDS.has(group.word.toLowerCase());
         });
         const totalErrors = filteredErrors.reduce(
           (acc, curr) => acc + curr.contexts.length,

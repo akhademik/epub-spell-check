@@ -1,8 +1,4 @@
 a
-khẩm
-nướu
-Ừm
-lóa
 abagiua
 abatoa
 abc
@@ -552,6 +548,7 @@ bẩn
 bẩu
 bẩy
 bẫm
+bẫng
 bẫy
 bậc
 bậm
@@ -1156,6 +1153,7 @@ chỉn
 chỉnh
 chị
 chịa
+chịch
 chịn
 chịt
 chịu
@@ -1879,6 +1877,7 @@ dõng
 dù
 dùa
 dùi
+dùm
 dùn
 dùng
 dúa
@@ -3333,6 +3332,7 @@ khấp
 khất
 khấu
 khầng
+khẩm
 khẩn
 khẩu
 khẩy
@@ -3852,6 +3852,7 @@ lòn
 lòng
 lòxo
 ló
+lóa
 lóc
 lóe
 lói
@@ -4948,6 +4949,7 @@ ngùn
 ngùng
 ngú
 ngúc
+ngúm
 ngún
 ngúng
 ngút
@@ -5590,6 +5592,7 @@ nưng
 nương
 nước
 nướng
+nướu
 nườm
 nường
 nược
@@ -5712,6 +5715,7 @@ nợ
 nợp
 nụ
 nục
+nụi
 nủa
 nứa
 nức
@@ -10175,6 +10179,7 @@ yểu
 ứa
 ức
 ứng
+Ừm
 ừ
 ừng
 ử
@@ -10183,8 +10188,3 @@ yểu
 ực
 ỳ
 ỷ
-nụi
-bẫng
-ngúm
-chịch
-dùm
