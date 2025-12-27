@@ -1164,11 +1164,12 @@
       function getContext(text, index, length) {
         const start = Math.max(0, index - 60);
         const end = Math.min(text.length, index + length + 60);
-        let prefix = text.substring(start, index);
-        let suffix = text.substring(index + length, end);
+        let prefix = escapeHtml(text.substring(start, index));
+        let suffix = escapeHtml(text.substring(index + length, end));
+        let target = escapeHtml(text.substr(index, length));
         if (start > 0) prefix = "..." + prefix;
         if (end < text.length) suffix = suffix + "...";
-        return { prefix, target: text.substr(index, length), suffix };
+        return { prefix, target, suffix };
       }
 
       function renderErrors(groups) {
@@ -1254,26 +1255,29 @@
         updateContextView();
       }
 
-      function getStyleForTypes(types) {
+      function getStyleForTypes(types, forHighlight = false) {
         const colorMap = {
-          "Không có trong từ điển": "rgba(239, 68, 68, 0.4)", // red-500
-          "Lỗi viết hoa": "rgba(245, 158, 11, 0.4)", // amber-500
-          "Lỗi gõ máy": "rgba(168, 85, 247, 0.4)", // purple-500
-          "Từ lạ / Tiếng nước ngoài": "rgba(59, 130, 246, 0.4)", // blue-500
-          "Sai quy tắc ngh": "rgba(236, 72, 153, 0.4)", // pink-500
-          "Sai quy tắc ng": "rgba(236, 72, 153, 0.4)",
-          "Sai quy tắc gh": "rgba(236, 72, 153, 0.4)",
-          "Sai quy tắc g": "rgba(236, 72, 153, 0.4)",
-          "Sai quy tắc k": "rgba(236, 72, 153, 0.4)",
-          "Sai quy tắc c": "rgba(236, 72, 153, 0.4)",
+          "Không có trong từ điển": "rgb(239, 68, 68)", // red-500
+          "Lỗi viết hoa": "rgb(245, 158, 11)", // amber-500
+          "Lỗi gõ máy": "rgb(168, 85, 247)", // purple-500
+          "Từ lạ / Tiếng nước ngoài": "rgb(59, 130, 246)", // blue-500
+          "Sai quy tắc ngh": "rgb(236, 72, 153)", // pink-500
+          "Sai quy tắc ng": "rgb(236, 72, 153)",
+          "Sai quy tắc gh": "rgb(236, 72, 153)",
+          "Sai quy tắc g": "rgb(236, 72, 153)",
+          "Sai quy tắc k": "rgb(236, 72, 153)",
+          "Sai quy tắc c": "rgb(236, 72, 153)",
         };
 
-        const colors = types.map(type => colorMap[type] || "rgba(100, 116, 139, 0.4)");
-
-        if (colors.length === 1) {
-          return `background-color: ${colors[0]};`;
-        } else if (colors.length > 1) {
-          return `background-image: linear-gradient(to right, ${colors.join(", ")});`;
+        if (forHighlight && types.length > 0) {
+          // For the main word highlight, use a consistent error color if multiple types, otherwise use the primary type's color
+          return `background-color: ${colorMap[types[0]] || "rgb(239, 68, 68)"};`;
+        } else if (types.length === 1) {
+          return `background-color: ${colorMap[types[0]] || "rgb(100, 116, 139)"};`;
+        } else if (types.length > 1) {
+          // For the small color indicator, use a gradient if multiple types
+          const colors = types.map(type => colorMap[type] || "rgb(100, 116, 139)");
+          return `background-image: linear-gradient(to right, ${colors.map(c => `${c}B0`).join(", ")});`; // Add 70% opacity
         }
         return "";
       }
@@ -1284,7 +1288,7 @@
         const total = currentGroup.contexts.length;
         const suggestions = findSuggestions(currentGroup.word);
         
-        const highlightStyle = getStyleForTypes(currentGroup.types);
+        const highlightStyle = getStyleForTypes(currentGroup.types, true);
 
         const suggestionHTML =
           suggestions.length > 0
@@ -1376,6 +1380,19 @@
             .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
         `;
       document.head.appendChild(style);
+      btnPrev.addEventListener("click", () => {
+        if (currentInstanceIndex > 0) {
+          currentInstanceIndex--;
+          updateContextView();
+        }
+      });
+
+      btnNext.addEventListener("click", () => {
+        if (currentGroup && currentInstanceIndex < currentGroup.contexts.length - 1) {
+          currentInstanceIndex++;
+          updateContextView();
+        }
+      });
     </script>
   </body>
 </html>
