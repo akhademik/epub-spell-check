@@ -587,9 +587,168 @@
     <script>
       // --- CONFIGURATION ---
 
-      let IGNORED_WORDS = new Set();
+      const IGNORED_WORDS = new Set([
+        "email",
+        "internet",
+        "web",
+        "website",
+        "video",
+        "clip",
+        "camera",
+        "fan",
+        "comment",
+        "live",
+        "show",
+        "team",
+        "ok",
+        "marketing",
+        "sale",
+        "deal",
+        "ship",
+        "shipper",
+        "order",
+        "check",
+        "boss",
+        "admin",
+        "post",
+        "status",
+        "link",
+        "share",
+        "view",
+        "like",
+        "download",
+        "upload",
+        "app",
+        "game",
+        "menu",
+        "list",
+        "top",
+        "hot",
+        "cool",
+        "pro",
+        "vip",
+        "scan",
+        "smartphone",
+        "laptop",
+        "mouse",
+        "keyboard",
+        "wifi",
+        "pixel",
+        "digital",
+        "design",
+        "designer",
+        "media",
+        "studio",
+        "content",
+        "pr",
+        "mc",
+        "dj",
+        "ceo",
+        "facebook",
+        "google",
+        "youtube",
+        "instagram",
+        "tiktok",
+        "zalo",
+        "shopee",
+        "tiki",
+        "lazada",
+        "grab",
+        "uber",
+        "be",
+        "now",
+        "baemin",
+        "food",
+        "coffee",
+        "cafe",
+        "bar",
+        "club",
+        "pub",
+        "gym",
+        "spa",
+        "yoga",
+        "tennis",
+        "golf",
+        "tour",
+        "guide",
+        "review",
+        "vlog",
+        "blog",
+        "blogger",
+        "streamer",
+        "startup",
+        "bonus",
+        "combo",
+        "concept",
+        "event",
+        "fashion",
+        "style",
+        "trend",
+        "hit",
+        "teen",
+        "idol",
+        "poster",
+        "banner",
+        "logo",
+        "slogan",
+        "background",
+        "format",
+        "version",
+        "update",
+        "level",
+        "skill",
+        "job",
+        "cv",
+        "interview",
+        "deadline",
+        "project",
+        "target",
+        "kpi",
+        "budget",
+        "data",
+        "database",
+        "server",
+        "code",
+        "coder",
+        "bug",
+        "fix",
+        "error",
+        "message",
+        "chat",
+        "inbox",
+        "online",
+        "offline",
+        "free",
+        "voucher",
+        "coupon",
+        "bill",
+        "iphone",
+        "ipad",
+        "android",
+        "ios",
+        "sms",
+        "sim",
+      ]);
+
+      // Specific mapping for forced tone placement (Old style -> New style preference)
+      // User wants: "khóa" (correct), "khoá" (wrong)
+      // We enforce tone on the first vowel for: oa, oe (where applicable)
+      const TONE_MISPLACEMENT = {
+        oá: "óa",
+        oà: "òa",
+        oả: "ỏa",
+        oã: "õa",
+        oạ: "ọa",
+        oé: "óe",
+        oè: "òe",
+        oẻ: "ỏe",
+        oẽ: "õe",
+        oẹ: "ọe",
+      };
+
       let NAMES_WHITELIST = new Set();
       let LOCAL_WHITELIST = new Set();
+      let DYNAMIC_IGNORED_WORDS = new Set();
 
       // DOM Elements
       const fileInput = document.getElementById("file-input");
@@ -720,19 +879,19 @@
       }
       
       function updateIgnoredWords() {
-        IGNORED_WORDS = new Set();
+        DYNAMIC_IGNORED_WORDS = new Set(); // Clear and re-populate dynamic whitelist
         const rawInput = whitelistInput.value;
         if (rawInput) {
           const tokens = rawInput
             .split(/[\n,\t]+/)
             .map((t) => t.trim().toLowerCase().normalize("NFC"))
             .filter((t) => t.length > 0);
-          tokens.forEach((t) => IGNORED_WORDS.add(t));
+          tokens.forEach((t) => DYNAMIC_IGNORED_WORDS.add(t));
         }
 
-        LOCAL_WHITELIST.forEach(word => IGNORED_WORDS.add(word)); // Always add whitelist.txt
+        LOCAL_WHITELIST.forEach(word => DYNAMIC_IGNORED_WORDS.add(word)); // Always add whitelist.txt
         if (ignoreForeignWordsCheckbox.checked) {
-          NAMES_WHITELIST.forEach(word => IGNORED_WORDS.add(word)); // Only add names.txt if checked
+          NAMES_WHITELIST.forEach(word => DYNAMIC_IGNORED_WORDS.add(word)); // Only add names.txt if checked
         }
         
         filterAndRenderErrors();
@@ -978,10 +1137,43 @@
         return { fullTextBlocks, title, author, coverUrl };
       }
 
+      // Helper function to check if a character is a Vietnamese vowel
+      function isVietnameseVowel(char) {
+        if (!char) return false;
+        const c = char.toLowerCase().normalize("NFC");
+        return "aáàảạãăắằẳặẵâấầẩậẫeéèẻẹẽêếềểệễiíìỉịĩoóòỏọõôốồổộỗơớờởợỡuúùủụũưứừửựữyýỳỷỵỹ".includes(c);
+      }
+
+      // Helper function to check if a character is a Vietnamese tone mark
+      function isToneMark(char) {
+        if (!char) return false;
+        // Tone mark is usually the second char after normalization for single-character tones.
+        // For more robust check, we can look for specific unicode ranges.
+        // Unicode combining diacritics for Vietnamese tones: U+0300 (grave), U+0309 (hook above), U+0301 (acute), U+0323 (dot below), U+0303 (tilde)
+        const nfdChar = char.normalize("NFD");
+        for (let i = 0; i < nfdChar.length; i++) {
+            const code = nfdChar.charCodeAt(i);
+            if (code >= 0x0300 && code <= 0x036f) { // Combining Diacritics range
+                // Specific Vietnamese tone marks
+                if ([0x0300, 0x0301, 0x0303, 0x0309, 0x0323].includes(code)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+      }
+
+      // Helper to remove tone marks from a word (for generating base forms)
+      function removeToneMarks(word) {
+        return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      }
+
+      // Function to check for incorrect accent placement and suggest correction
+      
       function analyzeText(paragraphs) {
         let totalWords = 0;
         const errorMap = new Map();
-        const wordRegex = /[\p{L}\p{M}]+/giu;
+        const wordRegex = /[\p{L}\p{M}]+/gu;
 
         const isFrontVowel = (c) => {
           if (!c) return false;
@@ -1005,75 +1197,93 @@
             totalWords++;
             if (word.length < 2) continue;
 
-            const lower = word.normalize("NFC").toLowerCase();
-            const isCapitalized = /^\p{Lu}/u.test(word);
+            const lower = word.toLowerCase().normalize("NFC"); // Use lower + NFC from hint.htm
+            const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word); // From hint.htm
 
-            if (IGNORED_WORDS.has(lower.toLowerCase())) continue;
+            if (IGNORED_WORDS.has(lower)) continue; // Use the global IGNORED_WORDS
 
-            const errorTypes = [];
-            
-            if ((word.match(/\p{Lu}/gu) || []).length > 1) {
-              errorTypes.push("Lỗi viết hoa");
+            let errorType = null; // Use single errorType, not array
+
+            // 1. Check Tone Placement (Strict Rule first)
+            for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
+              // FIX: Only match if it's at the END of the word (Open Syllable rule for oa, oe)
+              if (lower.endsWith(wrong)) {
+                errorType = "Sai vị trí dấu (Chuẩn cũ/mới)";
+                break;
+              }
             }
 
-            if (isDictLoaded) {
-              if (!validSyllables.has(lower.toLowerCase())) {
+            // 2. Dictionary Check
+            if (!errorType && isDictLoaded) { // Only run if no tone placement error
+              if (!validSyllables.has(lower)) {
+                if (!isCapitalized) { // Only flag if not capitalized (hint.htm logic)
                   if (/[fjwz]/.test(lower)) {
-                    errorTypes.push("Từ lạ / Tiếng nước ngoài");
+                    errorType = "Từ lạ / Tiếng nước ngoài";
                   } else if (/(aa|ee|oo|dd|js|kx|wt)$/.test(lower)) {
-                    errorTypes.push("Lỗi gõ máy");
+                    errorType = "Lỗi gõ máy (Typo)";
                   } else {
-                    errorTypes.push("Không có trong từ điển");
+                    errorType = "Không có trong từ điển";
                   }
+                }
               }
-            } else {
-              if (/[fjwz]/.test(lower)) {
-                errorTypes.push("Chứa ký tự lạ (f, j, w, z)");
-              } else if (lower.startsWith("ngh") && !isFrontVowel(lower[3]))
-                errorTypes.push("Sai quy tắc ngh");
-              else if (lower.startsWith("ng") && isFrontVowel(lower[2]))
-                errorTypes.push("Sai quy tắc ng");
-              else if (lower.startsWith("gh") && !isFrontVowel(lower[2]))
-                errorTypes.push("Sai quy tắc gh");
+            } else if (!errorType) { // Fallback heuristics if dictionary not loaded and no tone placement error
+              if (/[fjwz]/.test(lower) && !isCapitalized) { // Only flag if not capitalized
+                errorType = "Chứa ký tự lạ (f, j, w, z)";
+              } else if (
+                lower.startsWith("ngh") &&
+                !isFrontVowel(lower[3]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc ngh";
+              else if (
+                lower.startsWith("ng") &&
+                isFrontVowel(lower[2]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc ng";
+              else if (
+                lower.startsWith("gh") &&
+                !isFrontVowel(lower[2]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc gh";
               else if (
                 lower.startsWith("g") &&
                 isFrontVowel(lower[1]) &&
-                lower.substring(0, 2) !== "gi"
+                lower.substring(0, 2) !== "gi" &&
+                !isCapitalized
               )
-                errorTypes.push("Sai quy tắc g");
+                errorType = "Sai quy tắc g";
               else if (
                 lower.startsWith("k") &&
                 !lower.startsWith("kh") &&
                 !isFrontVowel(lower[1]) &&
-                !isY(lower[1])
+                !isY(lower[1]) &&
+                !isCapitalized
               )
-                errorTypes.push("Sai quy tắc k");
+                errorType = "Sai quy tắc k";
               else if (
                 lower.startsWith("c") &&
                 !lower.startsWith("ch") &&
-                (isFrontVowel(lower[1]) || isY(lower[1]))
+                (isFrontVowel(lower[1]) || isY(lower[1])) &&
+                !isCapitalized
               )
-                errorTypes.push("Sai quy tắc c");
+                errorType = "Sai quy tắc c";
             }
 
-            if (errorTypes.length > 0) {
-              const key = lower; // Group by word
+            if (errorType) {
+              const key = lower + "::" + errorType; // Group by word and error type
               if (!errorMap.has(key)) {
                 errorMap.set(key, {
                   id: key,
                   word: word,
-                  types: [],
+                  type: errorType, // Use single type
                   contexts: [],
                 });
               }
-              const errorGroup = errorMap.get(key);
-              errorGroup.contexts.push(getContext(para, match.index, word.length));
-              // Add types if they are not already there
-              errorTypes.forEach(type => {
-                if (!errorGroup.types.includes(type)) {
-                  errorGroup.types.push(type);
-                }
-              });
+              errorMap
+                .get(key)
+                .contexts.push(getContext(para, match.index, word.length));
             }
           }
         });
@@ -1087,7 +1297,8 @@
 
       function filterAndRenderErrors() {
         const filteredErrors = allDetectedErrors.filter((group) => {
-          return !IGNORED_WORDS.has(group.id);
+          // Check against global IGNORED_WORDS AND dynamically built DYNAMIC_IGNORED_WORDS
+          return !IGNORED_WORDS.has(group.word.toLowerCase()) && !DYNAMIC_IGNORED_WORDS.has(group.word.toLowerCase());
         });
         const totalErrors = filteredErrors.reduce(
           (acc, curr) => acc + curr.contexts.length,
@@ -1139,10 +1350,21 @@
       }
 
       function findSuggestions(wrongWord) {
+        // Special check for Tone Misplacement
+        const lowerWrong = wrongWord.toLowerCase();
+        for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
+          if (lowerWrong.includes(wrong)) {
+            // Replace the wrong part with right part
+            // Use regex to replace all occurrences if needed, but usually once per syllable
+            const suggested = lowerWrong.replace(wrong, right);
+            return [suggested]; // Priority return
+          }
+        }
+
         if (!isDictLoaded) return [];
         const suggestions = [];
         const maxDistance = wrongWord.length < 4 ? 1 : 2;
-        const lowerWrong = wrongWord.toLowerCase();
+
         for (const word of validSyllables) {
           if (Math.abs(word.length - lowerWrong.length) > maxDistance) continue;
           const dist = levenshteinDistance(lowerWrong, word);
@@ -1192,7 +1414,7 @@
         groups.forEach((group) => {
           const clone = template.content.cloneNode(true);
           clone.querySelector(".error-word").innerText = group.word;
-          clone.querySelector(".error-reason").innerText = group.types.join(", ");
+          clone.querySelector(".error-reason").innerText = group.type; // Use group.type directly
           clone.querySelector(".error-count").innerText = group.contexts.length;
 
           // Select button
@@ -1253,41 +1475,12 @@
         updateContextView();
       }
 
-      function getStyleForTypes(types, forHighlight = false) {
-        const colorMap = {
-          "Không có trong từ điển": "rgb(239, 68, 68)", // red-500
-          "Lỗi viết hoa": "rgb(245, 158, 11)", // amber-500
-          "Lỗi gõ máy": "rgb(168, 85, 247)", // purple-500
-          "Từ lạ / Tiếng nước ngoài": "rgb(59, 130, 246)", // blue-500
-          "Sai quy tắc ngh": "rgb(236, 72, 153)", // pink-500
-          "Sai quy tắc ng": "rgb(236, 72, 153)",
-          "Sai quy tắc gh": "rgb(236, 72, 153)",
-          "Sai quy tắc g": "rgb(236, 72, 153)",
-          "Sai quy tắc k": "rgb(236, 72, 153)",
-          "Sai quy tắc c": "rgb(236, 72, 153)",
-        };
-
-        if (forHighlight && types.length > 0) {
-          // For the main word highlight, use a consistent error color if multiple types, otherwise use the primary type's color
-          return `background-color: ${colorMap[types[0]] || "rgb(239, 68, 68)"};`;
-        } else if (types.length === 1) {
-          return `background-color: ${colorMap[types[0]] || "rgb(100, 116, 139)"};`;
-        } else if (types.length > 1) {
-          // For the small color indicator, use a gradient if multiple types
-          const colors = types.map(type => colorMap[type] || "rgb(100, 116, 139)");
-          return `background-image: linear-gradient(to right, ${colors.map(c => `${c}B0`).join(", ")});`; // Add 70% opacity
-        }
-        return "";
-      }
 
       function updateContextView() {
         if (!currentGroup) return;
         const context = currentGroup.contexts[currentInstanceIndex];
         const total = currentGroup.contexts.length;
         const suggestions = findSuggestions(currentGroup.word);
-        
-        const highlightStyle = getStyleForTypes(currentGroup.types, true);
-
         const suggestionHTML =
           suggestions.length > 0
             ? `<div class="mt-4 flex flex-wrap justify-center gap-2">
@@ -1301,19 +1494,12 @@
                    </div>`
             : "";
 
-        const reasonHTML = currentGroup.types.map(type => {
-          const colorMap = {
-            "Không có trong từ điển": "text-red-400",
-            "Lỗi viết hoa": "text-amber-400",
-            "Lỗi gõ máy": "text-purple-400",
-            "Từ lạ / Tiếng nước ngoài": "text-blue-400",
-          };
-          const textColor = colorMap[type] || "text-pink-400";
-          
-          let reasonContent = `<span class="${textColor} font-medium">${type}</span>`;
-          if (type === "Không có trong từ điển") {
-            reasonContent = `<span class="${textColor} font-medium">Không có trong từ điển</span>
-                             <span
+        const reasonHTML = `<div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
+                        <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                        <span class="text-red-400 font-medium">${currentGroup.type}</span>
+                        ${
+                          currentGroup.type === "Không có trong từ điển"
+                            ? `<span
                                   onclick="event.stopPropagation(); quickLookup('${escapeHtml(currentGroup.word)}')"
                                   class="inline-block align-middle p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-blue-400 cursor-pointer transition-colors"
                                   title="Tra cứu trên Wiktionary"
@@ -1330,14 +1516,10 @@
                                       clip-rule="evenodd"
                                     />
                                   </svg>
-                                </span>`;
-          }
-
-          return `<div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
-                    <span class="w-2 h-2 rounded-full" style="${getStyleForTypes([type]).replace('background-color', 'background')}"></span>
-                    ${reasonContent}
-                  </div>`
-        }).join('');
+                                </span>`
+                            : ""
+                        }
+                   </div>`;
 
         navIndicator.innerText = `${currentInstanceIndex + 1}/${total}`;
         btnPrev.disabled = currentInstanceIndex === 0;
@@ -1353,7 +1535,7 @@
                         <div class="text-xl leading-loose text-slate-300 font-serif">
                             ${escapeHtml(
                               context.prefix
-                            )}<span style="${highlightStyle}" class="text-white px-1 py-0.5 rounded border-b-2 border-red-500 font-bold mx-0.5 shadow-[0_0_15px_rgba(239,68,68,0.2)]">${escapeHtml(
+                            )}<span class="bg-red-500/20 text-red-400 px-1 py-0.5 rounded border-b-2 border-red-500 font-bold mx-0.5 shadow-[0_0_15px_rgba(239,68,68,0.2)]">${escapeHtml(
           context.target
         )}</span>${escapeHtml(context.suffix)}
                         </div>
@@ -1365,7 +1547,6 @@
                 </div>
             `;
       }
-
       function escapeHtml(text) {
         const div = document.createElement("div");
         div.textContent = text;
