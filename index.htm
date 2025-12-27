@@ -553,6 +553,9 @@
               <span
                 class="font-bold text-red-400 error-word text-lg truncate font-serif"
               ></span>
+              <div class="flex gap-1 error-type-dots">
+                <!-- Dots will be injected here -->
+              </div>
               <span
                 class="bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold px-2 py-0.5 rounded-full error-count flex-shrink-0"
               ></span>
@@ -583,7 +586,6 @@
         </button>
       </div>
     </template>
-
     <script>
       // --- CONFIGURATION ---
 
@@ -1137,40 +1139,23 @@
         return { fullTextBlocks, title, author, coverUrl };
       }
 
-      // Helper function to check if a character is a Vietnamese vowel
-      function isVietnameseVowel(char) {
-        if (!char) return false;
-        const c = char.toLowerCase().normalize("NFC");
-        return "aáàảạãăắằẳặẵâấầẩậẫeéèẻẹẽêếềểệễiíìỉịĩoóòỏọõôốồổộỗơớờởợỡuúùủụũưứừửựữyýỳỷỵỹ".includes(c);
-      }
-
-      // Helper function to check if a character is a Vietnamese tone mark
-      function isToneMark(char) {
-        if (!char) return false;
-        // Tone mark is usually the second char after normalization for single-character tones.
-        // For more robust check, we can look for specific unicode ranges.
-        // Unicode combining diacritics for Vietnamese tones: U+0300 (grave), U+0309 (hook above), U+0301 (acute), U+0323 (dot below), U+0303 (tilde)
-        const nfdChar = char.normalize("NFD");
-        for (let i = 0; i < nfdChar.length; i++) {
-            const code = nfdChar.charCodeAt(i);
-            if (code >= 0x0300 && code <= 0x036f) { // Combining Diacritics range
-                // Specific Vietnamese tone marks
-                if ([0x0300, 0x0301, 0x0303, 0x0309, 0x0323].includes(code)) {
-                    return true;
-                }
-            }
+      // Helper function to map error types to colors
+      function getColorForErrorType(errorType) {
+        switch (errorType) {
+          case "Sai vị trí dấu (Chuẩn cũ/mới)":
+            return "bg-yellow-400"; // Yellow for tone placement errors (vibrant)
+          case "Không có trong từ điển":
+            return "bg-indigo-500"; // Indigo for unknown words (distinct from blue and red)
+          case "Lỗi gõ máy (Typo)":
+            return "bg-purple-500"; // Purple (keep as is, good contrast)
+          case "Từ lạ / Tiếng nước ngoài":
+            return "bg-teal-500"; // Teal for foreign words (distinct from other blues/greens)
+          case "Lỗi viết hoa":
+            return "bg-green-500"; // Green for capitalization errors (distinct)
+          default:
+            return "bg-slate-500"; // Default color
         }
-        return false;
-      }
-
-      // Helper to remove tone marks from a word (for generating base forms)
-      function removeToneMarks(word) {
-        return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      }
-
-      // Function to check for incorrect accent placement and suggest correction
-      
-      function analyzeText(paragraphs) {
+      }      function analyzeText(paragraphs) {
         let totalWords = 0;
         const errorMap = new Map();
         const wordRegex = /[\p{L}\p{M}]+/gu;
@@ -1198,62 +1183,67 @@
             if (word.length < 2) continue;
 
             const lower = word.toLowerCase().normalize("NFC"); // Use lower + NFC from hint.htm
-            const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word); // From hint.htm
+            const isCapitalized = /^\p{Lu}/u.test(word); // Check if the first character is an uppercase Unicode letter
 
-            if (IGNORED_WORDS.has(lower)) continue; // Use the global IGNORED_WORDS
+            if (IGNORED_WORDS.has(lower) || DYNAMIC_IGNORED_WORDS.has(lower)) continue; // Use the global IGNORED_WORDS and DYNAMIC_IGNORED_WORDS
 
-            let errorType = null; // Use single errorType, not array
+            const errorTypes = []; // Use an array for error types
 
             // 1. Check Tone Placement (Strict Rule first)
             for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
               // FIX: Only match if it's at the END of the word (Open Syllable rule for oa, oe)
               if (lower.endsWith(wrong)) {
-                errorType = "Sai vị trí dấu (Chuẩn cũ/mới)";
+                errorTypes.push("Sai vị trí dấu (Chuẩn cũ/mới)");
                 break;
               }
             }
 
-            // 2. Dictionary Check
-            if (!errorType && isDictLoaded) { // Only run if no tone placement error
+            // 2. Check for incorrect capitalization: more than one uppercase letter in the word
+            if ((word.match(/\p{Lu}/gu) || []).length > 1) { // Use Unicode property escape for all uppercase letters
+                errorTypes.push("Lỗi viết hoa");
+            }
+
+            // 3. Dictionary Check
+            if (errorTypes.length === 0 && isDictLoaded) { // Only run if no tone placement error
               if (!validSyllables.has(lower)) {
-                if (!isCapitalized) { // Only flag if not capitalized (hint.htm logic)
+                if (!isCapitalized) { // Keep this check: Only flag if not capitalized (hint.htm logic)
                   if (/[fjwz]/.test(lower)) {
-                    errorType = "Từ lạ / Tiếng nước ngoài";
+                    errorTypes.push("Từ lạ / Tiếng nước ngoài");
                   } else if (/(aa|ee|oo|dd|js|kx|wt)$/.test(lower)) {
-                    errorType = "Lỗi gõ máy (Typo)";
+                    errorTypes.push("Lỗi gõ máy (Typo)");
                   } else {
-                    errorType = "Không có trong từ điển";
+                    errorTypes.push("Không có trong từ điển");
                   }
                 }
               }
-            } else if (!errorType) { // Fallback heuristics if dictionary not loaded and no tone placement error
-              if (/[fjwz]/.test(lower) && !isCapitalized) { // Only flag if not capitalized
-                errorType = "Chứa ký tự lạ (f, j, w, z)";
+            } else if (errorTypes.length === 0) { // Fallback heuristics if dictionary not loaded and no tone placement error
+              if (/[fjwz]/.test(lower) && !isCapitalized) { // Keep this check: Only flag if not capitalized
+                errorTypes.push("Chứa ký tự lạ (f, j, w, z)");
               } else if (
                 lower.startsWith("ngh") &&
                 !isFrontVowel(lower[3]) &&
                 !isCapitalized
               )
-                errorType = "Sai quy tắc ngh";
+                errorTypes.push("Sai quy tắc ngh");
               else if (
                 lower.startsWith("ng") &&
                 isFrontVowel(lower[2]) &&
                 !isCapitalized
               )
-                errorType = "Sai quy tắc ng";
+                errorTypes.push("Sai quy tắc ng");
               else if (
                 lower.startsWith("gh") &&
                 !isFrontVowel(lower[2]) &&
                 !isCapitalized
               )
-                errorType = "Sai quy tắc gh";
+                errorTypes.push("Sai quy tắc gh");
               else if (
                 lower.startsWith("g") &&
                 isFrontVowel(lower[1]) &&
                 lower.substring(0, 2) !== "gi" &&
                 !isCapitalized
               )
-                errorType = "Sai quy tắc g";
+                errorTypes.push("Sai quy tắc g");
               else if (
                 lower.startsWith("k") &&
                 !lower.startsWith("kh") &&
@@ -1261,23 +1251,23 @@
                 !isY(lower[1]) &&
                 !isCapitalized
               )
-                errorType = "Sai quy tắc k";
+                errorTypes.push("Sai quy tắc k");
               else if (
                 lower.startsWith("c") &&
                 !lower.startsWith("ch") &&
                 (isFrontVowel(lower[1]) || isY(lower[1])) &&
                 !isCapitalized
               )
-                errorType = "Sai quy tắc c";
+                errorTypes.push("Sai quy tắc c");
             }
 
-            if (errorType) {
-              const key = lower + "::" + errorType; // Group by word and error type
+            if (errorTypes.length > 0) {
+              const key = lower + "::" + errorTypes.join('::'); // Group by word and all error types
               if (!errorMap.has(key)) {
                 errorMap.set(key, {
                   id: key,
                   word: word,
-                  type: errorType, // Use single type
+                  types: errorTypes, // Store array of types
                   contexts: [],
                 });
               }
@@ -1414,7 +1404,16 @@
         groups.forEach((group) => {
           const clone = template.content.cloneNode(true);
           clone.querySelector(".error-word").innerText = group.word;
-          clone.querySelector(".error-reason").innerText = group.type; // Use group.type directly
+          // Populate colored dots
+          const errorTypeDotsContainer = clone.querySelector(".error-type-dots");
+          group.types.forEach(type => {
+            const dot = document.createElement("span");
+            dot.className = `w-2 h-2 rounded-full ${getColorForErrorType(type)}`;
+            dot.title = type; // Show error type on hover
+            errorTypeDotsContainer.appendChild(dot);
+          });
+          // Display the first error type as text in error-reason
+          clone.querySelector(".error-reason").innerText = group.types[0]; 
           clone.querySelector(".error-count").innerText = group.contexts.length;
 
           // Select button
@@ -1494,32 +1493,38 @@
                    </div>`
             : "";
 
-        const reasonHTML = `<div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
-                        <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                        <span class="text-red-400 font-medium">${currentGroup.type}</span>
-                        ${
-                          currentGroup.type === "Không có trong từ điển"
-                            ? `<span
-                                  onclick="event.stopPropagation(); quickLookup('${escapeHtml(currentGroup.word)}')"
-                                  class="inline-block align-middle p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-blue-400 cursor-pointer transition-colors"
-                                  title="Tra cứu trên Wiktionary"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                  >
-                                    <path
-                                      fill-rule="evenodd"
-                                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                      clip-rule="evenodd"
-                                    />
-                                  </svg>
-                                </span>`
-                            : ""
-                        }
-                   </div>`;
+        const reasonHTML = currentGroup.types
+          .map(
+            (type) => `
+              <div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
+                  <span class="w-2 h-2 rounded-full ${getColorForErrorType(type)}"></span>
+                  <span class="text-red-400 font-medium">${type}</span>
+                  ${
+                    type === "Không có trong từ điển"
+                      ? `<span
+                            onclick="event.stopPropagation(); quickLookup('${escapeHtml(currentGroup.word)}')"
+                            class="inline-block align-middle p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-blue-400 cursor-pointer transition-colors"
+                            title="Tra cứu trên Wiktionary"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                clip-rule="evenodd"
+                              />
+                            </svg>
+                          </span>`
+                      : ""
+                  }
+              </div>
+            `
+          )
+          .join("");
 
         navIndicator.innerText = `${currentInstanceIndex + 1}/${total}`;
         btnPrev.disabled = currentInstanceIndex === 0;
