@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vietnamese EPUB Spell Checker - Dark Mode</title>
+    <title>Vietnamese EPUB Spell Checker</title>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -699,10 +699,7 @@
           dictText.innerText = `Đã tải từ điển (${validSyllables.size.toLocaleString()} từ)`;
           console.log(`Đã tải từ điển: ${validSyllables.size} âm tiết`);
         } catch (err) {
-          console.warn(
-            "Tải từ điển thất bại, sử dụng quy tắc dự phòng:",
-            err
-          );
+          console.warn("Tải từ điển thất bại, sử dụng quy tắc dự phòng:", err);
           dictDot.classList.remove("bg-yellow-500", "animate-pulse");
           dictDot.classList.add("bg-red-500");
           dictText.innerText = "Lỗi tải từ điển (Dùng quy tắc cũ)";
@@ -711,19 +708,22 @@
 
       async function loadLocalWhitelist() {
         try {
-            const response = await fetch(WHITELIST_URL);
-            if (!response.ok) throw new Error(`Fetch failed for ${WHITELIST_URL}`);
-            const text = await response.text();
-            const lines = text.split('\n');
-            lines.forEach(line => {
-                const cleanLine = line.trim().toLowerCase();
-                if (cleanLine) {
-                    IGNORED_WORDS.add(cleanLine);
-                }
-            });
-            console.log(`Đã tải danh sách bỏ qua (cục bộ): ${IGNORED_WORDS.size} từ`);
+          const response = await fetch(WHITELIST_URL);
+          if (!response.ok)
+            throw new Error(`Fetch failed for ${WHITELIST_URL}`);
+          const text = await response.text();
+          const lines = text.split("\n");
+          lines.forEach((line) => {
+            const cleanLine = line.trim().toLowerCase();
+            if (cleanLine) {
+              IGNORED_WORDS.add(cleanLine);
+            }
+          });
+          console.log(
+            `Đã tải danh sách bỏ qua (cục bộ): ${IGNORED_WORDS.size} từ`
+          );
         } catch (err) {
-            console.warn("Tải danh sách bỏ qua (cục bộ) thất bại:", err);
+          console.warn("Tải danh sách bỏ qua (cục bộ) thất bại:", err);
         }
       }
 
@@ -1208,8 +1208,7 @@
           const clone = template.content.cloneNode(true);
           clone.querySelector(".error-word").innerText = group.word;
           clone.querySelector(".error-reason").innerText = group.type;
-          clone.querySelector(".error-count").innerText =
-            group.contexts.length;
+          clone.querySelector(".error-count").innerText = group.contexts.length;
 
           // Select button
           const selectBtn = clone.querySelector(".select-btn");
@@ -1302,9 +1301,7 @@
                 <div class="max-w-2xl text-center w-full animate-fadeIn">
                     <div class="flex items-center justify-center gap-2 mb-6">
                         <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-2 py-1 rounded">
-                            Ngữ cảnh ${
-                              currentInstanceIndex + 1
-                            } / ${total}
+                            Ngữ cảnh ${currentInstanceIndex + 1} / ${total}
                         </span>
                     </div>
                     <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative">
