@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vietnamese EPUB Spell Checker</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' /%3E%3C/svg%3E">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -83,7 +84,7 @@
               Soát Lỗi Chính Tả EPUB
             </h1>
             <div class="text-xs text-slate-500 font-medium">
-              v1.0 - 26/12/2025
+              v1.1 - 26/12/2025
             </div>
           </div>
         </div>
@@ -670,28 +671,7 @@
             }
           });
 
-          const extras = [
-            "kỹ",
-            "mỹ",
-            "kì",
-            "lí",
-            "qui",
-            "có",
-            "hắn",
-            "y",
-            "gã",
-            "thị",
-            "nó",
-            "ta",
-            "ngươi",
-            "chư",
-            "mỗ",
-            "tại",
-            "bị",
-            "bởi",
-            "chăng",
-          ];
-          extras.forEach((w) => validSyllables.add(w.normalize("NFC")));
+
 
           isDictLoaded = true;
           dictDot.classList.remove("bg-yellow-500", "animate-pulse");
@@ -1167,6 +1147,11 @@
           .map((s) => s.word);
       }
 
+      function quickLookup(word) {
+        const url = `https://vi.wiktionary.org/wiki/${encodeURIComponent(word)}`;
+        window.open(url, "_blank");
+      }
+
       function getContext(text, index, length) {
         const start = Math.max(0, index - 60);
         const end = Math.min(text.length, index + length + 60);
@@ -1313,9 +1298,33 @@
             "Từ lạ / Tiếng nước ngoài": "text-blue-400",
           };
           const textColor = colorMap[type] || "text-pink-400";
+          
+          let reasonContent = `<span class="${textColor} font-medium">${type}</span>`;
+          if (type === "Không có trong từ điển") {
+            reasonContent = `<span class="${textColor} font-medium">Không có trong từ điển</span>
+                             <span
+                                  onclick="event.stopPropagation(); quickLookup('${escapeHtml(currentGroup.word)}')"
+                                  class="inline-block align-middle p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-blue-400 cursor-pointer transition-colors"
+                                  title="Tra cứu trên Wiktionary"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                  >
+                                    <path
+                                      fill-rule="evenodd"
+                                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                      clip-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>`;
+          }
+
           return `<div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
                     <span class="w-2 h-2 rounded-full" style="${getStyleForTypes([type]).replace('background-color', 'background')}"></span>
-                    <span class="${textColor} font-medium">${type}</span>
+                    ${reasonContent}
                   </div>`
         }).join('');
 
