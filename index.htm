@@ -1014,82 +1014,70 @@
 
             if (IGNORED_WORDS.has(lower.toLowerCase())) continue;
 
-            let errorType = null;
+            const errorTypes = [];
             
             if ((word.match(/\p{Lu}/gu) || []).length > 1) {
-              errorType = "Lỗi viết hoa";
+              errorTypes.push("Lỗi viết hoa");
             }
 
             if (isDictLoaded) {
               if (!validSyllables.has(lower.toLowerCase())) {
-                if (!isCapitalized) {
                   if (/[fjwz]/.test(lower)) {
-                    errorType = "Từ lạ / Tiếng nước ngoài";
+                    errorTypes.push("Từ lạ / Tiếng nước ngoài");
                   } else if (/(aa|ee|oo|dd|js|kx|wt)$/.test(lower)) {
-                    errorType = "Lỗi gõ máy";
+                    errorTypes.push("Lỗi gõ máy");
                   } else {
-                    errorType = "Không có trong từ điển";
+                    errorTypes.push("Không có trong từ điển");
                   }
-                }
               }
             } else {
-              if (/[fjwz]/.test(lower) && !isCapitalized) {
-                errorType = "Chứa ký tự lạ (f, j, w, z)";
-              } else if (
-                lower.startsWith("ngh") &&
-                !isFrontVowel(lower[3]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc ngh";
-              else if (
-                lower.startsWith("ng") &&
-                isFrontVowel(lower[2]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc ng";
-              else if (
-                lower.startsWith("gh") &&
-                !isFrontVowel(lower[2]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc gh";
+              if (/[fjwz]/.test(lower)) {
+                errorTypes.push("Chứa ký tự lạ (f, j, w, z)");
+              } else if (lower.startsWith("ngh") && !isFrontVowel(lower[3]))
+                errorTypes.push("Sai quy tắc ngh");
+              else if (lower.startsWith("ng") && isFrontVowel(lower[2]))
+                errorTypes.push("Sai quy tắc ng");
+              else if (lower.startsWith("gh") && !isFrontVowel(lower[2]))
+                errorTypes.push("Sai quy tắc gh");
               else if (
                 lower.startsWith("g") &&
                 isFrontVowel(lower[1]) &&
-                lower.substring(0, 2) !== "gi" &&
-                !isCapitalized
+                lower.substring(0, 2) !== "gi"
               )
-                errorType = "Sai quy tắc g";
+                errorTypes.push("Sai quy tắc g");
               else if (
                 lower.startsWith("k") &&
                 !lower.startsWith("kh") &&
                 !isFrontVowel(lower[1]) &&
-                !isY(lower[1]) &&
-                !isCapitalized
+                !isY(lower[1])
               )
-                errorType = "Sai quy tắc k";
+                errorTypes.push("Sai quy tắc k");
               else if (
                 lower.startsWith("c") &&
                 !lower.startsWith("ch") &&
-                (isFrontVowel(lower[1]) || isY(lower[1])) &&
-                !isCapitalized
+                (isFrontVowel(lower[1]) || isY(lower[1]))
               )
-                errorType = "Sai quy tắc c";
+                errorTypes.push("Sai quy tắc c");
             }
 
-            if (errorType) {
-              const key = lower + "::" + errorType;
+            if (errorTypes.length > 0) {
+              const key = lower; // Group by word
               if (!errorMap.has(key)) {
                 errorMap.set(key, {
                   id: key,
                   word: word,
-                  type: errorType,
+                  types: [],
                   contexts: [],
                 });
               }
-              errorMap
-                .get(key)
-                .contexts.push(getContext(para, match.index, word.length));
+              const errorGroup = errorMap.get(key);
+              errorGroup.contexts.push(getContext(para, match.index, word.length));
+              // Add types if they are not already there
+              errorTypes.forEach(type => {
+                if (!errorGroup.types.includes(type)) {
+                  errorGroup.types.push(type);
+                }
+              });
             }
           }
         });
@@ -1211,7 +1199,7 @@
         groups.forEach((group) => {
           const clone = template.content.cloneNode(true);
           clone.querySelector(".error-word").innerText = group.word;
-          clone.querySelector(".error-reason").innerText = group.type;
+          clone.querySelector(".error-reason").innerText = group.types.join(", ");
           clone.querySelector(".error-count").innerText = group.contexts.length;
 
           // Select button
@@ -1272,11 +1260,38 @@
         updateContextView();
       }
 
+      function getStyleForTypes(types) {
+        const colorMap = {
+          "Không có trong từ điển": "rgba(239, 68, 68, 0.4)", // red-500
+          "Lỗi viết hoa": "rgba(245, 158, 11, 0.4)", // amber-500
+          "Lỗi gõ máy": "rgba(168, 85, 247, 0.4)", // purple-500
+          "Từ lạ / Tiếng nước ngoài": "rgba(59, 130, 246, 0.4)", // blue-500
+          "Sai quy tắc ngh": "rgba(236, 72, 153, 0.4)", // pink-500
+          "Sai quy tắc ng": "rgba(236, 72, 153, 0.4)",
+          "Sai quy tắc gh": "rgba(236, 72, 153, 0.4)",
+          "Sai quy tắc g": "rgba(236, 72, 153, 0.4)",
+          "Sai quy tắc k": "rgba(236, 72, 153, 0.4)",
+          "Sai quy tắc c": "rgba(236, 72, 153, 0.4)",
+        };
+
+        const colors = types.map(type => colorMap[type] || "rgba(100, 116, 139, 0.4)");
+
+        if (colors.length === 1) {
+          return `background-color: ${colors[0]};`;
+        } else if (colors.length > 1) {
+          return `background-image: linear-gradient(to right, ${colors.join(", ")});`;
+        }
+        return "";
+      }
+
       function updateContextView() {
         if (!currentGroup) return;
         const context = currentGroup.contexts[currentInstanceIndex];
         const total = currentGroup.contexts.length;
         const suggestions = findSuggestions(currentGroup.word);
+        
+        const highlightStyle = getStyleForTypes(currentGroup.types);
+
         const suggestionHTML =
           suggestions.length > 0
             ? `<div class="mt-4 flex flex-wrap justify-center gap-2">
@@ -1290,13 +1305,19 @@
                    </div>`
             : "";
 
-        const reasonHTML =
-          currentGroup.type !== "Không có trong từ điển"
-            ? `<div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
-                        <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                        <span class="text-red-400 font-medium">${currentGroup.type}</span>
-                   </div>`
-            : "";
+        const reasonHTML = currentGroup.types.map(type => {
+          const colorMap = {
+            "Không có trong từ điển": "text-red-400",
+            "Lỗi viết hoa": "text-amber-400",
+            "Lỗi gõ máy": "text-purple-400",
+            "Từ lạ / Tiếng nước ngoài": "text-blue-400",
+          };
+          const textColor = colorMap[type] || "text-pink-400";
+          return `<div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
+                    <span class="w-2 h-2 rounded-full" style="${getStyleForTypes([type]).replace('background-color', 'background')}"></span>
+                    <span class="${textColor} font-medium">${type}</span>
+                  </div>`
+        }).join('');
 
         navIndicator.innerText = `${currentInstanceIndex + 1}/${total}`;
         btnPrev.disabled = currentInstanceIndex === 0;
@@ -1312,7 +1333,7 @@
                         <div class="text-xl leading-loose text-slate-300 font-serif">
                             ${escapeHtml(
                               context.prefix
-                            )}<span class="bg-red-500/20 text-red-400 px-1 py-0.5 rounded border-b-2 border-red-500 font-bold mx-0.5 shadow-[0_0_15px_rgba(239,68,68,0.2)]">${escapeHtml(
+                            )}<span style="${highlightStyle}" class="text-white px-1 py-0.5 rounded border-b-2 border-red-500 font-bold mx-0.5 shadow-[0_0_15px_rgba(239,68,68,0.2)]">${escapeHtml(
           context.target
         )}</span>${escapeHtml(context.suffix)}
                         </div>
