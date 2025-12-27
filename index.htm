@@ -1017,7 +1017,7 @@
             let errorType = null;
 
             if (isDictLoaded) {
-              if (!validSyllables.has(lower)) {
+              if (!validSyllables.has(lower.toLowerCase())) {
                 if (!isCapitalized) {
                   if (/[fjwz]/.test(lower)) {
                     errorType = "Từ lạ / Tiếng nước ngoài";
