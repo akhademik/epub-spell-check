@@ -1015,6 +1015,10 @@
             if (IGNORED_WORDS.has(lower.toLowerCase())) continue;
 
             let errorType = null;
+            
+            if ((word.match(/\p{Lu}/gu) || []).length > 1) {
+              errorType = "Lỗi viết hoa";
+            }
 
             if (isDictLoaded) {
               if (!validSyllables.has(lower.toLowerCase())) {
