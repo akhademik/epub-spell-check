@@ -708,7 +708,7 @@
             const lines = text.split("\n");
             let count = 0;
             lines.forEach((line) => {
-              const cleanLine = line.trim().toLowerCase();
+              const cleanLine = line.trim().toLowerCase().normalize("NFC");
               if (cleanLine) {
                 set.add(cleanLine);
                 count++;
@@ -727,7 +727,7 @@
         if (rawInput) {
           const tokens = rawInput
             .split(/[\n,\t]+/)
-            .map((t) => t.trim().toLowerCase())
+            .map((t) => t.trim().toLowerCase().normalize("NFC"))
             .filter((t) => t.length > 0);
           tokens.forEach((t) => IGNORED_WORDS.add(t));
         }
@@ -1007,7 +1007,7 @@
             totalWords++;
             if (word.length < 2) continue;
 
-            const lower = word.normalize("NFC");
+            const lower = word.normalize("NFC").toLowerCase();
             const isCapitalized = /^\p{Lu}/u.test(word);
 
             if (IGNORED_WORDS.has(lower.toLowerCase())) continue;
@@ -1089,7 +1089,7 @@
 
       function filterAndRenderErrors() {
         const filteredErrors = allDetectedErrors.filter((group) => {
-          return !IGNORED_WORDS.has(group.word.toLowerCase());
+          return !IGNORED_WORDS.has(group.id);
         });
         const totalErrors = filteredErrors.reduce(
           (acc, curr) => acc + curr.contexts.length,
@@ -1109,7 +1109,7 @@
 
         // Trigger save and filter logic
         saveWhitelist();
-        filterAndRenderErrors();
+        updateIgnoredWords(); // Ensure IGNORED_WORDS is rebuilt and then filtering happens
 
         // Clear current context if the ignored word was selected
         if (currentGroup && currentGroup.word === word) {
