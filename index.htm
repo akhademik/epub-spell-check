@@ -3,15 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vietnamese EPUB Spell Checker</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' /%3E%3C/svg%3E">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
-      defer
-    ></script>
+    <title>Soát lỗi chính tả</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -33,11 +26,8 @@
         },
       };
     </script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@400;700&display=swap");
       body {
         font-family: "Noto Sans", sans-serif;
       }
@@ -47,6 +37,20 @@
       .scrollbar-hide {
         -ms-overflow-style: none;
         scrollbar-width: none;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out forwards;
       }
     </style>
   </head>
@@ -58,7 +62,7 @@
       class="bg-slate-900 border-b border-slate-800 sticky top-0 z-20 shadow-md"
     >
       <div
-        class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between"
+        class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between"
       >
         <div class="flex items-center gap-3">
           <div
@@ -83,11 +87,63 @@
             <h1 class="text-xl font-bold text-slate-100 tracking-tight">
               Soát Lỗi Chính Tả EPUB
             </h1>
-                        <div class="text-xs text-slate-500 font-medium">v1.2 - 27/12/2025</div>
+            <div class="text-xs text-slate-500 font-medium">
+              v1.29 - Fix lỗi nhảy dòng khi Ignore
+            </div>
           </div>
         </div>
 
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <!-- Settings Button -->
+          <button
+            id="settings-btn"
+            class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            title="Cấu hình (Settings)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+          </button>
+
+          <!-- Export Button -->
+          <button
+            id="export-btn"
+            class="hidden px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-emerald-900/20 flex items-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            <span class="hidden sm:inline">Xuất lỗi (.txt)</span>
+          </button>
+
           <!-- Reset Button -->
           <button
             id="reset-btn"
@@ -107,20 +163,24 @@
                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
               />
             </svg>
-            <span class="hidden sm:inline">Kiểm tra tệp khác</span>
+            <span class="hidden sm:inline">Kiểm tra file khác</span>
           </button>
 
+          <!-- Dict Status -->
           <div
             id="dict-status"
-            class="hidden md:flex items-center gap-2 text-xs px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700"
+            class="hidden md:flex items-center gap-3 text-xs px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 h-auto"
           >
             <div
-              class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"
+              class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse flex-shrink-0"
               id="dict-dot"
             ></div>
-            <span id="dict-text" class="text-slate-400"
-              >Đang tải từ điển...</span
+            <div
+              id="dict-text"
+              class="text-slate-400 font-mono leading-tight whitespace-nowrap"
             >
+              Đang tải dữ liệu...
+            </div>
           </div>
         </div>
       </div>
@@ -128,8 +188,127 @@
 
     <!-- Main Content -->
     <main
-      class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full flex flex-col gap-6"
+      class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full flex flex-col gap-6 relative"
     >
+      <!-- Settings Modal (Hidden by default) -->
+      <div
+        id="settings-modal"
+        class="hidden absolute top-0 right-4 z-50 w-80 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-5 animate-fadeIn"
+      >
+        <div
+          class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800"
+        >
+          <h3 class="text-lg font-bold text-white">Cấu hình kiểm tra</h3>
+          <button
+            id="close-settings-btn"
+            class="text-slate-500 hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Setting Item: Dictionary Check -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300"
+              >Lỗi không có trong từ điển</span
+            >
+            <label
+              for="set-dict"
+              class="relative inline-block w-10 h-6 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                id="set-dict"
+                class="sr-only peer"
+                checked
+              />
+              <div
+                class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+              ></div>
+            </label>
+          </div>
+
+          <!-- Setting Item: Uppercase Check -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300">Lỗi viết hoa (VD: tÔI)</span>
+            <label
+              for="set-case"
+              class="relative inline-block w-10 h-6 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                id="set-case"
+                class="sr-only peer"
+                checked
+              />
+              <div
+                class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+              ></div>
+            </label>
+          </div>
+
+          <!-- Setting Item: Tone Check -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300">Lỗi đặt dấu (Hòa/Hoà)</span>
+            <label
+              for="set-tone"
+              class="relative inline-block w-10 h-6 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                id="set-tone"
+                class="sr-only peer"
+                checked
+              />
+              <div
+                class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+              ></div>
+            </label>
+          </div>
+
+          <!-- Setting Item: Foreign/Structure Check -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300">Lỗi ký tự lạ / Cấu trúc</span>
+            <label
+              for="set-struct"
+              class="relative inline-block w-10 h-6 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                id="set-struct"
+                class="sr-only peer"
+                checked
+              />
+              <div
+                class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+              ></div>
+            </label>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-500">
+          <p class="mb-1 font-bold text-slate-400">Phím tắt:</p>
+          <div class="grid grid-cols-2 gap-2">
+            <div>⬆️ ⬇️ : Di chuyển</div>
+            <div>Delete / I : Bỏ qua</div>
+          </div>
+        </div>
+      </div>
+
       <!-- Upload Section -->
       <div
         id="upload-section"
@@ -171,11 +350,11 @@
           <div class="flex gap-4 mt-2">
             <span
               class="px-3 py-1 rounded bg-slate-800 border border-slate-700 text-xs text-slate-500"
-              >.epub only</span
+              >Chỉ hỗ trợ .epub</span
             >
             <span
               class="px-3 py-1 rounded bg-slate-800 border border-slate-700 text-xs text-slate-500"
-              >Xử lý ngoại tuyến</span
+              >Xử lý cục bộ</span
             >
           </div>
         </div>
@@ -289,13 +468,7 @@
         <div
           class="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-lg"
         >
-          <div class="flex items-center justify-between mb-2">
-            <label for="ignore-foreign-words-checkbox" class="flex items-center gap-2 text-sm font-bold text-slate-300">
-              <input type="checkbox" id="ignore-foreign-words-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-              Bỏ qua tên riêng/từ nước ngoài
-            </label>
-          </div>
-          <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center justify-between mb-3">
             <label
               for="whitelist-input"
               class="flex items-center gap-2 text-sm font-bold text-slate-300"
@@ -314,7 +487,7 @@
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              Thêm từ bỏ qua (Whitelist - Đã lưu)
+              Danh sách từ bỏ soát lỗi
             </label>
             <span class="text-xs text-slate-500"
               >Tự động cập nhật & lưu kết quả</span
@@ -326,6 +499,49 @@
             class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-slate-200 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-600 transition-colors"
             placeholder="Nhập các từ muốn bỏ qua, cách nhau bằng dấu phẩy, khoảng trắng hoặc xuống dòng (Ví dụ: tên nhân vật, địa danh lạ...)"
           ></textarea>
+
+          <!-- English Filter Checkbox -->
+          <div
+            class="flex items-center gap-2 mt-4 pt-3 border-t border-slate-800"
+          >
+            <input
+              type="checkbox"
+              id="eng-filter-checkbox"
+              class="w-4 h-4 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+            />
+            <label
+              for="eng-filter-checkbox"
+              class="text-sm font-medium text-slate-300 cursor-pointer select-none flex items-center gap-2"
+            >
+              Kích hoạt từ tiếng Anh
+              <span
+                id="eng-loading"
+                class="hidden text-xs text-yellow-500 animate-pulse flex items-center gap-1"
+              >
+                <svg
+                  class="animate-spin h-3 w-3"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Đang tải...
+              </span>
+            </label>
+          </div>
         </div>
 
         <!-- Stats Cards -->
@@ -528,16 +744,9 @@
     </main>
 
     <footer
-      class="mt-auto py-6 text-center text-slate-600 text-sm border-t border-slate-900 bg-slate-950"
+      class="mt-auto py-6 text-center text-white text-sm border-t border-slate-900 bg-slate-950"
     >
-      <p>
-        <a
-          href="https://github.com/duyet/vietnamese-wordlist"
-          target="_blank"
-          class="hover:text-blue-400 underline transition-colors"
-          >Sử dụng từ điển Viet74K</a
-        >
-      </p>
+      <p class="font-medium">-Akhademik 2025-</p>
     </footer>
 
     <!-- Templates -->
@@ -548,16 +757,18 @@
         <button
           class="select-btn flex-grow text-left px-4 py-3 flex items-center justify-between focus:outline-none rounded-l-lg border-r border-slate-800/50 group-hover:border-slate-700"
         >
-          <div class="overflow-hidden">
+          <div class="overflow-hidden w-full">
             <div class="flex items-center gap-2">
+              <!-- Dot will be injected here -->
               <span
-                class="font-bold text-red-400 error-word text-lg truncate font-serif"
+                class="status-dot w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-[0_0_5px_rgba(0,0,0,0.5)]"
               ></span>
-              <div class="flex gap-1 error-type-dots">
-                <!-- Dots will be injected here -->
-              </div>
+              <!-- Changed text color to white/slate-200 for better contrast against dot -->
               <span
-                class="bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold px-2 py-0.5 rounded-full error-count flex-shrink-0"
+                class="font-bold text-slate-200 error-word text-lg truncate font-serif"
+              ></span>
+              <span
+                class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full error-count flex-shrink-0"
               ></span>
             </div>
             <div
@@ -586,8 +797,13 @@
         </button>
       </div>
     </template>
+
     <script>
       // --- CONFIGURATION ---
+      const ENG_DICT_URL = "final_en_words.txt";
+      const DICT_URL = "final_vn_words.txt";
+      const STORAGE_KEY = "vn_spell_whitelist";
+      const SETTINGS_KEY = "vn_spell_settings";
 
       const IGNORED_WORDS = new Set([
         "email",
@@ -732,9 +948,6 @@
         "sim",
       ]);
 
-      // Specific mapping for forced tone placement (Old style -> New style preference)
-      // User wants: "khóa" (correct), "khoá" (wrong)
-      // We enforce tone on the first vowel for: oa, oe (where applicable)
       const TONE_MISPLACEMENT = {
         oá: "óa",
         oà: "òa",
@@ -747,10 +960,6 @@
         oẽ: "õe",
         oẹ: "ọe",
       };
-
-      let NAMES_WHITELIST = new Set();
-      let LOCAL_WHITELIST = new Set();
-      let DYNAMIC_IGNORED_WORDS = new Set();
 
       // DOM Elements
       const fileInput = document.getElementById("file-input");
@@ -771,12 +980,17 @@
         "meta-cover-placeholder"
       );
 
-      // New Element: Whitelist Input
+      // Whitelist, Reset & Export, Eng Filter
       const whitelistInput = document.getElementById("whitelist-input");
-      const ignoreForeignWordsCheckbox = document.getElementById("ignore-foreign-words-checkbox");
-
-      // New Element: Reset Button
       const resetBtn = document.getElementById("reset-btn");
+      const exportBtn = document.getElementById("export-btn");
+      const engFilterCheckbox = document.getElementById("eng-filter-checkbox");
+      const engLoading = document.getElementById("eng-loading");
+
+      // Settings UI
+      const settingsBtn = document.getElementById("settings-btn");
+      const settingsModal = document.getElementById("settings-modal");
+      const closeSettingsBtn = document.getElementById("close-settings-btn");
 
       // Dictionary Status Elements
       const dictStatus = document.getElementById("dict-status");
@@ -795,17 +1009,29 @@
       const statGroups = document.getElementById("stat-groups");
 
       // State
-      let allDetectedErrors = []; // Store raw results before filtering
+      let allDetectedErrors = [];
+      let currentFilteredErrors = [];
       let currentGroup = null;
       let currentInstanceIndex = 0;
-      let validSyllables = new Set(); // Stores our dictionary
+      let validSyllables = new Set();
+      let engWords = new Set();
       let isDictLoaded = false;
-      let currentCoverUrl = null; // Store cover blob URL to revoke later
-      let currentActiveButton = null; // Store reference to the active error item button
+      let isEngDictLoaded = false;
+      let isEngFilterEnabled = false;
+      let isEngDictLoading = false;
+      let currentCoverUrl = null;
+      let currentBookTitle = "";
+      let loadedTextContent = []; // Fix: Store parsed text globally
+
+      // Settings State
+      let checkSettings = {
+        dictionary: true,
+        uppercase: true,
+        tone: true,
+        foreign: true,
+      };
 
       // --- PERSISTENCE ---
-      const STORAGE_KEY = "vn_spell_whitelist";
-
       function loadWhitelist() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
@@ -817,96 +1043,128 @@
         localStorage.setItem(STORAGE_KEY, whitelistInput.value);
       }
 
-      // --- DICTIONARY AND WHITELIST LOADING ---
-      const DICT_URL = "vn-dict.txt";
-      const WHITELIST_URL = "whitelist.txt";
-      const NAMES_URL = "names.txt";
+      function loadSettings() {
+        const saved = localStorage.getItem(SETTINGS_KEY);
+        if (saved) {
+          checkSettings = JSON.parse(saved);
+          document.getElementById("set-dict").checked =
+            checkSettings.dictionary;
+          document.getElementById("set-case").checked = checkSettings.uppercase;
+          document.getElementById("set-tone").checked = checkSettings.tone;
+          document.getElementById("set-struct").checked = checkSettings.foreign;
+        }
+      }
 
-      async function loadDictionary() {
+      function saveSettings() {
+        checkSettings.dictionary = document.getElementById("set-dict").checked;
+        checkSettings.uppercase = document.getElementById("set-case").checked;
+        checkSettings.tone = document.getElementById("set-tone").checked;
+        checkSettings.foreign = document.getElementById("set-struct").checked;
+
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(checkSettings));
+
+        // Fix: Re-analyze immediately if text is loaded
+        if (loadedTextContent.length > 0) {
+          analyzeText(loadedTextContent);
+        }
+      }
+
+      // Define isY and isFrontVowel GLOBALLY to avoid ReferenceError
+      const wordRegex = /[\p{L}\p{M}]+/gu;
+
+      const isFrontVowel = (c) => {
+        if (!c) return false;
+        const norm = c
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase();
+        return ["i", "e"].includes(norm) || norm === "ê";
+      };
+      const isY = (c) =>
+        c &&
+        c
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "") === "y";
+
+      // --- DICTIONARY LOADING ---
+      async function loadDictionaries() {
         try {
           dictStatus.classList.remove("hidden");
-          dictText.innerText = "Đang tải từ điển cục bộ...";
+          dictText.innerText = "Đang tải dữ liệu...";
 
-          const response = await fetch(DICT_URL);
-          if (!response.ok) throw new Error(`Fetch failed for ${DICT_URL}`);
+          const [vnRes, enRes] = await Promise.all([
+            fetch(DICT_URL),
+            fetch(ENG_DICT_URL),
+          ]);
 
-          const text = await response.text();
-          const lines = text.split("\n");
-          lines.forEach((line) => {
-            const cleanLine = line.trim().toLowerCase().normalize("NFC");
-            if (cleanLine) {
-              const parts = cleanLine.split(/\s+/);
-              parts.forEach((p) => validSyllables.add(p));
-            }
-          });
+                        if (vnRes.ok) {
+                          const text = await vnRes.text();
+                          text.split(/\r?\n/).forEach((w) => {
+                            const cleanW = w.trim().toLowerCase().normalize("NFC");
+                            if (cleanW) {
+                              const parts = cleanW.split(/\s+/);
+                              parts.forEach((p) => validSyllables.add(p));
+                            }
+                          });            const extras = [
+              "kỹ",
+              "mỹ",
+              "kì",
+              "lí",
+              "qui",
+              "có",
+              "hắn",
+              "y",
+              "gã",
+              "thị",
+              "nó",
+              "ta",
+              "ngươi",
+              "chư",
+              "mỗ",
+              "tại",
+              "bị",
+              "bởi",
+              "chăng",
+            ];
+            extras.forEach((w) => validSyllables.add(w.normalize("NFC")));
+            isDictLoaded = true;
+          }
 
-          isDictLoaded = true;
+          if (enRes.ok) {
+            const text = await enRes.text();
+            text.split(/\r?\n/).forEach((w) => {
+              const cleanW = w.trim().toLowerCase();
+              if (cleanW) engWords.add(cleanW);
+            });
+            isEngDictLoaded = true;
+          }
+
           dictDot.classList.remove("bg-yellow-500", "animate-pulse");
-          dictDot.classList.add("bg-green-500");
-          dictText.innerText = `Đã tải từ điển (${validSyllables.size.toLocaleString()} từ)`;
-          console.log(`Đã tải từ điển: ${validSyllables.size} âm tiết`);
+          if (isDictLoaded) {
+            dictDot.classList.add("bg-green-500");
+            dictText.innerHTML = `
+                        <div class="flex flex-col items-start leading-snug">
+                            <span>VN: ${validSyllables.size.toLocaleString()} từ</span>
+                            <span>EN: ${engWords.size.toLocaleString()} từ</span>
+                        </div>
+                    `;
+          } else {
+            dictDot.classList.add("bg-red-500");
+            dictText.innerText = "Lỗi tải dữ liệu";
+          }
         } catch (err) {
-          console.warn("Tải từ điển thất bại, sử dụng quy tắc dự phòng:", err);
+          console.error("Critical error loading dictionaries:", err);
           dictDot.classList.remove("bg-yellow-500", "animate-pulse");
           dictDot.classList.add("bg-red-500");
-          dictText.innerText = "Lỗi tải từ điển (Dùng quy tắc cũ)";
+          dictText.innerText = "Lỗi kết nối";
         }
       }
 
-      async function loadIgnoreLists() {
-        const urls = [
-          { url: WHITELIST_URL, set: LOCAL_WHITELIST },
-          { url: NAMES_URL, set: NAMES_WHITELIST },
-        ];
+      loadDictionaries();
+      loadWhitelist();
+      loadSettings();
 
-        for (const { url, set } of urls) {
-          try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Fetch failed for ${url}`);
-            const text = await response.text();
-            const lines = text.split("\n");
-            let count = 0;
-            lines.forEach((line) => {
-              const cleanLine = line.trim().toLowerCase().normalize("NFC");
-              if (cleanLine) {
-                set.add(cleanLine);
-                count++;
-              }
-            });
-            console.log(`Đã tải ${count} từ từ ${url}`);
-          } catch (err) {
-            console.warn(`Tải danh sách bỏ qua (${url}) thất bại:`, err);
-          }
-        }
-      }
-      
-      function updateIgnoredWords() {
-        DYNAMIC_IGNORED_WORDS = new Set(); // Clear and re-populate dynamic whitelist
-        const rawInput = whitelistInput.value;
-        if (rawInput) {
-          const tokens = rawInput
-            .split(/[\n,\t]+/)
-            .map((t) => t.trim().toLowerCase().normalize("NFC"))
-            .filter((t) => t.length > 0);
-          tokens.forEach((t) => DYNAMIC_IGNORED_WORDS.add(t));
-        }
-
-        LOCAL_WHITELIST.forEach(word => DYNAMIC_IGNORED_WORDS.add(word)); // Always add whitelist.txt
-        if (ignoreForeignWordsCheckbox.checked) {
-          NAMES_WHITELIST.forEach(word => DYNAMIC_IGNORED_WORDS.add(word)); // Only add names.txt if checked
-        }
-        
-        filterAndRenderErrors();
-      }
-
-      // Trigger loads on startup
-      loadWhitelist(); // for localStorage
-      Promise.all([loadDictionary(), loadIgnoreLists()]).then(() => {
-        console.log("Hoàn tất tải từ điển và danh sách bỏ qua.");
-        updateIgnoredWords();
-      });
-
-      // Setup Event Listeners
       uploadSection.addEventListener("click", () => fileInput.click());
       uploadSection.addEventListener("dragover", (e) => {
         e.preventDefault();
@@ -918,63 +1176,151 @@
       uploadSection.addEventListener("drop", (e) => {
         e.preventDefault();
         uploadSection.classList.remove("border-blue-500", "bg-slate-800");
-        if (e.dataTransfer.files.length) {
-          handleFile(e.dataTransfer.files[0]);
-        }
+        if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
       });
       fileInput.addEventListener("change", (e) => {
         if (e.target.files.length) handleFile(e.target.files[0]);
       });
 
       resetBtn.addEventListener("click", resetApp);
+      exportBtn.addEventListener("click", exportErrors);
 
-      // Dynamic Whitelist Listener with Persistence
+      settingsBtn.addEventListener("click", () =>
+        settingsModal.classList.remove("hidden")
+      );
+      closeSettingsBtn.addEventListener("click", () =>
+        settingsModal.classList.add("hidden")
+      );
+
+      ["set-dict", "set-case", "set-tone", "set-struct"].forEach((id) => {
+        document.getElementById(id).addEventListener("change", saveSettings);
+      });
+
       whitelistInput.addEventListener("input", () => {
         saveWhitelist();
-        updateIgnoredWords();
+        filterAndRenderErrors();
       });
-      
-      ignoreForeignWordsCheckbox.addEventListener("change", updateIgnoredWords);
+      engFilterCheckbox.addEventListener("change", (e) => {
+        isEngFilterEnabled = e.target.checked;
+        filterAndRenderErrors();
+      });
 
-      // Main Logic
+      document.addEventListener("keydown", (e) => {
+        if (
+          document.activeElement === whitelistInput ||
+          !settingsModal.classList.contains("hidden")
+        )
+          return;
+        if (currentFilteredErrors.length === 0) return;
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          navigateErrors(1);
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          navigateErrors(-1);
+        } else if (e.key === "Delete" || e.key.toLowerCase() === "i") {
+          if (currentGroup) {
+            e.preventDefault();
+            quickIgnore(currentGroup.word);
+          }
+        }
+      });
+
+      function navigateErrors(direction) {
+        let nextIndex = 0;
+        if (currentGroup) {
+          const currentIndex = currentFilteredErrors.findIndex(
+            (g) => g.id === currentGroup.id
+          );
+          if (currentIndex !== -1) nextIndex = currentIndex + direction;
+        }
+        if (nextIndex < 0) nextIndex = 0;
+        if (nextIndex >= currentFilteredErrors.length)
+          nextIndex = currentFilteredErrors.length - 1;
+        const nextGroup = currentFilteredErrors[nextIndex];
+        if (nextGroup) {
+          selectGroup(nextGroup, null);
+          const listContainer = document.getElementById("error-list");
+          const buttons = listContainer.querySelectorAll(".select-btn");
+          if (buttons[nextIndex]) {
+            buttons[nextIndex].scrollIntoView({
+              block: "nearest",
+              behavior: "smooth",
+            });
+            buttons.forEach((b) => {
+              b.classList.remove(
+                "bg-blue-900/30",
+                "border-blue-700/50",
+                "ring-1",
+                "ring-blue-500/50"
+              );
+              b.classList.add("border-transparent", "border-r");
+            });
+            buttons[nextIndex].classList.add(
+              "bg-blue-900/30",
+              "border-blue-700/50",
+              "ring-1",
+              "ring-blue-500/50"
+            );
+            buttons[nextIndex].classList.remove(
+              "border-transparent",
+              "border-r"
+            );
+          }
+        }
+      }
+
+      btnPrev.addEventListener("click", () => {
+        if (currentGroup && currentInstanceIndex > 0) {
+          currentInstanceIndex--;
+          updateContextView();
+        }
+      });
+      btnNext.addEventListener("click", () => {
+        if (
+          currentGroup &&
+          currentInstanceIndex < currentGroup.contexts.length - 1
+        ) {
+          currentInstanceIndex++;
+          updateContextView();
+        }
+      });
+
       async function handleFile(file) {
         if (!file.name.endsWith(".epub")) {
           alert("Vui lòng chọn file .epub");
           return;
         }
-
+        isEngFilterEnabled = engFilterCheckbox.checked;
         uploadSection.classList.add("hidden");
         resultsSection.classList.add("hidden");
         processingUi.classList.remove("hidden");
         errorList.innerHTML = "";
-        // Don't clear whitelistInput.value here to keep persistence
         contextView.innerHTML =
           '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
         contextNav.classList.add("hidden");
         metaTitle.innerText = "Đang tải...";
         metaAuthor.innerText = "Đang tải...";
-
-        // Reset cover
-        metaCover.src = "";
-        metaCover.classList.add("hidden");
-        metaCoverPlaceholder.classList.remove("hidden");
         if (currentCoverUrl) {
           URL.revokeObjectURL(currentCoverUrl);
           currentCoverUrl = null;
         }
+        metaCover.src = "";
+        metaCover.classList.add("hidden");
+        metaCoverPlaceholder.classList.remove("hidden");
 
         try {
           updateProgress(10, "Đang giải nén tệp...");
           const zip = await JSZip.loadAsync(file);
-
           updateProgress(30, "Đang đọc cấu trúc sách...");
           const { fullTextBlocks, title, author, coverUrl } = await parseEpub(
             zip
           );
 
-          // Update UI with Metadata
+          loadedTextContent = fullTextBlocks; // Fix: Save text globally
           metaTitle.innerText = title;
           metaAuthor.innerText = author;
+          currentBookTitle = title;
 
           if (coverUrl) {
             currentCoverUrl = coverUrl;
@@ -983,17 +1329,14 @@
             metaCoverPlaceholder.classList.add("hidden");
           }
 
-          updateProgress(
-            60,
-            "Đang phân tích với " + (isDictLoaded ? "từ điển..." : "quy tắc...")
-          );
-
+          updateProgress(60, "Đang phân tích...");
           requestAnimationFrame(() => {
             setTimeout(() => {
               analyzeText(fullTextBlocks);
               processingUi.classList.add("hidden");
               resultsSection.classList.remove("hidden");
               resetBtn.classList.remove("hidden");
+              exportBtn.classList.remove("hidden");
             }, 100);
           });
         } catch (err) {
@@ -1007,9 +1350,9 @@
       function resetApp() {
         resultsSection.classList.add("hidden");
         resetBtn.classList.add("hidden");
+        exportBtn.classList.add("hidden");
         uploadSection.classList.remove("hidden");
         fileInput.value = "";
-
         statTotalWords.innerText = "0";
         statErrors.innerText = "0";
         statGroups.innerText = "0";
@@ -1019,8 +1362,6 @@
         contextNav.classList.add("hidden");
         metaTitle.innerText = "";
         metaAuthor.innerText = "";
-
-        // Reset cover
         metaCover.src = "";
         metaCover.classList.add("hidden");
         metaCoverPlaceholder.classList.remove("hidden");
@@ -1028,11 +1369,53 @@
           URL.revokeObjectURL(currentCoverUrl);
           currentCoverUrl = null;
         }
-
         allDetectedErrors = [];
+        currentFilteredErrors = [];
         currentGroup = null;
         currentInstanceIndex = 0;
-        currentActiveButton = null;
+        currentBookTitle = "";
+        loadedTextContent = [];
+      }
+
+      function exportErrors() {
+        const rawInput = whitelistInput.value;
+        const userWhitelist = new Set();
+        if (rawInput) {
+          const tokens = rawInput
+            .split(/[\n,\t]+/)
+            .map((t) => t.trim().toLowerCase())
+            .filter((t) => t.length > 0);
+          tokens.forEach((t) => userWhitelist.add(t));
+        }
+        let filteredErrors = allDetectedErrors.filter(
+          (group) => !userWhitelist.has(group.word.toLowerCase())
+        );
+        if (isEngFilterEnabled && isEngDictLoaded) {
+          filteredErrors = filteredErrors.filter(
+            (group) => !engWords.has(group.word.toLowerCase())
+          );
+        }
+        if (filteredErrors.length === 0) {
+          alert("Không có lỗi nào để xuất!");
+          return;
+        }
+        const content = filteredErrors.map((g) => `${g.word} ==>`).join("\n\n");
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        let fileName = "loi-khong-ro-ten.txt";
+        if (currentBookTitle) {
+          const safeTitle = currentBookTitle
+            .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
+            .trim();
+          fileName = `loi-${safeTitle}.txt`;
+        }
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       }
 
       function updateProgress(percent, text) {
@@ -1053,29 +1436,23 @@
         const rootPath = containerXml
           .querySelector("rootfile")
           .getAttribute("full-path");
-
         const opfData = await zip.file(rootPath).async("string");
         const opfXml = parser.parseFromString(opfData, "application/xml");
-
         const opfDir = rootPath.substring(0, rootPath.lastIndexOf("/"));
         const resolvePath = (p) => (opfDir ? opfDir + "/" + p : p);
 
-        // Extract Metadata
         const title =
           opfXml.getElementsByTagName("dc:title")[0]?.textContent ||
           opfXml.querySelector("title")?.textContent ||
           "Không rõ tên sách";
-
         const author =
           opfXml.getElementsByTagName("dc:creator")[0]?.textContent ||
           opfXml.querySelector("creator")?.textContent ||
           "Không rõ tác giả";
 
-        // Extract Cover
         let coverUrl = null;
         try {
           let coverHref = null;
-          // Method 1: meta name="cover"
           const coverMeta = opfXml.querySelector('meta[name="cover"]');
           if (coverMeta) {
             const coverId = coverMeta.getAttribute("content");
@@ -1084,14 +1461,12 @@
             );
             if (coverItem) coverHref = coverItem.getAttribute("href");
           }
-          // Method 2: item properties="cover-image"
           if (!coverHref) {
             const coverItem = opfXml.querySelector(
               'manifest item[properties*="cover-image"]'
             );
             if (coverItem) coverHref = coverItem.getAttribute("href");
           }
-
           if (coverHref) {
             const fullCoverPath = resolvePath(coverHref);
             const coverFile = zip.file(fullCoverPath);
@@ -1100,9 +1475,7 @@
               coverUrl = URL.createObjectURL(coverBlob);
             }
           }
-        } catch (e) {
-          console.warn("Không thể trích xuất bìa sách:", e);
-        }
+        } catch (e) {}
 
         const spine = Array.from(opfXml.querySelectorAll("spine itemref")).map(
           (ref) => ref.getAttribute("idref")
@@ -1114,12 +1487,10 @@
 
         let fullTextBlocks = [];
         let totalItems = spine.length;
-
         for (let i = 0; i < totalItems; i++) {
           const id = spine[i];
           const href = manifest[id];
           const fullPath = resolvePath(href);
-
           if (zip.file(fullPath)) {
             const htmlContent = await zip.file(fullPath).async("string");
             const doc = parser.parseFromString(htmlContent, "text/html");
@@ -1139,41 +1510,53 @@
         return { fullTextBlocks, title, author, coverUrl };
       }
 
-      // Helper function to map error types to colors
-      function getColorForErrorType(errorType) {
-        switch (errorType) {
-          case "Sai vị trí dấu (Chuẩn cũ/mới)":
-            return "bg-yellow-400"; // Yellow for tone placement errors (vibrant)
-          case "Không có trong từ điển":
-            return "bg-indigo-500"; // Indigo for unknown words (distinct from blue and red)
-          case "Lỗi gõ máy (Typo)":
-            return "bg-purple-500"; // Purple (keep as is, good contrast)
-          case "Từ lạ / Tiếng nước ngoài":
-            return "bg-teal-500"; // Teal for foreign words (distinct from other blues/greens)
-          case "Lỗi viết hoa":
-            return "bg-green-500"; // Green for capitalization errors (distinct)
-          default:
-            return "bg-slate-500"; // Default color
+      function getErrorHighlights(type) {
+        let style = {
+          dot: "bg-sky-500",
+          text: "text-sky-400",
+          bg: "bg-sky-500/20",
+          border: "border-sky-500",
+        };
+        if (!type) return style;
+        if (
+          type.startsWith("Sai quy tắc") ||
+          type.includes("Lỗi gõ máy") ||
+          type.includes("Lỗi viết hoa")
+        ) {
+          style = {
+            dot: "bg-red-500",
+            text: "text-red-400",
+            bg: "bg-red-500/20",
+            border: "border-red-500",
+          };
+        } else if (type.includes("Sai vị trí dấu")) {
+          style = {
+            dot: "bg-orange-500",
+            text: "text-orange-400",
+            bg: "bg-orange-500/20",
+            border: "border-orange-500",
+          };
+        } else if (type.includes("Từ lạ") || type.includes("ký tự lạ")) {
+          style = {
+            dot: "bg-pink-500",
+            text: "text-pink-400",
+            bg: "bg-pink-500/20",
+            border: "border-pink-500",
+          };
+        } else if (type.includes("Không có trong từ điển")) {
+          style = {
+            dot: "bg-sky-500",
+            text: "text-sky-400",
+            bg: "bg-sky-500/20",
+            border: "border-sky-500",
+          };
         }
-      }      function analyzeText(paragraphs) {
+        return style;
+      }
+
+      function analyzeText(paragraphs) {
         let totalWords = 0;
         const errorMap = new Map();
-        const wordRegex = /[\p{L}\p{M}]+/gu;
-
-        const isFrontVowel = (c) => {
-          if (!c) return false;
-          const norm = c
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase();
-          return ["i", "e"].includes(norm) || norm === "ê";
-        };
-        const isY = (c) =>
-          c &&
-          c
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "") === "y";
 
         paragraphs.forEach((para) => {
           let match;
@@ -1182,92 +1565,107 @@
             totalWords++;
             if (word.length < 2) continue;
 
-            const lower = word.toLowerCase().normalize("NFC"); // Use lower + NFC from hint.htm
-            const isCapitalized = /^\p{Lu}/u.test(word); // Check if the first character is an uppercase Unicode letter
+            const lower = word.toLowerCase().normalize("NFC");
+            const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word);
 
-            if (IGNORED_WORDS.has(lower) || DYNAMIC_IGNORED_WORDS.has(lower)) continue; // Use the global IGNORED_WORDS and DYNAMIC_IGNORED_WORDS
+            if (IGNORED_WORDS.has(lower)) continue;
 
-            const errorTypes = []; // Use an array for error types
+            let errorType = null;
 
-            // 1. Check Tone Placement (Strict Rule first)
-            for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
-              // FIX: Only match if it's at the END of the word (Open Syllable rule for oa, oe)
-              if (lower.endsWith(wrong)) {
-                errorTypes.push("Sai vị trí dấu (Chuẩn cũ/mới)");
-                break;
+            if (checkSettings.uppercase) {
+              const upperCount = Array.from(word).filter(
+                (c) => c.toUpperCase() === c && c.toLowerCase() !== c
+              ).length;
+              if (upperCount >= 2) errorType = "Lỗi viết hoa (Nhiều ký tự hoa)";
+            }
+
+            if (!errorType && checkSettings.tone) {
+              for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
+                // FIX: Only match if it's at the END of the word (Open Syllable rule for oa, oe)
+                if (lower.endsWith(wrong)) {
+                  errorType = "Sai vị trí dấu (Chuẩn cũ/mới)";
+                  break;
+                }
               }
             }
 
-            // 2. Check for incorrect capitalization: more than one uppercase letter in the word
-            if ((word.match(/\p{Lu}/gu) || []).length > 1) { // Use Unicode property escape for all uppercase letters
-                errorTypes.push("Lỗi viết hoa");
-            }
-
-            // 3. Dictionary Check
-            if (errorTypes.length === 0 && isDictLoaded) { // Only run if no tone placement error
+            if (!errorType && isDictLoaded && checkSettings.dictionary) {
               if (!validSyllables.has(lower)) {
-                if (!isCapitalized) { // Keep this check: Only flag if not capitalized (hint.htm logic)
+                if (!isCapitalized) {
                   if (/[fjwz]/.test(lower)) {
-                    errorTypes.push("Từ lạ / Tiếng nước ngoài");
+                    if (checkSettings.foreign)
+                      errorType = "Từ lạ / Tiếng nước ngoài";
+                    else errorType = "Không có trong từ điển";
                   } else if (/(aa|ee|oo|dd|js|kx|wt)$/.test(lower)) {
-                    errorTypes.push("Lỗi gõ máy (Typo)");
+                    errorType = "Lỗi gõ máy (Typo)";
                   } else {
-                    errorTypes.push("Không có trong từ điển");
+                    errorType = "Không có trong từ điển";
                   }
                 }
               }
-            } else if (errorTypes.length === 0) { // Fallback heuristics if dictionary not loaded and no tone placement error
-              if (/[fjwz]/.test(lower) && !isCapitalized) { // Keep this check: Only flag if not capitalized
-                errorTypes.push("Chứa ký tự lạ (f, j, w, z)");
-              } else if (
+            } else if (!errorType && checkSettings.foreign) {
+              if (/[fjwz]/.test(lower) && !isCapitalized)
+                errorType = "Chứa ký tự lạ (f, j, w, z)";
+            }
+
+            if (!errorType && checkSettings.foreign) {
+              if (
                 lower.startsWith("ngh") &&
                 !isFrontVowel(lower[3]) &&
                 !isCapitalized
               )
-                errorTypes.push("Sai quy tắc ngh");
+                errorType = "Sai quy tắc ngh";
               else if (
                 lower.startsWith("ng") &&
                 isFrontVowel(lower[2]) &&
                 !isCapitalized
               )
-                errorTypes.push("Sai quy tắc ng");
+                errorType = "Sai quy tắc ng";
               else if (
                 lower.startsWith("gh") &&
                 !isFrontVowel(lower[2]) &&
                 !isCapitalized
               )
-                errorTypes.push("Sai quy tắc gh");
+                errorType = "Sai quy tắc gh";
+              // Modified G rule:
               else if (
                 lower.startsWith("g") &&
-                isFrontVowel(lower[1]) &&
-                lower.substring(0, 2) !== "gi" &&
+                !lower.startsWith("gh") &&
+                !lower.startsWith("gi") &&
                 !isCapitalized
-              )
-                errorTypes.push("Sai quy tắc g");
-              else if (
+              ) {
+                const c = lower[1];
+                if (c) {
+                  const norm = c
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .toLowerCase();
+                  if (["e", "ê"].includes(norm)) errorType = "Sai quy tắc g";
+                }
+              } else if (
                 lower.startsWith("k") &&
                 !lower.startsWith("kh") &&
                 !isFrontVowel(lower[1]) &&
                 !isY(lower[1]) &&
                 !isCapitalized
               )
-                errorTypes.push("Sai quy tắc k");
+                errorType = "Sai quy tắc k";
               else if (
                 lower.startsWith("c") &&
                 !lower.startsWith("ch") &&
                 (isFrontVowel(lower[1]) || isY(lower[1])) &&
                 !isCapitalized
               )
-                errorTypes.push("Sai quy tắc c");
+                errorType = "Sai quy tắc c";
             }
 
-            if (errorTypes.length > 0) {
-              const key = lower + "::" + errorTypes.join('::'); // Group by word and all error types
+            if (errorType) {
+              const key = lower + "::" + errorType;
               if (!errorMap.has(key)) {
                 errorMap.set(key, {
                   id: key,
                   word: word,
-                  types: errorTypes, // Store array of types
+                  type: errorType,
                   contexts: [],
                 });
               }
@@ -1282,14 +1680,29 @@
         allDetectedErrors = Array.from(errorMap.values()).sort(
           (a, b) => b.contexts.length - a.contexts.length
         );
+        currentFilteredErrors = allDetectedErrors;
         filterAndRenderErrors();
       }
 
       function filterAndRenderErrors() {
-        const filteredErrors = allDetectedErrors.filter((group) => {
-          // Check against global IGNORED_WORDS AND dynamically built DYNAMIC_IGNORED_WORDS
-          return !IGNORED_WORDS.has(group.word.toLowerCase()) && !DYNAMIC_IGNORED_WORDS.has(group.word.toLowerCase());
-        });
+        const rawInput = whitelistInput.value;
+        const userWhitelist = new Set();
+        if (rawInput) {
+          const tokens = rawInput
+            .split(/[\n,\t]+/)
+            .map((t) => t.trim().toLowerCase())
+            .filter((t) => t.length > 0);
+          tokens.forEach((t) => userWhitelist.add(t));
+        }
+        let filteredErrors = allDetectedErrors.filter(
+          (group) => !userWhitelist.has(group.word.toLowerCase())
+        );
+        if (isEngFilterEnabled && isEngDictLoaded) {
+          filteredErrors = filteredErrors.filter(
+            (group) => !engWords.has(group.word.toLowerCase())
+          );
+        }
+        currentFilteredErrors = filteredErrors;
         const totalErrors = filteredErrors.reduce(
           (acc, curr) => acc + curr.contexts.length,
           0
@@ -1299,21 +1712,62 @@
         renderErrors(filteredErrors);
       }
 
-      // Quick Ignore Function
       function quickIgnore(word) {
+        // 1. Capture current index
+        let targetIndex = -1;
+        if (currentGroup) {
+          targetIndex = currentFilteredErrors.findIndex(
+            (g) => g.id === currentGroup.id
+          );
+        }
+
+        // 2. Add to whitelist
         const currentVal = whitelistInput.value;
         const separator = currentVal.trim() ? ", " : "";
-        // Add word to input
         whitelistInput.value = currentVal + separator + word;
-
-        // Trigger save and filter logic
         saveWhitelist();
-        updateIgnoredWords(); // Ensure IGNORED_WORDS is rebuilt and then filtering happens
 
-        // Clear current context if the ignored word was selected
-        if (currentGroup && currentGroup.word === word) {
+        // 3. Re-filter
+        filterAndRenderErrors();
+
+        // 4. Restore selection to the same index (or closest)
+        if (targetIndex !== -1 && currentFilteredErrors.length > 0) {
+          // Ensure index is within bounds
+          if (targetIndex >= currentFilteredErrors.length) {
+            targetIndex = currentFilteredErrors.length - 1;
+          }
+
+          const nextGroup = currentFilteredErrors[targetIndex];
+
+          // Select data
+          selectGroup(nextGroup, null);
+
+          // Select visual (wait for DOM update)
+          setTimeout(() => {
+            const listContainer = document.getElementById("error-list");
+            const buttons = listContainer.querySelectorAll(".select-btn");
+            if (buttons[targetIndex]) {
+              buttons[targetIndex].scrollIntoView({
+                block: "nearest",
+                behavior: "smooth",
+              });
+              // Add style manually since selectGroup was called with null
+              buttons[targetIndex].classList.add(
+                "bg-blue-900/30",
+                "border-blue-700/50",
+                "ring-1",
+                "ring-blue-500/50"
+              );
+              buttons[targetIndex].classList.remove(
+                "border-transparent",
+                "border-r"
+              );
+            }
+          }, 0);
+        } else if (currentFilteredErrors.length === 0) {
+          // Clear view if list empty
           contextView.innerHTML =
-            '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Đã bỏ qua</p><p class="text-sm opacity-60">Chọn mục khác từ danh sách</p></div>';
+            '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
           contextNav.classList.add("hidden");
           currentGroup = null;
         }
@@ -1340,21 +1794,15 @@
       }
 
       function findSuggestions(wrongWord) {
-        // Special check for Tone Misplacement
         const lowerWrong = wrongWord.toLowerCase();
         for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
           if (lowerWrong.includes(wrong)) {
-            // Replace the wrong part with right part
-            // Use regex to replace all occurrences if needed, but usually once per syllable
-            const suggested = lowerWrong.replace(wrong, right);
-            return [suggested]; // Priority return
+            return [lowerWrong.replace(wrong, right)];
           }
         }
-
         if (!isDictLoaded) return [];
         const suggestions = [];
         const maxDistance = wrongWord.length < 4 ? 1 : 2;
-
         for (const word of validSyllables) {
           if (Math.abs(word.length - lowerWrong.length) > maxDistance) continue;
           const dist = levenshteinDistance(lowerWrong, word);
@@ -1366,25 +1814,40 @@
           .map((s) => s.word);
       }
 
-      function quickLookup(word) {
-        const url = `https://vi.wiktionary.org/wiki/${encodeURIComponent(word)}`;
-        window.open(url, "_blank");
-      }
-
       function getContext(text, index, length) {
         const start = Math.max(0, index - 60);
         const end = Math.min(text.length, index + length + 60);
-        let prefix = escapeHtml(text.substring(start, index));
-        let suffix = escapeHtml(text.substring(index + length, end));
-        let target = escapeHtml(text.substr(index, length));
+        let prefix = text.substring(start, index);
+        let suffix = text.substring(index + length, end);
         if (start > 0) prefix = "..." + prefix;
         if (end < text.length) suffix = suffix + "...";
-        return { prefix, target, suffix };
+        return { prefix, target: text.substr(index, length), suffix };
+      }
+
+      function copyToClipboard(text) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand("copy");
+          const notification = document.createElement("div");
+          notification.className =
+            "fixed bottom-6 right-6 bg-slate-800 text-green-400 border border-slate-700 px-4 py-3 rounded-lg shadow-xl z-50 text-sm font-medium animate-fadeIn flex items-center gap-2";
+          notification.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span>Đã copy: "${text}"</span>`;
+          document.body.appendChild(notification);
+          setTimeout(() => {
+            notification.style.opacity = "0";
+            notification.style.transition = "opacity 0.5s ease";
+            setTimeout(() => notification.remove(), 500);
+          }, 2000);
+        } catch (err) {}
+        document.body.removeChild(textarea);
       }
 
       function renderErrors(groups) {
         errorList.innerHTML = "";
-        currentActiveButton = null;
         if (currentGroup) {
           const stillExists = groups.find((g) => g.id === currentGroup.id);
           if (!stillExists) {
@@ -1400,25 +1863,15 @@
           return;
         }
         const template = document.getElementById("error-item-template");
-        const fragment = document.createDocumentFragment();
         groups.forEach((group) => {
           const clone = template.content.cloneNode(true);
           clone.querySelector(".error-word").innerText = group.word;
-          // Populate colored dots
-          const errorTypeDotsContainer = clone.querySelector(".error-type-dots");
-          group.types.forEach(type => {
-            const dot = document.createElement("span");
-            dot.className = `w-2 h-2 rounded-full ${getColorForErrorType(type)}`;
-            dot.title = type; // Show error type on hover
-            errorTypeDotsContainer.appendChild(dot);
-          });
-          // Display the first error type as text in error-reason
-          clone.querySelector(".error-reason").innerText = group.types[0]; 
+          clone.querySelector(".error-reason").innerText = group.type;
           clone.querySelector(".error-count").innerText = group.contexts.length;
-
-          // Select button
+          const style = getErrorHighlights(group.type);
+          const dot = clone.querySelector(".status-dot");
+          dot.classList.add(style.dot);
           const selectBtn = clone.querySelector(".select-btn");
-
           if (currentGroup && currentGroup.id === group.id) {
             selectBtn.classList.add(
               "bg-blue-900/30",
@@ -1427,53 +1880,46 @@
               "ring-blue-500/50"
             );
             selectBtn.classList.remove("border-transparent", "border-r");
-            currentActiveButton = selectBtn; // Track the active button
           }
-
-          selectBtn.onclick = (e) => selectGroup(group, selectBtn);
-
-          // Ignore button
+          selectBtn.onclick = (e) => {
+            selectGroup(group, selectBtn);
+            copyToClipboard(group.word);
+          };
           const ignoreBtn = clone.querySelector(".ignore-btn");
           ignoreBtn.onclick = (e) => {
-            e.stopPropagation(); // Stop event bubbling
+            e.stopPropagation();
             quickIgnore(group.word);
           };
-
-          fragment.appendChild(clone);
+          errorList.appendChild(clone);
         });
-        errorList.appendChild(fragment);
       }
 
       function selectGroup(group, btnElement) {
         currentGroup = group;
         currentInstanceIndex = 0;
-
-        // Reset styles for previous active item
-        if (currentActiveButton && currentActiveButton !== btnElement) {
-          currentActiveButton.classList.remove(
+        const allItems = document.querySelectorAll("#error-list .select-btn");
+        allItems.forEach((btn) => {
+          btn.classList.remove(
             "bg-blue-900/30",
             "border-blue-700/50",
             "ring-1",
             "ring-blue-500/50"
           );
-          currentActiveButton.classList.add("border-transparent", "border-r");
+          btn.classList.add("border-transparent", "border-r");
+        });
+        if (btnElement) {
+          btnElement.classList.add(
+            "bg-blue-900/30",
+            "border-blue-700/50",
+            "ring-1",
+            "ring-blue-500/50"
+          );
+          btnElement.classList.remove("border-transparent", "border-r");
         }
-
-        // Apply style to current
-        btnElement.classList.add(
-          "bg-blue-900/30",
-          "border-blue-700/50",
-          "ring-1",
-          "ring-blue-500/50"
-        );
-        btnElement.classList.remove("border-transparent", "border-r");
-        currentActiveButton = btnElement;
-
         if (group.contexts.length > 1) contextNav.classList.remove("hidden");
         else contextNav.classList.add("hidden");
         updateContextView();
       }
-
 
       function updateContextView() {
         if (!currentGroup) return;
@@ -1492,43 +1938,15 @@
                        .join("")}
                    </div>`
             : "";
-
-        const reasonHTML = currentGroup.types
-          .map(
-            (type) => `
-              <div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
-                  <span class="w-2 h-2 rounded-full ${getColorForErrorType(type)}"></span>
-                  <span class="text-red-400 font-medium">${type}</span>
-                  ${
-                    type === "Không có trong từ điển"
-                      ? `<span
-                            onclick="event.stopPropagation(); quickLookup('${escapeHtml(currentGroup.word)}')"
-                            class="inline-block align-middle p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-blue-400 cursor-pointer transition-colors"
-                            title="Tra cứu trên Wiktionary"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                clip-rule="evenodd"
-                              />
-                            </svg>
-                          </span>`
-                      : ""
-                  }
-              </div>
-            `
-          )
-          .join("");
-
+        const style = getErrorHighlights(currentGroup.type);
+        const reasonHTML = `<div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
+                    <span class="w-3 h-3 rounded-full ${style.dot} shadow-[0_0_8px_currentColor]"></span>
+                    <span class="text-slate-200 font-medium">${currentGroup.type}</span>
+               </div>`;
         navIndicator.innerText = `${currentInstanceIndex + 1}/${total}`;
         btnPrev.disabled = currentInstanceIndex === 0;
         btnNext.disabled = currentInstanceIndex === total - 1;
+        const wiktionaryLink = `<a href="https://vi.wiktionary.org/wiki/${currentGroup.word}" target="_blank" class="ml-1 inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors" title="Tra cứu Wiktionary"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></a>`;
         contextView.innerHTML = `
                 <div class="max-w-2xl text-center w-full animate-fadeIn">
                     <div class="flex items-center justify-center gap-2 mb-6">
@@ -1538,11 +1956,13 @@
                     </div>
                     <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative">
                         <div class="text-xl leading-loose text-slate-300 font-serif">
-                            ${escapeHtml(
-                              context.prefix
-                            )}<span class="bg-red-500/20 text-red-400 px-1 py-0.5 rounded border-b-2 border-red-500 font-bold mx-0.5 shadow-[0_0_15px_rgba(239,68,68,0.2)]">${escapeHtml(
+                            ${escapeHtml(context.prefix)}<span class="${
+          style.bg
+        } ${style.text} px-1 py-0.5 rounded border-b-2 ${
+          style.border
+        } font-bold mx-0.5 shadow-[0_0_15px_rgba(0,0,0,0.2)]">${escapeHtml(
           context.target
-        )}</span>${escapeHtml(context.suffix)}
+        )} ${wiktionaryLink}</span>${escapeHtml(context.suffix)}
                         </div>
                     </div>
                     <div class="mt-8 flex flex-col items-center justify-center gap-4">
@@ -1552,31 +1972,12 @@
                 </div>
             `;
       }
+
       function escapeHtml(text) {
         const div = document.createElement("div");
         div.textContent = text;
         return div.innerHTML;
       }
-
-      const style = document.createElement("style");
-      style.textContent = `
-            @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-            .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
-        `;
-      document.head.appendChild(style);
-      btnPrev.addEventListener("click", () => {
-        if (currentInstanceIndex > 0) {
-          currentInstanceIndex--;
-          updateContextView();
-        }
-      });
-
-      btnNext.addEventListener("click", () => {
-        if (currentGroup && currentInstanceIndex < currentGroup.contexts.length - 1) {
-          currentInstanceIndex++;
-          updateContextView();
-        }
-      });
     </script>
   </body>
 </html>
