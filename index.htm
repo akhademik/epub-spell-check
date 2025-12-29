@@ -85,10 +85,10 @@
           </div>
           <div>
             <h1 class="text-xl font-bold text-slate-100 tracking-tight">
-              Soát Lỗi Chính Tả EPUB
+              Soát Lỗi Chính Tả
             </h1>
             <div class="text-xs text-slate-500 font-medium">
-              v1.34 - Cập nhật dữ liệu từ điển
+              v1.37 - Tối ưu UX
             </div>
           </div>
         </div>
@@ -190,6 +190,40 @@
     <main
       class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full flex flex-col gap-6 relative"
     >
+      <!-- Loading Overlay -->
+      <div
+        id="loading-overlay"
+        class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity"
+      >
+        <div
+          class="bg-slate-900 border border-slate-700 rounded-2xl px-8 py-6 shadow-2xl flex flex-col items-center gap-4"
+        >
+          <svg
+            class="animate-spin h-10 w-10 text-blue-500"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <span class="text-lg font-medium text-slate-200 animate-pulse"
+            >Đang áp dụng...</span
+          >
+        </div>
+      </div>
+
       <!-- Settings Modal (Hidden by default) -->
       <div
         id="settings-modal"
@@ -342,7 +376,7 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-2xl font-bold text-slate-200">Tải lên sách EPUB</h2>
+            <h2 class="text-2xl font-bold text-slate-200">Tải lên sách</h2>
             <p class="text-slate-400 mt-2 text-lg">
               Kéo thả hoặc nhấp để chọn tệp
             </p>
@@ -514,6 +548,32 @@
               class="text-sm font-medium text-slate-300 cursor-pointer select-none flex items-center gap-2"
             >
               Kích hoạt từ tiếng Anh
+              <span
+                id="eng-loading"
+                class="hidden text-xs text-yellow-500 animate-pulse flex items-center gap-1"
+              >
+                <svg
+                  class="animate-spin h-3 w-3"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Đang tải...
+              </span>
             </label>
           </div>
         </div>
@@ -670,7 +730,7 @@
                   >
                     <path
                       fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
                       clip-rule="evenodd"
                     />
                   </svg>
@@ -780,6 +840,149 @@
         "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/vn-dict.txt";
       const STORAGE_KEY = "vn_spell_whitelist";
       const SETTINGS_KEY = "vn_spell_settings";
+
+      const IGNORED_WORDS = new Set([
+        "email",
+        "internet",
+        "web",
+        "website",
+        "video",
+        "clip",
+        "camera",
+        "fan",
+        "comment",
+        "live",
+        "show",
+        "team",
+        "ok",
+        "marketing",
+        "sale",
+        "deal",
+        "ship",
+        "shipper",
+        "order",
+        "check",
+        "boss",
+        "admin",
+        "post",
+        "status",
+        "link",
+        "share",
+        "view",
+        "like",
+        "download",
+        "upload",
+        "app",
+        "game",
+        "menu",
+        "list",
+        "top",
+        "hot",
+        "cool",
+        "pro",
+        "vip",
+        "scan",
+        "smartphone",
+        "laptop",
+        "mouse",
+        "keyboard",
+        "wifi",
+        "pixel",
+        "digital",
+        "design",
+        "designer",
+        "media",
+        "studio",
+        "content",
+        "pr",
+        "mc",
+        "dj",
+        "ceo",
+        "facebook",
+        "google",
+        "youtube",
+        "instagram",
+        "tiktok",
+        "zalo",
+        "shopee",
+        "tiki",
+        "lazada",
+        "grab",
+        "uber",
+        "be",
+        "now",
+        "baemin",
+        "food",
+        "coffee",
+        "cafe",
+        "bar",
+        "club",
+        "pub",
+        "gym",
+        "spa",
+        "yoga",
+        "tennis",
+        "golf",
+        "tour",
+        "guide",
+        "review",
+        "vlog",
+        "blog",
+        "blogger",
+        "streamer",
+        "startup",
+        "bonus",
+        "combo",
+        "concept",
+        "event",
+        "fashion",
+        "style",
+        "trend",
+        "hit",
+        "teen",
+        "idol",
+        "poster",
+        "banner",
+        "logo",
+        "slogan",
+        "background",
+        "format",
+        "version",
+        "update",
+        "level",
+        "skill",
+        "job",
+        "cv",
+        "interview",
+        "deadline",
+        "project",
+        "target",
+        "kpi",
+        "budget",
+        "data",
+        "database",
+        "server",
+        "code",
+        "coder",
+        "bug",
+        "fix",
+        "error",
+        "message",
+        "chat",
+        "inbox",
+        "online",
+        "offline",
+        "free",
+        "voucher",
+        "coupon",
+        "bill",
+        "iphone",
+        "ipad",
+        "android",
+        "ios",
+        "sms",
+        "sim",
+      ]);
 
       const TONE_MISPLACEMENT = {
         oá: "óa",
@@ -897,7 +1100,14 @@
 
         // Fix: Re-analyze immediately if text is loaded
         if (loadedTextContent.length > 0) {
-          analyzeText(loadedTextContent);
+          const overlay = document.getElementById("loading-overlay");
+          overlay.classList.remove("hidden");
+
+          // Yield to UI thread to render the overlay
+          setTimeout(() => {
+            analyzeText(loadedTextContent);
+            overlay.classList.add("hidden");
+          }, 50);
         }
       }
 
@@ -1044,6 +1254,17 @@
       closeSettingsBtn.addEventListener("click", () =>
         settingsModal.classList.add("hidden")
       );
+
+      // Close settings when clicking outside
+      document.addEventListener("click", (e) => {
+        if (
+          !settingsModal.classList.contains("hidden") &&
+          !settingsModal.contains(e.target) &&
+          !settingsBtn.contains(e.target)
+        ) {
+          settingsModal.classList.add("hidden");
+        }
+      });
 
       ["set-dict", "set-case", "set-tone", "set-struct"].forEach((id) => {
         document.getElementById(id).addEventListener("change", saveSettings);
@@ -1407,12 +1628,11 @@
         return style;
       }
 
+      const localWordRegex = /[\p{L}\p{M}]+/gu;
+
       function analyzeText(paragraphs) {
         let totalWords = 0;
         const errorMap = new Map();
-
-        // Use a local regex instance to ensure clean state
-        const localWordRegex = /[\p{L}\p{M}]+/gu;
 
         paragraphs.forEach((para) => {
           let match;
@@ -1424,23 +1644,17 @@
             const lower = word.toLowerCase().normalize("NFC");
             const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word);
 
-            // Check whitelist early (if using built-in whitelist, though deprecated)
-            // But main filtering happens later with user whitelist
+            if (IGNORED_WORDS.has(lower)) continue;
 
             let errorType = null;
 
-            // 0. Check Uppercase Count (New Rule)
             if (checkSettings.uppercase) {
               const upperCount = Array.from(word).filter(
                 (c) => c.toUpperCase() === c && c.toLowerCase() !== c
               ).length;
-
-              if (upperCount >= 2) {
-                errorType = "Lỗi viết hoa (Nhiều ký tự hoa)";
-              }
+              if (upperCount >= 2) errorType = "Lỗi viết hoa (Nhiều ký tự hoa)";
             }
 
-            // 1. Check Tone Placement
             if (!errorType && checkSettings.tone) {
               for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
                 // FIX: Only match if it's at the END of the word (Open Syllable rule for oa, oe)
@@ -1451,7 +1665,6 @@
               }
             }
 
-            // 2. Dictionary Check
             if (!errorType && isDictLoaded && checkSettings.dictionary) {
               if (!validSyllables.has(lower)) {
                 if (!isCapitalized) {
@@ -1467,12 +1680,10 @@
                 }
               }
             } else if (!errorType && checkSettings.foreign) {
-              if (/[fjwz]/.test(lower) && !isCapitalized) {
+              if (/[fjwz]/.test(lower) && !isCapitalized)
                 errorType = "Chứa ký tự lạ (f, j, w, z)";
-              }
             }
 
-            // 3. Structure Check
             if (!errorType && checkSettings.foreign) {
               if (
                 lower.startsWith("ngh") &&
