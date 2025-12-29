@@ -12,11 +12,7 @@
         theme: {
           extend: {
             colors: {
-              slate: {
-                850: "#1e293b",
-                900: "#0f172a",
-                950: "#020617",
-              },
+              slate: { 850: "#1e293b", 900: "#0f172a", 950: "#020617" },
             },
             fontFamily: {
               sans: ['"Noto Sans"', "sans-serif"],
@@ -38,7 +34,6 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -87,12 +82,11 @@
             <h1 class="text-xl font-bold text-slate-100 tracking-tight">
               Soát Lỗi Chính Tả
             </h1>
-            <div class="text-xs text-slate-500 font-medium">v1.42</div>
+            <div class="text-xs text-slate-500 font-medium">v1.44</div>
           </div>
         </div>
 
         <div class="flex items-center gap-3">
-          <!-- Help Button -->
           <button
             id="help-btn"
             class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
@@ -113,12 +107,10 @@
               />
             </svg>
           </button>
-
-          <!-- Settings Button -->
           <button
             id="settings-btn"
             class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-            title="Cấu hình (Settings)"
+            title="Cấu hình"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -141,8 +133,6 @@
               />
             </svg>
           </button>
-
-          <!-- Export Button -->
           <button
             id="export-btn"
             class="hidden px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-emerald-900/20 flex items-center gap-2"
@@ -163,8 +153,6 @@
             </svg>
             <span class="hidden sm:inline">Xuất lỗi</span>
           </button>
-
-          <!-- Reset Button -->
           <button
             id="reset-btn"
             class="hidden px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-blue-900/20 flex items-center gap-2"
@@ -185,8 +173,6 @@
             </svg>
             <span class="hidden sm:inline">Kiểm tra file khác</span>
           </button>
-
-          <!-- Dict Status -->
           <div
             id="dict-status"
             class="hidden md:flex items-center gap-3 text-xs px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 h-auto"
@@ -244,83 +230,6 @@
         </div>
       </div>
 
-      <!-- Export Modal (NEW) -->
-      <div
-        id="export-modal"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn"
-      >
-        <div
-          class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
-        >
-          <div
-            class="flex justify-between items-center p-4 border-b border-slate-800 bg-slate-800/50"
-          >
-            <h3 class="text-lg font-bold text-white">Chọn kiểu xuất lỗi</h3>
-            <button
-              id="close-export-btn"
-              class="text-slate-400 hover:text-white transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-          <div class="p-6 space-y-4">
-            <button
-              id="export-vctve-btn"
-              class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2 group"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 opacity-70 group-hover:opacity-100"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              Xuất cho VCTVEGROUP
-            </button>
-            <button
-              id="export-normal-btn"
-              class="w-full py-3 px-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2 group"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 opacity-70 group-hover:opacity-100"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                />
-              </svg>
-              Xuất thông thường
-            </button>
-          </div>
-        </div>
-      </div>
-
       <!-- Help Modal -->
       <div
         id="help-modal"
@@ -328,6 +237,7 @@
       >
         <div
           class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+          onclick="event.stopPropagation()"
         >
           <div
             class="flex justify-between items-center p-4 border-b border-slate-800 bg-slate-800/50"
@@ -380,7 +290,6 @@
                 </li>
               </ul>
             </div>
-
             <div>
               <h4 class="font-bold text-white mb-1">2. Thao Tác & Phím Tắt</h4>
               <div
@@ -390,41 +299,36 @@
                   <kbd
                     class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
                     >⬆️</kbd
-                  >
-                  <span>Lên trên</span>
+                  ><span>Lên trên</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <kbd
                     class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
                     >⬇️</kbd
-                  >
-                  <span>Xuống dưới</span>
+                  ><span>Xuống dưới</span>
                 </div>
                 <div class="flex items-center gap-2 col-span-2">
                   <kbd
                     class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
                     >Del</kbd
-                  >
-                  <span class="opacity-50">/</span>
-                  <kbd
+                  ><span class="opacity-50">/</span
+                  ><kbd
                     class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
                     >I</kbd
-                  >
-                  <span>Bỏ qua từ (Whitelist)</span>
+                  ><span>Bỏ qua từ (Whitelist)</span>
                 </div>
               </div>
             </div>
-
             <div>
               <h4 class="font-bold text-white mb-1">3. Tính Năng Khác</h4>
               <ul class="list-disc pl-5 space-y-1 marker:text-green-500">
                 <li>
-                  <strong>Whitelist:</strong> Nhập các từ muốn bỏ qua vào ô text
-                  hoặc bấm icon con mắt gạch chéo.
+                  <strong>Whitelist:</strong> Nhập từ bỏ qua vào ô text hoặc bấm
+                  icon con mắt gạch chéo.
                 </li>
                 <li>
-                  <strong>Lọc Tiếng Anh:</strong> Tích vào ô "Kích hoạt từ tiếng
-                  Anh" để ẩn các từ có trong từ điển Anh.
+                  <strong>Lọc Tiếng Anh:</strong> Tích vào "Kích hoạt từ tiếng
+                  Anh" để ẩn từ điển Anh.
                 </li>
                 <li>
                   <strong>Cấu Hình (⚙️):</strong> Bật/tắt các loại lỗi muốn kiểm
@@ -436,7 +340,7 @@
         </div>
       </div>
 
-      <!-- Settings Modal (Hidden by default) -->
+      <!-- Settings Modal -->
       <div
         id="settings-modal"
         class="hidden absolute top-0 right-4 z-50 w-80 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-5 animate-fadeIn"
@@ -465,9 +369,7 @@
             </svg>
           </button>
         </div>
-
         <div class="space-y-4">
-          <!-- Setting Item: Dictionary Check -->
           <div class="flex items-center justify-between">
             <span class="text-sm text-slate-300"
               >Lỗi không có trong từ điển</span
@@ -487,8 +389,6 @@
               ></div>
             </label>
           </div>
-
-          <!-- Setting Item: Uppercase Check -->
           <div class="flex items-center justify-between">
             <span class="text-sm text-slate-300">Lỗi viết hoa (VD: tÔI)</span>
             <label
@@ -506,8 +406,6 @@
               ></div>
             </label>
           </div>
-
-          <!-- Setting Item: Tone Check -->
           <div class="flex items-center justify-between">
             <span class="text-sm text-slate-300">Lỗi đặt dấu (Hòa/Hoà)</span>
             <label
@@ -525,8 +423,6 @@
               ></div>
             </label>
           </div>
-
-          <!-- Setting Item: Foreign/Structure Check -->
           <div class="flex items-center justify-between">
             <span class="text-sm text-slate-300">Lỗi ký tự lạ / Cấu trúc</span>
             <label
@@ -545,7 +441,6 @@
             </label>
           </div>
         </div>
-
         <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-500">
           <p class="mb-1 font-bold text-slate-400">Phím tắt:</p>
           <div class="grid grid-cols-2 gap-2">
@@ -555,17 +450,15 @@
         </div>
       </div>
 
-      <!-- Upload Section -->
+      <!-- Upload & Processing & Results -->
       <div
         id="upload-section"
         class="bg-slate-900 rounded-2xl shadow-xl border-2 border-dashed border-slate-800 p-12 text-center transition-all hover:border-blue-500/50 hover:bg-slate-800/50 group cursor-pointer relative overflow-hidden"
       >
         <input type="file" id="file-input" accept=".epub" class="hidden" />
-
         <div
           class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"
         ></div>
-
         <div
           class="relative z-10 flex flex-col items-center justify-center gap-6 pointer-events-none"
         >
@@ -596,7 +489,6 @@
         </div>
       </div>
 
-      <!-- Processing UI -->
       <div
         id="processing-ui"
         class="hidden bg-slate-900 p-8 rounded-2xl shadow-xl border border-slate-800 max-w-2xl mx-auto w-full"
@@ -625,9 +517,7 @@
         </div>
       </div>
 
-      <!-- Results Section -->
       <div id="results-section" class="hidden flex flex-col gap-6">
-        <!-- Book Info -->
         <div
           class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-lg flex items-center gap-5 relative overflow-hidden min-h-[140px]"
         >
@@ -648,8 +538,6 @@
               />
             </svg>
           </div>
-
-          <!-- Cover Image Container -->
           <div
             class="w-20 h-28 bg-slate-800 rounded-lg flex-shrink-0 border border-slate-700 overflow-hidden relative shadow-md"
           >
@@ -678,7 +566,6 @@
               </svg>
             </div>
           </div>
-
           <div class="relative z-10">
             <div
               class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-1"
@@ -700,7 +587,6 @@
           </div>
         </div>
 
-        <!-- Whitelist Input -->
         <div
           class="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-lg"
         >
@@ -733,10 +619,8 @@
             id="whitelist-input"
             rows="2"
             class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-slate-200 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-600 transition-colors"
-            placeholder="Nhập các từ muốn bỏ qua, cách nhau bằng dấu phẩy, khoảng trắng hoặc xuống dòng (Ví dụ: tên nhân vật, địa danh lạ...)"
+            placeholder="Nhập các từ muốn bỏ qua..."
           ></textarea>
-
-          <!-- English Filter Checkbox -->
           <div
             class="flex items-center gap-2 mt-4 pt-3 border-t border-slate-800"
           >
@@ -753,8 +637,7 @@
               <span
                 id="eng-loading"
                 class="hidden text-xs text-yellow-500 animate-pulse flex items-center gap-1"
-              >
-                <svg
+                ><svg
                   class="animate-spin h-3 w-3"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -774,13 +657,12 @@
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Đang tải...
-              </span>
+                Đang tải...</span
+              >
             </label>
           </div>
         </div>
 
-        <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div
             class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden"
@@ -850,7 +732,6 @@
         </div>
 
         <div class="flex flex-col lg:flex-row gap-6 h-[600px] lg:h-[700px]">
-          <!-- Error List Sidebar -->
           <div
             class="w-full lg:w-1/3 flex flex-col bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden"
           >
@@ -882,12 +763,9 @@
             <div
               id="error-list"
               class="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent"
-            >
-              <!-- Items will be injected here -->
-            </div>
+            ></div>
           </div>
 
-          <!-- Context Preview -->
           <div
             class="w-full lg:w-2/3 flex flex-col bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden"
           >
@@ -932,7 +810,7 @@
                   >
                     <path
                       fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
                       clip-rule="evenodd"
                     />
                   </svg>
@@ -995,11 +873,9 @@
         >
           <div class="overflow-hidden w-full">
             <div class="flex items-center gap-2">
-              <!-- Dot will be injected here -->
               <span
                 class="status-dot w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-[0_0_5px_rgba(0,0,0,0.5)]"
               ></span>
-              <!-- Changed text color to white/slate-200 for better contrast against dot -->
               <span
                 class="font-bold text-slate-200 error-word text-lg truncate font-serif"
               ></span>
@@ -1042,7 +918,6 @@
         "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/vn-dict.txt";
       const STORAGE_KEY = "vn_spell_whitelist";
       const SETTINGS_KEY = "vn_spell_settings";
-
       const IGNORED_WORDS = new Set([
         "email",
         "internet",
@@ -1185,7 +1060,6 @@
         "sms",
         "sim",
       ]);
-
       const TONE_MISPLACEMENT = {
         oá: "óa",
         oà: "òa",
@@ -1199,141 +1073,77 @@
         oẹ: "ọe",
       };
 
-      // DOM Elements
-      const fileInput = document.getElementById("file-input");
-      const uploadSection = document.getElementById("upload-section");
-      const processingUi = document.getElementById("processing-ui");
-      const progressBar = document.getElementById("progress-bar");
-      const progressPercent = document.getElementById("progress-percent");
-      const statusText = document.getElementById("status-text");
-      const resultsSection = document.getElementById("results-section");
-      const errorList = document.getElementById("error-list");
-      const contextView = document.getElementById("context-view");
-
-      // Metadata & Cover Elements
-      const metaTitle = document.getElementById("meta-title");
-      const metaAuthor = document.getElementById("meta-author");
-      const metaCover = document.getElementById("meta-cover");
-      const metaCoverPlaceholder = document.getElementById(
-        "meta-cover-placeholder"
-      );
-
-      // Whitelist, Reset & Export, Eng Filter
-      const whitelistInput = document.getElementById("whitelist-input");
-      const resetBtn = document.getElementById("reset-btn");
-      const exportBtn = document.getElementById("export-btn");
-      const engFilterCheckbox = document.getElementById("eng-filter-checkbox");
-      const engLoading = document.getElementById("eng-loading");
-
-      // Settings UI
-      const settingsBtn = document.getElementById("settings-btn");
-      const settingsModal = document.getElementById("settings-modal");
-      const closeSettingsBtn = document.getElementById("close-settings-btn");
-
-      // Help UI
-      const helpBtn = document.getElementById("help-btn");
-      const helpModal = document.getElementById("help-modal");
-      const closeHelpBtn = document.getElementById("close-help-btn");
-
-      // Export UI
-      const exportModal = document.getElementById("export-modal");
-      const closeExportBtn = document.getElementById("close-export-btn");
-      const exportVctveBtn = document.getElementById("export-vctve-btn");
-      const exportNormalBtn = document.getElementById("export-normal-btn");
-
-      // Dictionary Status Elements
-      const dictStatus = document.getElementById("dict-status");
-      const dictDot = document.getElementById("dict-dot");
-      const dictText = document.getElementById("dict-text");
-
-      // Navigation Elements
-      const contextNav = document.getElementById("context-nav");
-      const btnPrev = document.getElementById("btn-prev");
-      const btnNext = document.getElementById("btn-next");
-      const navIndicator = document.getElementById("nav-indicator");
-
-      // Stats Elements
-      const statTotalWords = document.getElementById("stat-total-words");
-      const statErrors = document.getElementById("stat-errors");
-      const statGroups = document.getElementById("stat-groups");
+      // DOM Elements & UI Refs
+      const UI = {
+        fileInput: document.getElementById("file-input"),
+        uploadSection: document.getElementById("upload-section"),
+        processingUi: document.getElementById("processing-ui"),
+        progressBar: document.getElementById("progress-bar"),
+        progressPercent: document.getElementById("progress-percent"),
+        statusText: document.getElementById("status-text"),
+        resultsSection: document.getElementById("results-section"),
+        errorList: document.getElementById("error-list"),
+        contextView: document.getElementById("context-view"),
+        metaTitle: document.getElementById("meta-title"),
+        metaAuthor: document.getElementById("meta-author"),
+        metaCover: document.getElementById("meta-cover"),
+        metaCoverPlaceholder: document.getElementById("meta-cover-placeholder"),
+        whitelistInput: document.getElementById("whitelist-input"),
+        resetBtn: document.getElementById("reset-btn"),
+        exportBtn: document.getElementById("export-btn"),
+        engFilterCheckbox: document.getElementById("eng-filter-checkbox"),
+        settingsBtn: document.getElementById("settings-btn"),
+        settingsModal: document.getElementById("settings-modal"),
+        closeSettingsBtn: document.getElementById("close-settings-btn"),
+        helpBtn: document.getElementById("help-btn"),
+        helpModal: document.getElementById("help-modal"),
+        closeHelpBtn: document.getElementById("close-help-btn"),
+        exportModal: document.getElementById("export-modal"), // Removed in v1.41 logic but element might be there, will remove element
+        // Actually I removed the export modal HTML completely in this update as per request to remove choice.
+        dictStatus: document.getElementById("dict-status"),
+        dictDot: document.getElementById("dict-dot"),
+        dictText: document.getElementById("dict-text"),
+        contextNav: document.getElementById("context-nav"),
+        btnPrev: document.getElementById("btn-prev"),
+        btnNext: document.getElementById("btn-next"),
+        navIndicator: document.getElementById("nav-indicator"),
+        statTotalWords: document.getElementById("stat-total-words"),
+        statErrors: document.getElementById("stat-errors"),
+        statGroups: document.getElementById("stat-groups"),
+        loadingOverlay: document.getElementById("loading-overlay"),
+      };
 
       // State
-      let allDetectedErrors = [];
-      let currentFilteredErrors = [];
-      let currentGroup = null;
-      let currentInstanceIndex = 0;
-      let validSyllables = new Set();
-      let engWords = new Set();
-      let isDictLoaded = false;
-      let isEngDictLoaded = false;
-      let isEngFilterEnabled = false;
-      let isEngDictLoading = false;
-      let currentCoverUrl = null;
-      let currentBookTitle = "";
-      let loadedTextContent = []; // Fix: Store parsed text globally
-
-      // Settings State
-      let checkSettings = {
-        dictionary: true,
-        uppercase: true,
-        tone: true,
-        foreign: true,
+      let state = {
+        allDetectedErrors: [],
+        currentFilteredErrors: [],
+        currentGroup: null,
+        currentInstanceIndex: 0,
+        validSyllables: new Set(),
+        engWords: new Set(),
+        isDictLoaded: false,
+        isEngDictLoaded: false,
+        isEngFilterEnabled: false,
+        currentCoverUrl: null,
+        currentBookTitle: "",
+        loadedTextContent: [],
+        checkSettings: {
+          dictionary: true,
+          uppercase: true,
+          tone: true,
+          foreign: true,
+        },
       };
 
-      // --- PERSISTENCE ---
-      function loadWhitelist() {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          whitelistInput.value = saved;
-        }
-      }
-
-      function saveWhitelist() {
-        localStorage.setItem(STORAGE_KEY, whitelistInput.value);
-      }
-
-      function loadSettings() {
-        const saved = localStorage.getItem(SETTINGS_KEY);
-        if (saved) {
-          checkSettings = JSON.parse(saved);
-          document.getElementById("set-dict").checked =
-            checkSettings.dictionary;
-          document.getElementById("set-case").checked = checkSettings.uppercase;
-          document.getElementById("set-tone").checked = checkSettings.tone;
-          document.getElementById("set-struct").checked = checkSettings.foreign;
-        }
-      }
-
-      function saveSettings() {
-        checkSettings.dictionary = document.getElementById("set-dict").checked;
-        checkSettings.uppercase = document.getElementById("set-case").checked;
-        checkSettings.tone = document.getElementById("set-tone").checked;
-        checkSettings.foreign = document.getElementById("set-struct").checked;
-
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify(checkSettings));
-
-        // Fix: Re-analyze immediately if text is loaded
-        if (loadedTextContent.length > 0) {
-          const overlay = document.getElementById("loading-overlay");
-          overlay.classList.remove("hidden");
-
-          // Yield to UI thread to render the overlay
-          setTimeout(() => {
-            analyzeText(loadedTextContent);
-            overlay.classList.add("hidden");
-          }, 50);
-        }
-      }
-
-      // Define isY and isFrontVowel GLOBALLY to avoid ReferenceError
-      const isFrontVowel = (c) => {
-        if (!c) return false;
-        const norm = c
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase();
-        return ["i", "e"].includes(norm) || norm === "ê";
-      };
+      const wordRegex = /[\p{L}\p{M}]+/gu;
+      const isFrontVowel = (c) =>
+        c &&
+        ["i", "e", "ê"].includes(
+          c
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        );
       const isY = (c) =>
         c &&
         c
@@ -1341,15 +1151,19 @@
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "") === "y";
 
-      // --- DICTIONARY LOADING ---
+      // --- INIT & UTILS ---
+      function init() {
+        loadDictionaries();
+        loadWhitelist();
+        loadSettings();
+        setupEventListeners();
+      }
+
       async function fetchDictWithFallback(filename, onlineUrl) {
         try {
           const resLocal = await fetch(filename);
           if (resLocal.ok) return await resLocal.text();
-        } catch (e) {
-          /* Ignore */
-        }
-        // Fallback
+        } catch (e) {}
         const resOnline = await fetch(onlineUrl);
         if (!resOnline.ok) throw new Error("Load failed");
         return await resOnline.text();
@@ -1357,32 +1171,27 @@
 
       async function loadDictionaries() {
         try {
-          dictStatus.classList.remove("hidden");
-          dictText.innerText = "Đang tải dữ liệu...";
-
+          UI.dictStatus.classList.remove("hidden");
+          UI.dictText.innerText = "Đang tải dữ liệu...";
           const [vnRes, enRes] = await Promise.all([
             fetchDictWithFallback("vn-dict.txt", DICT_URL),
             fetchDictWithFallback("en-dict.txt", ENG_DICT_URL),
           ]);
 
           if (vnRes) {
-            const lines = vnRes.split("\n");
-            lines.forEach((line) => {
-              let wordRaw = line.trim();
-              if (!wordRaw) return;
-              if (wordRaw.startsWith("{") && wordRaw.endsWith("}")) {
+            vnRes.split("\n").forEach((line) => {
+              let w = line.trim();
+              if (!w) return;
+              if (w.startsWith("{") && w.endsWith("}")) {
                 try {
-                  const entry = JSON.parse(wordRaw);
-                  if (entry.text) wordRaw = entry.text;
+                  w = JSON.parse(w).text;
                 } catch (e) {}
               }
-              const cleanLine = wordRaw.toLowerCase().normalize("NFC");
-              if (cleanLine) {
-                const parts = cleanLine.split(/\s+/);
-                parts.forEach((p) => validSyllables.add(p));
-              }
+              const clean = w.toLowerCase().normalize("NFC");
+              if (clean)
+                clean.split(/\s+/).forEach((p) => state.validSyllables.add(p));
             });
-            const extras = [
+            [
               "kỹ",
               "mỹ",
               "kì",
@@ -1402,230 +1211,203 @@
               "bị",
               "bởi",
               "chăng",
-            ];
-            extras.forEach((w) => validSyllables.add(w.normalize("NFC")));
-            isDictLoaded = true;
+            ].forEach((w) => state.validSyllables.add(w.normalize("NFC")));
+            state.isDictLoaded = true;
           }
 
           if (enRes) {
             enRes.split(/\r?\n/).forEach((w) => {
-              const cleanW = w.trim().toLowerCase();
-              if (cleanW) engWords.add(cleanW);
+              const c = w.trim().toLowerCase();
+              if (c) state.engWords.add(c);
             });
-            isEngDictLoaded = true;
+            state.isEngDictLoaded = true;
           }
 
-          dictDot.classList.remove("bg-yellow-500", "animate-pulse");
-          if (isDictLoaded) {
-            dictDot.classList.add("bg-green-500");
-            dictText.innerHTML = `
-                        <div class="flex flex-col items-start leading-snug">
-                            <span>VN: ${validSyllables.size.toLocaleString()} từ</span>
-                            <span>EN: ${engWords.size.toLocaleString()} từ</span>
-                        </div>
-                    `;
+          UI.dictDot.classList.remove("bg-yellow-500", "animate-pulse");
+          if (state.isDictLoaded) {
+            UI.dictDot.classList.add("bg-green-500");
+            UI.dictText.innerHTML = `<div class="flex flex-col items-start leading-snug"><span>VN: ${state.validSyllables.size.toLocaleString()} từ</span><span>EN: ${state.engWords.size.toLocaleString()} từ</span></div>`;
           } else {
-            dictDot.classList.add("bg-red-500");
-            dictText.innerText = "Lỗi tải dữ liệu";
+            UI.dictDot.classList.add("bg-red-500");
+            UI.dictText.innerText = "Lỗi tải dữ liệu";
           }
         } catch (err) {
-          console.error("Critical error loading dictionaries:", err);
-          dictDot.classList.remove("bg-yellow-500", "animate-pulse");
-          dictDot.classList.add("bg-red-500");
-          dictText.innerText = "Lỗi kết nối";
+          console.error(err);
+          UI.dictDot.classList.remove("bg-yellow-500", "animate-pulse");
+          UI.dictDot.classList.add("bg-red-500");
+          UI.dictText.innerText = "Lỗi kết nối";
         }
       }
 
-      loadDictionaries();
-      loadWhitelist();
-      loadSettings();
+      function loadWhitelist() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) UI.whitelistInput.value = saved;
+      }
 
-      uploadSection.addEventListener("click", () => fileInput.click());
-      uploadSection.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        uploadSection.classList.add("border-blue-500", "bg-slate-800");
-      });
-      uploadSection.addEventListener("dragleave", () => {
-        uploadSection.classList.remove("border-blue-500", "bg-slate-800");
-      });
-      uploadSection.addEventListener("drop", (e) => {
-        e.preventDefault();
-        uploadSection.classList.remove("border-blue-500", "bg-slate-800");
-        if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-      });
-      fileInput.addEventListener("change", (e) => {
-        if (e.target.files.length) handleFile(e.target.files[0]);
-      });
+      function saveWhitelist() {
+        localStorage.setItem(STORAGE_KEY, UI.whitelistInput.value);
+      }
 
-      resetBtn.addEventListener("click", resetApp);
-
-      // Export Modal Logic
-      exportBtn.addEventListener("click", () =>
-        exportModal.classList.remove("hidden")
-      );
-      closeExportBtn.addEventListener("click", () =>
-        exportModal.classList.add("hidden")
-      );
-
-      exportVctveBtn.addEventListener("click", () => performExport("vctve"));
-      exportNormalBtn.addEventListener("click", () => performExport("normal"));
-
-      settingsBtn.addEventListener("click", () =>
-        settingsModal.classList.remove("hidden")
-      );
-      closeSettingsBtn.addEventListener("click", () =>
-        settingsModal.classList.add("hidden")
-      );
-
-      helpBtn.addEventListener("click", () =>
-        helpModal.classList.remove("hidden")
-      );
-      closeHelpBtn.addEventListener("click", () =>
-        helpModal.classList.add("hidden")
-      );
-
-      // Close settings when clicking outside
-      document.addEventListener("click", (e) => {
-        // Close Settings
-        if (
-          !settingsModal.classList.contains("hidden") &&
-          !settingsModal.contains(e.target) &&
-          !settingsBtn.contains(e.target)
-        ) {
-          settingsModal.classList.add("hidden");
+      function loadSettings() {
+        const saved = localStorage.getItem(SETTINGS_KEY);
+        if (saved) {
+          state.checkSettings = JSON.parse(saved);
+          document.getElementById("set-dict").checked =
+            state.checkSettings.dictionary;
+          document.getElementById("set-case").checked =
+            state.checkSettings.uppercase;
+          document.getElementById("set-tone").checked =
+            state.checkSettings.tone;
+          document.getElementById("set-struct").checked =
+            state.checkSettings.foreign;
         }
+      }
 
-        // Close Help Overlay - Fix logic: close if clicking backdrop (helpModal itself)
-        if (!helpModal.classList.contains("hidden") && e.target === helpModal) {
-          helpModal.classList.add("hidden");
+      function saveSettings() {
+        state.checkSettings = {
+          dictionary: document.getElementById("set-dict").checked,
+          uppercase: document.getElementById("set-case").checked,
+          tone: document.getElementById("set-tone").checked,
+          foreign: document.getElementById("set-struct").checked,
+        };
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(state.checkSettings));
+        if (state.loadedTextContent.length > 0) {
+          UI.loadingOverlay.classList.remove("hidden");
+          setTimeout(() => {
+            analyzeText(state.loadedTextContent);
+            UI.loadingOverlay.classList.add("hidden");
+          }, 50);
         }
+      }
 
-        // Close Export Overlay
-        if (
-          !exportModal.classList.contains("hidden") &&
-          e.target === exportModal
-        ) {
-          exportModal.classList.add("hidden");
-        }
-      });
-
-      ["set-dict", "set-case", "set-tone", "set-struct"].forEach((id) => {
-        document.getElementById(id).addEventListener("change", saveSettings);
-      });
-
-      whitelistInput.addEventListener("input", () => {
-        saveWhitelist();
-        filterAndRenderErrors();
-      });
-      engFilterCheckbox.addEventListener("change", (e) => {
-        isEngFilterEnabled = e.target.checked;
-        filterAndRenderErrors();
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if (
-          document.activeElement === whitelistInput ||
-          !settingsModal.classList.contains("hidden") ||
-          !exportModal.classList.contains("hidden")
-        )
-          return;
-        if (currentFilteredErrors.length === 0) return;
-        if (e.key === "ArrowDown") {
+      // --- EVENT LISTENERS ---
+      function setupEventListeners() {
+        UI.uploadSection.addEventListener("click", () => UI.fileInput.click());
+        UI.uploadSection.addEventListener("dragover", (e) => {
           e.preventDefault();
-          navigateErrors(1);
-        } else if (e.key === "ArrowUp") {
+          UI.uploadSection.classList.add("border-blue-500", "bg-slate-800");
+        });
+        UI.uploadSection.addEventListener("dragleave", () =>
+          UI.uploadSection.classList.remove("border-blue-500", "bg-slate-800")
+        );
+        UI.uploadSection.addEventListener("drop", (e) => {
           e.preventDefault();
-          navigateErrors(-1);
-        } else if (e.key === "Delete" || e.key.toLowerCase() === "i") {
-          if (currentGroup) {
+          UI.uploadSection.classList.remove("border-blue-500", "bg-slate-800");
+          if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+        UI.fileInput.addEventListener("change", (e) => {
+          if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        UI.resetBtn.addEventListener("click", resetApp);
+        UI.exportBtn.addEventListener("click", performExport); // Simple export now
+
+        UI.settingsBtn.addEventListener("click", () =>
+          UI.settingsModal.classList.remove("hidden")
+        );
+        UI.closeSettingsBtn.addEventListener("click", () =>
+          UI.settingsModal.classList.add("hidden")
+        );
+        UI.helpBtn.addEventListener("click", () =>
+          UI.helpModal.classList.remove("hidden")
+        );
+        UI.closeHelpBtn.addEventListener("click", () =>
+          UI.helpModal.classList.add("hidden")
+        );
+
+        // Close modals on outside click
+        document.addEventListener("click", (e) => {
+          if (
+            !UI.settingsModal.classList.contains("hidden") &&
+            !UI.settingsModal.contains(e.target) &&
+            !UI.settingsBtn.contains(e.target)
+          )
+            UI.settingsModal.classList.add("hidden");
+
+          // Fix for Help Modal Closing
+          if (
+            !UI.helpModal.classList.contains("hidden") &&
+            e.target === UI.helpModal
+          ) {
+            UI.helpModal.classList.add("hidden");
+          }
+        });
+
+        ["set-dict", "set-case", "set-tone", "set-struct"].forEach((id) =>
+          document.getElementById(id).addEventListener("change", saveSettings)
+        );
+
+        UI.whitelistInput.addEventListener("input", () => {
+          saveWhitelist();
+          filterAndRenderErrors();
+        });
+        UI.engFilterCheckbox.addEventListener("change", (e) => {
+          state.isEngFilterEnabled = e.target.checked;
+          filterAndRenderErrors();
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (
+            document.activeElement === UI.whitelistInput ||
+            !UI.settingsModal.classList.contains("hidden") ||
+            !UI.helpModal.classList.contains("hidden")
+          )
+            return;
+          if (state.currentFilteredErrors.length === 0) return;
+          if (e.key === "ArrowDown") {
             e.preventDefault();
-            quickIgnore(currentGroup.word);
+            navigateErrors(1);
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            navigateErrors(-1);
+          } else if (e.key === "Delete" || e.key.toLowerCase() === "i") {
+            if (state.currentGroup) {
+              e.preventDefault();
+              quickIgnore(state.currentGroup.word);
+            }
           }
-        }
-      });
+        });
 
-      function navigateErrors(direction) {
-        let nextIndex = 0;
-        if (currentGroup) {
-          const currentIndex = currentFilteredErrors.findIndex(
-            (g) => g.id === currentGroup.id
-          );
-          if (currentIndex !== -1) nextIndex = currentIndex + direction;
-        }
-        if (nextIndex < 0) nextIndex = 0;
-        if (nextIndex >= currentFilteredErrors.length)
-          nextIndex = currentFilteredErrors.length - 1;
-        const nextGroup = currentFilteredErrors[nextIndex];
-        if (nextGroup) {
-          selectGroup(nextGroup, null);
-          const listContainer = document.getElementById("error-list");
-          const buttons = listContainer.querySelectorAll(".select-btn");
-          if (buttons[nextIndex]) {
-            buttons[nextIndex].scrollIntoView({
-              block: "nearest",
-              behavior: "smooth",
-            });
-            buttons.forEach((b) => {
-              b.classList.remove(
-                "bg-blue-900/30",
-                "border-blue-700/50",
-                "ring-1",
-                "ring-blue-500/50"
-              );
-              b.classList.add("border-transparent", "border-r");
-            });
-            buttons[nextIndex].classList.add(
-              "bg-blue-900/30",
-              "border-blue-700/50",
-              "ring-1",
-              "ring-blue-500/50"
-            );
-            buttons[nextIndex].classList.remove(
-              "border-transparent",
-              "border-r"
-            );
+        UI.btnPrev.addEventListener("click", () => {
+          if (state.currentGroup && state.currentInstanceIndex > 0) {
+            state.currentInstanceIndex--;
+            updateContextView();
           }
-        }
+        });
+        UI.btnNext.addEventListener("click", () => {
+          if (
+            state.currentGroup &&
+            state.currentInstanceIndex < state.currentGroup.contexts.length - 1
+          ) {
+            state.currentInstanceIndex++;
+            updateContextView();
+          }
+        });
       }
 
-      btnPrev.addEventListener("click", () => {
-        if (currentGroup && currentInstanceIndex > 0) {
-          currentInstanceIndex--;
-          updateContextView();
-        }
-      });
-      btnNext.addEventListener("click", () => {
-        if (
-          currentGroup &&
-          currentInstanceIndex < currentGroup.contexts.length - 1
-        ) {
-          currentInstanceIndex++;
-          updateContextView();
-        }
-      });
-
+      // --- CORE LOGIC ---
       async function handleFile(file) {
         if (!file.name.endsWith(".epub")) {
           alert("Vui lòng chọn file .epub");
           return;
         }
-        isEngFilterEnabled = engFilterCheckbox.checked;
-        uploadSection.classList.add("hidden");
-        resultsSection.classList.add("hidden");
-        processingUi.classList.remove("hidden");
-        errorList.innerHTML = "";
-        contextView.innerHTML =
+        state.isEngFilterEnabled = UI.engFilterCheckbox.checked;
+        UI.uploadSection.classList.add("hidden");
+        UI.resultsSection.classList.add("hidden");
+        UI.processingUi.classList.remove("hidden");
+        UI.errorList.innerHTML = "";
+        UI.contextView.innerHTML =
           '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
-        contextNav.classList.add("hidden");
-        metaTitle.innerText = "Đang tải...";
-        metaAuthor.innerText = "Đang tải...";
-        if (currentCoverUrl) {
-          URL.revokeObjectURL(currentCoverUrl);
-          currentCoverUrl = null;
+        UI.contextNav.classList.add("hidden");
+        UI.metaTitle.innerText = "Đang tải...";
+        UI.metaAuthor.innerText = "Đang tải...";
+        if (state.currentCoverUrl) {
+          URL.revokeObjectURL(state.currentCoverUrl);
+          state.currentCoverUrl = null;
         }
-        metaCover.src = "";
-        metaCover.classList.add("hidden");
-        metaCoverPlaceholder.classList.remove("hidden");
+        UI.metaCover.src = "";
+        UI.metaCover.classList.add("hidden");
+        UI.metaCoverPlaceholder.classList.remove("hidden");
 
         try {
           updateProgress(10, "Đang giải nén tệp...");
@@ -1635,128 +1417,32 @@
             zip
           );
 
-          loadedTextContent = fullTextBlocks; // Fix: Save text globally
-          metaTitle.innerText = title;
-          metaAuthor.innerText = author;
-          currentBookTitle = title;
-
+          state.loadedTextContent = fullTextBlocks;
+          UI.metaTitle.innerText = title;
+          UI.metaAuthor.innerText = author;
+          state.currentBookTitle = title;
           if (coverUrl) {
-            currentCoverUrl = coverUrl;
-            metaCover.src = coverUrl;
-            metaCover.classList.remove("hidden");
-            metaCoverPlaceholder.classList.add("hidden");
+            state.currentCoverUrl = coverUrl;
+            UI.metaCover.src = coverUrl;
+            UI.metaCover.classList.remove("hidden");
+            UI.metaCoverPlaceholder.classList.add("hidden");
           }
-
           updateProgress(60, "Đang phân tích...");
           requestAnimationFrame(() => {
             setTimeout(() => {
               analyzeText(fullTextBlocks);
-              processingUi.classList.add("hidden");
-              resultsSection.classList.remove("hidden");
-              resetBtn.classList.remove("hidden");
-              exportBtn.classList.remove("hidden");
+              UI.processingUi.classList.add("hidden");
+              UI.resultsSection.classList.remove("hidden");
+              UI.resetBtn.classList.remove("hidden");
+              UI.exportBtn.classList.remove("hidden");
             }, 100);
           });
         } catch (err) {
           console.error(err);
           alert("Có lỗi xảy ra: " + err.message);
-          processingUi.classList.add("hidden");
-          uploadSection.classList.remove("hidden");
+          UI.processingUi.classList.add("hidden");
+          UI.uploadSection.classList.remove("hidden");
         }
-      }
-
-      function resetApp() {
-        resultsSection.classList.add("hidden");
-        resetBtn.classList.add("hidden");
-        exportBtn.classList.add("hidden");
-        uploadSection.classList.remove("hidden");
-        fileInput.value = "";
-        statTotalWords.innerText = "0";
-        statErrors.innerText = "0";
-        statGroups.innerText = "0";
-        errorList.innerHTML = "";
-        contextView.innerHTML =
-          '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
-        contextNav.classList.add("hidden");
-        metaTitle.innerText = "";
-        metaAuthor.innerText = "";
-        metaCover.src = "";
-        metaCover.classList.add("hidden");
-        metaCoverPlaceholder.classList.remove("hidden");
-        if (currentCoverUrl) {
-          URL.revokeObjectURL(currentCoverUrl);
-          currentCoverUrl = null;
-        }
-        allDetectedErrors = [];
-        currentFilteredErrors = [];
-        currentGroup = null;
-        currentInstanceIndex = 0;
-        currentBookTitle = "";
-        loadedTextContent = [];
-      }
-
-      // Helper function to get filtered errors
-      function getFilteredErrors() {
-        const rawInput = whitelistInput.value;
-        const userWhitelist = new Set();
-        if (rawInput) {
-          const tokens = rawInput
-            .split(/[\n,\t]+/)
-            .map((t) => t.trim().toLowerCase())
-            .filter((t) => t.length > 0);
-          tokens.forEach((t) => userWhitelist.add(t));
-        }
-        let filteredErrors = allDetectedErrors.filter(
-          (group) => !userWhitelist.has(group.word.toLowerCase())
-        );
-        if (isEngFilterEnabled && isEngDictLoaded) {
-          filteredErrors = filteredErrors.filter(
-            (group) => !engWords.has(group.word.toLowerCase())
-          );
-        }
-        return filteredErrors;
-      }
-
-      function performExport(type) {
-        const filteredErrors = getFilteredErrors();
-
-        if (filteredErrors.length === 0) {
-          alert("Không có lỗi nào để xuất!");
-          exportModal.classList.add("hidden");
-          return;
-        }
-
-        let content = "";
-        if (type === "vctve") {
-          content = filteredErrors.map((g) => `${g.word} ==>`).join("\n\n");
-        } else {
-          content = filteredErrors.map((g) => g.word).join("\n");
-        }
-
-        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        let fileName = "loi-khong-ro-ten.txt";
-        if (currentBookTitle) {
-          const safeTitle = currentBookTitle
-            .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
-            .trim();
-          fileName = `loi-${safeTitle}.txt`;
-        }
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        exportModal.classList.add("hidden");
-      }
-
-      function updateProgress(percent, text) {
-        progressBar.style.width = percent + "%";
-        progressPercent.innerText = percent + "%";
-        statusText.innerText = text;
       }
 
       async function parseEpub(zip) {
@@ -1812,37 +1498,506 @@
           }
         } catch (e) {}
 
+        let fullTextBlocks = [];
         const spine = Array.from(opfXml.querySelectorAll("spine itemref")).map(
           (ref) => ref.getAttribute("idref")
         );
         const manifest = {};
-        Array.from(opfXml.querySelectorAll("manifest item")).forEach((item) => {
-          manifest[item.getAttribute("id")] = item.getAttribute("href");
-        });
+        Array.from(opfXml.querySelectorAll("manifest item")).forEach(
+          (item) =>
+            (manifest[item.getAttribute("id")] = item.getAttribute("href"))
+        );
 
-        let fullTextBlocks = [];
-        let totalItems = spine.length;
-        for (let i = 0; i < totalItems; i++) {
-          const id = spine[i];
-          const href = manifest[id];
+        for (let i = 0; i < spine.length; i++) {
+          const href = manifest[spine[i]];
           const fullPath = resolvePath(href);
           if (zip.file(fullPath)) {
-            const htmlContent = await zip.file(fullPath).async("string");
-            const doc = parser.parseFromString(htmlContent, "text/html");
-            const paragraphs = Array.from(
+            const html = await zip.file(fullPath).async("string");
+            const doc = parser.parseFromString(html, "text/html");
+            const paras = Array.from(
               doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, div")
             )
               .map((el) => el.textContent.trim())
               .filter((text) => text.length > 0);
-            fullTextBlocks.push(...paragraphs);
+            fullTextBlocks.push(...paras);
           }
           if (i % 5 === 0)
             updateProgress(
-              30 + Math.round((i / totalItems) * 30),
-              `Đang đọc chương ${i + 1}/${totalItems}`
+              30 + Math.round((i / spine.length) * 30),
+              `Đang đọc chương ${i + 1}/${spine.length}`
             );
         }
         return { fullTextBlocks, title, author, coverUrl };
+      }
+
+      function analyzeText(paragraphs) {
+        let totalWords = 0;
+        const errorMap = new Map();
+        const localRegex = /[\p{L}\p{M}]+/gu;
+
+        paragraphs.forEach((para) => {
+          let match;
+          while ((match = localRegex.exec(para)) !== null) {
+            const word = match[0];
+            totalWords++;
+            if (word.length < 2) continue;
+
+            const lower = word.toLowerCase().normalize("NFC");
+            const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word);
+            if (IGNORED_WORDS.has(lower)) continue;
+
+            let errorType = null;
+
+            if (state.checkSettings.uppercase) {
+              const upperCount = Array.from(word).filter(
+                (c) => c.toUpperCase() === c && c.toLowerCase() !== c
+              ).length;
+              if (upperCount >= 2) errorType = "Lỗi viết hoa (Nhiều ký tự hoa)";
+            }
+
+            if (!errorType && state.checkSettings.tone) {
+              for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
+                if (lower.endsWith(wrong)) {
+                  errorType = "Sai vị trí dấu (Chuẩn cũ/mới)";
+                  break;
+                }
+              }
+            }
+
+            if (
+              !errorType &&
+              state.isDictLoaded &&
+              state.checkSettings.dictionary
+            ) {
+              if (!state.validSyllables.has(lower)) {
+                if (!isCapitalized) {
+                  if (/[fjwz]/.test(lower)) {
+                    if (state.checkSettings.foreign)
+                      errorType = "Từ lạ / Tiếng nước ngoài";
+                    else errorType = "Không có trong từ điển";
+                  } else if (/(aa|ee|oo|dd|js|kx|wt)$/.test(lower)) {
+                    errorType = "Lỗi gõ máy (Typo)";
+                  } else {
+                    errorType = "Không có trong từ điển";
+                  }
+                }
+              }
+            } else if (
+              !errorType &&
+              state.checkSettings.foreign &&
+              /[fjwz]/.test(lower) &&
+              !isCapitalized
+            ) {
+              errorType = "Chứa ký tự lạ (f, j, w, z)";
+            }
+
+            if (!errorType && state.checkSettings.foreign) {
+              if (
+                lower.startsWith("ngh") &&
+                !isFrontVowel(lower[3]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc ngh";
+              else if (
+                lower.startsWith("ng") &&
+                isFrontVowel(lower[2]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc ng";
+              else if (
+                lower.startsWith("gh") &&
+                !isFrontVowel(lower[2]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc gh";
+              else if (
+                lower.startsWith("g") &&
+                !lower.startsWith("gh") &&
+                !lower.startsWith("gi") &&
+                !isCapitalized
+              ) {
+                const c = lower[1];
+                if (c) {
+                  const norm = c
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .toLowerCase();
+                  if (["e", "ê"].includes(norm)) errorType = "Sai quy tắc g";
+                }
+              } else if (
+                lower.startsWith("k") &&
+                !lower.startsWith("kh") &&
+                !isFrontVowel(lower[1]) &&
+                !isY(lower[1]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc k";
+              else if (
+                lower.startsWith("c") &&
+                !lower.startsWith("ch") &&
+                (isFrontVowel(lower[1]) || isY(lower[1])) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc c";
+            }
+
+            if (errorType) {
+              const key = lower + "::" + errorType;
+              if (!errorMap.has(key))
+                errorMap.set(key, {
+                  id: key,
+                  word: word,
+                  type: errorType,
+                  contexts: [],
+                });
+              errorMap.get(key).contexts.push({
+                prefix: para.substring(
+                  Math.max(0, match.index - 60),
+                  match.index
+                ),
+                target: word,
+                suffix: para.substring(
+                  match.index + word.length,
+                  Math.min(para.length, match.index + word.length + 60)
+                ),
+              });
+            }
+          }
+        });
+
+        UI.statTotalWords.innerText = totalWords.toLocaleString();
+        state.allDetectedErrors = Array.from(errorMap.values()).sort(
+          (a, b) => b.contexts.length - a.contexts.length
+        );
+        state.currentFilteredErrors = state.allDetectedErrors;
+        filterAndRenderErrors();
+      }
+
+      function filterAndRenderErrors() {
+        const rawInput = UI.whitelistInput.value;
+        const userWhitelist = new Set();
+        if (rawInput) {
+          rawInput
+            .split(/[\n,\t]+/)
+            .map((t) => t.trim().toLowerCase())
+            .filter((t) => t.length > 0)
+            .forEach((t) => userWhitelist.add(t));
+        }
+        let filtered = state.allDetectedErrors.filter(
+          (g) => !userWhitelist.has(g.word.toLowerCase())
+        );
+        if (state.isEngFilterEnabled && state.isEngDictLoaded)
+          filtered = filtered.filter(
+            (g) => !state.engWords.has(g.word.toLowerCase())
+          );
+
+        state.currentFilteredErrors = filtered;
+        UI.statErrors.innerText = filtered
+          .reduce((acc, curr) => acc + curr.contexts.length, 0)
+          .toLocaleString();
+        UI.statGroups.innerText = filtered.length.toLocaleString();
+        renderErrors(filtered);
+      }
+
+      function renderErrors(groups) {
+        UI.errorList.innerHTML = "";
+        if (state.currentGroup) {
+          const stillExists = groups.find(
+            (g) => g.id === state.currentGroup.id
+          );
+          if (!stillExists) {
+            UI.contextView.innerHTML =
+              '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
+            UI.contextNav.classList.add("hidden");
+            state.currentGroup = null;
+          }
+        }
+        if (groups.length === 0) {
+          UI.errorList.innerHTML =
+            '<div class="p-10 text-center text-slate-600 flex flex-col items-center"><svg class="w-16 h-16 mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="text-lg font-medium">Tuyệt vời!</p><p class="text-sm mt-1">Không tìm thấy lỗi nào.</p></div>';
+          return;
+        }
+
+        const template = document.getElementById("error-item-template");
+        groups.forEach((group) => {
+          const clone = template.content.cloneNode(true);
+          clone.querySelector(".error-word").innerText = group.word;
+          clone.querySelector(".error-reason").innerText = group.type;
+          clone.querySelector(".error-count").innerText = group.contexts.length;
+
+          const style = getErrorHighlights(group.type);
+          clone.querySelector(".status-dot").classList.add(style.dot);
+          const btn = clone.querySelector(".select-btn");
+
+          if (state.currentGroup && state.currentGroup.id === group.id) {
+            btn.classList.add(
+              "bg-blue-900/30",
+              "border-blue-700/50",
+              "ring-1",
+              "ring-blue-500/50"
+            );
+            btn.classList.remove("border-transparent", "border-r");
+          }
+
+          btn.onclick = () => {
+            selectGroup(group, btn);
+            copyToClipboard(group.word);
+          };
+          clone.querySelector(".ignore-btn").onclick = (e) => {
+            e.stopPropagation();
+            quickIgnore(group.word);
+          };
+          UI.errorList.appendChild(clone);
+        });
+      }
+
+      function selectGroup(group, btnElement) {
+        state.currentGroup = group;
+        state.currentInstanceIndex = 0;
+
+        document.querySelectorAll("#error-list .select-btn").forEach((b) => {
+          b.classList.remove(
+            "bg-blue-900/30",
+            "border-blue-700/50",
+            "ring-1",
+            "ring-blue-500/50"
+          );
+          b.classList.add("border-transparent", "border-r");
+        });
+
+        if (btnElement) {
+          btnElement.classList.add(
+            "bg-blue-900/30",
+            "border-blue-700/50",
+            "ring-1",
+            "ring-blue-500/50"
+          );
+          btnElement.classList.remove("border-transparent", "border-r");
+        }
+
+        if (group.contexts.length > 1) UI.contextNav.classList.remove("hidden");
+        else UI.contextNav.classList.add("hidden");
+        updateContextView();
+      }
+
+      function updateContextView() {
+        if (!state.currentGroup) return;
+        const ctx = state.currentGroup.contexts[state.currentInstanceIndex];
+        UI.navIndicator.innerText = `${state.currentInstanceIndex + 1}/${
+          state.currentGroup.contexts.length
+        }`;
+        UI.btnPrev.disabled = state.currentInstanceIndex === 0;
+        UI.btnNext.disabled =
+          state.currentInstanceIndex === state.currentGroup.contexts.length - 1;
+
+        const suggestions = findSuggestions(state.currentGroup.word);
+        const suggHTML =
+          suggestions.length > 0
+            ? `<div class="mt-4 flex flex-wrap justify-center gap-2"><span class="text-sm text-slate-400 mr-1 self-center">Gợi ý:</span>${suggestions
+                .map(
+                  (s) =>
+                    `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm cursor-pointer hover:bg-green-800/50" onclick="copyToClipboard('${s}')">${s}</span>`
+                )
+                .join("")}</div>`
+            : "";
+        const style = getErrorHighlights(state.currentGroup.type);
+        const wiktionary = `<a href="https://vi.wiktionary.org/wiki/${state.currentGroup.word}" target="_blank" class="ml-1 inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors" title="Tra cứu Wiktionary"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></a>`;
+
+        UI.contextView.innerHTML = `
+                <div class="max-w-2xl text-center w-full animate-fadeIn">
+                    <div class="flex items-center justify-center gap-2 mb-6"><span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-2 py-1 rounded">Ngữ cảnh ${
+                      state.currentInstanceIndex + 1
+                    } / ${state.currentGroup.contexts.length}</span></div>
+                    <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative">
+                        <div class="text-xl leading-loose text-slate-300 font-serif">
+                            ${escapeHtml(ctx.prefix)}<span class="${style.bg} ${
+          style.text
+        } px-1 py-0.5 rounded border-b-2 ${
+          style.border
+        } font-bold mx-0.5 shadow-[0_0_15px_rgba(0,0,0,0.2)]">${escapeHtml(
+          ctx.target
+        )} ${wiktionary}</span>${escapeHtml(ctx.suffix)}
+                        </div>
+                    </div>
+                    <div class="mt-8 flex flex-col items-center justify-center gap-4">
+                        <div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3"><span class="w-3 h-3 rounded-full ${
+                          style.dot
+                        } shadow-[0_0_8px_currentColor]"></span><span class="text-slate-200 font-medium">${
+          state.currentGroup.type
+        }</span></div>
+                        ${suggHTML}
+                    </div>
+                </div>`;
+      }
+
+      // --- EXPORT & RESET ---
+      function performExport() {
+        const rawInput = UI.whitelistInput.value;
+        const userWhitelist = new Set();
+        if (rawInput)
+          rawInput
+            .split(/[\n,\t]+/)
+            .map((t) => t.trim().toLowerCase())
+            .filter((t) => t.length > 0)
+            .forEach((t) => userWhitelist.add(t));
+        let filtered = state.allDetectedErrors.filter(
+          (g) => !userWhitelist.has(g.word.toLowerCase())
+        );
+        if (state.isEngFilterEnabled && state.isEngDictLoaded)
+          filtered = filtered.filter(
+            (g) => !state.engWords.has(g.word.toLowerCase())
+          );
+
+        if (filtered.length === 0) {
+          alert("Không có lỗi nào để xuất!");
+          return;
+        }
+
+        const content = filtered.map((g) => g.word).join("\n"); // Fixed: Just word per line
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        let fileName = "loi-khong-ro-ten.txt";
+        if (state.currentBookTitle)
+          fileName = `loi-${state.currentBookTitle
+            .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
+            .trim()}.txt`;
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function resetApp() {
+        UI.resultsSection.classList.add("hidden");
+        UI.resetBtn.classList.add("hidden");
+        UI.exportBtn.classList.add("hidden");
+        UI.uploadSection.classList.remove("hidden");
+        UI.fileInput.value = "";
+        state = {
+          ...state,
+          allDetectedErrors: [],
+          currentFilteredErrors: [],
+          currentGroup: null,
+          currentInstanceIndex: 0,
+          currentBookTitle: "",
+          loadedTextContent: [],
+          currentCoverUrl: null,
+        };
+        if (state.currentCoverUrl) URL.revokeObjectURL(state.currentCoverUrl);
+      }
+
+      function updateProgress(percent, text) {
+        UI.progressBar.style.width = percent + "%";
+        UI.progressPercent.innerText = percent + "%";
+        UI.statusText.innerText = text;
+      }
+
+      // --- HELPERS ---
+      function quickIgnore(word) {
+        let targetIndex = -1;
+        if (state.currentGroup)
+          targetIndex = state.currentFilteredErrors.findIndex(
+            (g) => g.id === state.currentGroup.id
+          );
+        const sep = UI.whitelistInput.value.trim() ? ", " : "";
+        UI.whitelistInput.value += sep + word;
+        saveWhitelist();
+        filterAndRenderErrors();
+
+        if (targetIndex !== -1 && state.currentFilteredErrors.length > 0) {
+          if (targetIndex >= state.currentFilteredErrors.length)
+            targetIndex = state.currentFilteredErrors.length - 1;
+          const nextGroup = state.currentFilteredErrors[targetIndex];
+          selectGroup(nextGroup, null);
+          setTimeout(() => {
+            const btns = document.querySelectorAll("#error-list .select-btn");
+            if (btns[targetIndex]) {
+              btns[targetIndex].scrollIntoView({
+                block: "nearest",
+                behavior: "smooth",
+              });
+              btns[targetIndex].classList.add(
+                "bg-blue-900/30",
+                "border-blue-700/50",
+                "ring-1",
+                "ring-blue-500/50"
+              );
+              btns[targetIndex].classList.remove(
+                "border-transparent",
+                "border-r"
+              );
+            }
+          }, 0);
+        } else if (state.currentFilteredErrors.length === 0) {
+          UI.contextView.innerHTML =
+            '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
+          UI.contextNav.classList.add("hidden");
+          state.currentGroup = null;
+        }
+      }
+
+      function navigateErrors(direction) {
+        let nextIndex = 0;
+        if (state.currentGroup) {
+          const currentIndex = state.currentFilteredErrors.findIndex(
+            (g) => g.id === state.currentGroup.id
+          );
+          if (currentIndex !== -1) nextIndex = currentIndex + direction;
+        }
+        if (nextIndex < 0) nextIndex = 0;
+        if (nextIndex >= state.currentFilteredErrors.length)
+          nextIndex = state.currentFilteredErrors.length - 1;
+        const nextGroup = state.currentFilteredErrors[nextIndex];
+        if (nextGroup) {
+          selectGroup(nextGroup, null);
+          const btns = document.querySelectorAll("#error-list .select-btn");
+          if (btns[nextIndex]) {
+            btns[nextIndex].scrollIntoView({
+              block: "nearest",
+              behavior: "smooth",
+            });
+            btns.forEach((b) => {
+              b.classList.remove(
+                "bg-blue-900/30",
+                "border-blue-700/50",
+                "ring-1",
+                "ring-blue-500/50"
+              );
+              b.classList.add("border-transparent", "border-r");
+            });
+            btns[nextIndex].classList.add(
+              "bg-blue-900/30",
+              "border-blue-700/50",
+              "ring-1",
+              "ring-blue-500/50"
+            );
+            btns[nextIndex].classList.remove("border-transparent", "border-r");
+          }
+        }
+      }
+
+      function findSuggestions(wrongWord) {
+        const lowerWrong = wrongWord.toLowerCase();
+        for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
+          if (lowerWrong.includes(wrong))
+            return [lowerWrong.replace(wrong, right)];
+        }
+        if (!state.isDictLoaded) return [];
+        const suggestions = [];
+        const maxDistance = wrongWord.length < 4 ? 1 : 2;
+        for (const word of state.validSyllables) {
+          if (Math.abs(word.length - lowerWrong.length) > maxDistance) continue;
+          const dist = levenshteinDistance(lowerWrong, word);
+          if (dist <= maxDistance && dist > 0) suggestions.push({ word, dist });
+        }
+        return suggestions
+          .sort((a, b) => a.dist - b.dist)
+          .slice(0, 5)
+          .map((s) => s.word);
       }
 
       function getErrorHighlights(type) {
@@ -1878,290 +2033,27 @@
             bg: "bg-pink-500/20",
             border: "border-pink-500",
           };
-        } else if (type.includes("Không có trong từ điển")) {
-          style = {
-            dot: "bg-sky-500",
-            text: "text-sky-400",
-            bg: "bg-sky-500/20",
-            border: "border-sky-500",
-          };
         }
         return style;
-      }
-
-      const localWordRegex = /[\p{L}\p{M}]+/gu;
-
-      function analyzeText(paragraphs) {
-        let totalWords = 0;
-        const errorMap = new Map();
-
-        paragraphs.forEach((para) => {
-          let match;
-          while ((match = localWordRegex.exec(para)) !== null) {
-            const word = match[0];
-            totalWords++;
-            if (word.length < 2) continue;
-
-            const lower = word.toLowerCase().normalize("NFC");
-            const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word);
-
-            if (IGNORED_WORDS.has(lower)) continue;
-
-            let errorType = null;
-
-            if (checkSettings.uppercase) {
-              const upperCount = Array.from(word).filter(
-                (c) => c.toUpperCase() === c && c.toLowerCase() !== c
-              ).length;
-              if (upperCount >= 2) errorType = "Lỗi viết hoa (Nhiều ký tự hoa)";
-            }
-
-            if (!errorType && checkSettings.tone) {
-              for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
-                // FIX: Only match if it's at the END of the word (Open Syllable rule for oa, oe)
-                if (lower.endsWith(wrong)) {
-                  errorType = "Sai vị trí dấu (Chuẩn cũ/mới)";
-                  break;
-                }
-              }
-            }
-
-            if (!errorType && isDictLoaded && checkSettings.dictionary) {
-              if (!validSyllables.has(lower)) {
-                if (!isCapitalized) {
-                  if (/[fjwz]/.test(lower)) {
-                    if (checkSettings.foreign)
-                      errorType = "Từ lạ / Tiếng nước ngoài";
-                    else errorType = "Không có trong từ điển";
-                  } else if (/(aa|ee|oo|dd|js|kx|wt)$/.test(lower)) {
-                    errorType = "Lỗi gõ máy (Typo)";
-                  } else {
-                    errorType = "Không có trong từ điển";
-                  }
-                }
-              }
-            } else if (!errorType && checkSettings.foreign) {
-              if (/[fjwz]/.test(lower) && !isCapitalized)
-                errorType = "Chứa ký tự lạ (f, j, w, z)";
-            }
-
-            if (!errorType && checkSettings.foreign) {
-              if (
-                lower.startsWith("ngh") &&
-                !isFrontVowel(lower[3]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc ngh";
-              else if (
-                lower.startsWith("ng") &&
-                isFrontVowel(lower[2]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc ng";
-              else if (
-                lower.startsWith("gh") &&
-                !isFrontVowel(lower[2]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc gh";
-              // Modified G rule:
-              else if (
-                lower.startsWith("g") &&
-                !lower.startsWith("gh") &&
-                !lower.startsWith("gi") &&
-                !isCapitalized
-              ) {
-                const c = lower[1];
-                if (c) {
-                  const norm = c
-                    .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "")
-                    .toLowerCase();
-                  if (["e", "ê"].includes(norm)) errorType = "Sai quy tắc g";
-                }
-              } else if (
-                lower.startsWith("k") &&
-                !lower.startsWith("kh") &&
-                !isFrontVowel(lower[1]) &&
-                !isY(lower[1]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc k";
-              else if (
-                lower.startsWith("c") &&
-                !lower.startsWith("ch") &&
-                (isFrontVowel(lower[1]) || isY(lower[1])) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc c";
-            }
-
-            if (errorType) {
-              const key = lower + "::" + errorType;
-              if (!errorMap.has(key)) {
-                errorMap.set(key, {
-                  id: key,
-                  word: word,
-                  type: errorType,
-                  contexts: [],
-                });
-              }
-              errorMap
-                .get(key)
-                .contexts.push(getContext(para, match.index, word.length));
-            }
-          }
-        });
-
-        statTotalWords.innerText = totalWords.toLocaleString();
-        allDetectedErrors = Array.from(errorMap.values()).sort(
-          (a, b) => b.contexts.length - a.contexts.length
-        );
-        currentFilteredErrors = allDetectedErrors;
-        filterAndRenderErrors();
-      }
-
-      function filterAndRenderErrors() {
-        const rawInput = whitelistInput.value;
-        const userWhitelist = new Set();
-        if (rawInput) {
-          const tokens = rawInput
-            .split(/[\n,\t]+/)
-            .map((t) => t.trim().toLowerCase())
-            .filter((t) => t.length > 0);
-          tokens.forEach((t) => userWhitelist.add(t));
-        }
-
-        let filteredErrors = allDetectedErrors.filter((group) => {
-          return !userWhitelist.has(group.word.toLowerCase());
-        });
-
-        if (isEngFilterEnabled && isEngDictLoaded) {
-          filteredErrors = filteredErrors.filter(
-            (group) => !engWords.has(group.word.toLowerCase())
-          );
-        }
-
-        currentFilteredErrors = filteredErrors;
-        const totalErrors = filteredErrors.reduce(
-          (acc, curr) => acc + curr.contexts.length,
-          0
-        );
-        statErrors.innerText = totalErrors.toLocaleString();
-        statGroups.innerText = filteredErrors.length.toLocaleString();
-        renderErrors(filteredErrors);
-      }
-
-      function quickIgnore(word) {
-        // 1. Capture current index
-        let targetIndex = -1;
-        if (currentGroup) {
-          targetIndex = currentFilteredErrors.findIndex(
-            (g) => g.id === currentGroup.id
-          );
-        }
-
-        // 2. Add to whitelist
-        const currentVal = whitelistInput.value;
-        const separator = currentVal.trim() ? ", " : "";
-        whitelistInput.value = currentVal + separator + word;
-        saveWhitelist();
-
-        // 3. Re-filter
-        filterAndRenderErrors();
-
-        // 4. Restore selection to the same index (or closest)
-        if (targetIndex !== -1 && currentFilteredErrors.length > 0) {
-          // Ensure index is within bounds
-          if (targetIndex >= currentFilteredErrors.length) {
-            targetIndex = currentFilteredErrors.length - 1;
-          }
-
-          const nextGroup = currentFilteredErrors[targetIndex];
-
-          // Select data
-          selectGroup(nextGroup, null);
-
-          // Select visual (wait for DOM update from renderErrors)
-          setTimeout(() => {
-            const listContainer = document.getElementById("error-list");
-            const buttons = listContainer.querySelectorAll(".select-btn");
-            if (buttons[targetIndex]) {
-              buttons[targetIndex].scrollIntoView({
-                block: "nearest",
-                behavior: "smooth",
-              });
-              // Add style manually since selectGroup was called with null
-              buttons[targetIndex].classList.add(
-                "bg-blue-900/30",
-                "border-blue-700/50",
-                "ring-1",
-                "ring-blue-500/50"
-              );
-              buttons[targetIndex].classList.remove(
-                "border-transparent",
-                "border-r"
-              );
-            }
-          }, 0);
-        } else if (currentFilteredErrors.length === 0) {
-          // Clear view if list empty
-          contextView.innerHTML =
-            '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
-          contextNav.classList.add("hidden");
-          currentGroup = null;
-        }
       }
 
       function levenshteinDistance(a, b) {
         if (a.length === 0) return b.length;
         if (b.length === 0) return a.length;
-        const matrix = [];
-        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
-        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+        // Memory optimized Levenshtein (2 rows)
+        let row = new Array(a.length + 1);
+        for (let j = 0; j <= a.length; j++) row[j] = j;
+        let prevRow;
         for (let i = 1; i <= b.length; i++) {
+          prevRow = row;
+          row = new Array(a.length + 1);
+          row[0] = i;
           for (let j = 1; j <= a.length; j++) {
-            if (b.charAt(i - 1) === a.charAt(j - 1))
-              matrix[i][j] = matrix[i - 1][j - 1];
-            else
-              matrix[i][j] = Math.min(
-                matrix[i - 1][j - 1] + 1,
-                Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1)
-              );
+            if (b.charAt(i - 1) === a.charAt(j - 1)) row[j] = prevRow[j - 1];
+            else row[j] = Math.min(prevRow[j - 1], prevRow[j], row[j - 1]) + 1;
           }
         }
-        return matrix[b.length][a.length];
-      }
-
-      function findSuggestions(wrongWord) {
-        const lowerWrong = wrongWord.toLowerCase();
-        for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
-          if (lowerWrong.includes(wrong)) {
-            return [lowerWrong.replace(wrong, right)];
-          }
-        }
-        if (!isDictLoaded) return [];
-        const suggestions = [];
-        const maxDistance = wrongWord.length < 4 ? 1 : 2;
-        for (const word of validSyllables) {
-          if (Math.abs(word.length - lowerWrong.length) > maxDistance) continue;
-          const dist = levenshteinDistance(lowerWrong, word);
-          if (dist <= maxDistance && dist > 0) suggestions.push({ word, dist });
-        }
-        return suggestions
-          .sort((a, b) => a.dist - b.dist)
-          .slice(0, 5)
-          .map((s) => s.word);
-      }
-
-      function getContext(text, index, length) {
-        const start = Math.max(0, index - 60);
-        const end = Math.min(text.length, index + length + 60);
-        let prefix = text.substring(start, index);
-        let suffix = text.substring(index + length, end);
-        if (start > 0) prefix = "..." + prefix;
-        if (end < text.length) suffix = suffix + "...";
-        return { prefix, target: text.substr(index, length), suffix };
+        return row[a.length];
       }
 
       function copyToClipboard(text) {
@@ -2172,149 +2064,22 @@
         textarea.select();
         try {
           document.execCommand("copy");
-          const notification = document.createElement("div");
-          notification.className =
-            "fixed bottom-6 right-6 bg-slate-800 text-green-400 border border-slate-700 px-4 py-3 rounded-lg shadow-xl z-50 text-sm font-medium animate-fadeIn flex items-center gap-2";
-          notification.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span>Đã copy: "${text}"</span>`;
-          document.body.appendChild(notification);
-          setTimeout(() => {
-            notification.style.opacity = "0";
-            notification.style.transition = "opacity 0.5s ease";
-            setTimeout(() => notification.remove(), 500);
-          }, 2000);
+          showToast(`Đã copy: "${text}"`);
         } catch (err) {}
         document.body.removeChild(textarea);
       }
 
-      function renderErrors(groups) {
-        errorList.innerHTML = "";
-        if (currentGroup) {
-          const stillExists = groups.find((g) => g.id === currentGroup.id);
-          if (!stillExists) {
-            contextView.innerHTML =
-              '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
-            contextNav.classList.add("hidden");
-            currentGroup = null;
-          }
-        }
-        if (groups.length === 0) {
-          errorList.innerHTML =
-            '<div class="p-10 text-center text-slate-600 flex flex-col items-center"><svg class="w-16 h-16 mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="text-lg font-medium">Tuyệt vời!</p><p class="text-sm mt-1">Không tìm thấy lỗi nào (hoặc đã được lọc hết).</p></div>';
-          return;
-        }
-        const template = document.getElementById("error-item-template");
-        groups.forEach((group) => {
-          const clone = template.content.cloneNode(true);
-          clone.querySelector(".error-word").innerText = group.word;
-          clone.querySelector(".error-reason").innerText = group.type;
-          clone.querySelector(".error-count").innerText = group.contexts.length;
-
-          const style = getErrorHighlights(group.type);
-          const dot = clone.querySelector(".status-dot");
-          dot.classList.add(style.dot);
-
-          const selectBtn = clone.querySelector(".select-btn");
-          if (currentGroup && currentGroup.id === group.id) {
-            selectBtn.classList.add(
-              "bg-blue-900/30",
-              "border-blue-700/50",
-              "ring-1",
-              "ring-blue-500/50"
-            );
-            selectBtn.classList.remove("border-transparent", "border-r");
-          }
-          selectBtn.onclick = (e) => {
-            selectGroup(group, selectBtn);
-            copyToClipboard(group.word);
-          };
-
-          const ignoreBtn = clone.querySelector(".ignore-btn");
-          ignoreBtn.onclick = (e) => {
-            e.stopPropagation();
-            quickIgnore(group.word);
-          };
-
-          errorList.appendChild(clone);
-        });
-      }
-
-      function selectGroup(group, btnElement) {
-        currentGroup = group;
-        currentInstanceIndex = 0;
-        const allItems = document.querySelectorAll("#error-list .select-btn");
-        allItems.forEach((btn) => {
-          btn.classList.remove(
-            "bg-blue-900/30",
-            "border-blue-700/50",
-            "ring-1",
-            "ring-blue-500/50"
-          );
-          btn.classList.add("border-transparent", "border-r");
-        });
-        if (btnElement) {
-          btnElement.classList.add(
-            "bg-blue-900/30",
-            "border-blue-700/50",
-            "ring-1",
-            "ring-blue-500/50"
-          );
-          btnElement.classList.remove("border-transparent", "border-r");
-        }
-        if (group.contexts.length > 1) contextNav.classList.remove("hidden");
-        else contextNav.classList.add("hidden");
-        updateContextView();
-      }
-
-      function updateContextView() {
-        if (!currentGroup) return;
-        const context = currentGroup.contexts[currentInstanceIndex];
-        const total = currentGroup.contexts.length;
-        const suggestions = findSuggestions(currentGroup.word);
-        const suggestionHTML =
-          suggestions.length > 0
-            ? `<div class="mt-4 flex flex-wrap justify-center gap-2">
-                     <span class="text-sm text-slate-400 mr-1 self-center">Gợi ý:</span>
-                     ${suggestions
-                       .map(
-                         (s) =>
-                           `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm cursor-pointer hover:bg-green-800/50" onclick="copyToClipboard('${s}')">${s}</span>`
-                       )
-                       .join("")}
-                   </div>`
-            : "";
-        const style = getErrorHighlights(currentGroup.type);
-        const reasonHTML = `<div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
-                    <span class="w-3 h-3 rounded-full ${style.dot} shadow-[0_0_8px_currentColor]"></span>
-                    <span class="text-slate-200 font-medium">${currentGroup.type}</span>
-               </div>`;
-        navIndicator.innerText = `${currentInstanceIndex + 1}/${total}`;
-        btnPrev.disabled = currentInstanceIndex === 0;
-        btnNext.disabled = currentInstanceIndex === total - 1;
-        const wiktionaryLink = `<a href="https://vi.wiktionary.org/wiki/${currentGroup.word}" target="_blank" class="ml-1 inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors" title="Tra cứu Wiktionary"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></a>`;
-        contextView.innerHTML = `
-                <div class="max-w-2xl text-center w-full animate-fadeIn">
-                    <div class="flex items-center justify-center gap-2 mb-6">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-2 py-1 rounded">
-                            Ngữ cảnh ${currentInstanceIndex + 1} / ${total}
-                        </span>
-                    </div>
-                    <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative">
-                        <div class="text-xl leading-loose text-slate-300 font-serif">
-                            ${escapeHtml(context.prefix)}<span class="${
-          style.bg
-        } ${style.text} px-1 py-0.5 rounded border-b-2 ${
-          style.border
-        } font-bold mx-0.5 shadow-[0_0_15px_rgba(0,0,0,0.2)]">${escapeHtml(
-          context.target
-        )} ${wiktionaryLink}</span>${escapeHtml(context.suffix)}
-                        </div>
-                    </div>
-                    <div class="mt-8 flex flex-col items-center justify-center gap-4">
-                        ${reasonHTML}
-                        ${suggestionHTML}
-                    </div>
-                </div>
-            `;
+      function showToast(msg) {
+        const n = document.createElement("div");
+        n.className =
+          "fixed bottom-6 right-6 bg-slate-800 text-green-400 border border-slate-700 px-4 py-3 rounded-lg shadow-xl z-50 text-sm font-medium animate-fadeIn flex items-center gap-2";
+        n.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span>${msg}</span>`;
+        document.body.appendChild(n);
+        setTimeout(() => {
+          n.style.opacity = "0";
+          n.style.transition = "opacity 0.5s ease";
+          setTimeout(() => n.remove(), 500);
+        }, 2000);
       }
 
       function escapeHtml(text) {
@@ -2322,6 +2087,8 @@
         div.textContent = text;
         return div.innerHTML;
       }
+
+      init();
     </script>
   </body>
 </html>

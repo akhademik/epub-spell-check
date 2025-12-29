@@ -15,7 +15,6 @@ acquy
 acre
 acten
 ad
-adj
 admin
 adn
 adrenalin
@@ -7713,6 +7712,7 @@ trũng
 trơ
 trơi
 trơn
+trư
 trưa
 trưng
 trương
@@ -7720,8 +7720,6 @@ trước
 trướng
 trườn
 trường
-trườngề
-trưởnc
 trưởng
 trưỡng
 trượng
@@ -9739,3 +9737,7 @@ zốt
 ực
 ỳ
 ỷ
+ừm
+ah
+haha
+ngúm
