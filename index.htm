@@ -82,7 +82,7 @@
             <h1 class="text-xl font-bold text-slate-100 tracking-tight">
               Soát Lỗi Chính Tả
             </h1>
-            <div class="text-xs text-slate-500 font-medium">v1.59</div>
+            <div class="text-xs text-slate-500 font-medium">v1.63</div>
           </div>
         </div>
 
@@ -810,7 +810,7 @@
               >
                 <option value="count_desc">Số lượng (Cao → Thấp)</option>
                 <option value="count_asc">Số lượng (Thấp → Cao)</option>
-                <option value="alphabet">A → Z</option>
+                <option value="alpha_asc">A → Z</option>
                 <option value="alpha_desc">Z → A</option>
                 <option value="severity">Mức độ nghiêm trọng</option>
               </select>
@@ -863,7 +863,7 @@
                   >
                     <path
                       fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
                       clip-rule="evenodd"
                     />
                   </svg>
@@ -969,6 +969,8 @@
         "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/en-dict.txt";
       const DICT_URL =
         "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/vn-dict.txt";
+      const CUSTOM_DICT_URL =
+        "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/custom-dict.txt";
       const STORAGE_KEY = "vn_spell_whitelist";
       const SETTINGS_KEY = "vn_spell_settings";
       const IGNORED_WORDS = new Set([]);
@@ -1037,6 +1039,7 @@
         currentInstanceIndex: 0,
         validSyllables: new Set(),
         engWords: new Set(),
+        customWords: new Set(),
         isDictLoaded: false,
         isEngDictLoaded: false,
         isEngFilterEnabled: false,
@@ -1220,10 +1223,14 @@
         try {
           UI.dictStatus.classList.remove("hidden");
           UI.dictText.innerText = "Đang tải dữ liệu...";
-          const [vnRes, enRes] = await Promise.all([
+          const [vnRes, enRes, upRes] = await Promise.all([
             fetchDictWithFallback("vn-dict.txt", DICT_URL),
             fetchDictWithFallback("en-dict.txt", ENG_DICT_URL),
+            fetchDictWithFallback("custom-dict.txt", CUSTOM_DICT_URL).catch(
+              () => null
+            ),
           ]);
+
           if (vnRes) {
             vnRes.split("\n").forEach((line) => {
               let w = line.trim();
@@ -1267,6 +1274,13 @@
             });
             state.isEngDictLoaded = true;
           }
+          if (upRes) {
+            upRes.split(/\r?\n/).forEach((w) => {
+              const c = w.trim();
+              if (c) state.customWords.add(c);
+            });
+          }
+
           UI.dictDot.classList.remove("bg-yellow-500", "animate-pulse");
           if (state.isDictLoaded) {
             UI.dictDot.classList.add("bg-green-500");
@@ -1463,9 +1477,11 @@
             const word = match[0];
             totalWords++;
             if (word.length < 2) continue;
+
+            if (state.customWords.has(word)) continue;
+
             const lower = word.toLowerCase().normalize("NFC");
             const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word);
-            if (IGNORED_WORDS.has(lower)) continue;
             let errorType = null;
             if (state.checkSettings.uppercase) {
               const upperCount = Array.from(word).filter(
@@ -1507,7 +1523,10 @@
             ) {
               errorType = "Chứa ký tự lạ (f, j, w, z)";
             }
-            if (!errorType && state.checkSettings.foreign) {
+
+            const isWordInDict =
+              state.isDictLoaded && state.validSyllables.has(lower);
+            if (!errorType && state.checkSettings.foreign && !isWordInDict) {
               if (
                 lower.startsWith("ngh") &&
                 !isFrontVowel(lower[3]) &&
@@ -1562,30 +1581,15 @@
             if (errorType) {
               const key = lower + "::" + errorType;
               if (!errorMap.has(key))
-                state.allDetectedErrors.push({
+                errorMap.set(key, {
                   id: key,
                   word: word,
                   type: errorType,
                   contexts: [],
                 });
-              if (!errorMap.has(key))
-                errorMap.set(
-                  key,
-                  state.allDetectedErrors[state.allDetectedErrors.length - 1]
-                );
               errorMap
                 .get(key)
-                .contexts.push({
-                  prefix: para.substring(
-                    Math.max(0, match.index - 60),
-                    match.index
-                  ),
-                  target: word,
-                  suffix: para.substring(
-                    match.index + word.length,
-                    Math.min(para.length, match.index + word.length + 60)
-                  ),
-                });
+                .contexts.push(getContext(para, match.index, word.length));
             }
           }
         });
@@ -1613,7 +1617,6 @@
           filtered = filtered.filter(
             (g) => !state.engWords.has(g.word.toLowerCase())
           );
-
         if (state.sortMode === "alphabet") {
           const collator = new Intl.Collator("vi", {
             sensitivity: "accent",
@@ -1688,6 +1691,74 @@
           };
           UI.errorList.appendChild(clone);
         });
+      }
+
+      function selectGroup(group, btnElement) {
+        state.currentGroup = group;
+        state.currentInstanceIndex = 0;
+        document.querySelectorAll("#error-list .select-btn").forEach((b) => {
+          b.classList.remove(
+            "bg-blue-900/30",
+            "border-blue-700/50",
+            "ring-1",
+            "ring-blue-500/50"
+          );
+          b.classList.add("border-transparent", "border-r");
+        });
+        if (btnElement) {
+          btnElement.classList.add(
+            "bg-blue-900/30",
+            "border-blue-700/50",
+            "ring-1",
+            "ring-blue-500/50"
+          );
+          btnElement.classList.remove("border-transparent", "border-r");
+        }
+        if (group.contexts.length > 1) UI.contextNav.classList.remove("hidden");
+        else UI.contextNav.classList.add("hidden");
+        updateContextView();
+      }
+
+      function updateContextView() {
+        if (!state.currentGroup) return;
+        const ctx = state.currentGroup.contexts[state.currentInstanceIndex];
+        UI.navIndicator.innerText = `${state.currentInstanceIndex + 1}/${
+          state.currentGroup.contexts.length
+        }`;
+        UI.btnPrev.disabled = state.currentInstanceIndex === 0;
+        UI.btnNext.disabled =
+          state.currentInstanceIndex === state.currentGroup.contexts.length - 1;
+        const suggestions = findSuggestions(state.currentGroup.word);
+        const suggHTML =
+          suggestions.length > 0
+            ? `<div class="mt-4 flex flex-wrap justify-center gap-2"><span class="text-sm text-slate-400 mr-1 self-center">Gợi ý:</span>${suggestions
+                .map(
+                  (s) =>
+                    `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm cursor-pointer hover:bg-green-800/50" onclick="copyToClipboard('${s}')">${s}</span>`
+                )
+                .join("")}</div>`
+            : "";
+        const style = getErrorHighlights(state.currentGroup.type);
+        const wiktionary = `<a href="https://vi.wiktionary.org/wiki/${state.currentGroup.word}" target="_blank" class="ml-1 inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors" title="Tra cứu Wiktionary"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></a>`;
+        UI.contextView.innerHTML = `<div class="max-w-2xl text-center w-full animate-fadeIn"><div class="flex items-center justify-center gap-2 mb-6"><span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-2 py-1 rounded">Ngữ cảnh ${
+          state.currentInstanceIndex + 1
+        } / ${
+          state.currentGroup.contexts.length
+        }</span></div><div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative"><div class="text-xl leading-loose text-slate-300 font-serif">${escapeHtml(
+          ctx.prefix
+        )}<span class="${style.bg} ${
+          style.text
+        } px-1 py-0.5 rounded border-b-2 ${
+          style.border
+        } font-bold mx-0.5 shadow-[0_0_15px_rgba(0,0,0,0.2)]">${escapeHtml(
+          ctx.target
+        )} ${wiktionary}</span>${escapeHtml(
+          ctx.suffix
+        )}</div></div><div class="mt-8 flex flex-col items-center justify-center gap-4"><div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3"><span class="w-3 h-3 rounded-full ${
+          style.dot
+        } shadow-[0_0_8px_currentColor]"></span><span class="text-slate-200 font-medium">${
+          state.currentGroup.type
+        }</span></div>${suggHTML}</div></div>`;
       }
 
       function quickIgnore(word) {
@@ -1770,74 +1841,6 @@
             btns[nextIndex].classList.remove("border-transparent", "border-r");
           }
         }
-      }
-
-      function selectGroup(group, btnElement) {
-        state.currentGroup = group;
-        state.currentInstanceIndex = 0;
-        document.querySelectorAll("#error-list .select-btn").forEach((b) => {
-          b.classList.remove(
-            "bg-blue-900/30",
-            "border-blue-700/50",
-            "ring-1",
-            "ring-blue-500/50"
-          );
-          b.classList.add("border-transparent", "border-r");
-        });
-        if (btnElement) {
-          btnElement.classList.add(
-            "bg-blue-900/30",
-            "border-blue-700/50",
-            "ring-1",
-            "ring-blue-500/50"
-          );
-          btnElement.classList.remove("border-transparent", "border-r");
-        }
-        if (group.contexts.length > 1) UI.contextNav.classList.remove("hidden");
-        else UI.contextNav.classList.add("hidden");
-        updateContextView();
-      }
-
-      function updateContextView() {
-        if (!state.currentGroup) return;
-        const ctx = state.currentGroup.contexts[state.currentInstanceIndex];
-        UI.navIndicator.innerText = `${state.currentInstanceIndex + 1}/${
-          state.currentGroup.contexts.length
-        }`;
-        UI.btnPrev.disabled = state.currentInstanceIndex === 0;
-        UI.btnNext.disabled =
-          state.currentInstanceIndex === state.currentGroup.contexts.length - 1;
-        const suggestions = findSuggestions(state.currentGroup.word);
-        const suggHTML =
-          suggestions.length > 0
-            ? `<div class="mt-4 flex flex-wrap justify-center gap-2"><span class="text-sm text-slate-400 mr-1 self-center">Gợi ý:</span>${suggestions
-                .map(
-                  (s) =>
-                    `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm cursor-pointer hover:bg-green-800/50" onclick="copyToClipboard('${s}')">${s}</span>`
-                )
-                .join("")}</div>`
-            : "";
-        const style = getErrorHighlights(state.currentGroup.type);
-        const wiktionary = `<a href="https://vi.wiktionary.org/wiki/${state.currentGroup.word}" target="_blank" class="ml-1 inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors" title="Tra cứu Wiktionary"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></a>`;
-        UI.contextView.innerHTML = `<div class="max-w-2xl text-center w-full animate-fadeIn"><div class="flex items-center justify-center gap-2 mb-6"><span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-2 py-1 rounded">Ngữ cảnh ${
-          state.currentInstanceIndex + 1
-        } / ${
-          state.currentGroup.contexts.length
-        }</span></div><div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative"><div class="text-xl leading-loose text-slate-300 font-serif">${escapeHtml(
-          ctx.prefix
-        )}<span class="${style.bg} ${
-          style.text
-        } px-1 py-0.5 rounded border-b-2 ${
-          style.border
-        } font-bold mx-0.5 shadow-[0_0_15px_rgba(0,0,0,0.2)]">${escapeHtml(
-          ctx.target
-        )} ${wiktionary}</span>${escapeHtml(
-          ctx.suffix
-        )}</div></div><div class="mt-8 flex flex-col items-center justify-center gap-4"><div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3"><span class="w-3 h-3 rounded-full ${
-          style.dot
-        } shadow-[0_0_8px_currentColor]"></span><span class="text-slate-200 font-medium">${
-          state.currentGroup.type
-        }</span></div>${suggHTML}</div></div>`;
       }
 
       function resetApp() {

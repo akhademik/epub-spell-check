@@ -12,6 +12,7 @@ aalesund
 aalii
 aaliis
 aaliyah
+kangaroo
 aals
 aalst
 aalto
@@ -2152,6 +2153,11 @@ aerodyne
 aerodynes
 aeroflot
 aerofoil
+mozzarella
+shuffleboard
+dominatrix
+carcinogen
+periphyton
 aerofoils
 aerogel
 aerogels
