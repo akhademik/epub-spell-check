@@ -12,7 +12,11 @@
         theme: {
           extend: {
             colors: {
-              slate: { 850: "#1e293b", 900: "#0f172a", 950: "#020617" },
+              slate: {
+                850: "#1e293b",
+                900: "#0f172a",
+                950: "#020617",
+              },
             },
             fontFamily: {
               sans: ['"Noto Sans"', "sans-serif"],
@@ -82,7 +86,7 @@
             <h1 class="text-xl font-bold text-slate-100 tracking-tight">
               Soát Lỗi Chính Tả
             </h1>
-            <div class="text-xs text-slate-500 font-medium">v1.63</div>
+            <div class="text-xs text-slate-500 font-medium">v1.71</div>
           </div>
         </div>
 
@@ -394,7 +398,13 @@
             <div>
               <h4 class="font-bold text-white mb-1">3. Tính Năng</h4>
               <ul class="list-disc pl-5 space-y-1 marker:text-green-500">
-                <li><strong>Whitelist:</strong> Nhập từ bỏ qua vào ô text.</li>
+                <li>
+                  <strong>Whitelist:</strong> Nhập/Xuất danh sách từ bỏ qua.
+                </li>
+                <li>
+                  <strong>Xuất Lỗi:</strong> Tải báo cáo lỗi
+                  (VCTVEGROUP/Thường).
+                </li>
                 <li><strong>Lọc Tiếng Anh:</strong> Ẩn từ tiếng Anh chuẩn.</li>
                 <li><strong>Cấu Hình:</strong> Bật/tắt loại lỗi.</li>
               </ul>
@@ -662,55 +672,103 @@
                 /></svg
               >Danh sách từ bỏ soát lỗi</label
             >
-            <span class="text-xs text-slate-500"
-              >Tự động cập nhật & lưu kết quả</span
-            >
           </div>
           <textarea
             id="whitelist-input"
             rows="2"
             class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-slate-200 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-600 transition-colors"
-            placeholder="Nhập các từ muốn bỏ qua..."
+            placeholder="Nhập các từ muốn bỏ qua, cách nhau bằng dấu phẩy, khoảng trắng hoặc xuống dòng (Ví dụ: tên nhân vật, địa danh lạ...)"
           ></textarea>
+
           <div
-            class="flex items-center gap-2 mt-4 pt-3 border-t border-slate-800"
+            class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 pt-3 border-t border-slate-800"
           >
-            <input
-              type="checkbox"
-              id="eng-filter-checkbox"
-              class="w-4 h-4 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-500 focus:ring-offset-slate-900"
-            />
-            <label
-              for="eng-filter-checkbox"
-              class="text-sm font-medium text-slate-300 cursor-pointer select-none flex items-center gap-2"
-            >
-              Kích hoạt từ tiếng Anh
-              <span
-                id="eng-loading"
-                class="hidden text-xs text-yellow-500 animate-pulse flex items-center gap-1"
-                ><svg
-                  class="animate-spin h-3 w-3"
+            <div class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="eng-filter-checkbox"
+                class="w-4 h-4 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+              />
+              <label
+                for="eng-filter-checkbox"
+                class="text-sm font-medium text-slate-300 cursor-pointer select-none flex items-center gap-2"
+              >
+                Kích hoạt từ tiếng Anh
+                <span
+                  id="eng-loading"
+                  class="hidden text-xs text-yellow-500 animate-pulse flex items-center gap-1"
+                  ><svg
+                    class="animate-spin h-3 w-3"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Đang tải...</span
+                >
+              </label>
+            </div>
+            <div class="flex items-center gap-2">
+              <input
+                type="file"
+                id="whitelist-import-file"
+                class="hidden"
+                accept=".txt"
+              />
+              <button
+                id="import-whitelist-btn"
+                class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-slate-300 transition-colors flex items-center gap-1"
+              >
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3"
                   fill="none"
                   viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
                   <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                  />
                 </svg>
-                Đang tải...</span
+                Import Whitelist
+              </button>
+              <button
+                id="export-whitelist-btn"
+                class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-slate-300 transition-colors flex items-center gap-1"
               >
-            </label>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                Export Whitelist
+              </button>
+            </div>
           </div>
         </div>
 
@@ -804,22 +862,13 @@
                   /></svg
                 >Danh sách lỗi</span
               >
-              <select
-                id="sort-select"
-                class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-500 border border-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer"
-              >
-                <option value="count_desc">Số lượng (Cao → Thấp)</option>
-                <option value="count_asc">Số lượng (Thấp → Cao)</option>
-                <option value="alpha_asc">A → Z</option>
-                <option value="alpha_desc">Z → A</option>
-                <option value="severity">Mức độ nghiêm trọng</option>
-              </select>
             </div>
             <div
               id="error-list"
               class="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent"
             ></div>
           </div>
+
           <div
             class="w-full lg:w-2/3 flex flex-col bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden"
           >
@@ -1028,7 +1077,9 @@
         statErrors: document.getElementById("stat-errors"),
         statGroups: document.getElementById("stat-groups"),
         loadingOverlay: document.getElementById("loading-overlay"),
-        sortSelect: document.getElementById("sort-select"),
+        importWhitelistBtn: document.getElementById("import-whitelist-btn"),
+        exportWhitelistBtn: document.getElementById("export-whitelist-btn"),
+        whitelistImportFile: document.getElementById("whitelist-import-file"),
       };
 
       // --- 3. STATE ---
@@ -1071,19 +1122,6 @@
           .toLowerCase()
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "") === "y";
-
-      function getSeverityScore(type) {
-        if (!type) return 0;
-        if (
-          type.startsWith("Sai quy tắc") ||
-          type.includes("Lỗi gõ máy") ||
-          type.includes("Lỗi viết hoa")
-        )
-          return 4;
-        if (type.includes("Sai vị trí dấu")) return 3;
-        if (type.includes("Từ lạ") || type.includes("ký tự lạ")) return 2;
-        return 1;
-      }
 
       function getErrorHighlights(type) {
         let style = {
@@ -1206,6 +1244,61 @@
           showToast(`Đã copy: "${text}"`);
         } catch (err) {}
         document.body.removeChild(textarea);
+      }
+
+      function exportWhitelist() {
+        const content = UI.whitelistInput.value;
+        if (!content.trim()) {
+          alert("Danh sách trống!");
+          return;
+        }
+        const tokens = content
+          .split(/[,;\s]+/)
+          .map((t) => t.trim())
+          .filter((t) => t.length > 0);
+        const uniqueTokens = [...new Set(tokens)];
+        const formattedContent = uniqueTokens.join("\n");
+        const blob = new Blob([formattedContent], {
+          type: "text/plain;charset=utf-8",
+        });
+        const url = URL.createObjectURL(blob);
+        const now = new Date();
+        const timeString = `${now.getFullYear()}${String(
+          now.getMonth() + 1
+        ).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `whitelist-${timeString}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function handleImportWhitelist(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const newContent = e.target.result;
+          const currentContent = UI.whitelistInput.value;
+          const combinedContent = currentContent + " " + newContent;
+          // Improved split logic for all delimiters including whitespace
+          const tokens = combinedContent
+            .split(/[,;\s]+/)
+            .map((t) => t.trim())
+            .filter((t) => t.length > 0);
+          const uniqueTokens = [...new Set(tokens)];
+          // Format with trailing comma
+          const finalString = uniqueTokens.join(", ");
+          UI.whitelistInput.value =
+            finalString + (finalString.length > 0 ? ", " : "");
+          saveWhitelist();
+          filterAndRenderErrors();
+          showToast("Đã nhập whitelist thành công!");
+          event.target.value = "";
+        };
+        reader.readAsText(file);
       }
 
       // --- 5. LOGIC & EVENT LISTENERS ---
@@ -1606,7 +1699,7 @@
         const userWhitelist = new Set();
         if (rawInput)
           rawInput
-            .split(/[\n,\t]+/)
+            .split(/[,;\s]+/)
             .map((t) => t.trim().toLowerCase())
             .filter((t) => t.length > 0)
             .forEach((t) => userWhitelist.add(t));
@@ -1617,28 +1710,10 @@
           filtered = filtered.filter(
             (g) => !state.engWords.has(g.word.toLowerCase())
           );
-        if (state.sortMode === "alphabet") {
-          const collator = new Intl.Collator("vi", {
-            sensitivity: "accent",
-            numeric: true,
-          });
-          filtered.sort((a, b) => collator.compare(a.word, b.word));
-        } else if (state.sortMode === "alpha_desc") {
-          const collator = new Intl.Collator("vi", {
-            sensitivity: "accent",
-            numeric: true,
-          });
-          filtered.sort((a, b) => collator.compare(b.word, a.word));
-        } else if (state.sortMode === "count_asc") {
-          filtered.sort((a, b) => a.contexts.length - b.contexts.length);
-        } else {
-          filtered.sort((a, b) => {
-            const scoreA = getSeverityScore(a.type);
-            const scoreB = getSeverityScore(b.type);
-            if (scoreA !== scoreB) return scoreB - scoreA;
-            return b.contexts.length - a.contexts.length;
-          });
-        }
+
+        // Default Sort: Count Descending
+        filtered.sort((a, b) => b.contexts.length - a.contexts.length);
+
         state.currentFilteredErrors = filtered;
         UI.statErrors.innerText = filtered
           .reduce((acc, curr) => acc + curr.contexts.length, 0)
@@ -1949,12 +2024,7 @@
         UI.closeHelpBtn.addEventListener("click", () =>
           UI.helpModal.classList.add("hidden")
         );
-        document
-          .getElementById("sort-select")
-          .addEventListener("change", (e) => {
-            state.sortMode = e.target.value;
-            filterAndRenderErrors();
-          });
+
         document.addEventListener("click", (e) => {
           if (
             !UI.settingsModal.classList.contains("hidden") &&
@@ -1984,6 +2054,17 @@
           state.isEngFilterEnabled = e.target.checked;
           filterAndRenderErrors();
         });
+
+        // New Listeners for Import/Export Whitelist
+        UI.importWhitelistBtn.addEventListener("click", () =>
+          UI.whitelistImportFile.click()
+        );
+        UI.whitelistImportFile.addEventListener(
+          "change",
+          handleImportWhitelist
+        );
+        UI.exportWhitelistBtn.addEventListener("click", exportWhitelist);
+
         document.addEventListener("keydown", (e) => {
           if (
             document.activeElement === UI.whitelistInput ||
