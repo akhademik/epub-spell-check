@@ -87,9 +87,7 @@
             <h1 class="text-xl font-bold text-slate-100 tracking-tight">
               Soát Lỗi Chính Tả
             </h1>
-            <div class="text-xs text-slate-500 font-medium">
-              v1.38 - 29/12/2025
-            </div>
+            <div class="text-xs text-slate-500 font-medium">v1.42</div>
           </div>
         </div>
 
@@ -163,7 +161,7 @@
                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
               />
             </svg>
-            <span class="hidden sm:inline">Xuất lỗi (.txt)</span>
+            <span class="hidden sm:inline">Xuất lỗi</span>
           </button>
 
           <!-- Reset Button -->
@@ -246,7 +244,84 @@
         </div>
       </div>
 
-      <!-- Help Modal (NEW) -->
+      <!-- Export Modal (NEW) -->
+      <div
+        id="export-modal"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn"
+      >
+        <div
+          class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
+        >
+          <div
+            class="flex justify-between items-center p-4 border-b border-slate-800 bg-slate-800/50"
+          >
+            <h3 class="text-lg font-bold text-white">Chọn kiểu xuất lỗi</h3>
+            <button
+              id="close-export-btn"
+              class="text-slate-400 hover:text-white transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="p-6 space-y-4">
+            <button
+              id="export-vctve-btn"
+              class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2 group"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 opacity-70 group-hover:opacity-100"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              Xuất cho VCTVEGROUP
+            </button>
+            <button
+              id="export-normal-btn"
+              class="w-full py-3 px-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2 group"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 opacity-70 group-hover:opacity-100"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                />
+              </svg>
+              Xuất thông thường
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Modal -->
       <div
         id="help-modal"
         class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn"
@@ -470,6 +545,14 @@
             </label>
           </div>
         </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-500">
+          <p class="mb-1 font-bold text-slate-400">Phím tắt:</p>
+          <div class="grid grid-cols-2 gap-2">
+            <div>⬆️ ⬇️ : Di chuyển</div>
+            <div>Delete / I : Bỏ qua</div>
+          </div>
+        </div>
       </div>
 
       <!-- Upload Section -->
@@ -510,7 +593,6 @@
               Kéo thả hoặc nhấp để chọn tệp
             </p>
           </div>
-          <!-- Removed "Chỉ hỗ trợ .epub" and "Xử lý cục bộ" here -->
         </div>
       </div>
 
@@ -1153,6 +1235,12 @@
       const helpModal = document.getElementById("help-modal");
       const closeHelpBtn = document.getElementById("close-help-btn");
 
+      // Export UI
+      const exportModal = document.getElementById("export-modal");
+      const closeExportBtn = document.getElementById("close-export-btn");
+      const exportVctveBtn = document.getElementById("export-vctve-btn");
+      const exportNormalBtn = document.getElementById("export-normal-btn");
+
       // Dictionary Status Elements
       const dictStatus = document.getElementById("dict-status");
       const dictDot = document.getElementById("dict-dot");
@@ -1238,8 +1326,6 @@
       }
 
       // Define isY and isFrontVowel GLOBALLY to avoid ReferenceError
-      const wordRegex = /[\p{L}\p{M}]+/gu;
-
       const isFrontVowel = (c) => {
         if (!c) return false;
         const norm = c
@@ -1372,7 +1458,17 @@
       });
 
       resetBtn.addEventListener("click", resetApp);
-      exportBtn.addEventListener("click", exportErrors);
+
+      // Export Modal Logic
+      exportBtn.addEventListener("click", () =>
+        exportModal.classList.remove("hidden")
+      );
+      closeExportBtn.addEventListener("click", () =>
+        exportModal.classList.add("hidden")
+      );
+
+      exportVctveBtn.addEventListener("click", () => performExport("vctve"));
+      exportNormalBtn.addEventListener("click", () => performExport("normal"));
 
       settingsBtn.addEventListener("click", () =>
         settingsModal.classList.remove("hidden")
@@ -1390,6 +1486,7 @@
 
       // Close settings when clicking outside
       document.addEventListener("click", (e) => {
+        // Close Settings
         if (
           !settingsModal.classList.contains("hidden") &&
           !settingsModal.contains(e.target) &&
@@ -1397,12 +1494,18 @@
         ) {
           settingsModal.classList.add("hidden");
         }
-        if (
-          !helpModal.classList.contains("hidden") &&
-          !helpModal.contains(e.target) &&
-          !helpBtn.contains(e.target)
-        ) {
+
+        // Close Help Overlay - Fix logic: close if clicking backdrop (helpModal itself)
+        if (!helpModal.classList.contains("hidden") && e.target === helpModal) {
           helpModal.classList.add("hidden");
+        }
+
+        // Close Export Overlay
+        if (
+          !exportModal.classList.contains("hidden") &&
+          e.target === exportModal
+        ) {
+          exportModal.classList.add("hidden");
         }
       });
 
@@ -1422,7 +1525,8 @@
       document.addEventListener("keydown", (e) => {
         if (
           document.activeElement === whitelistInput ||
-          !settingsModal.classList.contains("hidden")
+          !settingsModal.classList.contains("hidden") ||
+          !exportModal.classList.contains("hidden")
         )
           return;
         if (currentFilteredErrors.length === 0) return;
@@ -1591,7 +1695,8 @@
         loadedTextContent = [];
       }
 
-      function exportErrors() {
+      // Helper function to get filtered errors
+      function getFilteredErrors() {
         const rawInput = whitelistInput.value;
         const userWhitelist = new Set();
         if (rawInput) {
@@ -1609,11 +1714,25 @@
             (group) => !engWords.has(group.word.toLowerCase())
           );
         }
+        return filteredErrors;
+      }
+
+      function performExport(type) {
+        const filteredErrors = getFilteredErrors();
+
         if (filteredErrors.length === 0) {
           alert("Không có lỗi nào để xuất!");
+          exportModal.classList.add("hidden");
           return;
         }
-        const content = filteredErrors.map((g) => `${g.word} ==>`).join("\n\n");
+
+        let content = "";
+        if (type === "vctve") {
+          content = filteredErrors.map((g) => `${g.word} ==>`).join("\n\n");
+        } else {
+          content = filteredErrors.map((g) => g.word).join("\n");
+        }
+
         const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         let fileName = "loi-khong-ro-ten.txt";
@@ -1630,6 +1749,8 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+
+        exportModal.classList.add("hidden");
       }
 
       function updateProgress(percent, text) {
@@ -1768,13 +1889,15 @@
         return style;
       }
 
+      const localWordRegex = /[\p{L}\p{M}]+/gu;
+
       function analyzeText(paragraphs) {
         let totalWords = 0;
         const errorMap = new Map();
 
         paragraphs.forEach((para) => {
           let match;
-          while ((match = wordRegex.exec(para)) !== null) {
+          while ((match = localWordRegex.exec(para)) !== null) {
             const word = match[0];
             totalWords++;
             if (word.length < 2) continue;
