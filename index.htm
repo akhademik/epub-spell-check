@@ -88,7 +88,7 @@
               Soát Lỗi Chính Tả EPUB
             </h1>
             <div class="text-xs text-slate-500 font-medium">
-              v1.33 - Fix lỗi nhảy Cursor
+              v1.34 - Cập nhật dữ liệu từ điển
             </div>
           </div>
         </div>
@@ -781,149 +781,6 @@
       const STORAGE_KEY = "vn_spell_whitelist";
       const SETTINGS_KEY = "vn_spell_settings";
 
-      const IGNORED_WORDS = new Set([
-        "email",
-        "internet",
-        "web",
-        "website",
-        "video",
-        "clip",
-        "camera",
-        "fan",
-        "comment",
-        "live",
-        "show",
-        "team",
-        "ok",
-        "marketing",
-        "sale",
-        "deal",
-        "ship",
-        "shipper",
-        "order",
-        "check",
-        "boss",
-        "admin",
-        "post",
-        "status",
-        "link",
-        "share",
-        "view",
-        "like",
-        "download",
-        "upload",
-        "app",
-        "game",
-        "menu",
-        "list",
-        "top",
-        "hot",
-        "cool",
-        "pro",
-        "vip",
-        "scan",
-        "smartphone",
-        "laptop",
-        "mouse",
-        "keyboard",
-        "wifi",
-        "pixel",
-        "digital",
-        "design",
-        "designer",
-        "media",
-        "studio",
-        "content",
-        "pr",
-        "mc",
-        "dj",
-        "ceo",
-        "facebook",
-        "google",
-        "youtube",
-        "instagram",
-        "tiktok",
-        "zalo",
-        "shopee",
-        "tiki",
-        "lazada",
-        "grab",
-        "uber",
-        "be",
-        "now",
-        "baemin",
-        "food",
-        "coffee",
-        "cafe",
-        "bar",
-        "club",
-        "pub",
-        "gym",
-        "spa",
-        "yoga",
-        "tennis",
-        "golf",
-        "tour",
-        "guide",
-        "review",
-        "vlog",
-        "blog",
-        "blogger",
-        "streamer",
-        "startup",
-        "bonus",
-        "combo",
-        "concept",
-        "event",
-        "fashion",
-        "style",
-        "trend",
-        "hit",
-        "teen",
-        "idol",
-        "poster",
-        "banner",
-        "logo",
-        "slogan",
-        "background",
-        "format",
-        "version",
-        "update",
-        "level",
-        "skill",
-        "job",
-        "cv",
-        "interview",
-        "deadline",
-        "project",
-        "target",
-        "kpi",
-        "budget",
-        "data",
-        "database",
-        "server",
-        "code",
-        "coder",
-        "bug",
-        "fix",
-        "error",
-        "message",
-        "chat",
-        "inbox",
-        "online",
-        "offline",
-        "free",
-        "voucher",
-        "coupon",
-        "bill",
-        "iphone",
-        "ipad",
-        "android",
-        "ios",
-        "sms",
-        "sim",
-      ]);
-
       const TONE_MISPLACEMENT = {
         oá: "óa",
         oà: "òa",
@@ -1313,7 +1170,7 @@
             zip
           );
 
-          loadedTextContent = fullTextBlocks;
+          loadedTextContent = fullTextBlocks; // Fix: Save text globally
           metaTitle.innerText = title;
           metaAuthor.innerText = author;
           currentBookTitle = title;
@@ -1554,9 +1411,12 @@
         let totalWords = 0;
         const errorMap = new Map();
 
+        // Use a local regex instance to ensure clean state
+        const localWordRegex = /[\p{L}\p{M}]+/gu;
+
         paragraphs.forEach((para) => {
           let match;
-          while ((match = wordRegex.exec(para)) !== null) {
+          while ((match = localWordRegex.exec(para)) !== null) {
             const word = match[0];
             totalWords++;
             if (word.length < 2) continue;
@@ -1564,17 +1424,23 @@
             const lower = word.toLowerCase().normalize("NFC");
             const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word);
 
-            if (IGNORED_WORDS.has(lower)) continue;
+            // Check whitelist early (if using built-in whitelist, though deprecated)
+            // But main filtering happens later with user whitelist
 
             let errorType = null;
 
+            // 0. Check Uppercase Count (New Rule)
             if (checkSettings.uppercase) {
               const upperCount = Array.from(word).filter(
                 (c) => c.toUpperCase() === c && c.toLowerCase() !== c
               ).length;
-              if (upperCount >= 2) errorType = "Lỗi viết hoa (Nhiều ký tự hoa)";
+
+              if (upperCount >= 2) {
+                errorType = "Lỗi viết hoa (Nhiều ký tự hoa)";
+              }
             }
 
+            // 1. Check Tone Placement
             if (!errorType && checkSettings.tone) {
               for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
                 // FIX: Only match if it's at the END of the word (Open Syllable rule for oa, oe)
@@ -1585,6 +1451,7 @@
               }
             }
 
+            // 2. Dictionary Check
             if (!errorType && isDictLoaded && checkSettings.dictionary) {
               if (!validSyllables.has(lower)) {
                 if (!isCapitalized) {
@@ -1600,10 +1467,12 @@
                 }
               }
             } else if (!errorType && checkSettings.foreign) {
-              if (/[fjwz]/.test(lower) && !isCapitalized)
+              if (/[fjwz]/.test(lower) && !isCapitalized) {
                 errorType = "Chứa ký tự lạ (f, j, w, z)";
+              }
             }
 
+            // 3. Structure Check
             if (!errorType && checkSettings.foreign) {
               if (
                 lower.startsWith("ngh") &&
