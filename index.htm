@@ -85,10 +85,10 @@
           </div>
           <div>
             <h1 class="text-xl font-bold text-slate-100 tracking-tight">
-              Soát Lỗi Chính Tả
+              Soát Lỗi Chính Tả EPUB
             </h1>
             <div class="text-xs text-slate-500 font-medium">
-              v1.29 - 29/12/2005
+              v1.33 - Fix lỗi nhảy Cursor
             </div>
           </div>
         </div>
@@ -342,7 +342,7 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-2xl font-bold text-slate-200">Tải sách lên</h2>
+            <h2 class="text-2xl font-bold text-slate-200">Tải lên sách EPUB</h2>
             <p class="text-slate-400 mt-2 text-lg">
               Kéo thả hoặc nhấp để chọn tệp
             </p>
@@ -514,32 +514,6 @@
               class="text-sm font-medium text-slate-300 cursor-pointer select-none flex items-center gap-2"
             >
               Kích hoạt từ tiếng Anh
-              <span
-                id="eng-loading"
-                class="hidden text-xs text-yellow-500 animate-pulse flex items-center gap-1"
-              >
-                <svg
-                  class="animate-spin h-3 w-3"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Đang tải...
-              </span>
             </label>
           </div>
         </div>
@@ -746,7 +720,7 @@
     <footer
       class="mt-auto py-6 text-center text-white text-sm border-t border-slate-900 bg-slate-950"
     >
-      <p class="font-medium">.:: Akhademik 2025 ::.</p>
+      <p class="font-medium">-Akhademik 2025-</p>
     </footer>
 
     <!-- Templates -->
@@ -800,8 +774,10 @@
 
     <script>
       // --- CONFIGURATION ---
-      const ENG_DICT_URL = "en-dict.txt";
-      const DICT_URL = "vn-dict.txt";
+      const ENG_DICT_URL =
+        "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/en-dict.txt";
+      const DICT_URL =
+        "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/vn-dict.txt";
       const STORAGE_KEY = "vn_spell_whitelist";
       const SETTINGS_KEY = "vn_spell_settings";
 
@@ -985,7 +961,6 @@
       const resetBtn = document.getElementById("reset-btn");
       const exportBtn = document.getElementById("export-btn");
       const engFilterCheckbox = document.getElementById("eng-filter-checkbox");
-      const engLoading = document.getElementById("eng-loading");
 
       // Settings UI
       const settingsBtn = document.getElementById("settings-btn");
@@ -1088,22 +1063,43 @@
           .replace(/[\u0300-\u036f]/g, "") === "y";
 
       // --- DICTIONARY LOADING ---
+      async function fetchDictWithFallback(filename, onlineUrl) {
+        try {
+          const resLocal = await fetch(filename);
+          if (resLocal.ok) return await resLocal.text();
+        } catch (e) {
+          /* Ignore */
+        }
+        // Fallback
+        const resOnline = await fetch(onlineUrl);
+        if (!resOnline.ok) throw new Error("Load failed");
+        return await resOnline.text();
+      }
+
       async function loadDictionaries() {
         try {
           dictStatus.classList.remove("hidden");
           dictText.innerText = "Đang tải dữ liệu...";
 
           const [vnRes, enRes] = await Promise.all([
-            fetch(DICT_URL),
-            fetch(ENG_DICT_URL),
+            fetchDictWithFallback("vn-dict.txt", DICT_URL),
+            fetchDictWithFallback("en-dict.txt", ENG_DICT_URL),
           ]);
 
-          if (vnRes.ok) {
-            const text = await vnRes.text();
-            text.split(/\r?\n/).forEach((w) => {
-              const cleanW = w.trim().toLowerCase().normalize("NFC");
-              if (cleanW) {
-                const parts = cleanW.split(/\s+/);
+          if (vnRes) {
+            const lines = vnRes.split("\n");
+            lines.forEach((line) => {
+              let wordRaw = line.trim();
+              if (!wordRaw) return;
+              if (wordRaw.startsWith("{") && wordRaw.endsWith("}")) {
+                try {
+                  const entry = JSON.parse(wordRaw);
+                  if (entry.text) wordRaw = entry.text;
+                } catch (e) {}
+              }
+              const cleanLine = wordRaw.toLowerCase().normalize("NFC");
+              if (cleanLine) {
+                const parts = cleanLine.split(/\s+/);
                 parts.forEach((p) => validSyllables.add(p));
               }
             });
@@ -1132,9 +1128,8 @@
             isDictLoaded = true;
           }
 
-          if (enRes.ok) {
-            const text = await enRes.text();
-            text.split(/\r?\n/).forEach((w) => {
+          if (enRes) {
+            enRes.split(/\r?\n/).forEach((w) => {
               const cleanW = w.trim().toLowerCase();
               if (cleanW) engWords.add(cleanW);
             });
@@ -1318,7 +1313,7 @@
             zip
           );
 
-          loadedTextContent = fullTextBlocks; // Fix: Save text globally
+          loadedTextContent = fullTextBlocks;
           metaTitle.innerText = title;
           metaAuthor.innerText = author;
           currentBookTitle = title;
@@ -1695,14 +1690,17 @@
             .filter((t) => t.length > 0);
           tokens.forEach((t) => userWhitelist.add(t));
         }
-        let filteredErrors = allDetectedErrors.filter(
-          (group) => !userWhitelist.has(group.word.toLowerCase())
-        );
+
+        let filteredErrors = allDetectedErrors.filter((group) => {
+          return !userWhitelist.has(group.word.toLowerCase());
+        });
+
         if (isEngFilterEnabled && isEngDictLoaded) {
           filteredErrors = filteredErrors.filter(
             (group) => !engWords.has(group.word.toLowerCase())
           );
         }
+
         currentFilteredErrors = filteredErrors;
         const totalErrors = filteredErrors.reduce(
           (acc, curr) => acc + curr.contexts.length,
@@ -1743,7 +1741,7 @@
           // Select data
           selectGroup(nextGroup, null);
 
-          // Select visual (wait for DOM update)
+          // Select visual (wait for DOM update from renderErrors)
           setTimeout(() => {
             const listContainer = document.getElementById("error-list");
             const buttons = listContainer.querySelectorAll(".select-btn");
@@ -1869,9 +1867,11 @@
           clone.querySelector(".error-word").innerText = group.word;
           clone.querySelector(".error-reason").innerText = group.type;
           clone.querySelector(".error-count").innerText = group.contexts.length;
+
           const style = getErrorHighlights(group.type);
           const dot = clone.querySelector(".status-dot");
           dot.classList.add(style.dot);
+
           const selectBtn = clone.querySelector(".select-btn");
           if (currentGroup && currentGroup.id === group.id) {
             selectBtn.classList.add(
@@ -1886,11 +1886,13 @@
             selectGroup(group, selectBtn);
             copyToClipboard(group.word);
           };
+
           const ignoreBtn = clone.querySelector(".ignore-btn");
           ignoreBtn.onclick = (e) => {
             e.stopPropagation();
             quickIgnore(group.word);
           };
+
           errorList.appendChild(clone);
         });
       }
@@ -1934,7 +1936,7 @@
                      ${suggestions
                        .map(
                          (s) =>
-                           `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm cursor-pointer hover:bg-green-800/50">${s}</span>`
+                           `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm cursor-pointer hover:bg-green-800/50" onclick="copyToClipboard('${s}')">${s}</span>`
                        )
                        .join("")}
                    </div>`
