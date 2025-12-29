@@ -88,7 +88,7 @@
               Soát Lỗi Chính Tả EPUB
             </h1>
             <div class="text-xs text-slate-500 font-medium">
-              v1.29 - Fix lỗi nhảy dòng khi Ignore
+              v1.29 - 29/12/2005
             </div>
           </div>
         </div>
@@ -746,7 +746,7 @@
     <footer
       class="mt-auto py-6 text-center text-white text-sm border-t border-slate-900 bg-slate-950"
     >
-      <p class="font-medium">-Akhademik 2025-</p>
+      <p class="font-medium">.:: Akhademik 2025 ::.</p>
     </footer>
 
     <!-- Templates -->
@@ -1098,15 +1098,16 @@
             fetch(ENG_DICT_URL),
           ]);
 
-                        if (vnRes.ok) {
-                          const text = await vnRes.text();
-                          text.split(/\r?\n/).forEach((w) => {
-                            const cleanW = w.trim().toLowerCase().normalize("NFC");
-                            if (cleanW) {
-                              const parts = cleanW.split(/\s+/);
-                              parts.forEach((p) => validSyllables.add(p));
-                            }
-                          });            const extras = [
+          if (vnRes.ok) {
+            const text = await vnRes.text();
+            text.split(/\r?\n/).forEach((w) => {
+              const cleanW = w.trim().toLowerCase().normalize("NFC");
+              if (cleanW) {
+                const parts = cleanW.split(/\s+/);
+                parts.forEach((p) => validSyllables.add(p));
+              }
+            });
+            const extras = [
               "kỹ",
               "mỹ",
               "kì",
