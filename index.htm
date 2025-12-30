@@ -51,6 +51,32 @@
       .animate-fadeIn {
         animation: fadeIn 0.3s ease-out forwards;
       }
+      /* Reader Settings Variables */
+      #context-view {
+        --reader-font: "Noto Sans", sans-serif;
+        --reader-size: 1.25rem;
+      }
+
+      .reader-content {
+        font-family: var(--reader-font) !important;
+        font-size: var(--reader-size) !important;
+        line-height: 1.8;
+        transition: font-size 0.2s, font-family 0.2s;
+      }
+      #error-list::-webkit-scrollbar {
+        width: 8px;
+      }
+      #error-list::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      #error-list::-webkit-scrollbar-thumb {
+        background-color: #475569; /* slate-600 */
+        border-radius: 20px;
+      }
+      #error-list {
+        scrollbar-width: thin;
+        scrollbar-color: #475569 transparent; /* thumb and track color */
+      }
     </style>
   </head>
   <body
@@ -69,7 +95,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
+              class="h-6 w-6 pointer-events-none"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -86,11 +112,14 @@
             <h1 class="text-xl font-bold text-slate-100 tracking-tight">
               Soát Lỗi Chính Tả
             </h1>
-            <div class="text-xs text-slate-500 font-medium">v1.71</div>
+            <div class="text-xs text-slate-500 font-medium">
+              v1.94 - Fixed ResetApp
+            </div>
           </div>
         </div>
 
         <div class="flex items-center gap-3">
+          <!-- Help Button -->
           <button
             id="help-btn"
             class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
@@ -98,7 +127,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
+              class="h-6 w-6 pointer-events-none"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -111,6 +140,8 @@
               />
             </svg>
           </button>
+
+          <!-- Settings Button -->
           <button
             id="settings-btn"
             class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
@@ -118,7 +149,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
+              class="h-6 w-6 pointer-events-none"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -137,13 +168,15 @@
               />
             </svg>
           </button>
+
+          <!-- Export Button -->
           <button
             id="export-btn"
             class="hidden px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-emerald-900/20 flex items-center gap-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
+              class="h-4 w-4 pointer-events-none"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -157,13 +190,15 @@
             </svg>
             <span class="hidden sm:inline">Xuất lỗi</span>
           </button>
+
+          <!-- Reset Button -->
           <button
             id="reset-btn"
             class="hidden px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-blue-900/20 flex items-center gap-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
+              class="h-4 w-4 pointer-events-none"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -177,6 +212,8 @@
             </svg>
             <span class="hidden sm:inline">Kiểm tra file khác</span>
           </button>
+
+          <!-- Dict Status -->
           <div
             id="dict-status"
             class="hidden md:flex items-center gap-3 text-xs px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 h-auto"
@@ -208,7 +245,7 @@
           class="bg-slate-900 border border-slate-700 rounded-2xl px-8 py-6 shadow-2xl flex flex-col items-center gap-4"
         >
           <svg
-            class="animate-spin h-10 w-10 text-blue-500"
+            class="animate-spin h-10 w-10 text-blue-500 pointer-events-none"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -252,7 +289,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
+                class="h-6 w-6 pointer-events-none"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -273,7 +310,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 opacity-70 group-hover:opacity-100"
+                class="h-5 w-5 opacity-70 group-hover:opacity-100 pointer-events-none"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -283,8 +320,9 @@
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                /></svg
-              >Xuất cho VCTVEGROUP
+                />
+              </svg>
+              Xuất cho VCTVEGROUP
             </button>
             <button
               id="export-normal-btn"
@@ -292,7 +330,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 opacity-70 group-hover:opacity-100"
+                class="h-5 w-5 opacity-70 group-hover:opacity-100 pointer-events-none"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -302,8 +340,9 @@
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                /></svg
-              >Xuất thông thường
+                />
+              </svg>
+              Xuất thông thường
             </button>
           </div>
         </div>
@@ -324,7 +363,7 @@
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-blue-500"
+                class="h-5 w-5 text-blue-500 pointer-events-none"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -334,8 +373,9 @@
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                /></svg
-              >Hướng Dẫn Sử Dụng
+                />
+              </svg>
+              Hướng Dẫn Sử Dụng
             </h3>
             <button
               id="close-help-btn"
@@ -343,7 +383,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
+                class="h-6 w-6 pointer-events-none"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -366,6 +406,7 @@
                 <li>Xem danh sách lỗi cột trái, ngữ cảnh cột phải.</li>
               </ul>
             </div>
+
             <div>
               <h4 class="font-bold text-white mb-1">2. Phím Tắt</h4>
               <div
@@ -375,26 +416,31 @@
                   <kbd
                     class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
                     >⬆️</kbd
-                  ><span>Lên</span>
+                  >
+                  <span>Lên</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <kbd
                     class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
                     >⬇️</kbd
-                  ><span>Xuống</span>
+                  >
+                  <span>Xuống</span>
                 </div>
                 <div class="flex items-center gap-2 col-span-2">
                   <kbd
                     class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
                     >Del</kbd
-                  ><span class="opacity-50">/</span
-                  ><kbd
+                  >
+                  <span class="opacity-50">/</span>
+                  <kbd
                     class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
                     >I</kbd
-                  ><span>Bỏ qua từ</span>
+                  >
+                  <span>Bỏ qua từ</span>
                 </div>
               </div>
             </div>
+
             <div>
               <h4 class="font-bold text-white mb-1">3. Tính Năng</h4>
               <ul class="list-disc pl-5 space-y-1 marker:text-green-500">
@@ -428,7 +474,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
+              class="h-5 w-5 pointer-events-none"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -442,69 +488,87 @@
             </svg>
           </button>
         </div>
+
         <div class="space-y-4">
+          <!-- Setting Item: Dictionary Check -->
           <div class="flex items-center justify-between">
             <span class="text-sm text-slate-300"
               >Lỗi không có trong từ điển</span
-            ><label
+            >
+            <label
               for="set-dict"
               class="relative inline-block w-10 h-6 cursor-pointer"
-              ><input
+            >
+              <input
                 type="checkbox"
                 id="set-dict"
                 class="sr-only peer"
-                checked />
+                checked
+              />
               <div
                 class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
-              ></div
-            ></label>
+              ></div>
+            </label>
           </div>
+
+          <!-- Setting Item: Uppercase Check -->
           <div class="flex items-center justify-between">
-            <span class="text-sm text-slate-300">Lỗi viết hoa (VD: tÔI)</span
-            ><label
+            <span class="text-sm text-slate-300">Lỗi viết hoa (VD: tÔI)</span>
+            <label
               for="set-case"
               class="relative inline-block w-10 h-6 cursor-pointer"
-              ><input
+            >
+              <input
                 type="checkbox"
                 id="set-case"
                 class="sr-only peer"
-                checked />
+                checked
+              />
               <div
                 class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
-              ></div
-            ></label>
+              ></div>
+            </label>
           </div>
+
+          <!-- Setting Item: Tone Check -->
           <div class="flex items-center justify-between">
-            <span class="text-sm text-slate-300">Lỗi đặt dấu (Hòa/Hoà)</span
-            ><label
+            <span class="text-sm text-slate-300">Lỗi đặt dấu (Hòa/Hoà)</span>
+            <label
               for="set-tone"
               class="relative inline-block w-10 h-6 cursor-pointer"
-              ><input
+            >
+              <input
                 type="checkbox"
                 id="set-tone"
                 class="sr-only peer"
-                checked />
+                checked
+              />
               <div
                 class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
-              ></div
-            ></label>
+              ></div>
+            </label>
           </div>
+
+          <!-- Setting Item: Foreign/Structure Check -->
           <div class="flex items-center justify-between">
-            <span class="text-sm text-slate-300">Lỗi ký tự lạ / Cấu trúc</span
-            ><label
+            <span class="text-sm text-slate-300">Lỗi ký tự lạ / Cấu trúc</span>
+            <label
               for="set-struct"
               class="relative inline-block w-10 h-6 cursor-pointer"
-              ><input
+            >
+              <input
                 type="checkbox"
                 id="set-struct"
                 class="sr-only peer"
-                checked />
+                checked
+              />
               <div
                 class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
-              ></div
-            ></label>
+              ></div>
+            </label>
           </div>
         </div>
+
         <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-500">
           <p class="mb-1 font-bold text-slate-400">Phím tắt:</p>
           <div class="grid grid-cols-2 gap-2">
@@ -514,14 +578,17 @@
         </div>
       </div>
 
+      <!-- Upload Section -->
       <div
         id="upload-section"
         class="bg-slate-900 rounded-2xl shadow-xl border-2 border-dashed border-slate-800 p-12 text-center transition-all hover:border-blue-500/50 hover:bg-slate-800/50 group cursor-pointer relative overflow-hidden"
       >
         <input type="file" id="file-input" accept=".epub" class="hidden" />
+
         <div
           class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"
         ></div>
+
         <div
           class="relative z-10 flex flex-col items-center justify-center gap-6 pointer-events-none"
         >
@@ -530,7 +597,7 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-10 w-10"
+              class="h-10 w-10 pointer-events-none"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -552,6 +619,7 @@
         </div>
       </div>
 
+      <!-- Processing UI -->
       <div
         id="processing-ui"
         class="hidden bg-slate-900 p-8 rounded-2xl shadow-xl border border-slate-800 max-w-2xl mx-auto w-full"
@@ -580,7 +648,9 @@
         </div>
       </div>
 
+      <!-- Results Section -->
       <div id="results-section" class="hidden flex flex-col gap-6">
+        <!-- Book Info -->
         <div
           class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-lg flex items-center gap-5 relative overflow-hidden min-h-[140px]"
         >
@@ -588,7 +658,7 @@
             class="absolute right-0 top-0 p-6 opacity-10 pointer-events-none"
           >
             <svg
-              class="w-40 h-40 text-white"
+              class="w-40 h-40 text-white pointer-events-none"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -601,6 +671,8 @@
               />
             </svg>
           </div>
+
+          <!-- Cover Image Container -->
           <div
             class="w-20 h-28 bg-slate-800 rounded-lg flex-shrink-0 border border-slate-700 overflow-hidden relative shadow-md"
           >
@@ -615,7 +687,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8"
+                class="h-8 w-8 pointer-events-none"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -629,6 +701,7 @@
               </svg>
             </div>
           </div>
+
           <div class="relative z-10">
             <div
               class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-1"
@@ -650,6 +723,7 @@
           </div>
         </div>
 
+        <!-- Whitelist Input -->
         <div
           class="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-lg"
         >
@@ -657,9 +731,10 @@
             <label
               for="whitelist-input"
               class="flex items-center gap-2 text-sm font-bold text-slate-300"
-              ><svg
+            >
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 text-green-500"
+                class="h-4 w-4 text-green-500 pointer-events-none"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -669,9 +744,10 @@
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                /></svg
-              >Danh sách từ bỏ soát lỗi</label
-            >
+                />
+              </svg>
+              Danh sách từ bỏ soát lỗi
+            </label>
           </div>
           <textarea
             id="whitelist-input"
@@ -697,8 +773,9 @@
                 <span
                   id="eng-loading"
                   class="hidden text-xs text-yellow-500 animate-pulse flex items-center gap-1"
-                  ><svg
-                    class="animate-spin h-3 w-3"
+                >
+                  <svg
+                    class="animate-spin h-3 w-3 pointer-events-none"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -717,8 +794,8 @@
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Đang tải...</span
-                >
+                  Đang tải...
+                </span>
               </label>
             </div>
             <div class="flex items-center gap-2">
@@ -734,7 +811,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-3 w-3"
+                  class="h-3 w-3 pointer-events-none"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -754,7 +831,7 @@
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-3 w-3"
+                  class="h-3 w-3 pointer-events-none"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -777,7 +854,11 @@
             class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden"
           >
             <div class="absolute right-0 top-0 p-4 opacity-5">
-              <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                class="w-24 h-24 pointer-events-none"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.968 7.968 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"
                 />
@@ -799,7 +880,11 @@
             class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden group"
           >
             <div class="absolute right-0 top-0 p-4 opacity-5 text-red-500">
-              <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                class="w-24 h-24 pointer-events-none"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fill-rule="evenodd"
                   d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -823,7 +908,11 @@
             class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden"
           >
             <div class="absolute right-0 top-0 p-4 opacity-5 text-blue-500">
-              <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                class="w-24 h-24 pointer-events-none"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
                 />
@@ -841,15 +930,16 @@
         </div>
 
         <div class="flex flex-col lg:flex-row gap-6 h-[600px] lg:h-[700px]">
+          <!-- Error List Sidebar -->
           <div
             class="w-full lg:w-1/3 flex flex-col bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden"
           >
             <div
               class="p-4 border-b border-slate-800 bg-slate-900/50 backdrop-blur font-semibold text-slate-300 flex justify-between items-center"
             >
-              <span class="flex items-center gap-2"
-                ><svg
-                  class="w-4 h-4 text-slate-500"
+              <span class="flex items-center gap-2">
+                <svg
+                  class="w-4 h-4 text-slate-500 pointer-events-none"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -859,25 +949,30 @@
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                  /></svg
-                >Danh sách lỗi</span
-              >
+                  />
+                </svg>
+                Danh sách lỗi
+              </span>
+              <!-- Removed Sort UI -->
             </div>
             <div
               id="error-list"
-              class="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent"
-            ></div>
+              class="flex-1 overflow-y-auto p-2 space-y-1"
+            >
+              <!-- Items will be injected here -->
+            </div>
           </div>
 
+          <!-- Context Preview -->
           <div
             class="w-full lg:w-2/3 flex flex-col bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden"
           >
             <div
               class="p-4 border-b border-slate-800 bg-slate-900/50 backdrop-blur font-semibold text-slate-300 flex justify-between items-center"
             >
-              <span class="flex items-center gap-2"
-                ><svg
-                  class="w-4 h-4 text-slate-500"
+              <span class="flex items-center gap-2">
+                <svg
+                  class="w-4 h-4 text-slate-500 pointer-events-none"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -893,12 +988,80 @@
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  /></svg
-                >Ngữ cảnh</span
+                  />
+                </svg>
+                Ngữ cảnh
+              </span>
+              <!-- Reader Settings Toolbar -->
+              <div
+                class="flex items-center gap-2 bg-slate-800 rounded-lg p-1 border border-slate-700"
               >
+                <button
+                  id="font-toggle-btn"
+                  class="p-1.5 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors"
+                  title="Đổi Font (Serif/Sans)"
+                >
+                  <!-- Changed Icon to T -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 4h14M12 4v16"
+                    />
+                  </svg>
+                </button>
+                <div class="w-px h-4 bg-slate-700 mx-0.5"></div>
+                <button
+                  id="size-down-btn"
+                  class="p-1.5 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors"
+                  title="Giảm cỡ chữ"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M20 12H4"
+                    />
+                  </svg>
+                </button>
+                <button
+                  id="size-up-btn"
+                  class="p-1.5 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors"
+                  title="Tăng cỡ chữ"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 id="context-nav"
-                class="hidden flex items-center gap-2 text-sm bg-slate-800 rounded-lg p-1 border border-slate-700"
+                class="hidden flex items-center gap-2 text-sm bg-slate-800 rounded-lg p-1 border border-slate-700 ml-2"
               >
                 <button
                   id="btn-prev"
@@ -906,13 +1069,13 @@
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
+                    class="h-4 w-4 pointer-events-none"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
                     <path
                       fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
                       clip-rule="evenodd"
                     />
                   </svg>
@@ -928,7 +1091,7 @@
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
+                    class="h-4 w-4 pointer-events-none"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -975,9 +1138,11 @@
         >
           <div class="overflow-hidden w-full">
             <div class="flex items-center gap-2">
+              <!-- Dot will be injected here -->
               <span
                 class="status-dot w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-[0_0_5px_rgba(0,0,0,0.5)]"
               ></span>
+              <!-- Changed text color to white/slate-200 for better contrast against dot -->
               <span
                 class="font-bold text-slate-200 error-word text-lg truncate font-serif"
               ></span>
@@ -996,7 +1161,7 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
+            class="h-5 w-5 pointer-events-none"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -1013,7 +1178,13 @@
     </template>
 
     <script>
-      // --- 1. CONFIGURATION ---
+      (function() {
+      // Global Error Handler
+      window.onerror = function (message, source, lineno, colno, error) {
+        console.error("Global Error:", message, "at", lineno, ":", colno);
+      };
+
+      // --- 1. CONFIGURATION & GLOBALS ---
       const ENG_DICT_URL =
         "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/en-dict.txt";
       const DICT_URL =
@@ -1022,6 +1193,7 @@
         "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/custom-dict.txt";
       const STORAGE_KEY = "vn_spell_whitelist";
       const SETTINGS_KEY = "vn_spell_settings";
+      const READER_SETTINGS_KEY = "vn_spell_reader";
       const IGNORED_WORDS = new Set([]);
       const TONE_MISPLACEMENT = {
         oá: "óa",
@@ -1037,7 +1209,29 @@
       };
       const localWordRegex = /[\p{L}\p{M}]+/gu;
 
-      // --- 2. DOM ELEMENTS ---
+      // Define global functions for click handlers
+      window.copyToClipboard = function (text) {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast(`Đã copy: "${text}"`);
+          }, (err) => {
+            console.error('Could not copy text: ', err);
+          });
+        } else {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.style.position = "fixed";
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+              document.execCommand("copy");
+              showToast(`Đã copy: "${text}"`);
+            } catch (err) {}
+            document.body.removeChild(textarea);
+        }
+      };
+
+      // --- 2. DOM ELEMENTS & STATE ---
       const UI = {
         fileInput: document.getElementById("file-input"),
         uploadSection: document.getElementById("upload-section"),
@@ -1080,9 +1274,11 @@
         importWhitelistBtn: document.getElementById("import-whitelist-btn"),
         exportWhitelistBtn: document.getElementById("export-whitelist-btn"),
         whitelistImportFile: document.getElementById("whitelist-import-file"),
+        fontToggleBtn: document.getElementById("font-toggle-btn"),
+        sizeUpBtn: document.getElementById("size-up-btn"),
+        sizeDownBtn: document.getElementById("size-down-btn"),
       };
 
-      // --- 3. STATE ---
       let state = {
         allDetectedErrors: [],
         currentFilteredErrors: [],
@@ -1104,10 +1300,10 @@
           tone: true,
           foreign: true,
         },
-        sortMode: "count_desc",
+        readerSettings: { fontSize: 1.25, fontFamily: "serif" },
       };
 
-      // --- 4. UTILS & HELPERS ---
+      // --- 3. HELPER FUNCTIONS ---
       const isFrontVowel = (c) =>
         c &&
         ["i", "e", "ê"].includes(
@@ -1160,6 +1356,16 @@
         return style;
       }
 
+      function sanitizeFilename(name) {
+        return name
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
+          .replace(/\s+/g, "-")
+          .toLowerCase()
+          .trim();
+      }
+
       function levenshteinDistance(a, b) {
         if (a.length === 0) return b.length;
         if (b.length === 0) return a.length;
@@ -1200,12 +1406,24 @@
       }
 
       function getContext(text, index, length) {
-        const start = Math.max(0, index - 60);
-        const end = Math.min(text.length, index + length + 60);
+        const contextLength = 60; // Characters before and after target
+        const start = Math.max(0, index - contextLength);
+        const end = Math.min(text.length, index + length + contextLength);
+
+        let prefix = text.substring(start, index);
+        let suffix = text.substring(index + length, end);
+
+        if (start > 0) {
+          prefix = "..." + prefix;
+        }
+        if (end < text.length) {
+          suffix = suffix + "...";
+        }
+
         return {
-          prefix: text.substring(start, index),
+          prefix: prefix,
           target: text.substr(index, length),
-          suffix: text.substring(index + length, end),
+          suffix: suffix,
         };
       }
 
@@ -1214,17 +1432,18 @@
         d.textContent = text;
         return d.innerHTML;
       }
+
       function updateProgress(p, t) {
-        UI.progressBar.style.width = p + "%";
-        UI.progressPercent.innerText = p + "%";
-        UI.statusText.innerText = t;
+        if (UI.progressBar) UI.progressBar.style.width = p + "%";
+        if (UI.progressPercent) UI.progressPercent.innerText = p + "%";
+        if (UI.statusText) UI.statusText.innerText = t;
       }
 
       function showToast(msg) {
         const n = document.createElement("div");
         n.className =
           "fixed bottom-6 right-6 bg-slate-800 text-green-400 border border-slate-700 px-4 py-3 rounded-lg shadow-xl z-[70] text-sm font-medium animate-fadeIn flex items-center gap-2";
-        n.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span>${msg}</span>`;
+        n.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span>${msg}</span>`;
         document.body.appendChild(n);
         setTimeout(() => {
           n.style.opacity = "0";
@@ -1233,83 +1452,25 @@
         }, 2000);
       }
 
-      function copyToClipboard(text) {
-        const textarea = document.createElement("textarea");
-        textarea.value = text;
-        textarea.style.position = "fixed";
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-          document.execCommand("copy");
-          showToast(`Đã copy: "${text}"`);
-        } catch (err) {}
-        document.body.removeChild(textarea);
-      }
 
-      function exportWhitelist() {
-        const content = UI.whitelistInput.value;
-        if (!content.trim()) {
-          alert("Danh sách trống!");
-          return;
-        }
-        const tokens = content
-          .split(/[,;\s]+/)
-          .map((t) => t.trim())
-          .filter((t) => t.length > 0);
-        const uniqueTokens = [...new Set(tokens)];
-        const formattedContent = uniqueTokens.join("\n");
-        const blob = new Blob([formattedContent], {
-          type: "text/plain;charset=utf-8",
-        });
-        const url = URL.createObjectURL(blob);
-        const now = new Date();
-        const timeString = `${now.getFullYear()}${String(
-          now.getMonth() + 1
-        ).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `whitelist-${timeString}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
 
-      function handleImportWhitelist(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const newContent = e.target.result;
-          const currentContent = UI.whitelistInput.value;
-          const combinedContent = currentContent + " " + newContent;
-          // Improved split logic for all delimiters including whitespace
-          const tokens = combinedContent
-            .split(/[,;\s]+/)
-            .map((t) => t.trim())
-            .filter((t) => t.length > 0);
-          const uniqueTokens = [...new Set(tokens)];
-          // Format with trailing comma
-          const finalString = uniqueTokens.join(", ");
-          UI.whitelistInput.value =
-            finalString + (finalString.length > 0 ? ", " : "");
-          saveWhitelist();
-          filterAndRenderErrors();
-          showToast("Đã nhập whitelist thành công!");
-          event.target.value = "";
-        };
-        reader.readAsText(file);
-      }
-
-      // --- 5. LOGIC & EVENT LISTENERS ---
+      // --- 4. LOGIC FUNCTIONS ---
       async function fetchDictWithFallback(filename, onlineUrl) {
         try {
           const res = await fetch(filename);
           if (res.ok) return await res.text();
-        } catch (e) {}
-        const res = await fetch(onlineUrl);
-        if (!res.ok) throw new Error("Load failed");
-        return await res.text();
+        } catch (e) {
+          console.warn(`Local file ${filename} not found, trying online...`);
+        }
+        try {
+          const res = await fetch(onlineUrl);
+          if (!res.ok)
+            throw new Error(`Failed to load ${onlineUrl}: ${res.status}`);
+          return await res.text();
+        } catch (e) {
+          console.error(`All sources failed for ${filename}:`, e);
+          throw e;
+        }
       }
 
       async function loadDictionaries() {
@@ -1366,6 +1527,8 @@
               if (c) state.engWords.add(c);
             });
             state.isEngDictLoaded = true;
+            if (document.getElementById("eng-loading"))
+              document.getElementById("eng-loading").classList.add("hidden");
           }
           if (upRes) {
             upRes.split(/\r?\n/).forEach((w) => {
@@ -1398,17 +1561,21 @@
         localStorage.setItem(STORAGE_KEY, UI.whitelistInput.value);
       }
       function loadSettings() {
-        const s = localStorage.getItem(SETTINGS_KEY);
-        if (s) {
-          state.checkSettings = JSON.parse(s);
-          document.getElementById("set-dict").checked =
-            state.checkSettings.dictionary;
-          document.getElementById("set-case").checked =
-            state.checkSettings.uppercase;
-          document.getElementById("set-tone").checked =
-            state.checkSettings.tone;
-          document.getElementById("set-struct").checked =
-            state.checkSettings.foreign;
+        try {
+          const s = localStorage.getItem(SETTINGS_KEY);
+          if (s) {
+            state.checkSettings = JSON.parse(s);
+            document.getElementById("set-dict").checked =
+              state.checkSettings.dictionary;
+            document.getElementById("set-case").checked =
+              state.checkSettings.uppercase;
+            document.getElementById("set-tone").checked =
+              state.checkSettings.tone;
+            document.getElementById("set-struct").checked =
+              state.checkSettings.foreign;
+          }
+        } catch (e) {
+          saveSettings();
         }
       }
       function saveSettings() {
@@ -1428,65 +1595,133 @@
         }
       }
 
-      async function handleFile(file) {
-        if (!file.name.endsWith(".epub")) {
-          alert("Vui lòng chọn file .epub");
-          return;
-        }
-        state.isEngFilterEnabled = UI.engFilterCheckbox.checked;
-        UI.uploadSection.classList.add("hidden");
+      function resetApp() {
         UI.resultsSection.classList.add("hidden");
-        UI.processingUi.classList.remove("hidden");
-        UI.errorList.innerHTML = "";
-        UI.contextView.innerHTML =
-          '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
-        UI.contextNav.classList.add("hidden");
-        UI.metaTitle.innerText = "Đang tải...";
-        UI.metaAuthor.innerText = "Đang tải...";
+        UI.resetBtn.classList.add("hidden");
+        UI.exportBtn.classList.add("hidden");
+        UI.uploadSection.classList.remove("hidden");
+        UI.fileInput.value = "";
+        state.allDetectedErrors = [];
+        state.currentFilteredErrors = [];
+        state.currentGroup = null;
+        state.currentInstanceIndex = 0;
+        state.currentBookTitle = "";
+        state.loadedTextContent = [];
+
         if (state.currentCoverUrl) {
           URL.revokeObjectURL(state.currentCoverUrl);
           state.currentCoverUrl = null;
         }
+
+        UI.statTotalWords.innerText = "0";
+        UI.statErrors.innerText = "0";
+        UI.statGroups.innerText = "0";
+        UI.errorList.innerHTML = "";
+        UI.contextView.innerHTML =
+          '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
+        UI.contextNav.classList.add("hidden");
+        UI.metaTitle.innerText = "";
+        UI.metaAuthor.innerText = "";
         UI.metaCover.src = "";
         UI.metaCover.classList.add("hidden");
         UI.metaCoverPlaceholder.classList.remove("hidden");
+      }
+
+      function exportWhitelist() {
+        const content = UI.whitelistInput.value;
+        if (!content.trim()) {
+          alert("Danh sách trống!");
+          return;
+        }
+        const tokens = content
+          .split(/[,;\s]+/)
+          .map((t) => t.trim())
+          .filter((t) => t.length > 0);
+        const uniqueTokens = [...new Set(tokens)];
+        const formattedContent = uniqueTokens.join("\n");
+        const blob = new Blob([formattedContent], {
+          type: "text/plain;charset=utf-8",
+        });
+        const url = URL.createObjectURL(blob);
+        const now = new Date();
+        const timeString = `${now.getFullYear()}${String(
+          now.getMonth() + 1
+        ).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `whitelist-${timeString}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function handleImportWhitelist(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const newContent = e.target.result;
+          const currentContent = UI.whitelistInput.value;
+          const combinedContent = currentContent + " " + newContent;
+          const tokens = combinedContent
+            .split(/[,;\s]+/)
+            .map((t) => t.trim())
+            .filter((t) => t.length > 0);
+          const uniqueTokens = [...new Set(tokens)];
+          const finalString = uniqueTokens.join(", ");
+          UI.whitelistInput.value =
+            finalString + (finalString.length > 0 ? ", " : "");
+          saveWhitelist();
+          filterAndRenderErrors();
+          showToast("Đã nhập whitelist thành công!");
+          event.target.value = "";
+        };
+        reader.readAsText(file);
+      }
+
+      function loadReaderSettings() {
         try {
-          updateProgress(10, "Đang giải nén tệp...");
-          const zip = await JSZip.loadAsync(file);
-          updateProgress(30, "Đang đọc cấu trúc sách...");
-          const { fullTextBlocks, title, author, coverUrl } = await parseEpub(
-            zip
-          );
-          state.loadedTextContent = fullTextBlocks;
-          UI.metaTitle.innerText = title;
-          UI.metaAuthor.innerText = author;
-          state.currentBookTitle = title;
-          if (coverUrl) {
-            state.currentCoverUrl = coverUrl;
-            UI.metaCover.src = coverUrl;
-            UI.metaCover.classList.remove("hidden");
-            UI.metaCoverPlaceholder.classList.add("hidden");
-          }
-          updateProgress(60, "Đang phân tích...");
-          requestAnimationFrame(() => {
-            setTimeout(() => {
-              analyzeText(fullTextBlocks);
-              UI.processingUi.classList.add("hidden");
-              UI.resultsSection.classList.remove("hidden");
-              UI.resetBtn.classList.remove("hidden");
-              UI.exportBtn.classList.remove("hidden");
-            }, 100);
-          });
-        } catch (err) {
-          console.error(err);
-          alert("Có lỗi xảy ra: " + err.message);
-          UI.processingUi.classList.add("hidden");
-          UI.uploadSection.classList.remove("hidden");
+          const s = localStorage.getItem(READER_SETTINGS_KEY);
+          if (s) state.readerSettings = JSON.parse(s);
+        } catch (e) {
+          state.readerSettings = { fontSize: 1.25, fontFamily: "serif" };
+        }
+        applyReaderStyles();
+      }
+
+      function saveReaderSettings() {
+        localStorage.setItem(
+          READER_SETTINGS_KEY,
+          JSON.stringify(state.readerSettings)
+        );
+        applyReaderStyles();
+        if (state.currentGroup) updateContextView();
+      }
+
+      function applyReaderStyles() {
+        const fontStyle =
+          state.readerSettings.fontFamily === "serif"
+            ? '"Noto Serif", serif'
+            : '"Noto Sans", sans-serif';
+        const fontSize = `${state.readerSettings.fontSize}rem`;
+
+        if (UI.contextView) {
+          UI.contextView.style.setProperty("--reader-font", fontStyle);
+          UI.contextView.style.setProperty("--reader-size", fontSize);
         }
       }
 
       async function parseEpub(zip) {
-        const cData = await zip.file("META-INF/container.xml").async("string");
+        // Fix 6: Check for container.xml existence
+        const containerFile = zip.file("META-INF/container.xml");
+        if (!containerFile) {
+          throw new Error(
+            "File EPUB không hợp lệ: thiếu META-INF/container.xml"
+          );
+        }
+        const cData = await containerFile.async("string");
+
         const parser = new DOMParser();
         const cXml = parser.parseFromString(cData, "application/xml");
         const rootPath = cXml
@@ -1496,6 +1731,7 @@
         const opfXml = parser.parseFromString(opfData, "application/xml");
         const opfDir = rootPath.substring(0, rootPath.lastIndexOf("/"));
         const resolvePath = (p) => (opfDir ? opfDir + "/" + p : p);
+
         const title =
           opfXml.getElementsByTagName("dc:title")[0]?.textContent ||
           opfXml.querySelector("title")?.textContent ||
@@ -1504,6 +1740,7 @@
           opfXml.getElementsByTagName("dc:creator")[0]?.textContent ||
           opfXml.querySelector("creator")?.textContent ||
           "Không rõ tác giả";
+
         let coverUrl = null;
         try {
           let coverHref = null;
@@ -1530,27 +1767,29 @@
             }
           }
         } catch (e) {}
+
         const spine = Array.from(opfXml.querySelectorAll("spine itemref")).map(
           (ref) => ref.getAttribute("idref")
         );
-        const manifest = {};
-        Array.from(opfXml.querySelectorAll("manifest item")).forEach(
-          (item) =>
-            (manifest[item.getAttribute("id")] = item.getAttribute("href"))
-        );
         let fullTextBlocks = [];
         for (let i = 0; i < spine.length; i++) {
-          const href = manifest[spine[i]];
-          const fullPath = resolvePath(href);
-          if (zip.file(fullPath)) {
-            const html = await zip.file(fullPath).async("string");
-            const doc = parser.parseFromString(html, "text/html");
-            const paras = Array.from(
-              doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, div")
-            )
-              .map((el) => el.textContent.trim())
-              .filter((text) => text.length > 0);
-            fullTextBlocks.push(...paras);
+          const id = spine[i];
+          const item = Array.from(
+            opfXml.querySelectorAll("manifest item")
+          ).find((it) => it.getAttribute("id") === id);
+          if (item) {
+            const href = item.getAttribute("href");
+            const fullPath = resolvePath(href);
+            if (zip.file(fullPath)) {
+              const html = await zip.file(fullPath).async("string");
+              const doc = parser.parseFromString(html, "text/html");
+              const paras = Array.from(
+                doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, div")
+              )
+                .map((el) => el.textContent.trim())
+                .filter((text) => text.length > 0);
+              fullTextBlocks.push(...paras);
+            }
           }
           if (i % 5 === 0)
             updateProgress(
@@ -1561,165 +1800,73 @@
         return { fullTextBlocks, title, author, coverUrl };
       }
 
-      function analyzeText(paragraphs) {
-        let totalWords = 0;
-        const errorMap = new Map();
-        paragraphs.forEach((para) => {
-          let match;
-          while ((match = localWordRegex.exec(para)) !== null) {
-            const word = match[0];
-            totalWords++;
-            if (word.length < 2) continue;
+      async function handleFile(file) {
+        if (!file.name.endsWith(".epub")) {
+          alert("Vui lòng chọn file .epub");
+          return;
+        }
 
-            if (state.customWords.has(word)) continue;
+        if (state.currentCoverUrl) {
+          URL.revokeObjectURL(state.currentCoverUrl);
+          state.currentCoverUrl = null;
+        }
 
-            const lower = word.toLowerCase().normalize("NFC");
-            const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word);
-            let errorType = null;
-            if (state.checkSettings.uppercase) {
-              const upperCount = Array.from(word).filter(
-                (c) => c.toUpperCase() === c && c.toLowerCase() !== c
-              ).length;
-              if (upperCount >= 2) errorType = "Lỗi viết hoa (Nhiều ký tự hoa)";
-            }
-            if (!errorType && state.checkSettings.tone) {
-              for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
-                if (lower.endsWith(wrong)) {
-                  errorType = "Sai vị trí dấu (Chuẩn cũ/mới)";
-                  break;
-                }
-              }
-            }
-            if (
-              !errorType &&
-              state.isDictLoaded &&
-              state.checkSettings.dictionary
-            ) {
-              if (!state.validSyllables.has(lower)) {
-                if (!isCapitalized) {
-                  if (/[fjwz]/.test(lower)) {
-                    if (state.checkSettings.foreign)
-                      errorType = "Từ lạ / Tiếng nước ngoài";
-                    else errorType = "Không có trong từ điển";
-                  } else if (/(aa|ee|oo|dd|js|kx|wt)$/.test(lower)) {
-                    errorType = "Lỗi gõ máy (Typo)";
-                  } else {
-                    errorType = "Không có trong từ điển";
-                  }
-                }
-              }
-            } else if (
-              !errorType &&
-              state.checkSettings.foreign &&
-              /[fjwz]/.test(lower) &&
-              !isCapitalized
-            ) {
-              errorType = "Chứa ký tự lạ (f, j, w, z)";
-            }
+        if (!state.isDictLoaded) {
+          alert("Đang tải dữ liệu từ điển, vui lòng đợi giây lát...");
+          return;
+        }
 
-            const isWordInDict =
-              state.isDictLoaded && state.validSyllables.has(lower);
-            if (!errorType && state.checkSettings.foreign && !isWordInDict) {
-              if (
-                lower.startsWith("ngh") &&
-                !isFrontVowel(lower[3]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc ngh";
-              else if (
-                lower.startsWith("ng") &&
-                isFrontVowel(lower[2]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc ng";
-              else if (
-                lower.startsWith("gh") &&
-                !isFrontVowel(lower[2]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc gh";
-              else if (
-                lower.startsWith("g") &&
-                !lower.startsWith("gh") &&
-                !lower.startsWith("gi") &&
-                !isCapitalized
-              ) {
-                const c = lower[1];
-                if (
-                  c &&
-                  ["e", "ê"].includes(
-                    c
-                      .normalize("NFD")
-                      .replace(/[\u0300-\u036f]/g, "")
-                      .toLowerCase()
-                  )
-                )
-                  errorType = "Sai quy tắc g";
-              } else if (
-                lower.startsWith("k") &&
-                !lower.startsWith("kh") &&
-                !isFrontVowel(lower[1]) &&
-                !isY(lower[1]) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc k";
-              else if (
-                lower.startsWith("c") &&
-                !lower.startsWith("ch") &&
-                (isFrontVowel(lower[1]) || isY(lower[1])) &&
-                !isCapitalized
-              )
-                errorType = "Sai quy tắc c";
-            }
-            if (errorType) {
-              const key = lower + "::" + errorType;
-              if (!errorMap.has(key))
-                errorMap.set(key, {
-                  id: key,
-                  word: word,
-                  type: errorType,
-                  contexts: [],
-                });
-              errorMap
-                .get(key)
-                .contexts.push(getContext(para, match.index, word.length));
-            }
-          }
-        });
-        UI.statTotalWords.innerText = totalWords.toLocaleString();
-        state.allDetectedErrors = Array.from(errorMap.values()).sort(
-          (a, b) => b.contexts.length - a.contexts.length
-        );
-        state.currentFilteredErrors = state.allDetectedErrors;
-        filterAndRenderErrors();
-      }
+        state.isEngFilterEnabled = UI.engFilterCheckbox.checked;
+        UI.uploadSection.classList.add("hidden");
+        UI.resultsSection.classList.add("hidden");
+        UI.processingUi.classList.remove("hidden");
+        UI.errorList.innerHTML = "";
+        UI.contextView.innerHTML =
+          '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
+        UI.contextNav.classList.add("hidden");
+        UI.metaTitle.innerText = "Đang tải...";
+        UI.metaAuthor.innerText = "Đang tải...";
 
-      function filterAndRenderErrors() {
-        const rawInput = UI.whitelistInput.value;
-        const userWhitelist = new Set();
-        if (rawInput)
-          rawInput
-            .split(/[,;\s]+/)
-            .map((t) => t.trim().toLowerCase())
-            .filter((t) => t.length > 0)
-            .forEach((t) => userWhitelist.add(t));
-        let filtered = state.allDetectedErrors.filter(
-          (g) => !userWhitelist.has(g.word.toLowerCase())
-        );
-        if (state.isEngFilterEnabled && state.isEngDictLoaded)
-          filtered = filtered.filter(
-            (g) => !state.engWords.has(g.word.toLowerCase())
+        UI.metaCover.src = "";
+        UI.metaCover.classList.add("hidden");
+        UI.metaCoverPlaceholder.classList.remove("hidden");
+
+        try {
+          updateProgress(10, "Đang giải nén tệp...");
+          const zip = await JSZip.loadAsync(file);
+          updateProgress(30, "Đang đọc cấu trúc sách...");
+          const { fullTextBlocks, title, author, coverUrl } = await parseEpub(
+            zip
           );
 
-        // Default Sort: Count Descending
-        filtered.sort((a, b) => b.contexts.length - a.contexts.length);
+          state.loadedTextContent = fullTextBlocks;
+          UI.metaTitle.innerText = title;
+          UI.metaAuthor.innerText = author;
+          state.currentBookTitle = title;
 
-        state.currentFilteredErrors = filtered;
-        UI.statErrors.innerText = filtered
-          .reduce((acc, curr) => acc + curr.contexts.length, 0)
-          .toLocaleString();
-        UI.statGroups.innerText = filtered.length.toLocaleString();
-        renderErrors(filtered);
+          if (coverUrl) {
+            state.currentCoverUrl = coverUrl;
+            UI.metaCover.src = coverUrl;
+            UI.metaCover.classList.remove("hidden");
+            UI.metaCoverPlaceholder.classList.add("hidden");
+          }
+
+          updateProgress(60, "Đang phân tích...");
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              analyzeText(fullTextBlocks);
+              UI.processingUi.classList.add("hidden");
+              UI.resultsSection.classList.remove("hidden");
+              UI.resetBtn.classList.remove("hidden");
+              UI.exportBtn.classList.remove("hidden");
+            }, 100);
+          });
+        } catch (err) {
+          console.error(err);
+          alert("Có lỗi xảy ra: " + err.message);
+          UI.processingUi.classList.add("hidden");
+          UI.uploadSection.classList.remove("hidden");
+        }
       }
 
       function renderErrors(groups) {
@@ -1758,7 +1905,7 @@
           }
           btn.onclick = () => {
             selectGroup(group, btn);
-            copyToClipboard(group.word);
+            window.copyToClipboard(group.word);
           };
           clone.querySelector(".ignore-btn").onclick = (e) => {
             e.stopPropagation();
@@ -1766,6 +1913,207 @@
           };
           UI.errorList.appendChild(clone);
         });
+      }
+
+      function filterAndRenderErrors() {
+        const rawInput = UI.whitelistInput.value;
+        const userWhitelist = new Set();
+        if (rawInput)
+          rawInput
+            .split(/[,;\s]+/)
+            .map((t) => t.trim().toLowerCase())
+            .filter((t) => t.length > 0)
+            .forEach((t) => userWhitelist.add(t));
+        let filtered = state.allDetectedErrors.filter((g) => {
+          const lowerWord = g.word.toLowerCase();
+          if (userWhitelist.has(lowerWord)) return false;
+          if (
+            state.isEngFilterEnabled &&
+            state.isEngDictLoaded &&
+            state.engWords.has(lowerWord)
+          )
+            return false;
+          return true;
+        });
+
+        filtered.sort((a, b) => b.contexts.length - a.contexts.length);
+
+        state.currentFilteredErrors = filtered;
+        UI.statErrors.innerText = filtered
+          .reduce((acc, curr) => acc + curr.contexts.length, 0)
+          .toLocaleString();
+        UI.statGroups.innerText = filtered.length.toLocaleString();
+        renderErrors(filtered);
+      }
+
+      function analyzeText(paragraphs) {
+        let totalWords = 0;
+        const errorMap = new Map();
+        paragraphs.forEach((para) => {
+          let match;
+          while ((match = localWordRegex.exec(para)) !== null) {
+            const word = match[0];
+            totalWords++;
+            if (word.length < 2) continue;
+            if (state.customWords.has(word)) continue;
+            const lower = word.toLowerCase().normalize("NFC");
+            const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word);
+            let errorType = null;
+
+            if (state.checkSettings.uppercase) {
+              const upperCount = Array.from(word).filter(
+                (c) => c.toUpperCase() === c && c.toLowerCase() !== c
+              ).length;
+              if (upperCount >= 2) errorType = "Lỗi viết hoa (Nhiều ký tự hoa)";
+            }
+            if (!errorType && state.checkSettings.tone) {
+              for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
+                if (lower.endsWith(wrong)) {
+                  errorType = "Sai vị trí dấu (Chuẩn cũ/mới)";
+                  break;
+                }
+              }
+            }
+
+            const isWordInDict =
+              state.isDictLoaded && state.validSyllables.has(lower);
+
+            if (!errorType && state.checkSettings.dictionary) {
+              if (!isWordInDict) {
+                if (!isCapitalized) {
+                  if (/[fjwz]/.test(lower)) {
+                    if (state.checkSettings.foreign)
+                      errorType = "Từ lạ / Tiếng nước ngoài";
+                    else errorType = "Không có trong từ điển";
+                  } else if (/(aa|ee|oo|dd|js|kx|wt)$/.test(lower)) {
+                    errorType = "Lỗi gõ máy (Typo)";
+                  } else {
+                    errorType = "Không có trong từ điển";
+                  }
+                }
+              }
+            } else if (
+              !errorType &&
+              state.checkSettings.foreign &&
+              /[fjwz]/.test(lower) &&
+              !isCapitalized
+            ) {
+              errorType = "Chứa ký tự lạ (f, j, w, z)";
+            }
+
+            if (!errorType && state.checkSettings.foreign && !isWordInDict) {
+              if (
+                lower.startsWith("ngh") &&
+                lower.length > 3 &&
+                !isFrontVowel(lower[3]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc ngh";
+              else if (
+                lower.startsWith("ng") &&
+                lower.length > 2 &&
+                isFrontVowel(lower[2]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc ng";
+              else if (
+                lower.startsWith("gh") &&
+                lower.length > 2 &&
+                !isFrontVowel(lower[2]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc gh";
+              else if (
+                lower.startsWith("g") &&
+                !lower.startsWith("gh") &&
+                !lower.startsWith("gi") &&
+                !isCapitalized
+              ) {
+                const c = lower[1];
+                if (
+                  c &&
+                  ["e", "ê"].includes(
+                    c
+                      .normalize("NFD")
+                      .replace(/[\u0300-\u036f]/g, "")
+                      .toLowerCase()
+                  )
+                )
+                  errorType = "Sai quy tắc g";
+              } else if (
+                lower.startsWith("k") &&
+                !lower.startsWith("kh") &&
+                lower.length > 1 &&
+                !isFrontVowel(lower[1]) &&
+                !isY(lower[1]) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc k";
+              else if (
+                lower.startsWith("c") &&
+                !lower.startsWith("ch") &&
+                lower.length > 1 &&
+                (isFrontVowel(lower[1]) || isY(lower[1])) &&
+                !isCapitalized
+              )
+                errorType = "Sai quy tắc c";
+            }
+
+            if (errorType) {
+              const key = lower + "::" + errorType;
+              if (!errorMap.has(key))
+                errorMap.set(key, {
+                  id: key,
+                  word: word,
+                  type: errorType,
+                  contexts: [],
+                });
+              errorMap
+                .get(key)
+                .contexts.push(getContext(para, match.index, word.length));
+            }
+          }
+        });
+        UI.statTotalWords.innerText = totalWords.toLocaleString();
+        state.allDetectedErrors = Array.from(errorMap.values()).sort(
+          (a, b) => b.contexts.length - a.contexts.length
+        );
+        state.currentFilteredErrors = state.allDetectedErrors;
+        filterAndRenderErrors();
+      }
+
+      function performExport(type) {
+        const filteredErrors = state.currentFilteredErrors;
+        if (filteredErrors.length === 0) {
+          alert("Không có lỗi nào để xuất!");
+          UI.exportModal.classList.add("hidden");
+          return;
+        }
+        let content = "";
+        if (type === "vctve")
+          content = filteredErrors.map((g) => `${g.word} ==>`).join("\n\n");
+        else content = filteredErrors.map((g) => g.word).join("\n");
+        const sanitizeFilename = (name) =>
+          name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
+            .replace(/\s+/g, "-")
+            .toLowerCase()
+            .trim();
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        let fileName = state.currentBookTitle
+          ? `loi-${sanitizeFilename(state.currentBookTitle)}.txt`
+          : "loi-khong-ro-ten.txt";
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        UI.exportModal.classList.add("hidden");
       }
 
       function selectGroup(group, btnElement) {
@@ -1814,12 +2162,20 @@
                 .join("")}</div>`
             : "";
         const style = getErrorHighlights(state.currentGroup.type);
-        const wiktionary = `<a href="https://vi.wiktionary.org/wiki/${state.currentGroup.word}" target="_blank" class="ml-1 inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors" title="Tra cứu Wiktionary"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></a>`;
+        const wiktionary = `<a href="https://vi.wiktionary.org/wiki/${state.currentGroup.word}" target="_blank" class="ml-1 inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors" title="Tra cứu Wiktionary"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></a>`;
+
+        // Use Inline Styles to guarantee application
+        const fontStyle =
+          state.readerSettings.fontFamily === "serif"
+            ? '"Noto Serif", serif'
+            : '"Noto Sans", sans-serif';
+        const fontSize = `${state.readerSettings.fontSize}rem`;
+
         UI.contextView.innerHTML = `<div class="max-w-2xl text-center w-full animate-fadeIn"><div class="flex items-center justify-center gap-2 mb-6"><span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-2 py-1 rounded">Ngữ cảnh ${
           state.currentInstanceIndex + 1
         } / ${
           state.currentGroup.contexts.length
-        }</span></div><div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative"><div class="text-xl leading-loose text-slate-300 font-serif">${escapeHtml(
+        }</span></div><div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative"><div class="reader-content" style="font-family: ${fontStyle} !important; font-size: ${fontSize} !important;">${escapeHtml(
           ctx.prefix
         )}<span class="${style.bg} ${
           style.text
@@ -1918,142 +2274,112 @@
         }
       }
 
-      function resetApp() {
-        UI.resultsSection.classList.add("hidden");
-        UI.resetBtn.classList.add("hidden");
-        UI.exportBtn.classList.add("hidden");
-        UI.uploadSection.classList.remove("hidden");
-        UI.fileInput.value = "";
-        state = {
-          ...state,
-          allDetectedErrors: [],
-          currentFilteredErrors: [],
-          currentGroup: null,
-          currentInstanceIndex: 0,
-          currentBookTitle: "",
-          loadedTextContent: [],
-          currentCoverUrl: null,
-        };
-        if (state.currentCoverUrl) URL.revokeObjectURL(state.currentCoverUrl);
-        UI.statTotalWords.innerText = "0";
-        UI.statErrors.innerText = "0";
-        UI.statGroups.innerText = "0";
-        UI.errorList.innerHTML = "";
-        UI.contextView.innerHTML =
-          '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
-        UI.contextNav.classList.add("hidden");
-        UI.metaTitle.innerText = "";
-        UI.metaAuthor.innerText = "";
-        UI.metaCover.src = "";
-        UI.metaCover.classList.add("hidden");
-        UI.metaCoverPlaceholder.classList.remove("hidden");
-      }
-
-      function performExport(type) {
-        const filteredErrors = state.currentFilteredErrors;
-        if (filteredErrors.length === 0) {
-          alert("Không có lỗi nào để xuất!");
-          UI.exportModal.classList.add("hidden");
-          return;
-        }
-        let content = "";
-        if (type === "vctve")
-          content = filteredErrors.map((g) => `${g.word} ==>`).join("\n\n");
-        else content = filteredErrors.map((g) => g.word).join("\n");
-        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        let fileName = state.currentBookTitle
-          ? `loi-${state.currentBookTitle
-              .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
-              .trim()}.txt`
-          : "loi-khong-ro-ten.txt";
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        UI.exportModal.classList.add("hidden");
-      }
-
       function setupEventListeners() {
-        UI.uploadSection.addEventListener("click", () => UI.fileInput.click());
-        UI.uploadSection.addEventListener("dragover", (e) => {
-          e.preventDefault();
-          UI.uploadSection.classList.add("border-blue-500", "bg-slate-800");
-        });
-        UI.uploadSection.addEventListener("dragleave", () =>
-          UI.uploadSection.classList.remove("border-blue-500", "bg-slate-800")
-        );
-        UI.uploadSection.addEventListener("drop", (e) => {
-          e.preventDefault();
-          UI.uploadSection.classList.remove("border-blue-500", "bg-slate-800");
-          if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-        });
-        UI.fileInput.addEventListener("change", (e) => {
-          if (e.target.files.length) handleFile(e.target.files[0]);
-        });
-        UI.resetBtn.addEventListener("click", resetApp);
-        UI.exportBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          UI.exportModal.classList.remove("hidden");
-        });
-        document
-          .getElementById("close-export-btn")
-          .addEventListener("click", () =>
-            UI.exportModal.classList.add("hidden")
+        if (UI.uploadSection) {
+          UI.uploadSection.addEventListener("click", () =>
+            UI.fileInput.click()
           );
-        document
-          .getElementById("export-vctve-btn")
-          .addEventListener("click", () => performExport("vctve"));
-        document
-          .getElementById("export-normal-btn")
-          .addEventListener("click", () => performExport("normal"));
-        UI.settingsBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          UI.settingsModal.classList.remove("hidden");
-        });
-        UI.closeSettingsBtn.addEventListener("click", () =>
-          UI.settingsModal.classList.add("hidden")
-        );
-        UI.helpBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          UI.helpModal.classList.remove("hidden");
-        });
-        UI.closeHelpBtn.addEventListener("click", () =>
-          UI.helpModal.classList.add("hidden")
-        );
+          UI.uploadSection.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            UI.uploadSection.classList.add("border-blue-500", "bg-slate-800");
+          });
+          UI.uploadSection.addEventListener("dragleave", () =>
+            UI.uploadSection.classList.remove("border-blue-500", "bg-slate-800")
+          );
+          UI.uploadSection.addEventListener("drop", (e) => {
+            e.preventDefault();
+            UI.uploadSection.classList.remove(
+              "border-blue-500",
+              "bg-slate-800"
+            );
+            if (e.dataTransfer.files.length)
+              handleFile(e.dataTransfer.files[0]);
+          });
+        }
+        if (UI.fileInput)
+          UI.fileInput.addEventListener("change", (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+          });
+
+        if (UI.resetBtn) UI.resetBtn.addEventListener("click", resetApp);
+
+        if (UI.exportBtn)
+          UI.exportBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            UI.exportModal.classList.remove("hidden");
+          });
+        if (UI.closeExportBtn)
+          document
+            .getElementById("close-export-btn")
+            .addEventListener("click", () =>
+              UI.exportModal.classList.add("hidden")
+            );
+        if (UI.exportVctveBtn)
+          document
+            .getElementById("export-vctve-btn")
+            .addEventListener("click", () => performExport("vctve"));
+        if (UI.exportNormalBtn)
+          document
+            .getElementById("export-normal-btn")
+            .addEventListener("click", () => performExport("normal"));
+
+        if (UI.settingsBtn)
+          UI.settingsBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            UI.settingsModal.classList.remove("hidden");
+          });
+        if (UI.closeSettingsBtn)
+          UI.closeSettingsBtn.addEventListener("click", () =>
+            UI.settingsModal.classList.add("hidden")
+          );
+
+        if (UI.helpBtn)
+          UI.helpBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            UI.helpModal.classList.remove("hidden");
+          });
+        if (UI.closeHelpBtn)
+          UI.closeHelpBtn.addEventListener("click", () =>
+            UI.helpModal.classList.add("hidden")
+          );
 
         document.addEventListener("click", (e) => {
           if (
+            UI.settingsModal &&
             !UI.settingsModal.classList.contains("hidden") &&
             !UI.settingsModal.contains(e.target) &&
             !UI.settingsBtn.contains(e.target)
           )
             UI.settingsModal.classList.add("hidden");
           if (
+            UI.helpModal &&
             !UI.helpModal.classList.contains("hidden") &&
             e.target === UI.helpModal
           )
             UI.helpModal.classList.add("hidden");
           if (
+            UI.exportModal &&
             !UI.exportModal.classList.contains("hidden") &&
             e.target === UI.exportModal
           )
             UI.exportModal.classList.add("hidden");
         });
-        ["set-dict", "set-case", "set-tone", "set-struct"].forEach((id) =>
-          document.getElementById(id).addEventListener("change", saveSettings)
-        );
-        UI.whitelistInput.addEventListener("input", () => {
-          saveWhitelist();
-          filterAndRenderErrors();
+
+        ["set-dict", "set-case", "set-tone", "set-struct"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener("change", saveSettings);
         });
-        UI.engFilterCheckbox.addEventListener("change", (e) => {
-          state.isEngFilterEnabled = e.target.checked;
-          filterAndRenderErrors();
-        });
+
+        if (UI.whitelistInput)
+          UI.whitelistInput.addEventListener("input", () => {
+            saveWhitelist();
+            filterAndRenderErrors();
+          });
+        if (UI.engFilterCheckbox)
+          UI.engFilterCheckbox.addEventListener("change", (e) => {
+            state.isEngFilterEnabled = e.target.checked;
+            filterAndRenderErrors();
+          });
 
         // New Listeners for Import/Export Whitelist
         UI.importWhitelistBtn.addEventListener("click", () =>
@@ -2065,12 +2391,36 @@
         );
         UI.exportWhitelistBtn.addEventListener("click", exportWhitelist);
 
+        // Reader Settings Listeners
+        if (UI.fontToggleBtn && UI.sizeUpBtn && UI.sizeDownBtn) {
+          UI.fontToggleBtn.addEventListener("click", () => {
+            state.readerSettings.fontFamily =
+              state.readerSettings.fontFamily === "serif" ? "sans" : "serif";
+            saveReaderSettings();
+          });
+          UI.sizeUpBtn.addEventListener("click", () => {
+            if (state.readerSettings.fontSize < 3) {
+              state.readerSettings.fontSize =
+                Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
+              saveReaderSettings();
+            }
+          });
+          UI.sizeDownBtn.addEventListener("click", () => {
+            if (state.readerSettings.fontSize > 0.8) {
+              state.readerSettings.fontSize =
+                Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
+              saveReaderSettings();
+            }
+          });
+        }
+
         document.addEventListener("keydown", (e) => {
           if (
             document.activeElement === UI.whitelistInput ||
-            !UI.settingsModal.classList.contains("hidden") ||
-            !UI.helpModal.classList.contains("hidden") ||
-            !UI.exportModal.classList.contains("hidden")
+            (UI.settingsModal &&
+              !UI.settingsModal.classList.contains("hidden")) ||
+            (UI.helpModal && !UI.helpModal.classList.contains("hidden")) ||
+            (UI.exportModal && !UI.exportModal.classList.contains("hidden"))
           )
             return;
           if (state.currentFilteredErrors.length === 0) return;
@@ -2087,30 +2437,37 @@
             }
           }
         });
-        UI.btnPrev.addEventListener("click", () => {
-          if (state.currentGroup && state.currentInstanceIndex > 0) {
-            state.currentInstanceIndex--;
-            updateContextView();
-          }
-        });
-        UI.btnNext.addEventListener("click", () => {
-          if (
-            state.currentGroup &&
-            state.currentInstanceIndex < state.currentGroup.contexts.length - 1
-          ) {
-            state.currentInstanceIndex++;
-            updateContextView();
-          }
-        });
+
+        if (UI.btnPrev)
+          UI.btnPrev.addEventListener("click", () => {
+            if (state.currentGroup && state.currentInstanceIndex > 0) {
+              state.currentInstanceIndex--;
+              updateContextView();
+            }
+          });
+        if (UI.btnNext)
+          UI.btnNext.addEventListener("click", () => {
+            if (
+              state.currentGroup &&
+              state.currentInstanceIndex <
+                state.currentGroup.contexts.length - 1
+            ) {
+              state.currentInstanceIndex++;
+              updateContextView();
+            }
+          });
       }
 
       function init() {
         loadDictionaries();
         loadWhitelist();
         loadSettings();
+        loadReaderSettings();
         setupEventListeners();
       }
+
       init();
+      })();
     </script>
   </body>
 </html>
