@@ -4,18 +4,20 @@ This document highlights parts of the codebase that appear to be unused, redunda
 
 ## Summary of Findings
 
-The codebase contains several areas for potential optimization. The most prominent findings include an unused file (`src/counter.ts`), which is likely remnant template code, and duplicated logic in the form of an `updateProgress` function defined both locally in `src/utils/epub-parser.ts` and as an exported function in `src/utils/ui-render.ts`. No unused production dependencies were found. A full analysis still requires inspecting specific parts of the `src` directory, all type definitions, and all assets in the `public` directory to ensure no unreferenced resources exist. The findings so far provide a strong starting point for optimization.
+The codebase originally contained several areas for potential optimization. The most prominent findings included an unused file (`src/counter.ts`) and duplicated logic in the form of an `updateProgress` function. **These two items have been addressed and optimized.** No unused production dependencies were found. A full analysis still requires inspecting specific parts of the `src` directory, all type definitions, and all assets in the `public` directory to ensure no unreferenced resources exist. The findings so far provide a strong starting point for ongoing optimization.
 
 ## Relevant Locations for Optimization
 
-### `src/counter.ts`
+### `src/counter.ts` (Status: Completed)
 
-*   **Reasoning:** This file (`src/counter.ts`) and its exported function `setupCounter` appear to be leftover template code from a Vite installation. It is not imported or used anywhere in the application and can be safely deleted.
+*   **Reasoning:** This file (`src/counter.ts`) and its exported function `setupCounter` appeared to be leftover template code from a Vite installation. It was not imported or used anywhere in the application.
+*   **Action Taken:** The file `src/counter.ts` has been safely deleted.
 *   **Key Symbols:** `setupCounter`
 
-### `src/utils/epub-parser.ts` (Duplicated `updateProgress` function)
+### `src/utils/epub-parser.ts` (Duplicated `updateProgress` function) (Status: Completed)
 
-*   **Reasoning:** This file contains a local, non-exported function named `updateProgress`. A function with the same name and purpose is already exported from `src/utils/ui-render.ts` and correctly used in `main.ts`. This creates duplicated logic and an unnecessary local implementation. The local `updateProgress` function in `epub-parser.ts` should be removed, and the exported version from `ui-render.ts` should be imported and used instead to centralize the functionality and improve maintainability.
+*   **Reasoning:** This file contained a local, non-exported function named `updateProgress`, which was a duplicate of the one already exported from `src/utils/ui-render.ts` and correctly used in `main.ts`. This created duplicated logic and an unnecessary local implementation.
+*   **Action Taken:** The local `updateProgress` function in `epub-parser.ts` has been removed. The exported version from `ui-render.ts` is now imported and used instead, centralizing the functionality and improving maintainability.
 *   **Key Symbols:** `updateProgress`
 
 ## Further Investigation Needed

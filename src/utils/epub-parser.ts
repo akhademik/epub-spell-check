@@ -3,14 +3,9 @@ import JSZip from 'jszip';
 import { BookMetadata, TextContentBlock, EpubContent } from '../types/epub';
 
 import { UIElements } from '../types/ui';
+import { updateProgress } from './ui-render';
 
-// Helper to update the progress UI
-function updateProgress(ui: UIElements, percentage: number, message: string) {
-  // logger.log(`Progress: ${percentage}% - ${message}`); // Removed as per user request
-  if (ui.progressBar) ui.progressBar.style.width = percentage + '%';
-  if (ui.progressPercent) ui.progressPercent.innerText = percentage + '%';
-  if (ui.statusText) ui.statusText.innerText = message;
-}
+
 
 // Function to parse the EPUB file
 export async function parseEpub(
