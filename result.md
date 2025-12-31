@@ -50,6 +50,7 @@ The project has made significant progress and is now highly interactive and func
 - **Statistics Cards Layout:** Standardized the gap between statistics cards (`gap-4` changed to `gap-6`) to improve alignment with other sections of the UI.
 - **Panel Layout Alignment:** Unified the layout system for statistics cards and main content panels by converting the main content panel row to a 3-column grid (`lg:grid-cols-3`), ensuring consistent horizontal alignment across the sections.
 - **Context View Search Links:** Repositioned the Wiktionary and Google search links to appear on the same line as the "type of error" display, adjacent to its content box.
+- **Error Color Coding:** Implemented a fixed color coding system that assigns a distinct and recognizable set of colors (dot, text, background, border) to each of the 6 unique error types. This ensures consistent color representation across application runs and scenarios. Specifically, 'Typo' is assigned blue, 'Dictionary' is red, 'Foreign' is green, and 'Uppercase' is yellow.
 
 ---
 

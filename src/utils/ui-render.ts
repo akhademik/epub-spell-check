@@ -15,22 +15,34 @@ export function updateProgress(ui: UIElements, percentage: number, message: stri
     if (ui.statusText) ui.statusText.innerText = message;
 }
 
+const COLOR_PALETTE = [
+    { dot: "bg-blue-500", text: "text-blue-400", bg: "bg-blue-500/20", border: "border-blue-500" },      // 0: Blue
+    { dot: "bg-red-500", text: "text-red-400", bg: "bg-red-500/20", border: "border-red-500" },       // 1: Red
+    { dot: "bg-green-500", text: "text-green-400", bg: "bg-green-500/20", border: "border-green-500" },    // 2: Green
+    { dot: "bg-yellow-500", text: "text-yellow-400", bg: "bg-yellow-500/20", border: "border-yellow-500" },  // 3: Yellow
+    { dot: "bg-indigo-500", text: "text-indigo-400", bg: "bg-indigo-500/20", border: "border-indigo-500" },  // 4: Indigo
+    { dot: "bg-purple-500", text: "text-purple-400", bg: "bg-purple-500/20", border: "border-purple-500" },  // 5: Purple
+    { dot: "bg-pink-500", text: "text-pink-400", bg: "bg-pink-500/20", border: "border-pink-500" },      // 6: Pink
+    { dot: "bg-teal-500", text: "text-teal-400", bg: "bg-teal-500/20", border: "border-teal-500" },      // 7: Teal
+];
+
+// Explicit mapping for fixed error colors
+const FIXED_ERROR_COLORS: Record<string, number> = {
+    'Dictionary': 1,  // Red
+    'Typo': 0,        // Blue
+    'Foreign': 2,     // Green
+    'Uppercase': 3,   // Yellow
+    'Tone': 4,        // Indigo (next available)
+    'Spelling': 5,    // Purple (next available)
+};
+
 function getErrorHighlights(type: string): { dot: string; text: string; bg: string; border: string } {
-    let style = {
-        dot: "bg-sky-500",
-        text: "text-sky-400",
-        bg: "bg-sky-500/20",
-        border: "border-sky-500",
-    };
-    if (!type) return style;
-    if (type.startsWith("Sai quy tắc") || type.includes("Lỗi gõ máy") || type.includes("Lỗi viết hoa")) {
-        style = { dot: "bg-red-500", text: "text-red-400", bg: "bg-red-500/20", border: "border-red-500" };
-    } else if (type.includes("Sai vị trí dấu")) {
-        style = { dot: "bg-orange-500", text: "text-orange-400", bg: "bg-orange-500/20", border: "border-orange-500" };
-    } else if (type.includes("Từ lạ") || type.includes("ký tự lạ")) {
-        style = { dot: "bg-pink-500", text: "text-pink-400", bg: "bg-pink-500/20", border: "border-pink-500" };
+    if (!type || !Object.prototype.hasOwnProperty.call(FIXED_ERROR_COLORS, type)) {
+        // Fallback or default color if type is unknown
+        return COLOR_PALETTE[COLOR_PALETTE.length - 1]; // Use last color as default/fallback
     }
-    return style;
+
+    return COLOR_PALETTE[FIXED_ERROR_COLORS[type]];
 }
 
 function getContext(text: string, index: number, length: number) {
