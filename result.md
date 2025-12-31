@@ -47,6 +47,8 @@ The project has made significant progress and is now highly interactive and func
 - **Instance Navigation Looping:** Implemented infinite looping for the "Prev" and "Next" instance navigation buttons; pressing "next" from the last instance goes to the first, and "prev" from the first goes to the last. The navigation buttons' enabled/disabled state has been updated to correctly support this continuous looping.
 - **Settings Modal Shortcuts:** Removed the keyboard shortcut instruction lines from the Settings modal for cleaner UI.
 - **Dictionary Status Display:** Removed the "Custom: X từ" count from the dictionary status display in the header.
+- **Statistics Cards Layout:** Standardized the gap between statistics cards (`gap-4` changed to `gap-6`) to improve alignment with other sections of the UI.
+- **Panel Layout Alignment:** Unified the layout system for statistics cards and main content panels by converting the main content panel row to a 3-column grid (`lg:grid-cols-3`), ensuring consistent horizontal alignment across the sections.
 
 ---
 
