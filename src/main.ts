@@ -10,6 +10,7 @@ import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
 import { ErrorGroup } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress } from './utils/ui-render';
 import { parseWhitelistInput } from './utils/whitelist-parser';
+import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay } from './utils/ui-utils';
 
 const SETTINGS_KEY = "vn_spell_settings";
 const WHITELIST_KEY = "vn_spell_whitelist";
@@ -270,18 +271,12 @@ function saveSettings() {
     
     // Instead of re-analyzing, just filter and re-render
     if (state.loadedTextContent.length > 0) {
-        if (UI.loadingOverlay) {
-            UI.loadingOverlay.classList.remove('hidden');
-            UI.loadingOverlay.classList.add('flex', 'items-center', 'justify-center');
-        }
+        showLoadingOverlay(UI);
         
         // Use a short timeout to allow the UI to update (e.g., show overlay) before filtering
         setTimeout(() => {
             filterAndRenderErrors();
-            if (UI.loadingOverlay) {
-                UI.loadingOverlay.classList.add('hidden');
-                UI.loadingOverlay.classList.remove('flex', 'items-center', 'justify-center');
-            }
+            hideLoadingOverlay(UI);
             logger.log('Filtering complete after settings change.');
         }, 50);
     }
@@ -458,10 +453,7 @@ function navigateInstance(direction: 'prev' | 'next') {
 }
 
 function resetApp() {
-  if (UI.resultsSection) { UI.resultsSection.classList.add("hidden"); UI.resultsSection.classList.remove('flex', 'flex-col', 'gap-6'); }
-  if (UI.resetBtn) { UI.resetBtn.classList.add("hidden"); UI.resetBtn.classList.remove('flex', 'items-center', 'gap-2'); }
-  if (UI.exportBtn) { UI.exportBtn.classList.add("hidden"); UI.exportBtn.classList.remove('flex', 'items-center', 'gap-2'); }
-  if (UI.uploadSection) UI.uploadSection.classList.remove("hidden");
+  hideProcessingUI(UI); // Centralized hiding of processing UI, results, and action buttons.
   if (UI.fileInput) UI.fileInput.value = "";
   if (UI.whitelistImportFile) UI.whitelistImportFile.value = "";
   state.currentBookTitle = "";
@@ -499,17 +491,12 @@ async function handleFile(file: File) {
     UI.settingsModal?.classList.add('hidden');
     if (UI.helpModal) { UI.helpModal.classList.add('hidden'); UI.helpModal.classList.remove('flex', 'items-center', 'justify-center'); }
     if (UI.exportModal) { UI.exportModal.classList.add('hidden'); UI.exportModal.classList.remove('flex', 'items-center', 'justify-center'); }
-    UI.loadingOverlay?.classList.add('hidden'); // Ensure loading overlay is hidden
+    hideLoadingOverlay(UI); // Ensure loading overlay is hidden
 
     resetApp();
     if (!state.dictionaryStatus.isVietnameseLoaded) { alert("Đang tải dữ liệu từ điển, vui lòng đợi giây lát..."); return; }
 
-    if (UI.uploadSection) UI.uploadSection.classList.add("hidden");
-    if (UI.processingUi) UI.processingUi.classList.remove("hidden");
-    if (UI.processingUiHeader) {
-        UI.processingUiHeader.classList.remove('hidden'); // Ensure it's not hidden
-        UI.processingUiHeader.classList.add('flex', 'items-end', 'justify-between', 'mb-4');
-    }
+    showProcessingUI(UI);
 
     try {
         const epubContent: EpubContent = await parseEpub(file, UI);
@@ -563,14 +550,12 @@ async function handleFile(file: File) {
             logger.log('Book loaded. No errors found.');
         }
 
-        if (UI.processingUi) UI.processingUi.classList.add("hidden");
-  if (UI.processingUiHeader) {
-      UI.processingUiHeader.classList.remove('flex', 'items-end', 'justify-between', 'mb-4');
-      UI.processingUiHeader.classList.add('hidden');
-  }
-        if (UI.resultsSection) { UI.resultsSection.classList.remove("hidden"); UI.resultsSection.classList.add('flex', 'flex-col', 'gap-6'); }
-        if (UI.resetBtn) { UI.resetBtn.classList.remove("hidden"); UI.resetBtn.classList.add('flex', 'items-center', 'gap-2'); }
-        if (UI.exportBtn) { UI.exportBtn.classList.remove("hidden"); UI.exportBtn.classList.add('flex', 'items-center', 'gap-2'); }
+        if (UI.processingUi) UI.processingUi.classList.add("hidden"); // Explicitly hide processing UI if it was shown
+        if (UI.processingUiHeader) { // Explicitly hide processing header if it was shown
+            UI.processingUiHeader.classList.remove('flex', 'items-end', 'justify-between', 'mb-4');
+            UI.processingUiHeader.classList.add('hidden');
+        }
+        showResultsUI(UI);
 
     } catch (err) {
         logger.error("Error processing EPUB file:", err);
@@ -585,13 +570,12 @@ async function handleFile(file: File) {
     UI.exportBtn?.classList.add('hidden');
     UI.resetBtn?.classList.add('hidden');
     UI.dictStatus?.classList.add('hidden');
-    UI.loadingOverlay?.classList.add('hidden'); // Also explicitly hide loading overlay
+    hideLoadingOverlay(UI); // Use helper for loading overlay
     UI.exportModal?.classList.add('hidden');
     UI.helpModal?.classList.add('hidden');
     UI.settingsModal?.classList.add('hidden');
-    UI.processingUi?.classList.add('hidden');
-    UI.resultsSection?.classList.add('hidden');
-    UI.processingUiHeader?.classList.add('hidden');
+    // Call hideProcessingUI which internally handles processingUi, processingUiHeader, resultsSection, etc.
+    hideProcessingUI(UI); 
     UI.engLoading?.classList.add('hidden');
    const { dictionaries, status } = await loadDictionaries(UI);  state.dictionaries = dictionaries;
   state.dictionaryStatus = status;
