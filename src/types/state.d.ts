@@ -2,6 +2,11 @@
 import { Dictionaries, DictionaryStatus } from './dictionary';
 import { TextContentBlock } from './epub';
 
+export interface ReaderSettings {
+  fontSize: number;
+  fontFamily: 'serif' | 'sans-serif';
+}
+
 export interface GlobalState {
   dictionaries: Dictionaries;
   dictionaryStatus: DictionaryStatus;
@@ -9,4 +14,5 @@ export interface GlobalState {
   loadedTextContent: TextContentBlock[];
   currentCoverUrl: string | null;
   totalWords: number; // Added totalWords
+  readerSettings: ReaderSettings;
 }

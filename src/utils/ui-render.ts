@@ -216,7 +216,7 @@ export function renderContextView(
             }</span>
             </div>
             <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative">
-                <div class="reader-content text-slate-300 leading-loose">
+                <div class="reader-content">
                     ${escapeHtml(prefix)}<span class="rounded ${style.bg} ${
                 style.text
             } px-1 py-0.5 font-bold">${escapeHtml(target)}</span>${escapeHtml(

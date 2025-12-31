@@ -13,6 +13,7 @@ import { renderErrorList, renderContextView, updateStats, updateProgress } from 
 const SETTINGS_KEY = "vn_spell_settings";
 const WHITELIST_KEY = "vn_spell_whitelist";
 const ENG_FILTER_KEY = "vn_spell_eng_filter";
+const READER_SETTINGS_KEY = "vn_spell_reader";
 let debounceTimer: number;
 
 // --- 2. DOM ELEMENTS & STATE ---
@@ -46,6 +47,10 @@ const UI: UIElements = {
   closeExportBtn: document.getElementById("close-export-btn"),
   exportVctveBtn: document.getElementById("export-vctve-btn"),
   exportNormalBtn: document.getElementById("export-normal-btn"),
+
+  fontToggleBtn: document.getElementById("font-toggle-btn"),
+  sizeUpBtn: document.getElementById("size-up-btn"),
+  sizeDownBtn: document.getElementById("size-down-btn"),
 
   settingToggles: {
       dict: document.getElementById("set-dict") as HTMLInputElement,
@@ -83,6 +88,7 @@ const state: AppState = {
   currentInstanceIndex: 0,
   checkSettings: { dictionary: true, uppercase: true, tone: true, foreign: true },
   isEngFilterEnabled: false,
+  readerSettings: { fontSize: 1.25, fontFamily: "serif" },
 };
 
 // --- Whitelist & Filter Logic ---
@@ -210,6 +216,36 @@ function loadSettings() {
     if(UI.settingToggles.case) UI.settingToggles.case.checked = state.checkSettings.uppercase;
     if(UI.settingToggles.tone) UI.settingToggles.tone.checked = state.checkSettings.tone;
     if(UI.settingToggles.struct) UI.settingToggles.struct.checked = state.checkSettings.foreign;
+}
+
+// --- Reader Settings Logic ---
+function applyReaderStyles() {
+    const contextView = document.getElementById('context-view');
+    if (contextView) {
+        const fontStyle = state.readerSettings.fontFamily === 'serif' ? '"Noto Serif", serif' : '"Noto Sans", sans-serif';
+        const fontSize = `${state.readerSettings.fontSize}rem`;
+        contextView.style.setProperty('--reader-font', fontStyle);
+        contextView.style.setProperty('--reader-size', fontSize);
+    }
+}
+
+function loadReaderSettings() {
+    try {
+        const s = localStorage.getItem(READER_SETTINGS_KEY);
+        if (s) state.readerSettings = JSON.parse(s);
+    } catch (e) {
+        logger.error("Failed to load reader settings", e);
+        state.readerSettings = { fontSize: 1.25, fontFamily: "serif" }; // Default value
+    }
+    applyReaderStyles();
+}
+
+function saveReaderSettings() {
+    localStorage.setItem(READER_SETTINGS_KEY, JSON.stringify(state.readerSettings));
+    applyReaderStyles();
+    if (state.currentGroup) {
+        renderContextView(UI, state.currentGroup, state.currentInstanceIndex, state.dictionaries);
+    }
 }
 
 // --- UI Interaction Logic ---
@@ -368,6 +404,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadSettings();
   loadWhitelist();
   loadEngFilter();
+  loadReaderSettings();
 
   // Event Listeners
   UI.fileInput?.addEventListener('change', (e) => (e.target as HTMLInputElement).files?.[0] && handleFile((e.target as HTMLInputElement).files![0]));
@@ -387,6 +424,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   UI.closeExportBtn?.addEventListener('click', () => UI.exportModal?.classList.add('hidden'));
   UI.exportVctveBtn?.addEventListener('click', () => alert('Export VCTVE placeholder'));
   UI.exportNormalBtn?.addEventListener('click', () => alert('Export Normal placeholder'));
+
+  UI.fontToggleBtn?.addEventListener('click', () => {
+    state.readerSettings.fontFamily = state.readerSettings.fontFamily === 'serif' ? 'sans-serif' : 'serif';
+    saveReaderSettings();
+  });
+  UI.sizeUpBtn?.addEventListener('click', () => {
+    if (state.readerSettings.fontSize < 3) {
+      state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
+      saveReaderSettings();
+    }
+  });
+  UI.sizeDownBtn?.addEventListener('click', () => {
+    if (state.readerSettings.fontSize > 0.8) {
+      state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
+      saveReaderSettings();
+    }
+  });
 
   Object.values(UI.settingToggles).forEach((toggle: HTMLInputElement | null) => toggle?.addEventListener('change', saveSettings));
   
