@@ -1,13 +1,12 @@
 // src/utils/epub-parser.ts
 import JSZip from 'jszip';
 import { BookMetadata, TextContentBlock, EpubContent } from '../types/epub';
-import { logger } from './logger';
 
 import { UIElements } from '../types/ui';
 
 // Helper to update the progress UI
 function updateProgress(ui: UIElements, percentage: number, message: string) {
-  logger.log(`Progress: ${percentage}% - ${message}`);
+  // logger.log(`Progress: ${percentage}% - ${message}`); // Removed as per user request
   if (ui.progressBar) ui.progressBar.style.width = percentage + '%';
   if (ui.progressPercent) ui.progressPercent.innerText = percentage + '%';
   if (ui.statusText) ui.statusText.innerText = message;
@@ -84,7 +83,7 @@ export async function parseEpub(
       }
     }
   } catch (_e) {
-    logger.warn("Could not extract cover image.", _e);
+    // logger.warn("Could not extract cover image.", _e); // Removed as per user request
   }
 
   updateProgress(ui, 30, 'Đang đọc cấu trúc sách...');
