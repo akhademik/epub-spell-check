@@ -37,6 +37,16 @@ const UI: UIElements = {
   settingsBtn: document.getElementById("settings-btn"),
   settingsModal: document.getElementById("settings-modal"),
   closeSettingsBtn: document.getElementById("close-settings-btn"),
+  
+  helpBtn: document.getElementById("help-btn"),
+  helpModal: document.getElementById("help-modal"),
+  closeHelpBtn: document.getElementById("close-help-btn"),
+
+  exportModal: document.getElementById("export-modal"),
+  closeExportBtn: document.getElementById("close-export-btn"),
+  exportVctveBtn: document.getElementById("export-vctve-btn"),
+  exportNormalBtn: document.getElementById("export-normal-btn"),
+
   settingToggles: {
       dict: document.getElementById("set-dict") as HTMLInputElement,
       case: document.getElementById("set-case") as HTMLInputElement,
@@ -275,8 +285,9 @@ async function handleFile(file: File) {
     if (!file.name.endsWith(".epub")) { alert("Vui lòng chọn file .epub"); return; }
     // Close any open modals when a new file is uploaded
     UI.settingsModal?.classList.add('hidden');
-    // UI.helpModal and UI.exportModal are not yet in the UI object, but will be added later.
-    // For now, only handle settingsModal.
+    UI.helpModal?.classList.add('hidden');
+    UI.exportModal?.classList.add('hidden');
+
     resetApp();
     if (!state.dictionaryStatus.isVietnameseLoaded) { alert("Đang tải dữ liệu từ điển, vui lòng đợi giây lát..."); return; }
 
@@ -342,6 +353,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   UI.settingsBtn?.addEventListener('click', () => UI.settingsModal?.classList.remove('hidden'));
   UI.closeSettingsBtn?.addEventListener('click', () => UI.settingsModal?.classList.add('hidden'));
+
+  UI.helpBtn?.addEventListener('click', () => UI.helpModal?.classList.remove('hidden'));
+  UI.closeHelpBtn?.addEventListener('click', () => UI.helpModal?.classList.add('hidden'));
+
+  UI.exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); UI.exportModal?.classList.remove('hidden'); });
+  UI.closeExportBtn?.addEventListener('click', () => UI.exportModal?.classList.add('hidden'));
+  UI.exportVctveBtn?.addEventListener('click', () => alert('Export VCTVE placeholder'));
+  UI.exportNormalBtn?.addEventListener('click', () => alert('Export Normal placeholder'));
+
   Object.values(UI.settingToggles).forEach((toggle: HTMLInputElement | null) => toggle?.addEventListener('change', saveSettings));
   
   UI.whitelistInput?.addEventListener('input', () => {
@@ -369,6 +389,17 @@ document.addEventListener('DOMContentLoaded', async () => {
           !UI.settingsBtn?.contains(e.target as Node)) {
           UI.settingsModal.classList.add('hidden');
       }
-      // Help Modal and Export Modal will be added here once their UI elements are defined in main.ts
+      // Help Modal
+      if (UI.helpModal && !UI.helpModal.classList.contains('hidden') &&
+          !UI.helpModal.contains(e.target as Node) &&
+          !UI.helpBtn?.contains(e.target as Node)) {
+          UI.helpModal.classList.add('hidden');
+      }
+      // Export Modal
+      if (UI.exportModal && !UI.exportModal.classList.contains('hidden') &&
+          !UI.exportModal.contains(e.target as Node) &&
+          !UI.exportBtn?.contains(e.target as Node)) {
+          UI.exportModal.classList.add('hidden');
+      }
   });
 });
