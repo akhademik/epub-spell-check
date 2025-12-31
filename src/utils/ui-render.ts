@@ -2,6 +2,8 @@
 import { ErrorGroup } from "../types/errors";
 import { UIElements } from "../types/ui";
 import { logger } from "./logger";
+import { findSuggestions } from "./analyzer";
+import { Dictionaries } from "../types/dictionary";
 
 // --- Helper Functions ---
 
@@ -53,6 +55,45 @@ function escapeHtml(text: string): string {
     const d = document.createElement("div");
     d.textContent = text;
     return d.innerHTML;
+}
+
+export function showToast(msg: string) {
+    const n = document.createElement("div");
+    n.className =
+        "fixed bottom-6 right-6 bg-slate-800 text-green-400 border border-slate-700 px-4 py-3 rounded-lg shadow-xl z-[70] text-sm font-medium animate-fadeIn flex items-center gap-2";
+    n.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span>${msg}</span>`;
+    document.body.appendChild(n);
+    setTimeout(() => {
+        n.style.opacity = "0";
+        n.style.transition = "opacity 0.5s"; 
+        setTimeout(() => n.remove(), 500);
+    }, 2000);
+}
+
+export function copyToClipboard(text: string) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(
+            () => {
+                showToast(`Đã copy: "${text}"`);
+            },
+            (err) => {
+                logger.error("Could not copy text: ", err);
+            }
+        );
+    } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand("copy");
+            showToast(`Đã copy: "${text}"`);
+        } catch (err) {
+            logger.error("Could not copy text (fallback): ", err);
+        }
+        document.body.removeChild(textarea);
+    }
 }
 
 // --- Main Rendering Functions ---
@@ -138,11 +179,12 @@ export function renderErrorList(
 export function renderContextView(
     ui: UIElements,
     group: ErrorGroup,
-    instanceIndex: number
+    instanceIndex: number,
+    dictionaries: Dictionaries 
 ) {
     const contextView = ui.metaTitle?.ownerDocument.getElementById("context-view");
     const navIndicator = ui.metaTitle?.ownerDocument.getElementById("nav-indicator");
-    const contextNav = ui.metaTitle?.ownerDocument.getElementById("nav-indicator"); // This one should be contextNav
+    const contextNav = ui.metaTitle?.ownerDocument.getElementById("context-nav"); // Corrected to contextNav
 
     if (!contextView || !navIndicator || !contextNav) {
         logger.error("Context view UI elements not found.");
@@ -153,21 +195,44 @@ export function renderContextView(
     const { prefix, target, suffix } = getContext(context.originalParagraph, context.matchIndex, group.word.length);
     const style = getErrorHighlights(group.type);
 
+    const suggestions = findSuggestions(group.word, dictionaries); // Call findSuggestions
+    const suggHTML = suggestions.length > 0
+        ? `<div class="mt-4 flex flex-wrap justify-center gap-2"><span class="text-sm text-slate-400 mr-1 self-center">Có thể là từ:</span>${suggestions
+              .map(
+                  (s) =>
+                      `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm cursor-pointer hover:bg-green-800/50" onclick="copyToClipboard('${s}')">${s}</span>`
+              )
+              .join("")}</div>`
+        : "";
+
     contextView.innerHTML = `
-        <div class="reader-content text-slate-300 leading-loose">
-            ${escapeHtml(prefix)}<span class="rounded ${style.bg} ${style.text} px-1 py-0.5 font-bold">${escapeHtml(target)}</span>${escapeHtml(suffix)}
-        </div>
-        <div class="mt-auto pt-4 border-t border-slate-800">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <span class="text-sm font-bold ${style.text}">${group.type}</span>
-                    <span class="text-xs text-slate-500">${group.reason}</span>
+        <div class="max-w-2xl text-center w-full animate-fadeIn">
+            <div class="flex items-center justify-center gap-2 mb-6">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-2 py-1 rounded">Ngữ cảnh ${
+                instanceIndex + 1
+            } / ${
+                group.contexts.length
+            }</span>
+            </div>
+            <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative">
+                <div class="reader-content text-slate-300 leading-loose">
+                    ${escapeHtml(prefix)}<span class="rounded ${style.bg} ${
+                style.text
+            } px-1 py-0.5 font-bold">${escapeHtml(target)}</span>${escapeHtml(
+                suffix
+            )}
                 </div>
+            </div>
+            <div class="mt-8 flex flex-col items-center justify-center gap-4">
+                <div class="px-5 py-3 bg-slate-800 text-slate-300 rounded-lg text-sm border border-slate-700 shadow-lg flex items-center gap-3">
+                    <span class="w-3 h-3 rounded-full ${style.dot} shadow-[0_0_8px_currentColor]"></span>
+                    <span class="text-slate-200 font-medium">${group.reason}</span>
+                </div>
+                ${suggHTML}
                 <a href="https://vi.wiktionary.org/wiki/${group.word}" target="_blank" class="text-xs text-blue-400 hover:underline">
                     Tra trên Wiktionary
                 </a>
             </div>
-            <!-- TODO: Add suggestions here -->
         </div>
     `;
 

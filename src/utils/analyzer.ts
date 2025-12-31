@@ -79,6 +79,73 @@ function getErrorType(word: string, dictionaries: Dictionaries, settings: CheckS
     return null;
 }
 
+function levenshteinDistance(a: string, b: string): number {
+    if (a.length === 0) return b.length;
+    if (b.length === 0) return a.length;
+
+    const matrix: number[][] = [];
+
+    // increment along the first column of each row
+    for (let i = 0; i <= b.length; i++) {
+        matrix[i] = [i];
+    }
+
+    // increment along the first row
+    for (let j = 0; j <= a.length; j++) {
+        matrix[0][j] = j;
+    }
+
+    // Fill in the rest of the matrix
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1, // substitution
+                    matrix[i][j - 1] + 1,     // insertion
+                    matrix[i - 1][j] + 1      // deletion
+                );
+            }
+        }
+    }
+
+    return matrix[b.length][a.length];
+}
+
+export function findSuggestions(word: string, dictionaries: Dictionaries): string[] {
+    const low = word.toLowerCase().normalize("NFC");
+    const suggestions: string[] = [];
+
+    // 1. Check for tone misplacement suggestions
+    for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
+        if (low.includes(wrong)) {
+            suggestions.push(low.replace(new RegExp(wrong, 'g'), right));
+        }
+    }
+
+    // 2. Check for Levenshtein distance suggestions from the Vietnamese dictionary
+    if (dictionaries.vietnamese.size > 0) {
+        const maxDist = word.length < 4 ? 1 : 2; // Shorter words need less distance
+        const possibleSuggestions: { word: string; dist: number }[] = [];
+
+        dictionaries.vietnamese.forEach(dictWord => {
+            if (Math.abs(dictWord.length - low.length) <= maxDist) {
+                const d = levenshteinDistance(low, dictWord);
+                if (d <= maxDist && d > 0) { // d > 0 to avoid suggesting the same word
+                    possibleSuggestions.push({ word: dictWord, dist: d });
+                }
+            }
+        });
+
+        possibleSuggestions.sort((a, b) => a.dist - b.dist);
+        suggestions.push(...possibleSuggestions.slice(0, 5).map(s => s.word));
+    }
+    
+    // Remove duplicates and limit to a reasonable number (e.g., 5-7 unique suggestions)
+    return Array.from(new Set(suggestions)).slice(0, 7);
+}
+
 
 export async function analyzeText(
   textBlocks: TextContentBlock[],

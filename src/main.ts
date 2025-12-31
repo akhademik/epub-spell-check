@@ -210,7 +210,7 @@ function selectGroup(group: ErrorGroup, element: HTMLElement) {
         div.classList.remove('bg-blue-900/30', 'border-blue-700/50', 'ring-1', 'ring-blue-500/50');
     });
     element.classList.add('bg-blue-900/30', 'border-blue-700/50', 'ring-1', 'ring-blue-500/50');
-    renderContextView(UI, group, state.currentInstanceIndex);
+    renderContextView(UI, group, state.currentInstanceIndex, state.dictionaries);
     updateNavButtons();
 }
 
@@ -233,7 +233,7 @@ function navigateInstance(direction: 'prev' | 'next') {
         state.currentInstanceIndex--;
     }
 
-    renderContextView(UI, state.currentGroup, state.currentInstanceIndex);
+    renderContextView(UI, state.currentGroup, state.currentInstanceIndex, state.dictionaries);
     updateNavButtons();
 }
 
