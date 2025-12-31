@@ -267,12 +267,18 @@ function saveSettings() {
     // Instead of re-analyzing, just filter and re-render
     if (state.loadedTextContent.length > 0) {
         const loadingOverlay = document.getElementById('loading-overlay');
-        if (loadingOverlay) loadingOverlay.classList.remove('hidden');
+        if (loadingOverlay) {
+            loadingOverlay.classList.remove('hidden');
+            loadingOverlay.classList.add('flex', 'items-center', 'justify-center');
+        }
         
         // Use a short timeout to allow the UI to update (e.g., show overlay) before filtering
         setTimeout(() => {
             filterAndRenderErrors();
-            if (loadingOverlay) loadingOverlay.classList.add('hidden');
+            if (loadingOverlay) {
+                loadingOverlay.classList.add('hidden');
+                loadingOverlay.classList.remove('flex', 'items-center', 'justify-center');
+            }
             logger.log('Filtering complete after settings change.');
         }, 50);
     }
@@ -449,9 +455,9 @@ function navigateInstance(direction: 'prev' | 'next') {
 }
 
 function resetApp() {
-  if (UI.resultsSection) UI.resultsSection.classList.add("hidden");
-  if (UI.resetBtn) UI.resetBtn.classList.add("hidden");
-  if (UI.exportBtn) UI.exportBtn.classList.add("hidden");
+  if (UI.resultsSection) { UI.resultsSection.classList.add("hidden"); UI.resultsSection.classList.remove('flex', 'flex-col', 'gap-6'); }
+  if (UI.resetBtn) { UI.resetBtn.classList.add("hidden"); UI.resetBtn.classList.remove('flex', 'items-center', 'gap-2'); }
+  if (UI.exportBtn) { UI.exportBtn.classList.add("hidden"); UI.exportBtn.classList.remove('flex', 'items-center', 'gap-2'); }
   if (UI.uploadSection) UI.uploadSection.classList.remove("hidden");
   if (UI.fileInput) UI.fileInput.value = "";
   state.currentBookTitle = "";
@@ -478,6 +484,7 @@ function resetApp() {
       UI.metaCover.classList.add("hidden");
   }
   if (UI.metaCoverPlaceholder) UI.metaCoverPlaceholder.classList.remove("hidden");
+  if (UI.dictStatus) { UI.dictStatus.classList.add("hidden"); UI.dictStatus.classList.remove("md:flex", "items-center", "gap-3"); }
   updateStats(UI, 0,0,0);
   logger.log('App reset.');
 }
@@ -486,8 +493,8 @@ async function handleFile(file: File) {
     if (!file.name.endsWith(".epub")) { alert("Vui lòng chọn file .epub"); return; }
     // Close any open modals when a new file is uploaded
     UI.settingsModal?.classList.add('hidden');
-    UI.helpModal?.classList.add('hidden');
-    UI.exportModal?.classList.add('hidden');
+    if (UI.helpModal) { UI.helpModal.classList.add('hidden'); UI.helpModal.classList.remove('flex', 'items-center', 'justify-center'); }
+    if (UI.exportModal) { UI.exportModal.classList.add('hidden'); UI.exportModal.classList.remove('flex', 'items-center', 'justify-center'); }
 
     resetApp();
     if (!state.dictionaryStatus.isVietnameseLoaded) { alert("Đang tải dữ liệu từ điển, vui lòng đợi giây lát..."); return; }
@@ -548,9 +555,9 @@ async function handleFile(file: File) {
         }
 
         if (UI.processingUi) UI.processingUi.classList.add("hidden");
-        if (UI.resultsSection) UI.resultsSection.classList.remove("hidden");
-        if (UI.resetBtn) UI.resetBtn.classList.remove("hidden");
-        if (UI.exportBtn) UI.exportBtn.classList.remove("hidden");
+        if (UI.resultsSection) { UI.resultsSection.classList.remove("hidden"); UI.resultsSection.classList.add('flex', 'flex-col', 'gap-6'); }
+        if (UI.resetBtn) { UI.resetBtn.classList.remove("hidden"); UI.resetBtn.classList.add('flex', 'items-center', 'gap-2'); }
+        if (UI.exportBtn) { UI.exportBtn.classList.remove("hidden"); UI.exportBtn.classList.add('flex', 'items-center', 'gap-2'); }
 
     } catch (err) {
         logger.error("Error processing EPUB file:", err);
@@ -582,11 +589,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   UI.settingsBtn?.addEventListener('click', () => UI.settingsModal?.classList.remove('hidden'));
   UI.closeSettingsBtn?.addEventListener('click', () => UI.settingsModal?.classList.add('hidden'));
 
-  UI.helpBtn?.addEventListener('click', () => UI.helpModal?.classList.remove('hidden'));
-  UI.closeHelpBtn?.addEventListener('click', () => UI.helpModal?.classList.add('hidden'));
+  UI.helpBtn?.addEventListener('click', () => { if (UI.helpModal) { UI.helpModal.classList.remove('hidden'); UI.helpModal.classList.add('flex', 'items-center', 'justify-center'); } });
+  UI.closeHelpBtn?.addEventListener('click', () => { if (UI.helpModal) { UI.helpModal.classList.add('hidden'); UI.helpModal.classList.remove('flex', 'items-center', 'justify-center'); } });
 
-  UI.exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); UI.exportModal?.classList.remove('hidden'); });
-  UI.closeExportBtn?.addEventListener('click', () => UI.exportModal?.classList.add('hidden'));
+  UI.exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); if (UI.exportModal) { UI.exportModal.classList.remove('hidden'); UI.exportModal.classList.add('flex', 'items-center', 'justify-center'); } });
+  UI.closeExportBtn?.addEventListener('click', () => { if (UI.exportModal) { UI.exportModal.classList.add('hidden'); UI.exportModal.classList.remove('flex', 'items-center', 'justify-center'); } });
   UI.exportVctveBtn?.addEventListener('click', () => performExport('vctve'));
   UI.exportNormalBtn?.addEventListener('click', () => performExport('normal'));
 
@@ -667,12 +674,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           !UI.helpModalContent?.contains(e.target as Node) &&
           !UI.helpBtn?.contains(e.target as Node)) {
           UI.helpModal.classList.add('hidden');
+          UI.helpModal.classList.remove('flex', 'items-center', 'justify-center');
       }
       // Export Modal
       if (UI.exportModal && !UI.exportModal.classList.contains('hidden') &&
           !UI.exportModal.contains(e.target as Node) &&
           !UI.exportBtn?.contains(e.target as Node)) {
           UI.exportModal.classList.add('hidden');
+          UI.exportModal.classList.remove('flex', 'items-center', 'justify-center');
       }
   });
 });

@@ -40,7 +40,10 @@ export async function loadDictionaries(ui: UIElements): Promise<{
     customWordCount: 0,
   };
 
-  if (ui.dictStatus) ui.dictStatus.classList.remove("hidden");
+  if (ui.dictStatus) {
+    ui.dictStatus.classList.remove("hidden");
+    ui.dictStatus.classList.add("md:flex", "items-center", "gap-3");
+  }
   if (ui.dictText) ui.dictText.innerText = "Đang tải dữ liệu...";
   if (ui.dictDot) {
     ui.dictDot.classList.remove("bg-green-500", "bg-red-500");
