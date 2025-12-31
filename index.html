@@ -40,7 +40,7 @@
             <h1 class="text-xl font-bold tracking-tight text-slate-100">
               Soát Lỗi Chính Tả
             </h1>
-            <div class="text-xs font-medium text-slate-500">v2.0</div>
+            <div class="text-xs font-medium text-slate-500">v3.0</div>
           </div>
         </div>
 
@@ -494,8 +494,6 @@
             </label>
           </div>
         </div>
-
-
       </div>
 
       <!-- Upload Section -->
@@ -546,9 +544,7 @@
       >
         <div class="flex items-end justify-between mb-4">
           <div>
-            <h3 class="mb-1 text-lg font-semibold text-white">
-              Đang xử lý
-            </h3>
+            <h3 class="mb-1 text-lg font-semibold text-white">Đang xử lý</h3>
             <div id="status-text" class="text-sm text-slate-400">
               Đang khởi tạo...
             </div>
@@ -849,7 +845,9 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px] lg:h-[700px]">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px] lg:h-[700px]"
+        >
           <!-- Error List Sidebar -->
           <div
             class="flex flex-col w-full overflow-hidden border shadow-xl lg:col-span-1 bg-slate-900 rounded-2xl border-slate-800"
@@ -909,11 +907,11 @@
                 </svg>
                 <span>Ngữ cảnh</span>
               </div>
-              
+
               <!-- Navigation Controls (Center) -->
               <div
                 id="context-nav-controls"
-                class="flex items-center gap-2 text-sm bg-slate-800 rounded-lg p-1 border border-slate-700"
+                class="flex items-center gap-2 p-1 text-sm border rounded-lg bg-slate-800 border-slate-700"
               >
                 <button
                   id="btn-prev"
@@ -1100,6 +1098,9 @@
       </div>
     </template>
 
-    <div id="toast-container" class="fixed bottom-0 right-0 p-4 flex flex-col-reverse items-end space-y-2 z-[999]"></div>
+    <div
+      id="toast-container"
+      class="fixed bottom-0 right-0 p-4 flex flex-col-reverse items-end space-y-2 z-[999]"
+    ></div>
   </body>
 </html>
