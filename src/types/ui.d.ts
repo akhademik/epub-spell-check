@@ -1,33 +1,25 @@
 // src/types/ui.d.ts
 
-export interface UIElements {
-  // Dictionary status
+interface BaseUI {
   dictStatus: HTMLElement | null;
   dictDot: HTMLElement | null;
   dictText: HTMLElement | null;
-
-  // File Upload
   fileInput: HTMLInputElement | null;
   uploadSection: HTMLElement | null;
-
-  // Processing UI
   processingUi: HTMLElement | null;
   progressBar: HTMLElement | null;
   progressPercent: HTMLElement | null;
   statusText: HTMLElement | null;
-
-  // Results UI
   resultsSection: HTMLElement | null;
   resetBtn: HTMLElement | null;
   exportBtn: HTMLElement | null;
-  
-  // Metadata display
   metaTitle: HTMLElement | null;
   metaAuthor: HTMLElement | null;
   metaCover: HTMLImageElement | null;
   metaCoverPlaceholder: HTMLElement | null;
+}
 
-  // Settings Modal
+interface SettingsUI {
   settingsBtn: HTMLElement | null;
   settingsModal: HTMLElement | null;
   closeSettingsBtn: HTMLElement | null;
@@ -37,19 +29,26 @@ export interface UIElements {
     tone: HTMLInputElement | null;
     struct: HTMLInputElement | null;
   }
+}
 
-  // Whitelist
+interface WhitelistUI {
   whitelistInput: HTMLTextAreaElement | null;
   importWhitelistBtn: HTMLElement | null;
   exportWhitelistBtn: HTMLElement | null;
   whitelistImportFile: HTMLInputElement | null;
+}
 
-  // English Filter
+interface EngFilterUI {
   engFilterCheckbox: HTMLInputElement | null;
+}
 
-  // Export Modal
+interface ExportUI {
   exportModal: HTMLElement | null;
   closeExportBtn: HTMLElement | null;
   exportVctveBtn: HTMLElement | null;
   exportNormalBtn: HTMLElement | null;
 }
+
+// The main UIElements type is a composition of all feature-specific UI interfaces.
+// ExportUI is marked as Partial because its elements are not yet implemented.
+export type UIElements = BaseUI & SettingsUI & WhitelistUI & EngFilterUI & Partial<ExportUI>;
