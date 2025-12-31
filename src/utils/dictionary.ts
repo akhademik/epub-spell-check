@@ -7,11 +7,8 @@ const ENG_DICT_URL = "https://raw.githubusercontent.com/akhademik/epub-spell-che
 const VIETNAMESE_DICT_URL = "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/vn-dict.txt";
 const CUSTOM_DICT_URL_REMOTE = "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/custom-dict.txt";
 
-interface UIElements {
-  dictStatus: HTMLElement | null;
-  dictDot: HTMLElement | null;
-  dictText: HTMLElement | null;
-}
+import { UIElements } from '../types/ui';
+
 
 // Helper to fetch dictionary content with local fallback
 async function fetchDictWithFallback(
