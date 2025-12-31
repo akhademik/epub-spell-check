@@ -148,6 +148,15 @@ function filterAndRenderErrors() {
         const lowerWord = group.word.toLowerCase();
         if (userWhitelist.has(lowerWord)) return false;
         if (state.isEngFilterEnabled && state.dictionaries.english.has(lowerWord)) return false;
+
+        // Add filtering based on checkSettings
+        const settings = state.checkSettings;
+        if (!settings.dictionary && group.type === 'Dictionary') return false;
+        if (!settings.uppercase && group.type === 'Uppercase') return false;
+        if (!settings.tone && group.type === 'Tone') return false;
+        // The 'foreign' setting in the UI corresponds to multiple error types
+        if (!settings.foreign && ['Foreign', 'Typo', 'Spelling'].includes(group.type)) return false;
+        
         return true;
     });
 
@@ -158,30 +167,27 @@ function filterAndRenderErrors() {
 }
 
 // --- Settings Logic ---
-async function applySettingsAndReanalyze() {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    if (loadingOverlay) loadingOverlay.classList.remove('hidden');
-    await new Promise(resolve => setTimeout(resolve, 50));
-
-    const { errors, totalWords } = await analyzeText(state.loadedTextContent, state.dictionaries, state.checkSettings, (p: number, m: string) => updateProgress(UI, p, m));
-    state.allDetectedErrors = groupErrors(errors);
-    state.totalWords = totalWords; // Update totalWords in state
-    
-    filterAndRenderErrors();
-    
-    if (loadingOverlay) loadingOverlay.classList.add('hidden');
-    logger.log('Re-analysis complete after settings change.');
-}
-
 function saveSettings() {
     state.checkSettings = {
         dictionary: UI.settingToggles.dict?.checked ?? true,
         uppercase: UI.settingToggles.case?.checked ?? true,
         tone: UI.settingToggles.tone?.checked ?? true,
-        foreign: UI.settingToggles.struct?.checked ?? true,
+        foreign: UI.settingToggles.struct?.checked ?? true, // This now controls multiple rule types
     };
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(state.checkSettings));
-    if (state.loadedTextContent.length > 0) applySettingsAndReanalyze();
+    
+    // Instead of re-analyzing, just filter and re-render
+    if (state.loadedTextContent.length > 0) {
+        const loadingOverlay = document.getElementById('loading-overlay');
+        if (loadingOverlay) loadingOverlay.classList.remove('hidden');
+        
+        // Use a short timeout to allow the UI to update (e.g., show overlay) before filtering
+        setTimeout(() => {
+            filterAndRenderErrors();
+            if (loadingOverlay) loadingOverlay.classList.add('hidden');
+            logger.log('Filtering complete after settings change.');
+        }, 50);
+    }
 }
 
 function loadSettings() {
@@ -287,11 +293,16 @@ async function handleFile(file: File) {
             if (UI.metaCoverPlaceholder) UI.metaCoverPlaceholder.classList.add("hidden");
         }
 
-        const { errors, totalWords } = await analyzeText(state.loadedTextContent, state.dictionaries, state.checkSettings, (p: number, m: string) => updateProgress(UI, p, m));
+        // Always run the initial analysis with all checks enabled to get a master list
+        const fullCheckSettings: CheckSettings = { dictionary: true, uppercase: true, tone: true, foreign: true };
+        const { errors, totalWords } = await analyzeText(state.loadedTextContent, state.dictionaries, fullCheckSettings, (p: number, m: string) => updateProgress(UI, p, m));
+        
         state.allDetectedErrors = groupErrors(errors);
         state.totalWords = totalWords; // Store totalWords in state
         
         updateProgress(UI, 100, 'Hoàn tất');
+        
+        // Now, filter this master list based on the user's current settings
         filterAndRenderErrors();
 
         if (UI.processingUi) UI.processingUi.classList.add("hidden");

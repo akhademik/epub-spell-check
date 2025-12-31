@@ -6,7 +6,8 @@ export type ErrorType =
   | 'Tone'
   | 'Structure'
   | 'Typo'
-  | 'Foreign';
+  | 'Foreign'
+  | 'Spelling';
 
 export interface ErrorContext {
   paragraphIndex: number;
