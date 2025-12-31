@@ -2,6 +2,7 @@
 import { Dictionaries } from "../types/dictionary";
 import { ErrorGroup, ErrorInstance, ErrorType } from "../types/errors";
 import { TextContentBlock } from "../types/epub";
+ 
 
 // --- Constants ---
 const TONE_MISPLACEMENT: Record<string, string> = {
@@ -10,9 +11,8 @@ const TONE_MISPLACEMENT: Record<string, string> = {
   uý: "úy", uỳ: "ùy", uỷ: "ủy", uỹ: "ũy", uỵ: "ụy",
 };
 const WORD_REGEX = /[\p{L}\p{M}]+/gu;
-const ANALYSIS_CHUNK_SIZE = 50; // Process 50 paragraphs before yielding
+const ANALYSIS_CHUNK_SIZE = 50;
 
-// --- Settings ---
 export interface CheckSettings {
   dictionary: boolean;
   uppercase: boolean;
@@ -20,41 +20,34 @@ export interface CheckSettings {
   foreign: boolean;
 }
 
+
+
 function getErrorType(word: string, dictionaries: Dictionaries, settings: CheckSettings): {type: ErrorType, reason: string} | null {
     const lower = word.toLowerCase().normalize("NFC");
     const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word);
 
-    // 1. Uppercase Check
+    if (dictionaries.vietnamese.has(lower)) {
+        return null; // It's a valid word, no error.
+    }
+    
+
+
+
+    // From this point, the word is NOT in the main dictionary.
     if (settings.uppercase) {
         const upperCount = (word.match(/[A-Z\u00C0-\u00DE]/g) || []).length;
-        if (upperCount >= 2) {
-            return { type: 'Uppercase', reason: 'Lỗi viết hoa (Nhiều ký tự hoa)' };
-        }
+        if (upperCount >= 2) return { type: 'Uppercase', reason: 'Lỗi viết hoa (Nhiều ký tự hoa)' };
     }
 
-    // 2. Tone Placement Check
     if (settings.tone) {
         for (const [wrong, _right] of Object.entries(TONE_MISPLACEMENT)) {
-            if (lower.includes(wrong)) {
-                return { type: 'Tone', reason: 'Sai vị trí dấu (Chuẩn cũ/mới)' };
-            }
+            if (lower.includes(wrong)) return { type: 'Tone', reason: 'Sai vị trí dấu (Chuẩn cũ/mới)' };
         }
     }
     
-    // If the word is in the dictionary, it can't have dictionary, foreign, or structure errors
-    if (dictionaries.vietnamese.has(lower)) {
-        return null;
-    }
-    
-    // 3. Foreign/Structure/Typo Checks
     if (settings.foreign) {
-        if (/[fjwz]/i.test(lower)) {
-            return { type: 'Foreign', reason: 'Từ lạ / Tiếng nước ngoài' };
-        }
-        if (/(aa|ee|oo|uu|ii|dd|js|kx|wt)$/i.test(lower)) {
-            return { type: 'Typo', reason: 'Lỗi gõ máy (Typo)' };
-        }
-        // TODO: Add more complex structure checks (ngh/ng, gh/g, k/c)
+        if (/[fjwz]/i.test(lower)) return { type: 'Foreign', reason: 'Từ lạ / Tiếng nước ngoài' };
+        if (/(aa|ee|oo|uu|ii|dd|js|kx|wt)$/i.test(lower)) return { type: 'Typo', reason: 'Lỗi gõ máy (Typo)' };
     }
 
     if (isCapitalized) return null;
@@ -67,16 +60,17 @@ function getErrorType(word: string, dictionaries: Dictionaries, settings: CheckS
 }
 
 
-// --- Main Analyzer Function (now async) ---
 export async function analyzeText(
   textBlocks: TextContentBlock[],
   dictionaries: Dictionaries,
   settings: CheckSettings,
   onProgress: (progress: number, message: string) => void
 ): Promise<{ errors: ErrorInstance[], totalWords: number }> {
+
   let totalWords = 0;
   const allErrors: ErrorInstance[] = [];
   const totalBlocks = textBlocks.length;
+
 
   for (let i = 0; i < totalBlocks; i++) {
     const block = textBlocks[i];
@@ -105,9 +99,8 @@ export async function analyzeText(
       }
     }
 
-    // Report progress and yield to main thread periodically
     if (i % ANALYSIS_CHUNK_SIZE === 0) {
-      const percentage = (i / totalBlocks) * 40; // Analysis is 40% of the bar (60% to 100%)
+      const percentage = (i / totalBlocks) * 40;
       const message = `Đang phân tích đoạn ${i + 1}/${totalBlocks}`;
       onProgress(60 + percentage, message);
       await new Promise(resolve => setTimeout(resolve, 0));
@@ -117,7 +110,6 @@ export async function analyzeText(
   return { errors: allErrors, totalWords };
 }
 
-// --- Grouping Function ---
 export function groupErrors(errors: ErrorInstance[]): ErrorGroup[] {
   const errorMap = new Map<string, ErrorGroup>();
 

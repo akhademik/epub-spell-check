@@ -46,4 +46,10 @@ export interface UIElements {
 
   // English Filter
   engFilterCheckbox: HTMLInputElement | null;
+
+  // Export Modal
+  exportModal: HTMLElement | null;
+  closeExportBtn: HTMLElement | null;
+  exportVctveBtn: HTMLElement | null;
+  exportNormalBtn: HTMLElement | null;
 }
