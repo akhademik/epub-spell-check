@@ -125,7 +125,6 @@ export async function loadDictionaries(ui: UIElements): Promise<{
           <div class="flex flex-col items-start leading-snug">
             <span>VN: ${status.vietnameseWordCount.toLocaleString()} từ</span>
             <span>EN: ${status.englishWordCount.toLocaleString()} từ</span>
-            <span>Custom: ${status.customWordCount.toLocaleString()} từ</span>
           </div>
         `;
       }

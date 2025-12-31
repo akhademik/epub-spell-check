@@ -45,6 +45,8 @@ The project has made significant progress and is now highly interactive and func
 - **Context Preview Header Layout:** The layout of the context preview header has been re-arranged to place the font size/family controls (Reader Settings Toolbar) to the right, and the navigation buttons (`Prev`, `Next`) now flank the "Ngữ cảnh 1/5" indicator in the center. Corresponding JavaScript code (`main.ts`, `ui-render.ts`) has been updated to correctly reference the new element IDs.
 - **Context View Instance Counter:** Removed the "Ngữ cảnh X / Y" instance counter text from the context view for a cleaner UI.
 - **Instance Navigation Looping:** Implemented infinite looping for the "Prev" and "Next" instance navigation buttons; pressing "next" from the last instance goes to the first, and "prev" from the first goes to the last. The navigation buttons' enabled/disabled state has been updated to correctly support this continuous looping.
+- **Settings Modal Shortcuts:** Removed the keyboard shortcut instruction lines from the Settings modal for cleaner UI.
+- **Dictionary Status Display:** Removed the "Custom: X từ" count from the dictionary status display in the header.
 
 ---
 
