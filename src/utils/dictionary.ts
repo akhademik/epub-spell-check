@@ -2,38 +2,21 @@
 import { Dictionaries, DictionaryStatus } from '../types/dictionary';
 import { logger } from './logger';
 
-// Remote fallback URLs (from sample.htm)
-const ENG_DICT_URL = "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/en-dict.txt";
-const VIETNAMESE_DICT_URL = "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/vn-dict.txt";
-const CUSTOM_DICT_URL_REMOTE = "https://raw.githubusercontent.com/akhademik/epub-spell-check/main/custom-dict.txt";
-
 import { UIElements } from '../types/ui';
 
 
 // Helper to fetch dictionary content with local fallback
-async function fetchDictWithFallback(
-  localFilename: string,
-  remoteUrl: string
-): Promise<string | null> {
+async function fetchLocalDict(localFilename: string): Promise<string | null> {
   try {
-    // Try fetching local file first
     const localRes = await fetch(`/${localFilename}`);
     if (localRes.ok) {
       return await localRes.text();
+    } else {
+        logger.warn(`Local file ${localFilename} not found, status: ${localRes.status}`);
+        return null; // Explicitly return null if local file not found
     }
-  } catch (_e) {
-    // console.warn(`Local file ${localFilename} not found, trying remote...`, e);
-  }
-
-  try {
-    // Fallback to remote URL
-    const remoteRes = await fetch(remoteUrl);
-    if (!remoteRes.ok) {
-      throw new Error(`Failed to load ${remoteUrl}: ${remoteRes.status}`);
-    }
-    return await remoteRes.text();
   } catch (e) {
-    logger.error(`All sources failed for ${localFilename}:`, e);
+    logger.error(`Failed to load local file ${localFilename}:`, e);
     return null;
   }
 }
@@ -66,9 +49,9 @@ export async function loadDictionaries(ui: UIElements): Promise<{
 
   try {
     const [vnRes, enRes, customRes] = await Promise.all([
-      fetchDictWithFallback("vn-dict.txt", VIETNAMESE_DICT_URL),
-      fetchDictWithFallback("en-dict.txt", ENG_DICT_URL),
-      fetchDictWithFallback("custom-dict.txt", CUSTOM_DICT_URL_REMOTE),
+      fetchLocalDict("vn-dict.txt"),
+      fetchLocalDict("en-dict.txt"),
+      fetchLocalDict("custom-dict.txt"),
     ]);
 
     // Process Vietnamese Dictionary
