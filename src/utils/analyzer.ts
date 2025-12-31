@@ -101,7 +101,7 @@ export async function analyzeText(
 
     if (i % ANALYSIS_CHUNK_SIZE === 0) {
       const percentage = (i / totalBlocks) * 40;
-      const message = `Đang phân tích đoạn ${i + 1}/${totalBlocks}`;
+      const message = `Đang hoàn tất phân tích...`;
       onProgress(60 + percentage, message);
       await new Promise(resolve => setTimeout(resolve, 0));
     }
