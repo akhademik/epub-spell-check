@@ -4,7 +4,7 @@ This document outlines the current progress of the EPUB Spell Checker project by
 
 ## Overall Status
 
-The project has a strong foundation with a well-organized file structure (Vite + TypeScript) and a near-complete UI skeleton in `index.html`. The core modules for parsing EPUBs and loading dictionaries are robust. The main gaps are in the spell-checking logic's sophistication and the implementation of UI interactivity. The application is **not currently runnable** in a way that produces a usable result, as the UI is not fully wired up.
+The project has made significant progress and is now highly interactive and functional. The core spell-checking logic is much more sophisticated, and key UI interactivity features have been implemented. The application is now in a state where it can be effectively used for spell-checking, though some features are still pending.
 
 ---
 
@@ -17,64 +17,48 @@ The project has a strong foundation with a well-organized file structure (Vite +
 - **Dependencies:** `JSZip` is correctly included as a dependency for EPUB file processing.
 
 ### 2. Core Logic
-- **EPUB Parsing (`epub-parser.ts`):**
-  - Successfully unzips and reads `.epub` files.
-  - Correctly parses `META-INF/container.xml` and the `.opf` file.
-  - Extracts book metadata (title, author).
-  - Extracts the book cover image and creates a local URL for display.
-  - Extracts and compiles text content from all relevant sections of the book.
-- **Dictionary Loading (`dictionary.ts`):**
-  - Implements the dictionary loading logic with a robust fallback system (tries local `public/` directory first, then fetches from remote URLs).
-  - Loads all three dictionaries: Vietnamese, English, and the custom whitelist.
-  - Updates the UI to show the status of dictionary loading (counts, success/fail status).
-- **Basic State Management (`main.ts`):**
-  - A central `state` object is defined to manage the application's data.
-  - Persistence of settings, whitelist, and the English filter toggle to `localStorage` is implemented (`loadSettings`, `saveSettings`, etc.).
+- **EPUB Parsing (`epub-parser.ts`):** Fully implemented. It successfully unzips and reads `.epub` files, parses metadata (title, author), extracts the cover image, and compiles text content.
+- **Dictionary Loading (`dictionary.ts`):** Fully implemented. It loads all three dictionaries (Vietnamese, English, custom) with a robust local-first fallback system and updates the UI accordingly.
+- **State Management & Settings (`main.ts`):**
+  - A central `state` object manages the application's data.
+  - Persistence of settings, whitelist, and the English filter toggle to `localStorage` is implemented.
+  - **Performance Optimization:** Settings toggles now use client-side filtering instead of re-analyzing the entire book, making the UI highly responsive.
+- **Spell-Checking Logic (`analyzer.ts`):**
+    - **Enhanced Analysis Rules:** The `getErrorType` function now includes Vietnamese-specific grammar rules (for `ng`/`ngh`, `g`/`gh`, `c`/`k`) and advanced typo-detection heuristics.
+    - **Suggestion Engine:** The `findSuggestions` logic using Levenshtein distance is implemented to provide spelling correction suggestions.
 
-### 3. UI Shell (`index.html`)
-- **Complete HTML Structure:** The `index.html` file contains all the necessary HTML elements found in `sample.htm`, including the header, upload section, processing UI, results section, and all modals (Help, Settings, Export).
-- **Templates:** The `<template id="error-item-template">` is present and ready for use.
-- **Styling:** The UI is styled with Tailwind CSS, matching the look and feel of the reference sample.
+### 3. UI Interactivity & Rendering
+- **UI Shell (`index.html`):** The complete HTML structure and templates are in place.
+- **Context View (`ui-render.ts`):**
+    - **Suggestion Display:** The context view now renders a list of clickable suggestions.
+    - **Refined Display:** The view shows the detailed error reason (e.g., "Lỗi gõ máy (Typo)") instead of a generic type and uses a more user-friendly prompt ("Có thể là từ:").
+- **User Feedback & Interaction:**
+  - **Toast Notifications:** A `showToast` function is implemented for user feedback.
+  - **Copy to Clipboard:** A `copyToClipboard` function is implemented and linked to the suggestions.
+  - **Modal Handling:** The settings modal now closes when clicking outside of it or when a new file is uploaded.
+- **Error Highlighting:** The visual feedback for a selected error in the list (highlighting the item) is implemented.
 
 ---
 
 ## ❌ What's Missing
 
-### 1. Core Spell-Checking Logic (`analyzer.ts`)
-- **Incomplete Analysis Rules:** The current `getErrorType` function is a simplified version of the logic in `sample.htm`. It is critically missing:
-  - **Vietnamese-specific grammar rules:** Checks for `ng`/`ngh`, `g`/`gh`, and `c`/`k` are not implemented. This is a major gap.
-  - **Heuristics:** Advanced typo detection like `(aa|ee|oo|dd|js|kx|wt)$` is missing.
-- **No Suggestions:** The logic to find and suggest corrections for misspelled words (`findSuggestions` in `sample.htm`) is completely absent.
-
-### 2. UI Interactivity & Rendering
+### 1. UI Interactivity & Rendering
 - **Event Handling (`main.ts`):**
-  - Most UI event listeners have not been wired up. This includes:
-    - Opening and closing the Help, Settings, and Export modals.
-    - Keyboard navigation (Arrow keys to move between errors, `Delete`/`I` to ignore).
-    - Context navigation buttons (`Prev`/`Next` for error instances).
-    - Reader controls for font size and family.
-- **Context View Rendering (`ui-render.ts`):**
-  - The `renderContextView` function is basic. It displays the text but is missing:
-    - The formatted "Suggestions" block.
-    - The link to look up the word on Wiktionary.
-    - The polished header showing the error type and dot indicator.
-- **User Feedback:**
-  - There are no **toast notifications** (e.g., for "Copied to clipboard" or "Whitelist imported").
-  - The "copy to clipboard" functionality is not implemented.
+  - Event listeners for the **Help and Export modals** (opening and closing) are not yet wired up.
+  - **Keyboard navigation** (Arrow keys to move between errors, `Delete`/`I` to ignore) is not implemented.
+  - **Context navigation buttons** (`Prev`/`Next` for error instances) are not yet functional.
+  - **Reader controls** for font size and family are not yet functional.
 
-### 3. Feature Gaps
-- **Export Functionality:** While the export modal exists in the HTML, the logic to generate and download the error files (`performExport` in `sample.htm`) is missing from `main.ts`.
-- **Error Group Selection:** The visual feedback for selecting an error in the list (highlighting the selected item) is not fully implemented. `selectGroup` exists but the corresponding CSS classes and handling seem incomplete.
-- **Application Reset:** The `resetApp` function is implemented but may be missing some cleanup steps compared to the original, and needs to be thoroughly tested.
+### 2. Feature Gaps
+- **Export Functionality:** The logic to generate and download the error files (`performExport` from `sample.htm`) is missing from `main.ts`.
+- **Application Reset:** The `resetApp` function is implemented but could benefit from more thorough testing to ensure all state is cleanly reset.
 
 ---
 
 ## Conclusion & Next Steps
 
-The project is off to a great start with a solid architectural foundation. The immediate priority should be to **bridge the gaps in the core analysis logic** and then to **progressively wire up the UI elements** to make the application interactive and usable.
+The project is now in a very good state, with most of the core logic and critical UI feedback loops implemented. The immediate priority is to finish wiring up the remaining UI components to make the application fully navigable and feature-complete.
 
-1.  **Enhance `analyzer.ts`:** Implement the missing Vietnamese grammar rules and typo-detection heuristics.
-2.  **Implement Suggestions:** Create the `findSuggestions` logic (using Levenshtein distance) and integrate it into `ui-render.ts`.
-3.  **Wire Up UI:** Add all missing event listeners in `main.ts` for modals, keyboard navigation, and context controls.
-4.  **Implement Export:** Add the `performExport` logic to `main.ts`.
-5.  **Refine UI Rendering:** Improve `renderContextView` to match the `sample.htm` output and add toast notifications.
+1.  **Wire Up UI:** Add all remaining event listeners in `main.ts` for modals, keyboard navigation, and context controls.
+2.  **Implement Export:** Add the `performExport` logic to `main.ts`.
+3.  **Test and Refine:** Conduct thorough testing of all features, especially the `resetApp` function and edge cases in the analysis.
