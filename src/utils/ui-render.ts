@@ -163,6 +163,7 @@ export function renderErrorList(
         if (selectBtn) {
             selectBtn.onclick = () => {
                 onSelectGroup(group, buttonContainer);
+                copyToClipboard(group.word);
             };
         }
         
