@@ -364,7 +364,7 @@ bíp
 bít
 bíu
 bò
-bò;
+bò
 bòi
 bòm
 bòn
@@ -415,7 +415,7 @@ bơn
 bư
 bưa
 bưng
-bưng;
+bưng
 bưu
 bươi
 bươm
@@ -539,7 +539,7 @@ bịn
 bịnh
 bịp
 bịt
-bịt;
+bịt
 bịu
 bọ
 bọc
@@ -755,7 +755,7 @@ chiếu
 chiền
 chiềng
 chiều
-chiều;
+chiều
 chiểu
 chiệc
 chiện
@@ -813,7 +813,7 @@ chuyền
 chuyển
 chuyện
 chuôi
-chuôi;
+chuôi
 chuôm
 chuông
 chuẩn
@@ -922,7 +922,7 @@ chùng
 chùy
 chú
 chúa
-chúa;
+chúa
 chúc
 chúi
 chúm
@@ -1111,6 +1111,7 @@ chụm
 chụp
 chụt
 chủ
+chủy
 chủa
 chủm
 chủn
@@ -1381,13 +1382,12 @@ cạp
 cạu
 cạy
 cả
-cả;
+cả
 cải
 cảm
 cản
 cảng
 cảnh
-cảnh<i>
 cảo
 cảu
 cảy
@@ -1402,7 +1402,7 @@ cầm
 cần
 cầu
 cầy
-cầy;
+cầy
 cẩm
 cẩn
 cẩu
@@ -1449,7 +1449,7 @@ cỏn
 cỏng
 cố
 cốc
-cốc;
+cốc
 cối
 cốm
 cốn
@@ -1461,7 +1461,7 @@ cồm
 cồn
 cồng
 cổ
-cổ;
+cổ
 cổi
 cổn
 cổng
@@ -1500,7 +1500,7 @@ cụp
 cụt
 củ
 của
-của;
+của
 củi
 củm
 củn
@@ -1599,7 +1599,7 @@ dom
 domino
 don
 dong
-dong;
+dong
 doping
 download
 doàng
@@ -1695,7 +1695,7 @@ dính
 díp
 dít
 díu
-díu;
+díu
 dò
 dòi
 dòm
@@ -1756,7 +1756,7 @@ dượi
 dượng
 dượt
 dạ
-dạ;
+dạ
 dạc
 dại
 dạm
@@ -1799,7 +1799,7 @@ dắt
 dằm
 dằn
 dằng
-dằng;
+dằng
 dẳn
 dẳng
 dặc
@@ -1888,7 +1888,7 @@ dức
 dứng
 dứt
 dừ
-dừ;
+dừ
 dừa
 dừng
 dử
@@ -2135,7 +2135,7 @@ giòi
 giòn
 giòng
 gió
-gió;
+gió
 gióc
 giói
 gión
@@ -2769,7 +2769,7 @@ hưu
 hươm
 hươn
 hương
-hương;
+hương
 hươu
 hước
 hướm
@@ -2865,7 +2865,7 @@ họa
 học
 họe
 họng
-họng;
+họng
 họp
 hỏ
 hỏa
@@ -3038,7 +3038,7 @@ khe
 khem
 khen
 kheo
-kheo;
+kheo
 khi
 khin
 khinh
@@ -3229,7 +3229,7 @@ khải
 khảm
 khản
 khảng
-khảng;
+khảng
 khảnh
 khảo
 khảy
@@ -3272,7 +3272,7 @@ khềnh
 khều
 khểnh
 khễnh
-khễnh;
+khễnh
 khệ
 khệch
 khệnh
@@ -3353,7 +3353,7 @@ kiếm
 kiến
 kiếng
 kiếp
-kiếp;
+kiếp
 kiết
 kiếu
 kiềm
@@ -3367,7 +3367,7 @@ kiễng
 kiệm
 kiện
 kiệt
-kiệt;
+kiệt
 kiệu
 kk
 km
@@ -3498,7 +3498,7 @@ lai–ly
 lam
 lambda
 lan
-lan;
+lan
 lang
 lanh
 lanhtô
@@ -3632,7 +3632,7 @@ loăng
 loạc
 loạch
 loại
-loại;
+loại
 loạn
 loạng
 loạt
@@ -3692,7 +3692,7 @@ làu
 lày
 lá
 lác
-lác;
+lác
 lách
 lái
 lán
@@ -3821,7 +3821,7 @@ lơng
 lư
 lưa
 lưng
-lưng;
+lưng
 lưu
 lưòi
 lưòng
@@ -4043,7 +4043,7 @@ lữ
 lữa
 lững
 lự
-lự;
+lự
 lựa
 lực
 lựng
@@ -4259,7 +4259,7 @@ máo
 mát
 máu
 máy
-máy;
+máy
 mâm
 mân
 mâng
@@ -4268,7 +4268,7 @@ mâu
 mây
 mã
 mãi
-mãi;
+mãi
 mãn
 mãng
 mãnh
@@ -4361,7 +4361,7 @@ mơ
 mơi
 mơn
 mưa
-mưa;
+mưa
 mưng
 mưu
 mươi
@@ -4390,7 +4390,7 @@ mạp
 mạt
 mạy
 mả
-mả;
+mả
 mải
 mản
 mảng
@@ -4414,9 +4414,6 @@ mẩy
 mẫm
 mẫn
 mẫu
-mẫu:
-mẫu:new
-mẫu:đề
 mậm
 mận
 mập
@@ -4736,7 +4733,7 @@ ngà
 ngài
 ngàm
 ngàn
-ngàn;
+ngàn
 ngàng
 ngành
 ngào
@@ -4946,7 +4943,7 @@ ngựa
 ngực
 nha
 nhai
-nhai;
+nhai
 nham
 nhan
 nhang
@@ -5126,7 +5123,7 @@ nhương
 nhướn
 nhướng
 nhường
-nhường;
+nhường
 nhưỡng
 nhược
 nhượng
@@ -5320,7 +5317,7 @@ niệt
 niệu
 nn
 no
-no;
+no
 noa
 noel
 noi
@@ -5458,7 +5455,6 @@ nưng
 nươi
 nương
 nước
-nước:
 nướng
 nướu
 nườm
@@ -5592,7 +5588,7 @@ nử
 nửa
 nữ
 nữa
-nữa;
+nữa
 nự
 nực
 nựng
@@ -5772,7 +5768,7 @@ phái
 phán
 pháo
 pháp
-pháp;
+pháp
 phát
 pháy
 phân
@@ -5919,7 +5915,7 @@ phổí
 phỗng
 phộc
 phộng
-phộng;
+phộng
 phớ
 phới
 phớn
@@ -5935,7 +5931,7 @@ phụng
 phụp
 phụt
 phủ
-phủ;
+phủ
 phủi
 phủng
 phứa
@@ -6259,7 +6255,6 @@ rang
 ranh
 rao
 rap
-rap<i>
 rat
 rau
 ray
@@ -6620,7 +6615,7 @@ rợm
 rợn
 rợp
 rợt
-rụ;
+rụ
 rụa
 rục
 rụi
@@ -6815,7 +6810,7 @@ suông
 suý
 suýt
 suất
-suất;
+suất
 suối
 suốt
 suồng
@@ -6893,7 +6888,7 @@ sôvanh
 sõi
 sõng
 sù
-sù;
+sù
 sùi
 sùm
 sùng
@@ -7084,7 +7079,7 @@ ta
 tabu
 taekwondo
 tai
-tai;
+tai
 taiga
 taj
 taka
@@ -7461,7 +7456,7 @@ thụt
 thụy
 thủ
 thủa
-thủa;
+thủa
 thủi
 thủm
 thủng
@@ -7924,7 +7919,7 @@ tw
 ty
 typo
 tà
-tà;
+tà
 tài
 tàm
 tàn
@@ -7985,7 +7980,7 @@ tích
 tím
 tín
 tính
-tính;
+tính
 típ
 tít
 tíu
@@ -8009,7 +8004,7 @@ tót
 tô
 tôi
 tôm
-tôm;
+tôm
 tôn
 tông
 tôngđơ
@@ -8048,7 +8043,7 @@ tĩu
 tũm
 tũn
 tơ
-tơ;
+tơ
 tơi
 tơn
 tơrơt
@@ -8187,7 +8182,7 @@ tổng
 tỗng
 tộ
 tộc
-tộc;
+tộc
 tội
 tộp
 tột
@@ -8341,7 +8336,7 @@ vitcô
 vixcô
 viêm
 viên
-viên;
+viên
 viêng
 viôlông
 viếng
@@ -8461,7 +8456,6 @@ văn
 văng
 vđv
 vĩ
-vĩ<sup>o
 vĩnh
 vũ
 vũm
@@ -9172,7 +9166,7 @@ zốt
 ăcquy
 ăm
 ăn
-ăn;
+ăn
 ăng
 ăngten
 ăă
@@ -9239,7 +9233,7 @@ zốt
 đoài
 đoàn
 đoàng
-đoàng;
+đoàng
 đoành
 đoá
 đoác
@@ -9391,7 +9385,7 @@ zốt
 đĩa
 đĩnh
 đũa
-đũa;
+đũa
 đũi
 đũng
 đơ
@@ -9423,7 +9417,7 @@ zốt
 đảng
 đảnh
 đảo
-đảo;
+đảo
 đảy
 đấm
 đấng
@@ -9487,12 +9481,12 @@ zốt
 đễ
 đễnh
 đệ
-đệ;
+đệ
 đệm
 đệp
 đỉ
 đỉa
-đỉa;
+đỉa
 đỉnh
 địa
 địch
@@ -9544,7 +9538,7 @@ zốt
 đớt
 đờ
 đời
-đời;
+đời
 đờm
 đờn
 đởm
