@@ -4,7 +4,7 @@ This document highlights parts of the codebase that appear to be unused, redunda
 
 ## Summary of Findings
 
-The codebase originally contained several areas for potential optimization. The most prominent findings included an unused file (`src/counter.ts`) and duplicated logic in the form of an `updateProgress` function. **These two items have been addressed and optimized.** The duplicated whitelist parsing logic in `src/main.ts` has also been extracted into a dedicated utility, UI toggling for complex components has been centralized, and blocking `alert()` dialogs have been replaced with a non-blocking toast notification system. An in-depth scan of `src/utils/analyzer.ts` and `src/utils/ui-render.ts` revealed no unused internal code. The previously noted `src/typescript.svg` file does not exist in the project, and `index.html` contains no references to it. No unused production dependencies were found. A full analysis still requires checking all type definitions and remaining assets in the `public` directory. The findings so far provide a strong starting point for ongoing optimization.
+The codebase originally contained several areas for potential optimization. The most prominent findings included an unused file (`src/counter.ts`) and duplicated logic in the form of an `updateProgress` function. **These two items have been addressed and optimized.** The duplicated whitelist parsing logic in `src/main.ts` has also been extracted into a dedicated utility, UI toggling for complex components has been centralized, and blocking `alert()` dialogs have been replaced with a non-blocking toast notification system. An in-depth scan of `src/utils/analyzer.ts` and `src/utils/ui-render.ts` revealed no unused internal code. The previously noted `src/typescript.svg` file does not exist in the project, and `index.html` contains no references to it. Additionally, unused type definition files (`src/types/errors.d.ts`, `src/types/state.d.ts`, and the `ProgressUpdate` interface in `src/types/epub.d.ts`) have been identified and removed. No unused production dependencies were found. A full analysis still requires checking remaining assets in the `public` directory. The findings so far provide a strong starting point for ongoing optimization.
 
 ## Relevant Locations for Optimization
 
@@ -18,7 +18,25 @@ The codebase originally contained several areas for potential optimization. The 
 
 *   **Reasoning:** This file contained a local, non-exported function named `updateProgress`, which was a duplicate of the one already exported from `src/utils/ui-render.ts` and correctly used in `main.ts`. This created duplicated logic and an unnecessary local implementation.
 *   **Action Taken:** The local `updateProgress` function in `epub-parser.ts` has been removed. The exported version from `ui-render.ts` is now imported and used instead, centralizing the functionality and improving maintainability.
-*   **Key Symbols:** `updateProgress`
+*   **KeySymbols:** `updateProgress`
+
+### `src/types/errors.d.ts` (Status: Completed)
+
+*   **Reasoning:** This file contained multiple type definitions (`ErrorType`, `ErrorContext`, `ErrorInstance`, `ErrorGroup`). Investigation concluded that none of these types were used anywhere in the codebase.
+*   **Action Taken:** The file `src/types/errors.d.ts` has been safely deleted.
+*   **Key Symbols:** `ErrorType`, `ErrorContext`, `ErrorInstance`, `ErrorGroup`
+
+### `src/types/state.d.ts` (Status: Completed)
+
+*   **Reasoning:** This file defined types for application state management (`ReaderSettings`, `GlobalState`). Investigation concluded that these types were not used, suggesting they were remnants of a planned or abandoned feature.
+*   **Action Taken:** The file `src/types/state.d.ts` has been safely deleted.
+*   **Key Symbols:** `ReaderSettings`, `GlobalState`
+
+### `ProgressUpdate` interface in `src/types/epub.d.ts` (Status: Completed)
+
+*   **Reasoning:** The `ProgressUpdate` interface was defined but not used anywhere in the codebase.
+*   **Action Taken:** The `ProgressUpdate` interface has been removed from `src/types/epub.d.ts`.
+*   **Key Symbols:** `ProgressUpdate`
 
 ## Review of `src/main.ts` - Refactoring Opportunities
 
@@ -37,7 +55,13 @@ To complete the optimization assessment, the following areas require more detail
 
 *   **Scanning all files in `src/` (e.g., `analyzer.ts`, `ui-render.ts`) for unused internal functions and variables beyond what was found in the initial trace.**
     *   **Update:** A detailed review of `src/utils/analyzer.ts` and `src/utils/ui-render.ts` was conducted. All internal (non-exported) functions and variables in these modules are actively used by their respective exported functions. **No unused internal code was identified in these files.**
-*   Checking all type definitions in `src/types/` for any unused or redundant declarations.
+*   **Checking all type definitions in `src/types/` for any unused or redundant declarations.**
+    *   **Update:**
+        *   `src/types/dictionary.d.ts`: All declared types (`Dictionary`, `Dictionaries`, `DictionaryStatus`) are actively used. No unused types found.
+        *   `src/types/epub.d.ts`: `BookMetadata`, `TextContentBlock`, and `EpubContent` are in use. The `ProgressUpdate` interface has been identified as **unused** and has been removed.
+        *   `src/types/errors.d.ts`: Contains multiple type definitions (`ErrorType`, `ErrorContext`, `ErrorInstance`, `ErrorGroup`). Investigation concluded that **none of these types are currently used anywhere in the codebase**, making the entire file a candidate for removal. **Action Taken:** The file `src/types/errors.d.ts` has been safely deleted.
+        *   `src/types/state.d.ts`: Defines types for application state management (`ReaderSettings`, `GlobalState`). Investigation concluded that **these types are not used**, suggesting they are remnants of a planned or abandoned feature. This file is a candidate for removal. **Action Taken:** The file `src/types/state.d.ts` has been safely deleted.
+        *   `src/types/ui.d.ts`: **Analysis Complete.** All interface declarations (`BaseUI`, `SettingsUI`, `WhitelistUI`, etc.) are composed into the main `UIElements` type. A review of `src/main.ts` confirms that all properties defined in these interfaces are initialized and used. **Conclusion: There are no unused or redundant types in this file.**
 *   **Thoroughly analyzing the `public` directory for unreferenced assets (e.g., `custom-dict.txt`, `en-dict.txt`, `vn-dict.txt`, `typescript.svg`).**
     *   **Update:** A search of the entire project confirms that the file `src/typescript.svg` **does not exist** in the codebase. The `index.html` file also contains no references to it. The concern about this file is unfounded. Remaining assets in `public/` still need verification.
 *   A deeper analysis of project dependencies to ensure all are actively used and necessary.

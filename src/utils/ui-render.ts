@@ -243,7 +243,7 @@ export function renderContextView(
     }
 
     const context = group.contexts[instanceIndex];
-    const { prefix, target, suffix } = getContext(context.originalParagraph, context.matchIndex, group.word.length);
+    const { prefix, target, suffix } = getContext(context.context.originalParagraph, context.context.matchIndex, group.word.length);
     const style = getErrorHighlights(group.type);
 
     const suggestions = findSuggestions(group.word, dictionaries); // Call findSuggestions

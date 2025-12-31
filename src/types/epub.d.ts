@@ -16,7 +16,3 @@ export interface EpubContent {
   textBlocks: TextContentBlock[];
 }
 
-export interface ProgressUpdate {
-  percentage: number;
-  message: string;
-}

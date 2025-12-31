@@ -175,12 +175,16 @@ export async function analyzeText(
       if (error) {
         allErrors.push({
           word,
+          originalWord: word,
           type: error.type,
           reason: error.reason,
           context: {
-            paragraphIndex: i,
-            matchIndex: match.index,
             originalParagraph: block.text,
+            startIndex: match.index,
+            endIndex: match.index + word.length,
+            chapterIndex: i, // Assuming i is the chapter/block index
+            paragraphIndex: i, // Assuming i is also the paragraph index
+            matchIndex: match.index,
           },
         });
       }
@@ -207,14 +211,18 @@ export function groupErrors(errors: ErrorInstance[]): ErrorGroup[] {
         id: groupId,
         word: error.word,
         type: error.type,
-        reason: error.reason,
+        reason: error.reason || 'No specific reason', // Provide a default if undefined
+        count: 0, // Initialize count
         contexts: [],
       });
     }
-    errorMap.get(groupId)!.contexts.push(error.context);
+    errorMap.get(groupId)!.contexts.push(error);
   });
   
   const groups = Array.from(errorMap.values());
+  groups.forEach(group => {
+    group.count = group.contexts.length;
+  });
   groups.sort((a, b) => b.contexts.length - a.contexts.length);
 
   return groups;
