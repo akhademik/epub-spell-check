@@ -521,6 +521,32 @@ async function handleFile(file: File) {
         // Now, filter this master list based on the user's current settings
         filterAndRenderErrors();
 
+        if (state.currentFilteredErrors.length > 0) {
+            const firstErrorGroup = state.currentFilteredErrors[0];
+            // Find the corresponding DOM element for the first error group
+            const errorList = document.getElementById('error-list');
+            const firstErrorElement = errorList?.querySelector(`[data-group-id="${firstErrorGroup.id}"]`) as HTMLElement;
+            if (firstErrorElement) {
+                selectGroup(firstErrorGroup, firstErrorElement);
+                firstErrorElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+            logger.log('Book loaded and first error selected.');
+        } else {
+            // No errors found, display a message in the context view
+            const contextView = document.getElementById('context-view');
+            const contextNav = UI.contextNavControls;
+            if (contextView) {
+                contextView.innerHTML = `
+                    <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
+                        <p class="text-lg mb-2">Tuyệt vời!</p>
+                        <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
+                    </div>`;
+            }
+            if (contextNav) contextNav.classList.add('hidden');
+            state.currentGroup = null; // Clear current group state
+            logger.log('Book loaded. No errors found.');
+        }
+
         if (UI.processingUi) UI.processingUi.classList.add("hidden");
         if (UI.resultsSection) UI.resultsSection.classList.remove("hidden");
         if (UI.resetBtn) UI.resetBtn.classList.remove("hidden");
