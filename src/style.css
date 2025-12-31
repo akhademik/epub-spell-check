@@ -58,3 +58,8 @@ body {
   scrollbar-width: thin;
   scrollbar-color: #475569 transparent; /* thumb and track color */
 }
+
+.settings-modal-aligned {
+  right: max(1rem, calc((100vw - 72rem) / 2 + 0.5rem));
+}
+
