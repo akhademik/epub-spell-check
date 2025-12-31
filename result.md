@@ -49,6 +49,7 @@ The project has made significant progress and is now highly interactive and func
 - **Dictionary Status Display:** Removed the "Custom: X từ" count from the dictionary status display in the header.
 - **Statistics Cards Layout:** Standardized the gap between statistics cards (`gap-4` changed to `gap-6`) to improve alignment with other sections of the UI.
 - **Panel Layout Alignment:** Unified the layout system for statistics cards and main content panels by converting the main content panel row to a 3-column grid (`lg:grid-cols-3`), ensuring consistent horizontal alignment across the sections.
+- **Context View Search Links:** Repositioned the Wiktionary and Google search links to appear on the same line as the "type of error" display, adjacent to its content box.
 
 ---
 
