@@ -202,7 +202,7 @@ export function renderContextView(
         ? `<div class="mt-4 flex flex-wrap justify-center gap-2"><span class="text-sm text-slate-400 mr-1 self-center">Có thể là từ:</span>${suggestions
               .map(
                   (s) =>
-                      `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm cursor-pointer hover:bg-green-800/50" onclick="copyToClipboard('${s}')">${s}</span>`
+                      `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm">${s}</span>`
               )
               .join("")}</div>`
         : "";

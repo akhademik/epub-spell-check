@@ -33,7 +33,7 @@ The project has made significant progress and is now highly interactive and func
 
 - **UI Shell (`index.html`):** The complete HTML structure and templates are in place.
 - **Context View (`ui-render.ts`):**
-  - **Suggestion Display:** The context view now renders a list of clickable suggestions.
+  - **Suggestion Display:** The context view now renders a list of suggestion words as plain text without interactive actions.
   - **Refined Display:** The view shows the detailed error reason (e.g., "Lỗi gõ máy (Typo)") instead of a generic type and uses a more user-friendly prompt ("Có thể là từ:").
 - **User Feedback & Interaction:**
   - **Toast Notifications:** A `showToast` function is implemented for user feedback.
