@@ -231,9 +231,16 @@ export function renderContextView(
                     <span class="text-slate-200 font-medium">${group.reason}</span>
                 </div>
                 ${suggHTML}
-                <a href="https://vi.wiktionary.org/wiki/${group.word}" target="_blank" class="text-xs text-blue-400 hover:underline">
-                    Tra trên Wiktionary
-                </a>
+                <div class="flex items-center gap-2 mt-4">
+                    <a href="https://vi.wiktionary.org/wiki/${encodeURIComponent(group.word)}" target="_blank" title="Tra cứu trên Wiktionary"
+                       class="inline-flex items-center justify-center p-2 text-blue-400 transition-colors rounded-lg bg-slate-800 hover:text-white hover:bg-blue-600">
+                        <img src="https://vi.wiktionary.org/static/favicon/piece.ico" alt="Wiktionary" class="w-5 h-5">
+                    </a>
+                    <a href="https://www.google.com/search?q=${encodeURIComponent(group.word)}" target="_blank" title="Tìm kiếm trên Google"
+                       class="inline-flex items-center justify-center p-2 text-green-400 transition-colors rounded-lg bg-slate-800 hover:text-white hover:bg-green-600">
+                        <img src="https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico" alt="Google" class="w-5 h-5">
+                    </a>
+                </div>
             </div>
         </div>
     `;
