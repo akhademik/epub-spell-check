@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@400;700&display=swap");
+
+body {
+  font-family: "Noto Sans", sans-serif;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Reader Settings Variables */
+#context-view {
+  --reader-font: "Noto Sans", sans-serif;
+  --reader-size: 1.25rem;
+}
+
+.reader-content {
+  font-family: var(--reader-font) !important;
+  font-size: var(--reader-size) !important;
+  line-height: 1.8;
+  transition: font-size 0.2s, font-family 0.2s;
+}
+
+#error-list::-webkit-scrollbar {
+  width: 8px;
+}
+#error-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+#error-list::-webkit-scrollbar-thumb {
+  background-color: #475569; /* slate-600 */
+  border-radius: 20px;
+}
+#error-list {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 transparent; /* thumb and track color */
+}
