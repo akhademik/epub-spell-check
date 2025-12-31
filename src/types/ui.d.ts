@@ -45,6 +45,7 @@ interface EngFilterUI {
 interface HelpUI {
   helpBtn: HTMLElement | null;
   helpModal: HTMLElement | null;
+  helpModalContent: HTMLElement | null;
   closeHelpBtn: HTMLElement | null;
 }
 

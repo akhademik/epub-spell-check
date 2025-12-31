@@ -41,7 +41,7 @@ The project has made significant progress and is now highly interactive and func
   - **Modal Handling:** The settings modal now closes when clicking outside of it or when a new file is uploaded.
 - **Error Highlighting:** The visual feedback for a selected error in the list (highlighting the item) is implemented.
 - **Whitelist (`quickIgnore`):** Fixed an issue where `Delete`/`I` would repeatedly add the same word to the whitelist. The `quickIgnore` function now adds words uniquely, and after ignoring a word, it attempts to select the next logical error in the filtered list.
-- **Navigation:** Fixed an issue where pressing up/down arrows after ignoring a word would reset navigation to the beginning. Navigation now correctly maintains context, attempts to keep the cursor's relative position, and wraps around the filtered error list.
+- **Help Modal:** Increased the size of the instruction modal and enabled closing by clicking outside its content, consistent with other modals.
 
 ---
 

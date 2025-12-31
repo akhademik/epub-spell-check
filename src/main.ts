@@ -41,6 +41,7 @@ const UI: UIElements = {
   
   helpBtn: document.getElementById("help-btn"),
   helpModal: document.getElementById("help-modal"),
+  helpModalContent: document.getElementById("help-modal-content"),
   closeHelpBtn: document.getElementById("close-help-btn"),
 
   exportModal: document.getElementById("export-modal"),
@@ -629,7 +630,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       // Help Modal
       if (UI.helpModal && !UI.helpModal.classList.contains('hidden') &&
-          !UI.helpModal.contains(e.target as Node) &&
+          !UI.helpModalContent?.contains(e.target as Node) &&
           !UI.helpBtn?.contains(e.target as Node)) {
           UI.helpModal.classList.add('hidden');
       }
