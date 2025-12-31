@@ -147,6 +147,7 @@ export function renderErrorList(
         const countEl = clone.querySelector(".error-count");
         const dotEl = clone.querySelector(".status-dot");
         const buttonContainer = clone.querySelector("div") as HTMLElement;
+        if (buttonContainer) buttonContainer.dataset.groupId = group.id;
         const selectBtn = clone.querySelector(".select-btn") as HTMLButtonElement;
         const ignoreBtn = clone.querySelector(".ignore-btn") as HTMLButtonElement;
 

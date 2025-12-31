@@ -213,6 +213,32 @@ function loadSettings() {
 }
 
 // --- UI Interaction Logic ---
+function navigateErrors(direction: 'up' | 'down') {
+    if (state.currentFilteredErrors.length === 0) return;
+
+    let nextIndex = 0;
+    if (state.currentGroup) {
+        const currentIndex = state.currentFilteredErrors.findIndex(g => g.id === state.currentGroup?.id);
+        if (currentIndex !== -1) {
+            nextIndex = direction === 'down' ? currentIndex + 1 : currentIndex - 1;
+        }
+    }
+
+    if (nextIndex < 0) nextIndex = state.currentFilteredErrors.length - 1;
+    if (nextIndex >= state.currentFilteredErrors.length) nextIndex = 0;
+
+    const nextGroup = state.currentFilteredErrors[nextIndex];
+    if (nextGroup) {
+        const errorList = document.getElementById('error-list');
+        const nextElement = errorList?.querySelector(`[data-group-id="${nextGroup.id}"]`) as HTMLElement;
+        if (nextElement) {
+            const selectBtn = nextElement.querySelector('.select-btn') as HTMLButtonElement;
+            if(selectBtn) selectBtn.click();
+            nextElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+    }
+}
+
 function selectGroup(group: ErrorGroup, element: HTMLElement) {
     state.currentGroup = group;
     state.currentInstanceIndex = 0;
@@ -380,6 +406,34 @@ document.addEventListener('DOMContentLoaded', async () => {
   UI.uploadSection?.addEventListener('dragover', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.add('border-blue-500/50', 'bg-slate-800/50'); });
   UI.uploadSection?.addEventListener('dragleave', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); });
   UI.uploadSection?.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); if (e.dataTransfer?.files?.[0]) handleFile(e.dataTransfer.files[0]); });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+      const activeElement = document.activeElement;
+      if (activeElement && ['TEXTAREA', 'INPUT'].includes(activeElement.tagName)) {
+          return;
+      }
+
+      if (state.currentFilteredErrors.length === 0) return;
+
+      switch (e.key) {
+          case 'ArrowDown':
+              e.preventDefault();
+              navigateErrors('down');
+              break;
+          case 'ArrowUp':
+              e.preventDefault();
+              navigateErrors('up');
+              break;
+          case 'Delete':
+          case 'i':
+              if (state.currentGroup) {
+                  e.preventDefault();
+                  quickIgnore(state.currentGroup.word);
+              }
+              break;
+      }
+  });
 
   // Global click handler to close modals when clicking outside
   document.addEventListener('click', (e) => {
