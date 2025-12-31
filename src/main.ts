@@ -273,6 +273,10 @@ function resetApp() {
 
 async function handleFile(file: File) {
     if (!file.name.endsWith(".epub")) { alert("Vui lòng chọn file .epub"); return; }
+    // Close any open modals when a new file is uploaded
+    UI.settingsModal?.classList.add('hidden');
+    // UI.helpModal and UI.exportModal are not yet in the UI object, but will be added later.
+    // For now, only handle settingsModal.
     resetApp();
     if (!state.dictionaryStatus.isVietnameseLoaded) { alert("Đang tải dữ liệu từ điển, vui lòng đợi giây lát..."); return; }
 
@@ -356,4 +360,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   UI.uploadSection?.addEventListener('dragover', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.add('border-blue-500/50', 'bg-slate-800/50'); });
   UI.uploadSection?.addEventListener('dragleave', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); });
   UI.uploadSection?.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); if (e.dataTransfer?.files?.[0]) handleFile(e.dataTransfer.files[0]); });
+
+  // Global click handler to close modals when clicking outside
+  document.addEventListener('click', (e) => {
+      // Settings Modal
+      if (UI.settingsModal && !UI.settingsModal.classList.contains('hidden') &&
+          !UI.settingsModal.contains(e.target as Node) &&
+          !UI.settingsBtn?.contains(e.target as Node)) {
+          UI.settingsModal.classList.add('hidden');
+      }
+      // Help Modal and Export Modal will be added here once their UI elements are defined in main.ts
+  });
 });
