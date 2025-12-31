@@ -29,6 +29,8 @@ const UI: UIElements = {
   statusText: document.getElementById("status-text"),
   resetBtn: document.getElementById("reset-btn"),
   exportBtn: document.getElementById("export-btn"),
+  loadingOverlay: document.getElementById("loading-overlay"),
+  processingUiHeader: document.getElementById("processing-ui-header"),
   
   metaTitle: document.getElementById("meta-title"),
   metaAuthor: document.getElementById("meta-author"),
@@ -65,6 +67,7 @@ const UI: UIElements = {
   exportWhitelistBtn: document.getElementById("export-whitelist-btn"),
   whitelistImportFile: document.getElementById("whitelist-import-file") as HTMLInputElement,
   engFilterCheckbox: document.getElementById("eng-filter-checkbox") as HTMLInputElement,
+  engLoading: document.getElementById("eng-loading"), // Add engLoading here
   resultsSection: document.getElementById("results-section"), 
 };
 
@@ -278,18 +281,17 @@ function saveSettings() {
     
     // Instead of re-analyzing, just filter and re-render
     if (state.loadedTextContent.length > 0) {
-        const loadingOverlay = document.getElementById('loading-overlay');
-        if (loadingOverlay) {
-            loadingOverlay.classList.remove('hidden');
-            loadingOverlay.classList.add('flex', 'items-center', 'justify-center');
+        if (UI.loadingOverlay) {
+            UI.loadingOverlay.classList.remove('hidden');
+            UI.loadingOverlay.classList.add('flex', 'items-center', 'justify-center');
         }
         
         // Use a short timeout to allow the UI to update (e.g., show overlay) before filtering
         setTimeout(() => {
             filterAndRenderErrors();
-            if (loadingOverlay) {
-                loadingOverlay.classList.add('hidden');
-                loadingOverlay.classList.remove('flex', 'items-center', 'justify-center');
+            if (UI.loadingOverlay) {
+                UI.loadingOverlay.classList.add('hidden');
+                UI.loadingOverlay.classList.remove('flex', 'items-center', 'justify-center');
             }
             logger.log('Filtering complete after settings change.');
         }, 50);
@@ -508,12 +510,17 @@ async function handleFile(file: File) {
     UI.settingsModal?.classList.add('hidden');
     if (UI.helpModal) { UI.helpModal.classList.add('hidden'); UI.helpModal.classList.remove('flex', 'items-center', 'justify-center'); }
     if (UI.exportModal) { UI.exportModal.classList.add('hidden'); UI.exportModal.classList.remove('flex', 'items-center', 'justify-center'); }
+    UI.loadingOverlay?.classList.add('hidden'); // Ensure loading overlay is hidden
 
     resetApp();
     if (!state.dictionaryStatus.isVietnameseLoaded) { alert("Đang tải dữ liệu từ điển, vui lòng đợi giây lát..."); return; }
 
     if (UI.uploadSection) UI.uploadSection.classList.add("hidden");
     if (UI.processingUi) UI.processingUi.classList.remove("hidden");
+    if (UI.processingUiHeader) {
+        UI.processingUiHeader.classList.remove('hidden'); // Ensure it's not hidden
+        UI.processingUiHeader.classList.add('flex', 'items-end', 'justify-between', 'mb-4');
+    }
 
     try {
         const epubContent: EpubContent = await parseEpub(file, UI);
@@ -568,6 +575,10 @@ async function handleFile(file: File) {
         }
 
         if (UI.processingUi) UI.processingUi.classList.add("hidden");
+  if (UI.processingUiHeader) {
+      UI.processingUiHeader.classList.remove('flex', 'items-end', 'justify-between', 'mb-4');
+      UI.processingUiHeader.classList.add('hidden');
+  }
         if (UI.resultsSection) { UI.resultsSection.classList.remove("hidden"); UI.resultsSection.classList.add('flex', 'flex-col', 'gap-6'); }
         if (UI.resetBtn) { UI.resetBtn.classList.remove("hidden"); UI.resetBtn.classList.add('flex', 'items-center', 'gap-2'); }
         if (UI.exportBtn) { UI.exportBtn.classList.remove("hidden"); UI.exportBtn.classList.add('flex', 'items-center', 'gap-2'); }
@@ -580,9 +591,20 @@ async function handleFile(file: File) {
 }
 
 // --- 5. INITIALIZATION ---
-document.addEventListener('DOMContentLoaded', async () => {
-  const { dictionaries, status } = await loadDictionaries(UI);
-  state.dictionaries = dictionaries;
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Ensure elements that start hidden are indeed hidden after removing 'hidden' from HTML
+    UI.exportBtn?.classList.add('hidden');
+    UI.resetBtn?.classList.add('hidden');
+    UI.dictStatus?.classList.add('hidden');
+    UI.loadingOverlay?.classList.add('hidden'); // Also explicitly hide loading overlay
+    UI.exportModal?.classList.add('hidden');
+    UI.helpModal?.classList.add('hidden');
+    UI.settingsModal?.classList.add('hidden');
+    UI.processingUi?.classList.add('hidden');
+    UI.resultsSection?.classList.add('hidden');
+    UI.processingUiHeader?.classList.add('hidden');
+    UI.engLoading?.classList.add('hidden');
+   const { dictionaries, status } = await loadDictionaries(UI);  state.dictionaries = dictionaries;
   state.dictionaryStatus = status;
   logger.log('Dictionaries Loaded:', state.dictionaryStatus);
   

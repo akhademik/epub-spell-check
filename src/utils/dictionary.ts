@@ -51,11 +51,24 @@ export async function loadDictionaries(ui: UIElements): Promise<{
   }
 
   try {
+    // Show engLoading indicator when starting English dictionary fetch
+    if (ui.engLoading) {
+        ui.engLoading.classList.remove("hidden");
+        ui.engLoading.classList.add("flex"); // Ensure flex is present for display
+    }
+
     const [vnRes, enRes, customRes] = await Promise.all([
       fetchLocalDict("vn-dict.txt"),
       fetchLocalDict("en-dict.txt"),
       fetchLocalDict("custom-dict.txt"),
     ]);
+
+    // Hide engLoading indicator once English dictionary fetch is complete
+    if (ui.engLoading) {
+        ui.engLoading.classList.add("hidden");
+        ui.engLoading.classList.remove("flex");
+    }
+
 
     // Process Vietnamese Dictionary
     if (vnRes) {

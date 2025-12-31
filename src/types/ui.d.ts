@@ -13,6 +13,8 @@ interface BaseUI {
   resultsSection: HTMLElement | null;
   resetBtn: HTMLElement | null;
   exportBtn: HTMLElement | null;
+  loadingOverlay: HTMLElement | null;
+  processingUiHeader: HTMLElement | null;
   metaTitle: HTMLElement | null;
   metaAuthor: HTMLElement | null;
   metaCover: HTMLImageElement | null;
@@ -40,6 +42,7 @@ interface WhitelistUI {
 
 interface EngFilterUI {
   engFilterCheckbox: HTMLInputElement | null;
+  engLoading: HTMLElement | null;
 }
 
 interface HelpUI {
