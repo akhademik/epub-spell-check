@@ -11,6 +11,7 @@ import { ErrorGroup } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress } from './utils/ui-render';
 import { parseWhitelistInput } from './utils/whitelist-parser';
 import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay } from './utils/ui-utils';
+import { showToast } from './utils/notifications';
 
 const SETTINGS_KEY = "vn_spell_settings";
 const WHITELIST_KEY = "vn_spell_whitelist";
@@ -186,7 +187,7 @@ function saveWhitelist() {
 
 function exportWhitelist() {
     if (!UI.whitelistInput?.value.trim()) {
-        alert("Danh sách trống!");
+        showToast("Danh sách trống!", "info");
         return;
     }
     const uniqueTokens = [...parseWhitelistInput(UI.whitelistInput.value)];
@@ -308,7 +309,7 @@ function sanitizeFilename(name: string): string {
 
 function performExport(type: 'vctve' | 'normal') {
     if (state.currentFilteredErrors.length === 0) {
-        alert("Không có lỗi nào để xuất!");
+        showToast("Không có lỗi nào để xuất!", "info");
         if (UI.exportModal) UI.exportModal.classList.add("hidden");
         return;
     }
@@ -486,7 +487,7 @@ function resetApp() {
 }
 
 async function handleFile(file: File) {
-    if (!file.name.endsWith(".epub")) { alert("Vui lòng chọn file .epub"); return; }
+    if (!file.name.endsWith(".epub")) { showToast("Vui lòng chọn file .epub", "error"); return; }
     // Close any open modals when a new file is uploaded
     UI.settingsModal?.classList.add('hidden');
     if (UI.helpModal) { UI.helpModal.classList.add('hidden'); UI.helpModal.classList.remove('flex', 'items-center', 'justify-center'); }
@@ -494,7 +495,7 @@ async function handleFile(file: File) {
     hideLoadingOverlay(UI); // Ensure loading overlay is hidden
 
     resetApp();
-    if (!state.dictionaryStatus.isVietnameseLoaded) { alert("Đang tải dữ liệu từ điển, vui lòng đợi giây lát..."); return; }
+    if (!state.dictionaryStatus.isVietnameseLoaded) { showToast("Đang tải dữ liệu từ điển, vui lòng đợi giây lát...", "info"); return; }
 
     showProcessingUI(UI);
 
@@ -559,7 +560,7 @@ async function handleFile(file: File) {
 
     } catch (err) {
         logger.error("Error processing EPUB file:", err);
-        alert("Có lỗi xảy ra: " + (err instanceof Error ? err.message : String(err)));
+        showToast("Có lỗi xảy ra: " + (err instanceof Error ? err.message : String(err)), "error");
         resetApp();
     }
 }
