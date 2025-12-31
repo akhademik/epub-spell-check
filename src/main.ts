@@ -205,9 +205,21 @@ function handleImportWhitelist(event: Event) {
     reader.onload = (e) => {
         const newContent = e.target?.result as string;
         const currentContent = UI.whitelistInput!.value;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const combined = [...new Set((currentContent + " " + newContent).split(/[,;"]+/).map((t: any) => t.trim()).filter(Boolean))];
-        UI.whitelistInput!.value = combined.join(", ") + (combined.length > 0 ? ", " : "");
+
+        const words: string[] = [];
+
+        // Process current content (already comma-separated)
+        words.push(...currentContent.split(/,\s*/).map(t => t.trim()).filter(Boolean));
+
+        // Process new content - robust splitting
+        newContent.split(/[\r\n]+/).forEach(line => { // First split by newlines/carriage returns
+            // Then split each line by commas, semicolons, spaces, and quotes
+            words.push(...line.split(/\s*[,;\s"]+\s*/).map(t => t.trim()).filter(Boolean));
+        });
+        
+        // Remove duplicates and combine
+        const uniqueCombined = [...new Set(words)];
+        UI.whitelistInput!.value = uniqueCombined.join(", ") + (uniqueCombined.length > 0 ? ", " : "");
         saveWhitelist();
         filterAndRenderErrors();
     };
@@ -460,6 +472,7 @@ function resetApp() {
   if (UI.exportBtn) { UI.exportBtn.classList.add("hidden"); UI.exportBtn.classList.remove('flex', 'items-center', 'gap-2'); }
   if (UI.uploadSection) UI.uploadSection.classList.remove("hidden");
   if (UI.fileInput) UI.fileInput.value = "";
+  if (UI.whitelistImportFile) UI.whitelistImportFile.value = "";
   state.currentBookTitle = "";
   state.loadedTextContent = [];
   state.totalWords = 0;
