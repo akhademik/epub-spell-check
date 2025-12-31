@@ -218,6 +218,48 @@ function loadSettings() {
     if(UI.settingToggles.struct) UI.settingToggles.struct.checked = state.checkSettings.foreign;
 }
 
+function sanitizeFilename(name: string): string {
+    const sanitized = name
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[<>:"/\\|?*]/g, "")
+        .replace(/\s+/g, "-")
+        .toLowerCase()
+        .trim();
+    // eslint-disable-next-line no-control-regex
+    return sanitized.replace(/[\x00-\x1F]/g, "");
+}
+
+function performExport(type: 'vctve' | 'normal') {
+    if (state.currentFilteredErrors.length === 0) {
+        alert("Không có lỗi nào để xuất!");
+        if (UI.exportModal) UI.exportModal.classList.add("hidden");
+        return;
+    }
+
+    let content = "";
+    if (type === 'vctve') {
+        content = state.currentFilteredErrors.map((g) => `${g.word} ==>`).join("\n\n");
+    } else {
+        content = state.currentFilteredErrors.map((g) => g.word).join("\n");
+    }
+
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const fileName = state.currentBookTitle ? `loi-${sanitizeFilename(state.currentBookTitle)}.txt` : "loi-khong-ro-ten.txt";
+    
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    if (UI.exportModal) UI.exportModal.classList.add("hidden");
+}
+
+
 // --- Reader Settings Logic ---
 function applyReaderStyles() {
     const contextView = document.getElementById('context-view');
@@ -422,8 +464,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   UI.exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); UI.exportModal?.classList.remove('hidden'); });
   UI.closeExportBtn?.addEventListener('click', () => UI.exportModal?.classList.add('hidden'));
-  UI.exportVctveBtn?.addEventListener('click', () => alert('Export VCTVE placeholder'));
-  UI.exportNormalBtn?.addEventListener('click', () => alert('Export Normal placeholder'));
+  UI.exportVctveBtn?.addEventListener('click', () => performExport('vctve'));
+  UI.exportNormalBtn?.addEventListener('click', () => performExport('normal'));
 
   UI.fontToggleBtn?.addEventListener('click', () => {
     state.readerSettings.fontFamily = state.readerSettings.fontFamily === 'serif' ? 'sans-serif' : 'serif';
