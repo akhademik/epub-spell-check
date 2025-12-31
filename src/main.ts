@@ -99,6 +99,8 @@ function quickIgnore() {
     }
 
     const wordToIgnore = state.currentGroup.word;
+    const wordToIgnoreId = state.currentGroup.id; // Store ID before filtering
+    const originalIndex = state.currentFilteredErrors.findIndex(g => g.id === wordToIgnoreId); // Store original index
     
     // Parse current whitelist into a Set for uniqueness
     const currentWhitelistRaw = UI.whitelistInput.value;
@@ -117,25 +119,34 @@ function quickIgnore() {
     saveWhitelist();
     filterAndRenderErrors();
 
-    const errorList = document.getElementById('error-list'); // Declare errorList here
+    const errorList = document.getElementById('error-list');
 
     // After filtering, check if the current group still exists or select a new one
     if (state.currentFilteredErrors.length > 0) {
-        // Try to select the next error if available, otherwise the first one
-        let nextIndex = state.currentFilteredErrors.findIndex(g => g.id === state.currentGroup?.id);
-        if (nextIndex === -1 || nextIndex >= state.currentFilteredErrors.length) {
-            nextIndex = 0; // If current group is gone or was last, select the first one
+        let targetIndex;
+        // Try to find the *original* currentGroup in the *newly filtered* list
+        const reFoundIndex = state.currentFilteredErrors.findIndex(g => g.id === wordToIgnoreId); // Use stored ID
+
+        if (reFoundIndex !== -1) {
+            // If the original group is still present (unlikely after ignoring it, but good for robustness), select it
+            targetIndex = reFoundIndex;
+        } else {
+            // The original group was ignored and is no longer in the list.
+            // Try to select the error at the *original position*, or the last one if out of bounds.
+            targetIndex = Math.min(originalIndex, state.currentFilteredErrors.length - 1);
+            if (targetIndex < 0) targetIndex = 0; // Ensure index is not negative if list became very small
         }
-        const nextElementInList = errorList?.querySelector(`[data-group-id="${state.currentFilteredErrors[nextIndex].id}"]`) as HTMLElement | null;
+        
+        const nextGroup = state.currentFilteredErrors[targetIndex];
+        const nextElementInList = errorList?.querySelector(`[data-group-id="${nextGroup.id}"]`) as HTMLElement | null;
         if (nextElementInList) {
-            selectGroup(state.currentFilteredErrors[nextIndex], nextElementInList);
-            // Simulate click to scroll and highlight (this is handled by selectGroup now)
+            selectGroup(nextGroup, nextElementInList);
             nextElementInList.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
     } else {
         // No more filtered errors, clear context view
         const contextView = document.getElementById('context-view');
-        const contextNav = document.getElementById('context-nav'); // Assuming this is correct ID for nav container
+        const contextNav = document.getElementById('context-nav');
         if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
         if (contextNav) contextNav.classList.add('hidden');
         state.currentGroup = null;
@@ -351,18 +362,36 @@ function saveReaderSettings() {
 
 // --- UI Interaction Logic ---
 function navigateErrors(direction: 'up' | 'down') {
-    if (state.currentFilteredErrors.length === 0) return;
-
-    let nextIndex = 0;
-    if (state.currentGroup) {
-        const currentIndex = state.currentFilteredErrors.findIndex(g => g.id === state.currentGroup?.id);
-        if (currentIndex !== -1) {
-            nextIndex = direction === 'down' ? currentIndex + 1 : currentIndex - 1;
-        }
+    if (state.currentFilteredErrors.length === 0) {
+        // If no errors, clear current group and context view
+        state.currentGroup = null;
+        const contextView = document.getElementById('context-view');
+        const contextNav = document.getElementById('context-nav');
+        if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
+        if (contextNav) contextNav.classList.add('hidden');
+        return;
     }
 
-    if (nextIndex < 0) nextIndex = state.currentFilteredErrors.length - 1;
-    if (nextIndex >= state.currentFilteredErrors.length) nextIndex = 0;
+    let currentIndex = -1;
+    if (state.currentGroup) {
+        currentIndex = state.currentFilteredErrors.findIndex(g => g.id === state.currentGroup?.id);
+    }
+    
+    let nextIndex;
+
+    if (direction === 'down') {
+        if (currentIndex === -1 || currentIndex >= state.currentFilteredErrors.length - 1) {
+            nextIndex = 0; // Wrap around to the beginning or start from beginning if current not found
+        } else {
+            nextIndex = currentIndex + 1;
+        }
+    } else { // direction === 'up'
+        if (currentIndex === -1 || currentIndex === 0) {
+            nextIndex = state.currentFilteredErrors.length - 1; // Wrap around to the end or start from end if current not found
+        } else {
+            nextIndex = currentIndex - 1;
+        }
+    }
 
     const nextGroup = state.currentFilteredErrors[nextIndex];
     if (nextGroup) {
