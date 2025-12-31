@@ -6,6 +6,8 @@ This document highlights parts of the codebase that appear to be unused, redunda
 
 The codebase originally contained several areas for potential optimization. The most prominent findings included an unused file (`src/counter.ts`) and duplicated logic in the form of an `updateProgress` function. **These two items have been addressed and optimized.** The duplicated whitelist parsing logic in `src/main.ts` has also been extracted into a dedicated utility, UI toggling for complex components has been centralized, and blocking `alert()` dialogs have been replaced with a non-blocking toast notification system. An in-depth scan of `src/utils/analyzer.ts` and `src/utils/ui-render.ts` revealed no unused internal code. The previously noted `src/typescript.svg` file does not exist in the project, and `index.html` contains no references to it. Additionally, unused type definition files (`src/types/errors.d.ts`, `src/types/state.d.ts`, and the `ProgressUpdate` interface in `src/types/epub.d.ts`) have been identified and removed. No unused production dependencies were found. A full analysis still requires checking remaining assets in the `public` directory. The findings so far provide a strong starting point for ongoing optimization.
 
+A recent code review has identified several new areas for improvement, which are detailed in the "Code Review Findings" section.
+
 ## Relevant Locations for Optimization
 
 ### `src/counter.ts` (Status: Completed)
@@ -49,19 +51,41 @@ A detailed review of `src/main.ts` identified the following areas for potential 
 *   **Alert Dialogs (Status: Completed)**: The use of `alert()` for user feedback (e.g., in `performExport()` and `handleFile()`) was generally not ideal for modern UIs as it's blocking and unstyled.
     *   **Action Taken**: All `alert()` calls have been replaced with calls to a new non-blocking toast notification system implemented in `src/utils/notifications.ts`. This improves the user experience.
 
+## Code Review Findings
+
+Based on a recent code review, the following issues and opportunities for improvement have been identified.
+
+### High Priority
+
+*   **Memory Leak in Cover Handling:** Object URLs for cover images are not revoked when a new book is loaded, only when the application is reset. This can lead to a memory leak over time.
+*   **Race Condition in Debouncing:** The `debounceTimer` in `src/main.ts` is not cleared on component unmount (e.g., page unload), which could lead to unexpected behavior.
+*   **Input Validation:** The whitelist textarea does not have explicit validation, which could lead to unexpected behavior if the user inputs malformed data.
+*   **Undo/Redo for Whitelist:** The review suggests adding undo/redo functionality for whitelist changes to improve user experience.
+
+### Medium Priority
+
+*   **Scattered State Management:** The application's state is managed across a global `state` object, `localStorage`, and direct DOM element state. This could be centralized for better maintainability.
+*   **Imperative UI Updates:** The code directly manipulates the DOM for UI updates. A more reactive pattern could improve code clarity and reduce potential for bugs.
+*   **Broad Function Responsibilities:** The `handleFile` function in `src/main.ts` has many responsibilities and could be broken down into smaller, more focused functions.
+*   **Inconsistent Modal State Toggling:** Different modals use different patterns for showing and hiding, which should be standardized.
+*   **Event Listener Leak:** The global `keydown` event listener is never removed, which can lead to memory leaks and unexpected behavior in more complex applications.
+*   **Excessive Filtering:** The `filterAndRenderErrors` function re-calculates the filtered error list on every change, which could be optimized by caching the results.
+*   **DOM Thrashing:** There are several places where `classList` is called sequentially on the same element, which can be optimized to reduce DOM reflows.
+*   **Virtual Scrolling for Error List:** For books with a large number of errors, the error list could become a performance bottleneck. Implementing virtual scrolling would improve performance.
+*   **Keyboard Shortcuts Help:** The application has keyboard shortcuts, but there is no easy way for the user to discover them.
+
+### Low Priority
+
+*   **Accessibility (ARIA):** The application could be improved by adding ARIA labels to provide better accessibility for screen readers.
+*   **Theme Toggle:** A dark/light theme toggle could be implemented.
+*   **Export Format Options:** The export functionality could be extended to support other formats like JSON or CSV.
+*   **Cache Dictionary Lookups:** Dictionary lookups could be cached to improve performance.
+*   **Progress Persistence:** The application could save its state to allow users to resume their sessions.
+
 ## Further Investigation Needed
 
 To complete the optimization assessment, the following areas require more detailed investigation:
 
-*   **Scanning all files in `src/` (e.g., `analyzer.ts`, `ui-render.ts`) for unused internal functions and variables beyond what was found in the initial trace.**
-    *   **Update:** A detailed review of `src/utils/analyzer.ts` and `src/utils/ui-render.ts` was conducted. All internal (non-exported) functions and variables in these modules are actively used by their respective exported functions. **No unused internal code was identified in these files.**
-*   **Checking all type definitions in `src/types/` for any unused or redundant declarations.**
-    *   **Update:**
-        *   `src/types/dictionary.d.ts`: All declared types (`Dictionary`, `Dictionaries`, `DictionaryStatus`) are actively used. No unused types found.
-        *   `src/types/epub.d.ts`: `BookMetadata`, `TextContentBlock`, and `EpubContent` are in use. The `ProgressUpdate` interface has been identified as **unused** and has been removed.
-        *   `src/types/errors.d.ts`: Contains multiple type definitions (`ErrorType`, `ErrorContext`, `ErrorInstance`, `ErrorGroup`). Investigation concluded that **none of these types are currently used anywhere in the codebase**, making the entire file a candidate for removal. **Action Taken:** The file `src/types/errors.d.ts` has been safely deleted.
-        *   `src/types/state.d.ts`: Defines types for application state management (`ReaderSettings`, `GlobalState`). Investigation concluded that **these types are not used**, suggesting they are remnants of a planned or abandoned feature. This file is a candidate for removal. **Action Taken:** The file `src/types/state.d.ts` has been safely deleted.
-        *   `src/types/ui.d.ts`: **Analysis Complete.** All interface declarations (`BaseUI`, `SettingsUI`, `WhitelistUI`, etc.) are composed into the main `UIElements` type. A review of `src/main.ts` confirms that all properties defined in these interfaces are initialized and used. **Conclusion: There are no unused or redundant types in this file.**
-*   **Thoroughly analyzing the `public` directory for unreferenced assets (e.g., `custom-dict.txt`, `en-dict.txt`, `vn-dict.txt`, `typescript.svg`).**
-    *   **Update:** A search of the entire project confirms that the file `src/typescript.svg` **does not exist** in the codebase. The `index.html` file also contains no references to it. The concern about this file is unfounded. Remaining assets in `public/` still need verification.
-*   A deeper analysis of project dependencies to ensure all are actively used and necessary.
+*   **Thoroughly analyzing the `public` directory for unreferenced assets (e.g., `custom-dict.txt`, `en-dict.txt`, `vn-dict.txt`).**
+*   **A deeper analysis of project dependencies to ensure all are actively used and necessary.**
+*   **Investigate the claim of unnecessary re-renders in `renderContextView()` to confirm if it's a valid issue.**
