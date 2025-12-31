@@ -9,6 +9,7 @@ import { GlobalState } from './types/state';
 import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
 import { ErrorGroup } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress } from './utils/ui-render';
+import { parseWhitelistInput } from './utils/whitelist-parser';
 
 const SETTINGS_KEY = "vn_spell_settings";
 const WHITELIST_KEY = "vn_spell_whitelist";
@@ -107,10 +108,8 @@ function quickIgnore() {
     const wordToIgnoreId = state.currentGroup.id; // Store ID before filtering
     const originalIndex = state.currentFilteredErrors.findIndex(g => g.id === wordToIgnoreId); // Store original index
     
-    // Parse current whitelist into a Set for uniqueness
     const currentWhitelistRaw = UI.whitelistInput.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const whitelistSet = new Set(currentWhitelistRaw.split(/[,;"]+/).map((t: any) => t.trim()).filter(Boolean));
+    const whitelistSet = parseWhitelistInput(currentWhitelistRaw);
 
     if (whitelistSet.has(wordToIgnore.toLowerCase())) {
         logger.log(`'${wordToIgnore}' is already in the whitelist.`);
@@ -161,8 +160,7 @@ function quickIgnore() {
 function quickIgnoreWordFromList(word: string) { // Renamed original quickIgnore to avoid confusion and for specific use case
     if (!UI.whitelistInput) return;
     const currentWhitelistRaw = UI.whitelistInput.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const whitelistSet = new Set(currentWhitelistRaw.split(/[,;"]+/).map((t: any) => t.trim()).filter(Boolean));
+    const whitelistSet = parseWhitelistInput(currentWhitelistRaw);
 
     if (whitelistSet.has(word.toLowerCase())) {
         logger.log(`'${word}' is already in the whitelist.`);
@@ -190,8 +188,7 @@ function exportWhitelist() {
         alert("Danh sách trống!");
         return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const uniqueTokens = [...new Set(UI.whitelistInput.value.split(/[,;"]+/).map((t: any) => t.trim()).filter(Boolean))];
+    const uniqueTokens = [...parseWhitelistInput(UI.whitelistInput.value)];
     const blob = new Blob([uniqueTokens.join("\n")], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -209,19 +206,12 @@ function handleImportWhitelist(event: Event) {
         const newContent = e.target?.result as string;
         const currentContent = UI.whitelistInput!.value;
 
-        const words: string[] = [];
-
-        // Process current content (already comma-separated)
-        words.push(...currentContent.split(/,\s*/).map(t => t.trim()).filter(Boolean));
-
-        // Process new content - robust splitting
-        newContent.split(/[\r\n]+/).forEach(line => { // First split by newlines/carriage returns
-            // Then split each line by commas, semicolons, spaces, and quotes
-            words.push(...line.split(/\s*[,;\s"]+\s*/).map(t => t.trim()).filter(Boolean));
-        });
+        const currentWords = parseWhitelistInput(currentContent);
+        const importedWords = parseWhitelistInput(newContent);
         
-        // Remove duplicates and combine
-        const uniqueCombined = [...new Set(words)];
+        // Combine unique words from both sources
+        const combined = new Set([...currentWords, ...importedWords]);
+        const uniqueCombined = [...combined];
         UI.whitelistInput!.value = uniqueCombined.join(", ") + (uniqueCombined.length > 0 ? ", " : "");
         saveWhitelist();
         filterAndRenderErrors();
@@ -244,8 +234,7 @@ function saveEngFilter() {
 // --- Filtering and Rendering ---
 function filterAndRenderErrors() {
     if (!UI.whitelistInput) return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const userWhitelist = new Set(UI.whitelistInput.value.split(/[,;"]+/).map((t: any) => t.trim().toLowerCase()).filter(Boolean));
+    const userWhitelist = parseWhitelistInput(UI.whitelistInput.value);
     
     state.currentFilteredErrors = state.allDetectedErrors.filter(group => {
         const lowerWord = group.word.toLowerCase();
