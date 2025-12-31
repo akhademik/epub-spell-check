@@ -26,4 +26,24 @@ export interface UIElements {
   metaAuthor: HTMLElement | null;
   metaCover: HTMLImageElement | null;
   metaCoverPlaceholder: HTMLElement | null;
+
+  // Settings Modal
+  settingsBtn: HTMLElement | null;
+  settingsModal: HTMLElement | null;
+  closeSettingsBtn: HTMLElement | null;
+  settingToggles: {
+    dict: HTMLInputElement | null;
+    case: HTMLInputElement | null;
+    tone: HTMLInputElement | null;
+    struct: HTMLInputElement | null;
+  }
+
+  // Whitelist
+  whitelistInput: HTMLTextAreaElement | null;
+  importWhitelistBtn: HTMLElement | null;
+  exportWhitelistBtn: HTMLElement | null;
+  whitelistImportFile: HTMLInputElement | null;
+
+  // English Filter
+  engFilterCheckbox: HTMLInputElement | null;
 }

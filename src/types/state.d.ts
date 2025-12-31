@@ -8,4 +8,5 @@ export interface GlobalState {
   currentBookTitle: string;
   loadedTextContent: TextContentBlock[];
   currentCoverUrl: string | null;
+  totalWords: number; // Added totalWords
 }

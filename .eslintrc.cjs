@@ -15,7 +15,7 @@ module.exports = {
   },
   rules: {
     'no-console': 'warn',
-    '@typescript-eslint/no-unused-vars': ['warn', { 'caughtErrorsIgnorePattern': '^_' }],
+    '@typescript-eslint/no-unused-vars': ['warn', { 'varsIgnorePattern': '^_', 'caughtErrorsIgnorePattern': '^_' }],
     '@typescript-eslint/no-explicit-any': 'warn',
   }
 };
