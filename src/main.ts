@@ -92,11 +92,70 @@ const state: AppState = {
 };
 
 // --- Whitelist & Filter Logic ---
-function quickIgnore(word: string) {
+function quickIgnore() {
+    if (!UI.whitelistInput || !state.currentGroup) {
+        logger.log("No current error group to ignore.");
+        return;
+    }
+
+    const wordToIgnore = state.currentGroup.word;
+    
+    // Parse current whitelist into a Set for uniqueness
+    const currentWhitelistRaw = UI.whitelistInput.value;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const whitelistSet = new Set(currentWhitelistRaw.split(/[,;"]+/).map((t: any) => t.trim()).filter(Boolean));
+
+    if (whitelistSet.has(wordToIgnore.toLowerCase())) {
+        logger.log(`'${wordToIgnore}' is already in the whitelist.`);
+        // Even if already in whitelist, re-filter in case state changed
+        filterAndRenderErrors();
+        return;
+    }
+
+    whitelistSet.add(wordToIgnore);
+    UI.whitelistInput.value = Array.from(whitelistSet).join(", ");
+    saveWhitelist();
+    filterAndRenderErrors();
+
+    const errorList = document.getElementById('error-list'); // Declare errorList here
+
+    // After filtering, check if the current group still exists or select a new one
+    if (state.currentFilteredErrors.length > 0) {
+        // Try to select the next error if available, otherwise the first one
+        let nextIndex = state.currentFilteredErrors.findIndex(g => g.id === state.currentGroup?.id);
+        if (nextIndex === -1 || nextIndex >= state.currentFilteredErrors.length) {
+            nextIndex = 0; // If current group is gone or was last, select the first one
+        }
+        const nextElementInList = errorList?.querySelector(`[data-group-id="${state.currentFilteredErrors[nextIndex].id}"]`) as HTMLElement | null;
+        if (nextElementInList) {
+            selectGroup(state.currentFilteredErrors[nextIndex], nextElementInList);
+            // Simulate click to scroll and highlight (this is handled by selectGroup now)
+            nextElementInList.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+    } else {
+        // No more filtered errors, clear context view
+        const contextView = document.getElementById('context-view');
+        const contextNav = document.getElementById('context-nav'); // Assuming this is correct ID for nav container
+        if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
+        if (contextNav) contextNav.classList.add('hidden');
+        state.currentGroup = null;
+    }
+}
+
+function quickIgnoreWordFromList(word: string) { // Renamed original quickIgnore to avoid confusion and for specific use case
     if (!UI.whitelistInput) return;
-    const currentWhitelist = UI.whitelistInput.value;
-    const newWhitelist = currentWhitelist ? `${currentWhitelist}, ${word}` : `${word}, `;
-    UI.whitelistInput.value = newWhitelist;
+    const currentWhitelistRaw = UI.whitelistInput.value;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const whitelistSet = new Set(currentWhitelistRaw.split(/[,;"]+/).map((t: any) => t.trim()).filter(Boolean));
+
+    if (whitelistSet.has(word.toLowerCase())) {
+        logger.log(`'${word}' is already in the whitelist.`);
+        filterAndRenderErrors();
+        return;
+    }
+
+    whitelistSet.add(word);
+    UI.whitelistInput.value = Array.from(whitelistSet).join(", ");
     saveWhitelist();
     filterAndRenderErrors();
 }
@@ -179,7 +238,7 @@ function filterAndRenderErrors() {
     const totalErrorInstances = state.currentFilteredErrors.reduce((acc, g) => acc + g.contexts.length, 0);
     
     updateStats(UI, state.totalWords, totalErrorInstances, state.currentFilteredErrors.length);
-    renderErrorList(UI, state.currentFilteredErrors, selectGroup, quickIgnore);
+    renderErrorList(UI, state.currentFilteredErrors, selectGroup, quickIgnoreWordFromList);
 }
 
 // --- Settings Logic ---
@@ -525,7 +584,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           case 'i':
               if (state.currentGroup) {
                   e.preventDefault();
-                  quickIgnore(state.currentGroup.word);
+                  quickIgnore();
               }
               break;
       }
