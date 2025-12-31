@@ -62,6 +62,10 @@ interface ReaderUI {
   sizeDownBtn: HTMLElement | null;
 }
 
+interface NavigationUI {
+  contextNavControls: HTMLElement | null;
+}
+
 // The main UIElements type is a composition of all feature-specific UI interfaces.
 // ExportUI is marked as Partial because its elements are not yet implemented.
-export type UIElements = BaseUI & SettingsUI & WhitelistUI & EngFilterUI & Partial<ExportUI> & Partial<HelpUI> & Partial<ReaderUI>;
+export type UIElements = BaseUI & SettingsUI & WhitelistUI & EngFilterUI & Partial<ExportUI> & Partial<HelpUI> & Partial<ReaderUI> & Partial<NavigationUI>;

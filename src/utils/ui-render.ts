@@ -186,9 +186,9 @@ export function renderContextView(
 ) {
     const contextView = ui.metaTitle?.ownerDocument.getElementById("context-view");
     const navIndicator = ui.metaTitle?.ownerDocument.getElementById("nav-indicator");
-    const contextNav = ui.metaTitle?.ownerDocument.getElementById("context-nav"); // Corrected to contextNav
+    const contextNavControls = ui.contextNavControls; // Use the new UI reference
 
-    if (!contextView || !navIndicator || !contextNav) {
+    if (!contextView || !navIndicator || !contextNavControls) {
         logger.error("Context view UI elements not found.");
         return;
     }
@@ -209,13 +209,6 @@ export function renderContextView(
 
     contextView.innerHTML = `
         <div class="max-w-2xl text-center w-full animate-fadeIn">
-            <div class="flex items-center justify-center gap-2 mb-6">
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-2 py-1 rounded">Ngữ cảnh ${
-                instanceIndex + 1
-            } / ${
-                group.contexts.length
-            }</span>
-            </div>
             <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative">
                 <div class="reader-content">
                     ${escapeHtml(prefix)}<span class="rounded ${style.bg} ${
@@ -246,5 +239,5 @@ export function renderContextView(
     `;
 
     navIndicator.textContent = `${instanceIndex + 1}/${group.contexts.length}`;
-    contextNav.classList.remove("hidden");
+    contextNavControls.classList.remove("hidden");
 }

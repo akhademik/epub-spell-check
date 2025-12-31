@@ -893,7 +893,7 @@
             <div
               class="flex items-center justify-between p-4 font-semibold border-b border-slate-800 bg-slate-900/50 backdrop-blur text-slate-300"
             >
-              <span class="flex items-center gap-2">
+              <div class="flex items-center gap-2">
                 <svg
                   class="w-4 h-4 pointer-events-none text-slate-500"
                   fill="none"
@@ -913,9 +913,60 @@
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                   />
                 </svg>
-                Ngữ cảnh
-              </span>
-              <!-- Reader Settings Toolbar -->
+                <span>Ngữ cảnh</span>
+              </div>
+              
+              <!-- Navigation Controls (Center) -->
+              <div
+                id="context-nav-controls"
+                class="flex items-center gap-2 text-sm bg-slate-800 rounded-lg p-1 border border-slate-700"
+              >
+                <button
+                  id="btn-prev"
+                  class="p-1.5 hover:bg-slate-700 rounded-md text-slate-400 hover:text-white disabled:opacity-30 transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <span
+                  id="nav-indicator"
+                  class="font-mono text-slate-300 min-w-[3rem] text-center text-xs"
+                  >1/1</span
+                >
+                <button
+                  id="btn-next"
+                  class="p-1.5 hover:bg-slate-700 rounded-md text-slate-400 hover:text-white disabled:opacity-30 transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Reader Settings Toolbar (Right) -->
               <div
                 class="flex items-center gap-2 p-1 border rounded-lg bg-slate-800 border-slate-700"
               >
@@ -924,7 +975,6 @@
                   class="p-1.5 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors"
                   title="Đổi Font (Serif/Sans)"
                 >
-                  <!-- Changed Icon to T -->
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="w-4 h-4 pointer-events-none"
@@ -978,54 +1028,6 @@
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div
-                id="context-nav"
-                class="flex items-center hidden gap-2 p-1 ml-2 text-sm border rounded-lg bg-slate-800 border-slate-700"
-              >
-                <button
-                  id="btn-prev"
-                  class="p-1.5 hover:bg-slate-700 rounded-md text-slate-400 hover:text-white disabled:opacity-30 transition-colors"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-4 h-4 pointer-events-none"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                </button>
-                <span
-                  id="nav-indicator"
-                  class="font-mono text-slate-300 min-w-[3rem] text-center text-xs"
-                  >1/1</span
-                >
-                <button
-                  id="btn-next"
-                  class="p-1.5 hover:bg-slate-700 rounded-md text-slate-400 hover:text-white disabled:opacity-30 transition-colors"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-4 h-4 pointer-events-none"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5l7 7-7 7"
                     />
                   </svg>
                 </button>

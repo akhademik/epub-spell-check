@@ -52,6 +52,7 @@ const UI: UIElements = {
   fontToggleBtn: document.getElementById("font-toggle-btn"),
   sizeUpBtn: document.getElementById("size-up-btn"),
   sizeDownBtn: document.getElementById("size-down-btn"),
+  contextNavControls: document.getElementById("context-nav-controls"), // New reference
 
   settingToggles: {
       dict: document.getElementById("set-dict") as HTMLInputElement,
@@ -367,7 +368,7 @@ function navigateErrors(direction: 'up' | 'down') {
         // If no errors, clear current group and context view
         state.currentGroup = null;
         const contextView = document.getElementById('context-view');
-        const contextNav = document.getElementById('context-nav');
+        const contextNav = UI.contextNavControls; // Use the UI reference
         if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
         if (contextNav) contextNav.classList.add('hidden');
         return;
@@ -422,18 +423,25 @@ function updateNavButtons() {
     const btnNext = document.getElementById("btn-next") as HTMLButtonElement;
     if (!btnPrev || !btnNext || !state.currentGroup) return;
 
-    btnPrev.disabled = state.currentInstanceIndex === 0;
-    btnNext.disabled = state.currentInstanceIndex >= state.currentGroup.contexts.length - 1;
+    const numInstances = state.currentGroup.contexts.length;
+    const isDisabled = numInstances <= 1;
+
+    btnPrev.disabled = isDisabled;
+    btnNext.disabled = isDisabled;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function navigateInstance(direction: 'prev' | 'next') {
     if (!state.currentGroup) return;
 
-    if (direction === 'next' && state.currentInstanceIndex < state.currentGroup.contexts.length - 1) {
-        state.currentInstanceIndex++;
-    } else if (direction === 'prev' && state.currentInstanceIndex > 0) {
-        state.currentInstanceIndex--;
+    const numInstances = state.currentGroup.contexts.length;
+
+    if (numInstances === 0) {
+        state.currentInstanceIndex = 0;
+    } else if (direction === 'next') {
+        state.currentInstanceIndex = (state.currentInstanceIndex + 1) % numInstances;
+    } else if (direction === 'prev') {
+        state.currentInstanceIndex = (state.currentInstanceIndex - 1 + numInstances) % numInstances;
     }
 
     renderContextView(UI, state.currentGroup, state.currentInstanceIndex, state.dictionaries);
@@ -459,7 +467,7 @@ function resetApp() {
   }
   const errorList = document.getElementById('error-list');
   const contextView = document.getElementById('context-view');
-  const contextNav = document.getElementById('nav-indicator');
+  const contextNav = document.getElementById('context-nav-controls');
   if (errorList) errorList.innerHTML = '';
   if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
   if (contextNav) contextNav.classList.add('hidden');

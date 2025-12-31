@@ -42,6 +42,9 @@ The project has made significant progress and is now highly interactive and func
 - **Error Highlighting:** The visual feedback for a selected error in the list (highlighting the item) is implemented.
 - **Whitelist (`quickIgnore`):** Fixed an issue where `Delete`/`I` would repeatedly add the same word to the whitelist. The `quickIgnore` function now adds words uniquely, and after ignoring a word, it attempts to select the next logical error in the filtered list.
 - **Help Modal:** Increased the size of the instruction modal and enabled closing by clicking outside its content, consistent with other modals.
+- **Context Preview Header Layout:** The layout of the context preview header has been re-arranged to place the font size/family controls (Reader Settings Toolbar) to the right, and the navigation buttons (`Prev`, `Next`) now flank the "Ngữ cảnh 1/5" indicator in the center. Corresponding JavaScript code (`main.ts`, `ui-render.ts`) has been updated to correctly reference the new element IDs.
+- **Context View Instance Counter:** Removed the "Ngữ cảnh X / Y" instance counter text from the context view for a cleaner UI.
+- **Instance Navigation Looping:** Implemented infinite looping for the "Prev" and "Next" instance navigation buttons; pressing "next" from the last instance goes to the first, and "prev" from the first goes to the last. The navigation buttons' enabled/disabled state has been updated to correctly support this continuous looping.
 
 ---
 
