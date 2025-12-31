@@ -57,17 +57,54 @@ function escapeHtml(text: string): string {
     return d.innerHTML;
 }
 
+// --- Global Toast Management ---
+const MAX_TOASTS = 3;
+const activeToasts: HTMLElement[] = [];
+
 export function showToast(msg: string) {
+    const toastContainer = document.getElementById("toast-container");
+    if (!toastContainer) {
+        logger.error("Toast container #toast-container not found.");
+        return;
+    }
+
     const n = document.createElement("div");
     n.className =
-        "fixed bottom-6 right-6 bg-slate-800 text-green-400 border border-slate-700 px-4 py-3 rounded-lg shadow-xl z-[70] text-sm font-medium animate-fadeIn flex items-center gap-2";
+        "toast-item relative px-4 py-3 rounded-lg shadow-xl z-[70] text-sm font-medium flex items-center gap-2 mt-2 " +
+        "bg-slate-800 text-green-400 border border-slate-700 " +
+        "transition-all duration-500 ease-out transform translate-y-full opacity-0"; // Initial state for animation
     n.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span>${msg}</span>`;
-    document.body.appendChild(n);
+
+    // Add new toast to the top of the container (visually at the bottom)
+    toastContainer.prepend(n);
+    activeToasts.push(n);
+
+    // Animate in
+    requestAnimationFrame(() => {
+        n.classList.remove("translate-y-full", "opacity-0");
+    });
+
+    // Enforce max toasts limit
+    if (activeToasts.length > MAX_TOASTS) {
+        const oldestToast = activeToasts.shift(); // Remove oldest from array
+        if (oldestToast) {
+            oldestToast.classList.add("opacity-0"); // Start fade out
+            oldestToast.addEventListener("transitionend", () => oldestToast.remove(), { once: true });
+        }
+    }
+
+    // Auto-dismiss after 3 seconds
     setTimeout(() => {
-        n.style.opacity = "0";
-        n.style.transition = "opacity 0.5s"; 
-        setTimeout(() => n.remove(), 500);
-    }, 2000);
+        n.classList.add("opacity-0", "translate-y-full"); // Fade out and slide down
+        n.addEventListener("transitionend", () => {
+            n.remove();
+            // Remove from activeToasts if it hasn't been removed by the limit enforcement
+            const index = activeToasts.indexOf(n);
+            if (index > -1) {
+                activeToasts.splice(index, 1);
+            }
+        }, { once: true });
+    }, 3000);
 }
 
 export function copyToClipboard(text: string) {

@@ -36,7 +36,7 @@ The project has made significant progress and is now highly interactive and func
   - **Suggestion Display:** The context view now renders a list of suggestion words as plain text without interactive actions.
   - **Refined Display:** The view shows the detailed error reason (e.g., "Lỗi gõ máy (Typo)") instead of a generic type and uses a more user-friendly prompt ("Có thể là từ:").
 - **User Feedback & Interaction:**
-  - **Toast Notifications:** A `showToast` function is implemented for user feedback.
+  - **Toast Notifications:** Implemented dynamic toast notification behavior. New toasts now push older ones upwards, with a maximum of 3 toasts visible at any time. When the limit is exceeded, the oldest toast is animated out and removed. The animation duration has been increased for a slower effect (`duration-500`), and explicit vertical spacing (`mt-2`) is applied to each toast for consistent separation.
   - **Copy to Clipboard:** A `copyToClipboard` function is implemented and linked to the suggestions.
   - **Modal Handling:** The settings modal now closes when clicking outside of it or when a new file is uploaded.
 - **Error Highlighting:** The visual feedback for a selected error in the list (highlighting the item) is implemented.
