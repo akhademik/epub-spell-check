@@ -9,7 +9,7 @@ import { GlobalState } from './types/state';
 import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
 import { ErrorGroup } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress } from './utils/ui-render';
-import { parseWhitelistInput } from './utils/whitelist-parser';
+import { parseWhitelistWithOriginalCase } from './utils/whitelist-parser';
 import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay } from './utils/ui-utils';
 import { showToast } from './utils/notifications';
 
@@ -110,18 +110,17 @@ function quickIgnore() {
     const wordToIgnoreId = state.currentGroup.id; // Store ID before filtering
     const originalIndex = state.currentFilteredErrors.findIndex(g => g.id === wordToIgnoreId); // Store original index
     
-    const currentWhitelistRaw = UI.whitelistInput.value;
-    const whitelistSet = parseWhitelistInput(currentWhitelistRaw);
+    const { display, check } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
 
-    if (whitelistSet.has(wordToIgnore.toLowerCase())) {
+    if (check.has(wordToIgnore.toLowerCase())) {
         logger.log(`'${wordToIgnore}' is already in the whitelist.`);
         // Even if already in whitelist, re-filter in case state changed
         filterAndRenderErrors();
         return;
     }
 
-    whitelistSet.add(wordToIgnore);
-    UI.whitelistInput.value = Array.from(whitelistSet).join(", ");
+    display.push(wordToIgnore);
+    UI.whitelistInput.value = display.join(", ");
     saveWhitelist();
     filterAndRenderErrors();
 
@@ -161,17 +160,16 @@ function quickIgnore() {
 
 function quickIgnoreWordFromList(word: string) { // Renamed original quickIgnore to avoid confusion and for specific use case
     if (!UI.whitelistInput) return;
-    const currentWhitelistRaw = UI.whitelistInput.value;
-    const whitelistSet = parseWhitelistInput(currentWhitelistRaw);
+    const { display, check } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
 
-    if (whitelistSet.has(word.toLowerCase())) {
+    if (check.has(word.toLowerCase())) {
         logger.log(`'${word}' is already in the whitelist.`);
         filterAndRenderErrors();
         return;
     }
 
-    whitelistSet.add(word);
-    UI.whitelistInput.value = Array.from(whitelistSet).join(", ");
+    display.push(word);
+    UI.whitelistInput.value = display.join(", ");
     saveWhitelist();
     filterAndRenderErrors();
 }
@@ -190,8 +188,8 @@ function exportWhitelist() {
         showToast("Danh sách trống!", "info");
         return;
     }
-    const uniqueTokens = [...parseWhitelistInput(UI.whitelistInput.value)];
-    const blob = new Blob([uniqueTokens.join("\n")], { type: "text/plain;charset=utf-8" });
+    const { display } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
+    const blob = new Blob([display.join("\n")], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -201,22 +199,75 @@ function exportWhitelist() {
 }
 
 function handleImportWhitelist(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
+    const fileInput = event.target as HTMLInputElement;
+    const file = fileInput.files?.[0];
     if (!file || !UI.whitelistInput) return;
+
+    // --- Input Validation ---
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    if (fileExtension !== "txt" && fileExtension !== "md") {
+        showToast("Lỗi: Tệp phải là tệp văn bản (.txt, .md)", "error");
+        fileInput.value = '';
+        return;
+    }
+
+    if (file.size > 1024 * 1024) { // 1MB limit
+        showToast("Lỗi: Kích thước tệp không được vượt quá 1MB", "error");
+        fileInput.value = '';
+        return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
         const newContent = e.target?.result as string;
-        const currentContent = UI.whitelistInput!.value;
-
-        const currentWords = parseWhitelistInput(currentContent);
-        const importedWords = parseWhitelistInput(newContent);
         
-        // Combine unique words from both sources
-        const combined = new Set([...currentWords, ...importedWords]);
-        const uniqueCombined = [...combined];
-        UI.whitelistInput!.value = uniqueCombined.join(", ") + (uniqueCombined.length > 0 ? ", " : "");
+        const { display: importedDisplay } = parseWhitelistWithOriginalCase(newContent);
+
+        if (importedDisplay.length > 10000) {
+            showToast("Lỗi: Danh sách trắng không được chứa nhiều hơn 10,000 từ", "error");
+            fileInput.value = '';
+            return;
+        }
+
+        const validWordRegex = /^[a-zA-Z\p{L}-]+$/u;
+        const validWords: string[] = [];
+        const invalidWords: string[] = [];
+
+        for (const word of importedDisplay) {
+            if (word.length > 50) {
+                invalidWords.push(word);
+            } else if (validWordRegex.test(word)) {
+                validWords.push(word);
+            } else {
+                invalidWords.push(word);
+            }
+        }
+
+        if (invalidWords.length > 0) {
+            showToast(`Các từ không hợp lệ đã bị loại bỏ: ${invalidWords.join(", ")}`, "info");
+        }
+
+        const currentContent = UI.whitelistInput!.value;
+        const { display: currentDisplay } = parseWhitelistWithOriginalCase(currentContent);
+        
+        const finalWhitelistMap = new Map<string, string>();
+
+        for (const word of currentDisplay) {
+            finalWhitelistMap.set(word.toLowerCase(), word);
+        }
+
+        for (const word of validWords) {
+            finalWhitelistMap.set(word.toLowerCase(), word);
+        }
+        
+        const finalDisplay = Array.from(finalWhitelistMap.values());
+
+        UI.whitelistInput!.value = finalDisplay.join(", ") + (finalDisplay.length > 0 ? ", " : "");
         saveWhitelist();
         filterAndRenderErrors();
+
+        // Reset file input to allow re-importing the same file
+        fileInput.value = '';
     };
     reader.readAsText(file);
 }
@@ -236,11 +287,11 @@ function saveEngFilter() {
 // --- Filtering and Rendering ---
 function filterAndRenderErrors() {
     if (!UI.whitelistInput) return;
-    const userWhitelist = parseWhitelistInput(UI.whitelistInput.value);
+    const { check } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
     
     state.currentFilteredErrors = state.allDetectedErrors.filter(group => {
         const lowerWord = group.word.toLowerCase();
-        if (userWhitelist.has(lowerWord)) return false;
+        if (check.has(lowerWord)) return false;
         if (state.isEngFilterEnabled && state.dictionaries.english.has(lowerWord)) return false;
 
         // Add filtering based on checkSettings
