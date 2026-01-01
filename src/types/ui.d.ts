@@ -37,6 +37,7 @@ interface WhitelistUI {
   importWhitelistBtn: HTMLElement | null;
   exportWhitelistBtn: HTMLElement | null;
   whitelistImportFile: HTMLInputElement | null;
+  clearWhitelistBtn: HTMLButtonElement | null;
 }
 
 interface EngFilterUI {
@@ -68,6 +69,13 @@ interface NavigationUI {
   contextNavControls: HTMLElement | null;
 }
 
-export type ModalKey = 'settings' | 'help' | 'export';
+interface ClearWhitelistModalUI {
+  clearWhitelistModal: HTMLElement | null;
+  closeClearWhitelistBtn: HTMLButtonElement | null;
+  cancelClearWhitelistBtn: HTMLButtonElement | null;
+  confirmClearWhitelistBtn: HTMLButtonElement | null;
+}
 
-export type UIElements = BaseUI & SettingsUI & WhitelistUI & EngFilterUI & Partial<ExportUI> & Partial<HelpUI> & Partial<ReaderUI> & Partial<NavigationUI>;
+export type ModalKey = 'settings' | 'help' | 'export' | 'clear-whitelist';
+
+export type UIElements = BaseUI & SettingsUI & WhitelistUI & EngFilterUI & Partial<ExportUI> & Partial<HelpUI> & Partial<ReaderUI> & Partial<NavigationUI> & Partial<ClearWhitelistModalUI>;

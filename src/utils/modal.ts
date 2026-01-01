@@ -11,6 +11,8 @@ function getModalElement(ui: UIElements, modalKey: ModalKey): HTMLElement | null
             return ui.helpModal || null;
         case 'export':
             return ui.exportModal || null;
+        case 'clear-whitelist':
+            return ui.clearWhitelistModal || null;
         default:
             return null;
     }

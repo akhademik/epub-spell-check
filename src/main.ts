@@ -83,6 +83,11 @@ const UI: UIElements = {
     exportVctveBtn: document.getElementById("export-vctve-btn"),
     exportNormalBtn: document.getElementById("export-normal-btn"),
 
+    clearWhitelistModal: document.getElementById("clear-whitelist-modal"),
+    closeClearWhitelistBtn: document.getElementById("close-clear-whitelist-btn") as HTMLButtonElement,
+    cancelClearWhitelistBtn: document.getElementById("cancel-clear-whitelist-btn") as HTMLButtonElement,
+    confirmClearWhitelistBtn: document.getElementById("confirm-clear-whitelist-btn") as HTMLButtonElement,
+
     fontToggleBtn: document.getElementById("font-toggle-btn"),
     sizeUpBtn: document.getElementById("size-up-btn"),
     sizeDownBtn: document.getElementById("size-down-btn"),
@@ -97,6 +102,7 @@ const UI: UIElements = {
     whitelistInput: document.getElementById("whitelist-input") as HTMLTextAreaElement,
     importWhitelistBtn: document.getElementById("import-whitelist-btn"),
     exportWhitelistBtn: document.getElementById("export-whitelist-btn"),
+    clearWhitelistBtn: document.getElementById("clear-whitelist-btn") as HTMLButtonElement,
     whitelistImportFile: document.getElementById("whitelist-import-file") as HTMLInputElement,
     engFilterCheckbox: document.getElementById("eng-filter-checkbox") as HTMLInputElement,
     engLoading: document.getElementById("eng-loading"),
@@ -175,6 +181,15 @@ function quickIgnoreWordFromList(word: string) {
     if (updateWhitelist(word)) {
         updateAndRenderErrors();
     }
+}
+
+function clearWhitelist() {
+    if (!UI.whitelistInput) return;
+    if (UI.whitelistInput.value.trim() === "") {
+        showToast("Danh sách đã trống.", "info");
+        return;
+    }
+    openModal(UI, 'clear-whitelist');
 }
 
 
@@ -413,6 +428,7 @@ function navigateErrors(direction: 'up' | 'down') {
         const nextElement = errorList?.querySelector(`[data-group-id="${nextGroup.id}"]`) as HTMLElement;
         if (nextElement) {
             selectGroup(nextGroup, nextElement);
+            copyToClipboard(nextGroup.word);
             nextElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
     }
@@ -496,6 +512,7 @@ function closeAllModals() {
     closeModal(UI, 'settings');
     closeModal(UI, 'help');
     closeModal(UI, 'export');
+    closeModal(UI, 'clear-whitelist');
 }
 
 function prepareForNewFile(): boolean {
@@ -611,6 +628,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     closeModal(UI, 'export');
     closeModal(UI, 'help');
     closeModal(UI, 'settings');
+    closeModal(UI, 'clear-whitelist');
     hideProcessingUI(UI);
     UI.engLoading?.classList.add('hidden');
     try {
@@ -686,7 +704,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     UI.exportWhitelistBtn?.addEventListener('click', exportWhitelist);
     UI.importWhitelistBtn?.addEventListener('click', () => UI.whitelistImportFile?.click());
+    UI.clearWhitelistBtn?.addEventListener('click', clearWhitelist);
     UI.whitelistImportFile?.addEventListener('change', handleImportWhitelist);
+
+    UI.closeClearWhitelistBtn?.addEventListener('click', () => closeModal(UI, 'clear-whitelist'));
+    UI.cancelClearWhitelistBtn?.addEventListener('click', () => closeModal(UI, 'clear-whitelist'));
+    UI.confirmClearWhitelistBtn?.addEventListener('click', () => {
+        updateUIWhitelistInput(UI, "");
+        saveWhitelist("");
+        updateAndRenderErrors();
+        closeModal(UI, 'clear-whitelist');
+        showToast("Đã xoá hết danh sách bỏ qua.", "info");
+    });
 
     UI.engFilterCheckbox?.addEventListener('change', () => {
         state.isEngFilterEnabled = UI.engFilterCheckbox?.checked ?? false;
@@ -734,6 +763,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         if (UI.exportModal && !UI.exportModal.contains(e.target as Node) && !UI.exportBtn?.contains(e.target as Node)) {
             closeModal(UI, 'export');
+        }
+        if (UI.clearWhitelistModal && !UI.clearWhitelistModal.contains(e.target as Node) && !UI.clearWhitelistBtn?.contains(e.target as Node)) {
+            closeModal(UI, 'clear-whitelist');
         }
     });
 
