@@ -7,21 +7,11 @@ aahed
 aahing
 aahs
 aal
-Crowe
-Westminster
-Mycroft
-Farnham
-Brookwood
-Aiofe
-Shaftebury
-Jenkinson
-Afghanistan
 aalborg
 aalesund
 aalii
 aaliis
 aaliyah
-kangaroo
 aals
 aalst
 aalto
@@ -2162,11 +2152,6 @@ aerodyne
 aerodynes
 aeroflot
 aerofoil
-mozzarella
-shuffleboard
-dominatrix
-carcinogen
-periphyton
 aerofoils
 aerogel
 aerogels
@@ -2399,6 +2384,7 @@ affyde
 affying
 afghan
 afghanis
+afghanistan
 afghans
 afield
 afire
@@ -2925,7 +2911,6 @@ agurial
 agustin
 aguti
 agutis
-ah
 aha
 ahab
 ahaggar
@@ -3052,6 +3037,7 @@ aint
 aintab
 ainu
 ainus
+aiofe
 aioli
 aiolis
 air
@@ -3990,10 +3976,10 @@ alkyls
 alkyne
 alkynes
 all
-all(a)
 all-fired
 all-out
 all-time
+all(a)
 alla
 allah
 allahabad
@@ -5504,6 +5490,7 @@ andosite
 andouille
 andradite
 andre
+andré
 andrea
 andreaea
 andrei
@@ -5527,7 +5514,6 @@ andromeda
 andropov
 andros
 andryala
-andré
 ands
 andvari
 andvile
@@ -10601,7 +10587,6 @@ azymite
 azymites
 azymous
 azyms
-bte
 b-girl
 b-horizon
 b-meson
@@ -10713,8 +10698,8 @@ babus
 babushka
 babushkas
 baby
-baby(a)
 baby-wise
+baby(a)
 babydoll
 babydolls
 babyface
@@ -15508,9 +15493,9 @@ bifter
 bifters
 bifurcate
 bifurcous
+big-boned
 big(a)
 big(p)
-big-boned
 biga
 bigae
 bigamies
@@ -17181,8 +17166,8 @@ bludier
 bludiest
 bludy
 blue
-blue(a)
 blue-eyed
+blue(a)
 blueback
 bluebacks
 blueball
@@ -17998,8 +17983,8 @@ bonducs
 bondwoman
 bondwomen
 bone
-bone(a)
 bone-idle
+bone(a)
 boneblack
 boned
 bonefish
@@ -18739,8 +18724,8 @@ bottles
 bottling
 bottlings
 bottom
-bottom(a)
 bottom-up
+bottom(a)
 bottomed
 bottomer
 bottomers
@@ -18950,8 +18935,8 @@ bovinity
 bovver
 bovvers
 bow
-bow(a)
 bow-wow
+bow(a)
 bowat
 bowats
 bowbent
@@ -20400,6 +20385,7 @@ brooklime
 brooklyn
 brooks
 brookweed
+brookwood
 brool
 brools
 broom
@@ -20688,6 +20674,7 @@ bsa
 bsd
 bsds
 bt
+bte
 btl
 btry
 btu
@@ -21033,9 +21020,9 @@ builds
 buildup
 buildups
 built
-built(p)
 built-in
 built-up
+built(p)
 builtin
 builtup
 buirdlier
@@ -22871,11 +22858,8 @@ calif
 califate
 califates
 califont
-California
 califonts
-Westmoreland
-Frankenstein
-Washington
+california
 califs
 caligo
 caligoes
@@ -23387,8 +23371,8 @@ canalling
 canals
 cananga
 canape
-canapes
 canapé
+canapes
 canara
 canard
 canards
@@ -24173,6 +24157,7 @@ carcel
 carcelage
 carcels
 carceral
+carcinogen
 carcinoid
 carcinoma
 cardamine
@@ -25665,6 +25650,7 @@ celibates
 celibatic
 celina
 celine
+céline
 celioma
 cell
 cell-free
@@ -29310,8 +29296,8 @@ cleanthes
 cleanup
 cleanups
 clear
-clear(p)
 clear-cut
+clear(p)
 clearable
 clearage
 clearages
@@ -34261,7 +34247,6 @@ cproperty
 cps
 cq
 cquadroon
-crme
 craal
 craaled
 craaling
@@ -35116,6 +35101,7 @@ critturs
 crius
 crivens
 crivvens
+crme
 croak
 croaked
 croaker
@@ -35288,9 +35274,9 @@ crosiered
 crosiers
 crospin
 cross
-cross(a)
 cross-bun
 cross-eye
+cross(a)
 crossable
 crossarm
 crossarms
@@ -35415,6 +35401,7 @@ crowdies
 crowding
 crowds
 crowdy
+crowe
 crowea
 croweas
 crowed
@@ -37073,7 +37060,6 @@ czars
 czech
 czechs
 czerny
-céline
 d-day
 d-layer
 daal
@@ -43773,6 +43759,7 @@ dominate
 dominated
 dominates
 dominator
+dominatrix
 domine
 dominee
 domineer
@@ -44512,9 +44499,9 @@ dowlney
 dowls
 dowly
 down
+down-bow
 down(a)
 down(p)
-down-bow
 downa
 downbeat
 downbeats
@@ -52195,9 +52182,9 @@ ewks
 ewt
 ewts
 ex
-ex(a)
 ex-mayor
 ex-spouse
+ex(a)
 exabyte
 exabytes
 exact
@@ -53174,9 +53161,6 @@ ezekiel
 ezochin/
 ezokin/gr
 ezra
-fte
-fted
-faon
 faa
 faaing
 faan
@@ -53886,6 +53870,7 @@ fanworts
 fanzine
 fanzines
 fao
+faon
 fap
 faq
 faqir
@@ -54016,6 +54001,7 @@ farnesol
 farnesols
 farness
 farnesses
+farnham
 faro
 faroe
 faroese
@@ -59088,6 +59074,7 @@ franco
 francoa
 francois
 francoise
+françoise
 francolin
 franconia
 francs
@@ -59103,6 +59090,7 @@ frank
 frankable
 franked
 frankel
+frankenstein
 franker
 frankers
 frankest
@@ -59125,7 +59113,6 @@ franz
 franzier
 franziest
 franzy
-françoise
 frap
 frape
 frapp
@@ -59371,8 +59358,8 @@ frescoing
 frescoist
 frescos
 fresh
-fresh(a)
 fresh-cut
+fresh(a)
 freshed
 freshen
 freshened
@@ -59946,6 +59933,8 @@ fsh
 fslic
 ft
 ftc
+fte
+fted
 fth
 ftp
 ftper
@@ -62672,6 +62661,7 @@ geraniols
 geranium
 geraniums
 gerard
+gérard
 gerardia
 gerardias
 gerardo
@@ -65239,7 +65229,6 @@ gpa
 gpo
 gpu
 gq
-grce
 gr/
 gr/dos
 gr/gnothi
@@ -65760,6 +65749,7 @@ grazing
 grazingly
 grazings
 grazioso
+grce
 gre
 grease
 greased
@@ -67198,6 +67188,7 @@ gunstocks
 gunstone
 gunstones
 gunter
+günter
 gunters
 gunther
 gunwale
@@ -67593,8 +67584,6 @@ gyve
 gyved
 gyves
 gyving
-gérard
-günter
 h&m
 haaf
 haafs
@@ -67889,7 +67878,6 @@ hags
 hague
 haguebut
 hah
-haha
 hahas
 hahn
 hahnemann
@@ -68086,7 +68074,6 @@ halesia
 halest
 haley
 half
-half(a)
 half-cock
 half-hour
 half-mast
@@ -68094,6 +68081,7 @@ half-moon
 half-pay
 half-size
 half-time
+half(a)
 halfa
 halfas
 halfback
@@ -69506,8 +69494,8 @@ hdqrs
 hdtv
 heaavy
 head
-head(a)
 head-on
+head(a)
 headache
 headaches
 headachey
@@ -70627,6 +70615,7 @@ hermandad
 hermann
 hermannia
 hermes
+hermès
 hermetic
 hermetics
 hermetism
@@ -70643,7 +70632,6 @@ hermitry
 hermits
 hermon
 herms
-hermès
 hern
 hernandez
 hernaria
@@ -72000,8 +71988,8 @@ hombres
 homburg
 homburgs
 home
-home(a)
 home-farm
+home(a)
 homebirth
 homebody
 homebound
@@ -73194,7 +73182,6 @@ huguenot
 huguenots
 hugy
 huh
-huhu
 huhus
 huia
 huias
@@ -74118,9 +74105,9 @@ hyte
 hythe
 hythes
 hyundai
-i'm
 i-beam
 i.e.
+i'm
 ia
 iaccoca
 iacocca
@@ -75370,12 +75357,12 @@ impv
 imshi
 imshy
 imus
-in(a)
-in(p)
 in-basket
 in-bounds
 in-law
 in-situ
+in(a)
+in(p)
 ina
 inability
 inachis
@@ -79008,6 +78995,7 @@ jemmying
 jena
 jenifer
 jenkins
+jenkinson
 jenna
 jenner
 jennet
@@ -80266,6 +80254,7 @@ jurats
 jure
 jurel
 jurels
+jürgen
 juridic
 juridical
 juried
@@ -80349,7 +80338,6 @@ jylland
 jymold
 jynx
 jynxes
-jürgen
 kaaba
 kaal
 kaama
@@ -94632,7 +94620,6 @@ miction
 mictions
 micturate
 mid
-mid(a)
 mid-april
 mid-july
 mid-june
@@ -94641,6 +94628,7 @@ mid-may
 mid-off
 mid-on
 mid-water
+mid(a)
 midair
 midairs
 midas
@@ -98394,6 +98382,7 @@ mozing
 mozo
 mozos
 mozz
+mozzarella
 mozzes
 mozzetta
 mozzettas
@@ -99586,6 +99575,7 @@ mycotic
 mycotoxic
 mycotoxin
 mycovirus
+mycroft
 mycs
 mydriases
 mydriasis
@@ -101380,9 +101370,8 @@ nevski
 nevsky
 nevus
 new
-new york
-new(a)
 new-made
+new(a)
 newari
 newark
 newbie
@@ -102126,11 +102115,11 @@ nmr
 nne
 nnumber
 nnw
-no(a)
 no-go
 no-goal
 no-hit
 no-show
+no(a)
 noachian
 noah
 noahs
@@ -104601,7 +104590,6 @@ ofay
 ofays
 ofelia
 off
-off(p)
 off-base
 off-day
 off-hand
@@ -104609,6 +104597,7 @@ off-line
 off-peak
 off-road
 off-site
+off(p)
 offal
 offals
 offbeat
@@ -104908,10 +104897,10 @@ olantern
 olav
 olcott
 old
-old(a)
 old-time
 old-timer
 old-world
+old(a)
 oldage
 oldbuck
 oldcastle
@@ -105212,11 +105201,11 @@ omrah
 omrahs
 oms
 omsk
-on(p)
 on-key
 on-line
 on-site
 on-street
+on(p)
 onager
 onagers
 onagri
@@ -105270,7 +105259,6 @@ ondogram
 ondograms
 ondograph
 one
-one(a)
 one-armed
 one-eared
 one-eyed
@@ -105286,6 +105274,7 @@ one-step
 one-tenth
 one-third
 one-way
+one(a)
 oneal
 oneborse
 oneeyed
@@ -105669,7 +105658,6 @@ opiner
 opiners
 opines
 oping
-opinitre
 opiniator
 opiniatry
 opinicus
@@ -105678,6 +105666,7 @@ opiniodz
 opinion
 opinioned
 opinions
+opinitre
 opinon
 opioid
 opioids
@@ -110624,8 +110613,8 @@ parsonish
 parsons
 parsque
 part
-part(a)
 part-time
+part(a)
 partake
 partaken
 partaker
@@ -112695,6 +112684,7 @@ peripatus
 peripetia
 peripety
 periphery
+periphyton
 periplasm
 periplast
 periploca
@@ -124662,8 +124652,8 @@ readvise
 readvised
 readvises
 ready
-ready(a)
 ready-mix
+ready(a)
 readying
 readymade
 reaedify
@@ -136205,10 +136195,10 @@ sdeining
 sdeins
 sdi
 sea
-sea(a)
 sea-duty
 sea-god
 sea-green
+sea(a)
 seabag
 seabags
 seabank
@@ -137815,8 +137805,8 @@ seston
 sestons
 sestos
 set
-set(p)
 set-to
+set(p)
 seta
 setaceous
 setae
@@ -138127,6 +138117,7 @@ shady
 shaef
 shaffer
 shaft
+shaftebury
 shafted
 shafter
 shafters
@@ -139781,6 +139772,7 @@ shudders
 shuddery
 shudra
 shuffle
+shuffleboard
 shuffled
 shuffler
 shufflers
@@ -152853,8 +152845,6 @@ szczecin
 szechwan
 szeged
 szilard
-ttonner
-ttons
 t-bar
 t-man
 t-square
@@ -155928,7 +155918,6 @@ tezel
 tf
 tg
 tgif
-thtre
 thack
 thacked
 thackeray
@@ -156044,7 +156033,6 @@ thawless
 thaws
 thawy
 thc
-thetre
 thea
 theaceae
 theaceous
@@ -156289,6 +156277,7 @@ thether
 thetic
 thetical
 thetis
+thetre
 theurgic
 theurgies
 theurgist
@@ -156821,6 +156810,7 @@ thruway
 thruways
 thrymsa
 thrymsas
+thtre
 thuban
 thud
 thudded
@@ -158552,9 +158542,9 @@ tootsies
 tootsing
 tootsy
 toowoomba
-top(a)
 top-down
 top-heavy
+top(a)
 topalgia
 topalgias
 toparch
@@ -159419,8 +159409,8 @@ tracy
 trad
 tradable
 trade
-trade(a)
 trade-in
+trade(a)
 tradeable
 traded
 tradeful
@@ -161022,8 +161012,8 @@ trudgings
 truditur
 trudy
 true
-true(a)
 true-blue
+true(a)
 trueblue
 trueblues
 trueborn
@@ -161251,6 +161241,8 @@ tsutsumus
 tsvetaeva
 tswana
 tswanas
+ttonner
+ttons
 tty
 tuamotu
 tuan
@@ -166149,9 +166141,9 @@ unzipping
 unzips
 unzoned
 up
+up-bow
 up(a)
 up(p)
-up-bow
 upadaisy
 upaithric
 upanishad
@@ -167469,6 +167461,7 @@ valeriana
 valerians
 valeric
 valerie
+valérie
 valery
 vales
 valet
@@ -167593,7 +167586,6 @@ valvulae
 valvular
 valvule
 valvules
-valérie
 vambrace
 vambraced
 vambraces
@@ -168685,6 +168677,7 @@ veronese
 veronica
 veronicas
 veronique
+véronique
 verpa
 verquere
 verqueres
@@ -170473,7 +170466,6 @@ vyborg
 vying
 vyingly
 vyings
-véronique
 wa
 waac
 waacs
@@ -171398,6 +171390,7 @@ washin
 washiness
 washing
 washings
+washington
 washins
 washland
 washlands
@@ -172213,7 +172206,6 @@ welkins
 welks
 welkt
 well
-well(p)
 well-bred
 well-done
 well-fed
@@ -172222,6 +172214,7 @@ well-made
 well-off
 well-read
 well-worn
+well(p)
 welladay
 welladays
 welland
@@ -172391,6 +172384,8 @@ westings
 westley
 westlin
 westlins
+westminster
+westmoreland
 westmost
 weston
 wests
@@ -175699,8 +175694,8 @@ yeanling
 yeanlings
 yeans
 year
-year's
 year-end
+year's
 yearbook
 yearbooks
 yeard
