@@ -8,7 +8,7 @@ import { UIElements } from './types/ui';
 import { state, loadStateFromLocalStorage, saveCheckSettings, saveWhitelist, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState } from './state';
 import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
 import { ErrorGroup } from './types/errors';
-import { renderErrorList, renderContextView, updateStats, updateProgress } from './utils/ui-render';
+import { renderErrorList, renderContextView, updateStats, updateProgress, copyToClipboard } from './utils/ui-render';
 import { parseWhitelistWithOriginalCase } from './utils/whitelist-parser';
 import { getFilteredErrors } from './utils/filter';
 import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay } from './utils/ui-utils';
@@ -285,7 +285,7 @@ function filterAndRenderErrors() {
     const totalErrorInstances = state.currentFilteredErrors.reduce((_acc: number, _g: ErrorGroup) => _acc + _g.contexts.length, 0);
     
     updateStats(UI, state.totalWords, totalErrorInstances, state.currentFilteredErrors.length);
-    renderErrorList(UI, state.currentFilteredErrors, selectGroup, quickIgnoreWordFromList);
+    renderErrorList(UI, state.currentFilteredErrors); // Removed selectGroup and quickIgnoreWordFromList
 }
 
 // --- Settings Logic ---
@@ -721,6 +721,55 @@ async function handleFile(file: File) {
 
   // Keyboard navigation
   document.addEventListener('keydown', handleGlobalKeydown);
+
+  // Event delegation for error list
+  const errorListElement = document.getElementById("error-list");
+  if (errorListElement) {
+    errorListElement.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+
+      // Check if a select button was clicked
+      const selectBtn = target.closest('.select-btn');
+      if (selectBtn) {
+        const errorItem = selectBtn.closest('[data-group-id]') as HTMLElement;
+        if (errorItem) {
+          const groupId = errorItem.dataset.groupId;
+          const group = state.currentFilteredErrors.find(g => g.id === groupId);
+          if (group) {
+            selectGroup(group, errorItem);
+            copyToClipboard(group.word);
+          }
+        }
+        return;
+      }
+
+      // Check if an ignore button was clicked
+      const ignoreBtn = target.closest('.ignore-btn');
+      if (ignoreBtn) {
+        e.stopPropagation();
+        const errorItem = ignoreBtn.closest('[data-group-id]') as HTMLElement;
+        if (errorItem) {
+          const groupId = errorItem.dataset.groupId; // Get groupId to find the group object
+          const group = state.currentFilteredErrors.find(g => g.id === groupId);
+          if (group && group.word) {
+            quickIgnoreWordFromList(group.word);
+          }
+        }
+        return;
+      }
+
+      // If the click is on the error item itself (not a button), treat it as a select
+      const errorItem = target.closest('[data-group-id]') as HTMLElement;
+      if (errorItem) {
+        const groupId = errorItem.dataset.groupId;
+        const group = state.currentFilteredErrors.find(g => g.id === groupId);
+        if (group) {
+            selectGroup(group, errorItem);
+            copyToClipboard(group.word);
+        }
+      }
+    });
+  }
 
   // Global click handler to close modals when clicking outside
   document.addEventListener('click', (e) => {

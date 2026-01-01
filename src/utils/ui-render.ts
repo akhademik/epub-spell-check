@@ -159,9 +159,7 @@ export function updateStats(ui: UIElements, totalWords: number, totalErrors: num
 
 export function renderErrorList(
     ui: UIElements,
-    groups: ErrorGroup[],
-    onSelectGroup: (group: ErrorGroup, element: HTMLElement) => void,
-    onIgnoreWord: (word: string) => void
+    groups: ErrorGroup[]
 ) {
     const errorList = ui.metaTitle?.ownerDocument.getElementById("error-list");
     if (!errorList) {
@@ -196,9 +194,11 @@ export function renderErrorList(
         const countEl = clone.querySelector(".error-count");
         const dotEl = clone.querySelector(".status-dot");
         const buttonContainer = clone.querySelector("div") as HTMLElement;
-        if (buttonContainer) buttonContainer.dataset.groupId = group.id;
-        const selectBtn = clone.querySelector(".select-btn") as HTMLButtonElement;
-        const ignoreBtn = clone.querySelector(".ignore-btn") as HTMLButtonElement;
+        if (buttonContainer) {
+            buttonContainer.dataset.groupId = group.id;
+            buttonContainer.dataset.groupWord = group.word; // Add word to container
+        }
+
 
         if (wordEl) wordEl.textContent = group.word;
         if (reasonEl) reasonEl.textContent = group.reason;
@@ -208,21 +208,7 @@ export function renderErrorList(
             const style = getErrorHighlights(group.type);
             dotEl.classList.add(style.dot);
         }
-
-        if (selectBtn) {
-            selectBtn.onclick = () => {
-                onSelectGroup(group, buttonContainer);
-                copyToClipboard(group.word);
-            };
-        }
-        
-        if (ignoreBtn) {
-            ignoreBtn.onclick = (e) => {
-                e.stopPropagation();
-                onIgnoreWord(group.word);
-            };
-        }
-
+        // Removed individual onclick assignments for selectBtn and ignoreBtn
         errorList.appendChild(clone);
     });
 }
