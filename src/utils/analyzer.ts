@@ -44,8 +44,13 @@ function getErrorType(word: string, dictionaries: Dictionaries, settings: CheckS
   }
 
   if (settings.tone) {
-    for (const [wrong, _right] of Object.entries(TONE_MISPLACEMENT)) {
-      if (lower.includes(wrong)) return { type: 'Tone', reason: 'Sai vị trí dấu (Chuẩn cũ/mới)' };
+    for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
+      if (lower.includes(wrong)) {
+        const correctedWord = lower.replace(wrong, right);
+        if (dictionaries.vietnamese.has(correctedWord)) {
+          return { type: 'Tone', reason: 'Sai vị trí dấu (Chuẩn cũ/mới)' };
+        }
+      }
     }
   }
 
