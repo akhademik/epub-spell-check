@@ -463,20 +463,95 @@ function resetApp() {
   logger.log('App reset.');
 }
 
-async function handleFile(file: File) {
-    if (!file.name.endsWith(".epub")) { showToast("Vui lòng chọn file .epub", "error"); return; }
-    // Close any open modals when a new file is uploaded
+function closeAllModals() {
     UI.settingsModal?.classList.add('hidden');
-    if (UI.helpModal) { UI.helpModal.classList.add('hidden'); UI.helpModal.classList.remove('flex', 'items-center', 'justify-center'); }
-    if (UI.exportModal) { UI.exportModal.classList.add('hidden'); UI.exportModal.classList.remove('flex', 'items-center', 'justify-center'); }
-    hideLoadingOverlay(UI); // Ensure loading overlay is hidden
+    if (UI.helpModal) {
+        UI.helpModal.classList.add('hidden');
+        UI.helpModal.classList.remove('flex', 'items-center', 'justify-center');
+    }
+    if (UI.exportModal) {
+        UI.exportModal.classList.add('hidden');
+        UI.exportModal.classList.remove('flex', 'items-center', 'justify-center');
+    }
+}
 
+function prepareForNewFile(): boolean {
     resetApp();
-    if (!state.dictionaryStatus.isVietnameseLoaded) { showToast("Đang tải dữ liệu từ điển, vui lòng đợi giây lát...", "info"); return; }
+    if (!state.dictionaryStatus.isVietnameseLoaded) {
+        showToast("Đang tải dữ liệu từ điển, vui lòng đợi giây lát...", "info");
+        return false;
+    }
+    return true;
+}
+
+function updateBookMetadata(epubContent: EpubContent) {
+    state.loadedTextContent = epubContent.textBlocks;
+    state.currentBookTitle = epubContent.metadata.title;
+
+    if (UI.metaTitle) UI.metaTitle.innerText = epubContent.metadata.title;
+    if (UI.metaAuthor) UI.metaAuthor.innerText = epubContent.metadata.author;
+    if (epubContent.metadata.coverUrl && UI.metaCover) {
+        state.currentCoverUrl = epubContent.metadata.coverUrl;
+        UI.metaCover.src = epubContent.metadata.coverUrl;
+        UI.metaCover.classList.remove("hidden");
+        if (UI.metaCoverPlaceholder) UI.metaCoverPlaceholder.classList.add("hidden");
+    }
+}
+
+async function runAnalysis(epubContent: EpubContent) {
+    const fullCheckSettings: CheckSettings = { dictionary: true, uppercase: true, tone: true, foreign: true };
+    const { errors, totalWords } = await analyzeText(epubContent.textBlocks, state.dictionaries, fullCheckSettings, (p: number, m: string) => updateProgress(UI, p, m));
+    
+    state.allDetectedErrors = groupErrors(errors);
+    state.totalWords = totalWords;
+    
+    updateProgress(UI, 100, 'Hoàn tất');
+    
+    filterAndRenderErrors();
+
+    if (state.currentFilteredErrors.length > 0) {
+        const firstErrorGroup = state.currentFilteredErrors[0];
+        const errorList = document.getElementById('error-list');
+        const firstErrorElement = errorList?.querySelector(`[data-group-id="${firstErrorGroup.id}"]`) as HTMLElement;
+        if (firstErrorElement) {
+            selectGroup(firstErrorGroup, firstErrorElement);
+            firstErrorElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+        logger.log('Book loaded and first error selected.');
+    } else {
+        const contextView = document.getElementById('context-view');
+        const contextNav = UI.contextNavControls;
+        if (contextView) {
+            contextView.innerHTML = `
+                <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
+                    <p class="text-lg mb-2">Tuyệt vời!</p>
+                    <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
+                </div>`;
+        }
+        if (contextNav) contextNav.classList.add('hidden');
+        state.currentGroup = null;
+        logger.log('Book loaded. No errors found.');
+    }
+
+    if (UI.processingUi) UI.processingUi.classList.add("hidden");
+    if (UI.processingUiHeader) {
+        UI.processingUiHeader.classList.remove('flex', 'items-end', 'justify-between', 'mb-4');
+        UI.processingUiHeader.classList.add('hidden');
+    }
+    showResultsUI(UI);
+}
+
+async function handleFile(file: File) {
+    if (!file.name.endsWith(".epub")) {
+        showToast("Vui lòng chọn file .epub", "error");
+        return;
+    }
+
+    closeAllModals();
+    if (!prepareForNewFile()) return;
 
     showProcessingUI(UI);
 
-    // Explicitly revoke the old cover URL to prevent memory leaks
     if (state.currentCoverUrl) {
         URL.revokeObjectURL(state.currentCoverUrl);
         state.currentCoverUrl = null;
@@ -484,70 +559,15 @@ async function handleFile(file: File) {
 
     try {
         const epubContent: EpubContent = await parseEpub(file, UI);
-        state.loadedTextContent = epubContent.textBlocks;
-        state.currentBookTitle = epubContent.metadata.title;
-
-        if (UI.metaTitle) UI.metaTitle.innerText = epubContent.metadata.title;
-        if (UI.metaAuthor) UI.metaAuthor.innerText = epubContent.metadata.author;
-        if (epubContent.metadata.coverUrl && UI.metaCover) {
-            state.currentCoverUrl = epubContent.metadata.coverUrl;
-            UI.metaCover.src = epubContent.metadata.coverUrl;
-            UI.metaCover.classList.remove("hidden");
-            if (UI.metaCoverPlaceholder) UI.metaCoverPlaceholder.classList.add("hidden");
-        }
-
-        // Always run the initial analysis with all checks enabled to get a master list
-        const fullCheckSettings: CheckSettings = { dictionary: true, uppercase: true, tone: true, foreign: true };
-        const { errors, totalWords } = await analyzeText(state.loadedTextContent, state.dictionaries, fullCheckSettings, (p: number, m: string) => updateProgress(UI, p, m));
-        
-        state.allDetectedErrors = groupErrors(errors);
-        state.totalWords = totalWords; // Store totalWords in state
-        
-        updateProgress(UI, 100, 'Hoàn tất');
-        
-        // Now, filter this master list based on the user's current settings
-        filterAndRenderErrors();
-
-        if (state.currentFilteredErrors.length > 0) {
-            const firstErrorGroup = state.currentFilteredErrors[0];
-            // Find the corresponding DOM element for the first error group
-            const errorList = document.getElementById('error-list');
-            const firstErrorElement = errorList?.querySelector(`[data-group-id="${firstErrorGroup.id}"]`) as HTMLElement;
-            if (firstErrorElement) {
-                selectGroup(firstErrorGroup, firstErrorElement);
-                firstErrorElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            }
-            logger.log('Book loaded and first error selected.');
-        } else {
-            // No errors found, display a message in the context view
-            const contextView = document.getElementById('context-view');
-            const contextNav = UI.contextNavControls;
-            if (contextView) {
-                contextView.innerHTML = `
-                    <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
-                        <p class="text-lg mb-2">Tuyệt vời!</p>
-                        <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
-                    </div>`;
-            }
-            if (contextNav) contextNav.classList.add('hidden');
-            state.currentGroup = null; // Clear current group state
-            logger.log('Book loaded. No errors found.');
-        }
-
-        if (UI.processingUi) UI.processingUi.classList.add("hidden"); // Explicitly hide processing UI if it was shown
-        if (UI.processingUiHeader) { // Explicitly hide processing header if it was shown
-            UI.processingUiHeader.classList.remove('flex', 'items-end', 'justify-between', 'mb-4');
-            UI.processingUiHeader.classList.add('hidden');
-        }
-        showResultsUI(UI);
-
+        updateBookMetadata(epubContent);
+        await runAnalysis(epubContent);
     } catch (err) {
         logger.error("Error processing EPUB file:", err);
         let errorMessage = "Có lỗi xảy ra trong quá trình xử lý tệp EPUB.";
         if (err instanceof Error) {
             if (err.message.includes("EPUB không hợp lệ")) {
-                errorMessage = err.message; // Use the specific message from epub-parser
-            } else if (err.message.includes("Zip is not a valid zip file")) { // Specific error from jszip
+                errorMessage = err.message;
+            } else if (err.message.includes("Zip is not a valid zip file")) {
                 errorMessage = "Tệp EPUB bị hỏng hoặc không đúng định dạng Zip.";
             } else {
                 errorMessage = `Lỗi không xác định: ${err.message}`;
