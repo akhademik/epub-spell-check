@@ -10,6 +10,7 @@ import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
 import { ErrorGroup } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress } from './utils/ui-render';
 import { parseWhitelistWithOriginalCase } from './utils/whitelist-parser';
+import { getFilteredErrors } from './utils/filter';
 import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay } from './utils/ui-utils';
 import { showToast } from './utils/notifications';
 
@@ -243,23 +244,14 @@ function handleImportWhitelist(event: Event) {
 // --- Filtering and Rendering ---
 function filterAndRenderErrors() {
     if (!UI.whitelistInput) return;
-    const { check } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
-    
-    state.currentFilteredErrors = state.allDetectedErrors.filter((_group: ErrorGroup) => {
-        const lowerWord = _group.word.toLowerCase();
-        if (check.has(lowerWord)) return false;
-        if (state.isEngFilterEnabled && state.dictionaries.english.has(lowerWord)) return false;
 
-        // Add filtering based on checkSettings
-        const settings = state.checkSettings;
-        if (!settings.dictionary && _group.type === 'Dictionary') return false;
-        if (!settings.uppercase && _group.type === 'Uppercase') return false;
-        if (!settings.tone && _group.type === 'Tone') return false;
-        // The 'foreign' setting in the UI corresponds to multiple error types
-        if (!settings.foreign && ['Foreign', 'Typo', 'Spelling'].includes(_group.type)) return false;
-        
-        return true;
-    });
+    state.currentFilteredErrors = getFilteredErrors(
+        state.allDetectedErrors,
+        UI.whitelistInput.value,
+        state.isEngFilterEnabled,
+        state.checkSettings,
+        state.dictionaries.english
+    );
 
     const totalErrorInstances = state.currentFilteredErrors.reduce((_acc: number, _g: ErrorGroup) => _acc + _g.contexts.length, 0);
     
