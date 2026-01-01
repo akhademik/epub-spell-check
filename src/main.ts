@@ -750,4 +750,9 @@ async function handleFile(file: File) {
           UI.exportModal.classList.remove('flex', 'items-center', 'justify-center');
       }
   });
+
+  // Clear debounce timer on page unload
+  window.addEventListener('beforeunload', () => {
+    clearTimeout(debounceTimer);
+  });
 });

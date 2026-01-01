@@ -4,7 +4,7 @@ Based on a recent code review, the following issues and opportunities for improv
 
 ### High Priority
 
-- **Race Condition in Debouncing:** The `debounceTimer` in `src/main.ts` is not cleared on component unmount (e.g., page unload), which could lead to unexpected behavior.
+- **Race Condition in Debouncing:** The `debounceTimer` in `src/main.ts` is now cleared on `beforeunload` event, preventing unexpected behavior when the component unmounts. **[Addressed]**
 - **Undo/Redo for Whitelist:** The review suggests adding undo/redo functionality for whitelist changes to improve user experience.
 - **Memory Leaks in State:** The `resetApp` function re-assigns arrays (`loadedTextContent`, `allDetectedErrors`) instead of clearing them (e.g., `array.length = 0`), which can be less efficient for garbage collection.
 - **Improved Error Boundaries:** The main `handleFile` function has a generic `catch` block. It should be improved to handle specific errors (e.g., parsing errors, malformed EPUBs) to provide better user feedback.
