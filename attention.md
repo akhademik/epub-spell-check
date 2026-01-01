@@ -12,7 +12,7 @@ Based on a recent code review, the following issues and opportunities for improv
 - ✅ **Event Listener Leak:** The global `keydown` event listener was not removed, which could lead to memory leaks. This has been fixed by ensuring the listener is removed during app reset.
 - ✅ **DOM Query Selectors in Loops / DOM Thrashing:** Optimized by caching the selected error element in `state` to prevent repeated `querySelectorAll` calls for styling. `classList` operations in UI utility functions have been refactored for more atomic and declarative class management.
 - ✅ **Event Delegation for Error List:** Implemented event delegation for the error list by adding a single click listener to the parent container (`#error-list`), eliminating individual listeners on each error item and handling interactions more efficiently.
-- **Magic Numbers and Strings:** The code uses "magic" numbers and strings directly in the logic (e.g., for file size limits, debounce delays). These should be extracted into named constants for better readability and maintainability.
+- ✅ **Magic Numbers and Strings:** Extracted magic numbers and strings into named constants within `src/constants.ts` to improve readability and maintainability.
 
 ### Low Priority
 

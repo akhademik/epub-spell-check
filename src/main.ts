@@ -14,6 +14,7 @@ import { getFilteredErrors } from './utils/filter';
 import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay } from './utils/ui-utils';
 import { showToast } from './utils/notifications';
 import { openModal, closeModal } from './utils/modal';
+import { DEBOUNCE_DELAY_MS, FILE_SIZE_LIMIT_BYTES, WHITELIST_WORD_COUNT_LIMIT, WHITELIST_WORD_LENGTH_LIMIT, FONT_SIZE_MAX_REM, FONT_SIZE_MIN_REM, SETTINGS_FILTER_DEBOUNCE_MS, EPUB_FILE_EXTENSION, WHITELIST_FILE_EXTENSIONS } from './constants';
 
 let debounceTimer: number;
 
@@ -199,13 +200,13 @@ function handleImportWhitelist(event: Event) {
 
     // --- Input Validation ---
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
-    if (fileExtension !== "txt" && fileExtension !== "md") {
+    if (!WHITELIST_FILE_EXTENSIONS.includes(fileExtension || "")) {
         showToast("Lỗi: Tệp phải là tệp văn bản (.txt, .md)", "error");
         fileInput.value = '';
         return;
     }
 
-    if (file.size > 1024 * 1024) { // 1MB limit
+    if (file.size > FILE_SIZE_LIMIT_BYTES) { // 1MB limit
         showToast("Lỗi: Kích thước tệp không được vượt quá 1MB", "error");
         fileInput.value = '';
         return;
@@ -217,7 +218,7 @@ function handleImportWhitelist(event: Event) {
         
         const { display: importedDisplay } = parseWhitelistWithOriginalCase(newContent);
 
-        if (importedDisplay.length > 10000) {
+        if (importedDisplay.length > WHITELIST_WORD_COUNT_LIMIT) {
             showToast("Lỗi: Danh sách trắng không được chứa nhiều hơn 10,000 từ", "error");
             fileInput.value = '';
             return;
@@ -228,7 +229,7 @@ function handleImportWhitelist(event: Event) {
         const invalidWords: string[] = [];
 
         for (const word of importedDisplay) {
-            if (word.length > 50) {
+            if (word.length > WHITELIST_WORD_LENGTH_LIMIT) {
                 invalidWords.push(word);
             } else if (validWordRegex.test(word)) {
                 validWords.push(word);
@@ -307,7 +308,7 @@ function saveSettings() {
             filterAndRenderErrors();
             hideLoadingOverlay(UI);
             logger.log('Filtering complete after settings change.');
-        }, 50);
+        }, SETTINGS_FILTER_DEBOUNCE_MS);
     }
 }
 
@@ -565,7 +566,7 @@ async function runAnalysis(epubContent: EpubContent) {
 }
 
 async function handleFile(file: File) {
-    if (!file.name.endsWith(".epub")) {
+    if (!file.name.endsWith(EPUB_FILE_EXTENSION)) {
         showToast("Vui lòng chọn file .epub", "error");
         return;
     }
@@ -656,14 +657,14 @@ async function handleFile(file: File) {
     applyReaderStyles();
   });
   UI.sizeUpBtn?.addEventListener('click', () => {
-    if (state.readerSettings.fontSize < 3) {
+    if (state.readerSettings.fontSize < FONT_SIZE_MAX_REM) {
       state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
       saveReaderSettings();
       applyReaderStyles();
     }
   });
   UI.sizeDownBtn?.addEventListener('click', () => {
-    if (state.readerSettings.fontSize > 0.8) {
+    if (state.readerSettings.fontSize > FONT_SIZE_MIN_REM) {
       state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
       saveReaderSettings();
       applyReaderStyles();
@@ -677,7 +678,7 @@ async function handleFile(file: File) {
       debounceTimer = window.setTimeout(() => {
           if (UI.whitelistInput) saveWhitelist(UI.whitelistInput.value);
           filterAndRenderErrors();
-      }, 500);
+      }, DEBOUNCE_DELAY_MS);
   });
   UI.exportWhitelistBtn?.addEventListener('click', exportWhitelist);
   UI.importWhitelistBtn?.addEventListener('click', () => UI.whitelistImportFile?.click());

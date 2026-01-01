@@ -4,6 +4,9 @@ import { UIElements } from "../types/ui";
 import { logger } from "./logger";
 import { findSuggestions } from "./analyzer";
 import { Dictionaries } from "../types/dictionary";
+import { CONTEXT_LENGTH_CHARS, MAX_TOASTS_DISPLAYED, TOAST_AUTO_DISMISS_MS } from '../constants';
+
+const activeToasts: HTMLElement[] = [];
 
 // --- Helper Functions ---
 
@@ -46,7 +49,7 @@ function getErrorHighlights(type: string): { dot: string; text: string; bg: stri
 }
 
 function getContext(text: string, index: number, length: number) {
-    const contextLength = 60; // Characters before and after
+    const contextLength = CONTEXT_LENGTH_CHARS; // Characters before and after
     const start = Math.max(0, index - contextLength);
     const end = Math.min(text.length, index + length + contextLength);
 
@@ -70,9 +73,6 @@ function escapeHtml(text: string): string {
 }
 
 // --- Global Toast Management ---
-const MAX_TOASTS = 3;
-const activeToasts: HTMLElement[] = [];
-
 export function showToast(msg: string) {
     const toastContainer = document.getElementById("toast-container");
     if (!toastContainer) {
@@ -97,7 +97,7 @@ export function showToast(msg: string) {
     });
 
     // Enforce max toasts limit
-    if (activeToasts.length > MAX_TOASTS) {
+    if (activeToasts.length > MAX_TOASTS_DISPLAYED) {
         const oldestToast = activeToasts.shift(); // Remove oldest from array
         if (oldestToast) {
             oldestToast.classList.add("opacity-0"); // Start fade out
@@ -116,7 +116,7 @@ export function showToast(msg: string) {
                 activeToasts.splice(index, 1);
             }
         }, { once: true });
-    }, 3000);
+    }, TOAST_AUTO_DISMISS_MS);
 }
 
 export function copyToClipboard(text: string) {
