@@ -204,6 +204,7 @@ export function renderContextView(
     instanceIndex: number,
     dictionaries: Dictionaries
 ) {
+    logger.debug('renderContextView called with:', { group, instanceIndex });
     const contextView = ui.metaTitle?.ownerDocument.getElementById("context-view");
     const navIndicator = ui.metaTitle?.ownerDocument.getElementById("nav-indicator");
     const contextNavControls = ui.contextNavControls;

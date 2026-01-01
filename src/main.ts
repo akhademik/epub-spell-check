@@ -663,7 +663,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     UI.whitelistInput?.addEventListener('input', () => {
         clearTimeout(debounceTimer);
         debounceTimer = window.setTimeout(() => {
-            updateUIWhitelistInput(UI, UI.whitelistInput!.value);
+            saveWhitelist(UI.whitelistInput!.value);
             updateAndRenderErrors();
         }, DEBOUNCE_DELAY_MS);
     });
