@@ -13,6 +13,7 @@ import { parseWhitelistWithOriginalCase } from './utils/whitelist-parser';
 import { getFilteredErrors } from './utils/filter';
 import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay } from './utils/ui-utils';
 import { showToast } from './utils/notifications';
+import { openModal, closeModal } from './utils/modal';
 
 let debounceTimer: number;
 
@@ -299,7 +300,7 @@ function sanitizeFilename(name: string): string {
 function performExport(type: 'vctve' | 'normal') {
     if (state.currentFilteredErrors.length === 0) {
         showToast("Không có lỗi nào để xuất!", "info");
-        if (UI.exportModal) UI.exportModal.classList.add("hidden");
+        if (UI.exportModal) closeModal(UI.exportModal);
         return;
     }
 
@@ -322,7 +323,7 @@ function performExport(type: 'vctve' | 'normal') {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    if (UI.exportModal) UI.exportModal.classList.add("hidden");
+    if (UI.exportModal) closeModal(UI.exportModal);
 }
 
 
@@ -456,15 +457,9 @@ function resetApp() {
 }
 
 function closeAllModals() {
-    UI.settingsModal?.classList.add('hidden');
-    if (UI.helpModal) {
-        UI.helpModal.classList.add('hidden');
-        UI.helpModal.classList.remove('flex', 'items-center', 'justify-center');
-    }
-    if (UI.exportModal) {
-        UI.exportModal.classList.add('hidden');
-        UI.exportModal.classList.remove('flex', 'items-center', 'justify-center');
-    }
+    if (UI.settingsModal) closeModal(UI.settingsModal);
+    if (UI.helpModal) closeModal(UI.helpModal);
+    if (UI.exportModal) closeModal(UI.exportModal);
 }
 
 function prepareForNewFile(): boolean {
@@ -578,9 +573,9 @@ async function handleFile(file: File) {
     UI.resetBtn?.classList.add('hidden');
     UI.dictStatus?.classList.add('hidden');
     hideLoadingOverlay(UI); // Use helper for loading overlay
-    UI.exportModal?.classList.add('hidden');
-    UI.helpModal?.classList.add('hidden');
-    UI.settingsModal?.classList.add('hidden');
+    if (UI.exportModal) closeModal(UI.exportModal);
+    if (UI.helpModal) closeModal(UI.helpModal);
+    if (UI.settingsModal) closeModal(UI.settingsModal);
     // Call hideProcessingUI which internally handles processingUi, processingUiHeader, resultsSection, etc.
     hideProcessingUI(UI); 
     UI.engLoading?.classList.add('hidden');
@@ -608,14 +603,14 @@ async function handleFile(file: File) {
   (document.getElementById("btn-prev") as HTMLButtonElement)?.addEventListener('click', () => navigateInstance('prev'));
   (document.getElementById("btn-next") as HTMLButtonElement)?.addEventListener('click', () => navigateInstance('next'));
 
-  UI.settingsBtn?.addEventListener('click', () => UI.settingsModal?.classList.remove('hidden'));
-  UI.closeSettingsBtn?.addEventListener('click', () => UI.settingsModal?.classList.add('hidden'));
+  UI.settingsBtn?.addEventListener('click', () => { if (UI.settingsModal) openModal(UI.settingsModal); });
+  UI.closeSettingsBtn?.addEventListener('click', () => { if (UI.settingsModal) closeModal(UI.settingsModal); });
 
-  UI.helpBtn?.addEventListener('click', () => { if (UI.helpModal) { UI.helpModal.classList.remove('hidden'); UI.helpModal.classList.add('flex', 'items-center', 'justify-center'); } });
-  UI.closeHelpBtn?.addEventListener('click', () => { if (UI.helpModal) { UI.helpModal.classList.add('hidden'); UI.helpModal.classList.remove('flex', 'items-center', 'justify-center'); } });
+  UI.helpBtn?.addEventListener('click', () => { if (UI.helpModal) openModal(UI.helpModal); });
+  UI.closeHelpBtn?.addEventListener('click', () => { if (UI.helpModal) closeModal(UI.helpModal); });
 
-  UI.exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); if (UI.exportModal) { UI.exportModal.classList.remove('hidden'); UI.exportModal.classList.add('flex', 'items-center', 'justify-center'); } });
-  UI.closeExportBtn?.addEventListener('click', () => { if (UI.exportModal) { UI.exportModal.classList.add('hidden'); UI.exportModal.classList.remove('flex', 'items-center', 'justify-center'); } });
+  UI.exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); if (UI.exportModal) openModal(UI.exportModal); });
+  UI.closeExportBtn?.addEventListener('click', () => { if (UI.exportModal) closeModal(UI.exportModal); });
   UI.exportVctveBtn?.addEventListener('click', () => performExport('vctve'));
   UI.exportNormalBtn?.addEventListener('click', () => performExport('normal'));
 
@@ -695,21 +690,19 @@ async function handleFile(file: File) {
       if (UI.settingsModal && !UI.settingsModal.classList.contains('hidden') &&
           !UI.settingsModal.contains(e.target as Node) &&
           !UI.settingsBtn?.contains(e.target as Node)) {
-          UI.settingsModal.classList.add('hidden');
+          if (UI.settingsModal) closeModal(UI.settingsModal);
       }
       // Help Modal
       if (UI.helpModal && !UI.helpModal.classList.contains('hidden') &&
           !UI.helpModalContent?.contains(e.target as Node) &&
           !UI.helpBtn?.contains(e.target as Node)) {
-          UI.helpModal.classList.add('hidden');
-          UI.helpModal.classList.remove('flex', 'items-center', 'justify-center');
+          if (UI.helpModal) closeModal(UI.helpModal);
       }
       // Export Modal
       if (UI.exportModal && !UI.exportModal.classList.contains('hidden') &&
           !UI.exportModal.contains(e.target as Node) &&
           !UI.exportBtn?.contains(e.target as Node)) {
-          UI.exportModal.classList.add('hidden');
-          UI.exportModal.classList.remove('flex', 'items-center', 'justify-center');
+          if (UI.exportModal) closeModal(UI.exportModal);
       }
   });
 
