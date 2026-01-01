@@ -62,3 +62,14 @@ export function hideLoadingOverlay(ui: UIElements) {
     ui.loadingOverlay?.classList.remove(...OVERLAY_VISIBLE);
     ui.loadingOverlay?.classList.add(HIDDEN_CLASS);
 }
+
+/**
+ * Updates the whitelist input UI element.
+ * @param ui The UIElements object.
+ * @param value The new value for the whitelist input.
+ */
+export function updateUIWhitelistInput(ui: UIElements, value: string) {
+    if (ui.whitelistInput) {
+        ui.whitelistInput.value = value;
+    }
+}

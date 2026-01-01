@@ -11,7 +11,7 @@ import { ErrorGroup } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress, copyToClipboard } from './utils/ui-render';
 import { parseWhitelistWithOriginalCase } from './utils/whitelist-parser';
 import { getFilteredErrors } from './utils/filter';
-import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay } from './utils/ui-utils';
+import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay, updateUIWhitelistInput } from './utils/ui-utils';
 import { showToast } from './utils/notifications';
 import { openModal, closeModal } from './utils/modal';
 import { DEBOUNCE_DELAY_MS, FILE_SIZE_LIMIT_BYTES, WHITELIST_WORD_COUNT_LIMIT, WHITELIST_WORD_LENGTH_LIMIT, FONT_SIZE_MAX_REM, FONT_SIZE_MIN_REM, SETTINGS_FILTER_DEBOUNCE_MS, EPUB_FILE_EXTENSION, WHITELIST_FILE_EXTENSIONS } from './constants';
@@ -147,7 +147,7 @@ function quickIgnore() {
     const originalIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === wordToIgnoreId);
     
     if (updateWhitelist(wordToIgnore)) {
-        filterAndRenderErrors();
+        updateAndRenderErrors();
         selectNextError(wordToIgnoreId, originalIndex);
     }
 }
@@ -163,14 +163,14 @@ function updateWhitelist(word: string): boolean {
     }
 
     display.push(word);
-    UI.whitelistInput.value = display.join(", ");
+    updateUIWhitelistInput(UI, display.join(", "));
     saveWhitelist(UI.whitelistInput.value);
     return true;
 }
 
 function quickIgnoreWordFromList(word: string) { // Renamed original quickIgnore to avoid confusion and for specific use case
     if (updateWhitelist(word)) {
-        filterAndRenderErrors();
+        updateAndRenderErrors();
     }
 }
 
@@ -257,9 +257,9 @@ function handleImportWhitelist(event: Event) {
         
         const finalDisplay = Array.from(finalWhitelistMap.values());
 
-        UI.whitelistInput!.value = finalDisplay.join(", ") + (finalDisplay.length > 0 ? ", " : "");
+        updateUIWhitelistInput(UI, finalDisplay.join(", ") + (finalDisplay.length > 0 ? ", " : ""));
         saveWhitelist(UI.whitelistInput!.value);
-        filterAndRenderErrors();
+        updateAndRenderErrors();
 
         // Reset file input to allow re-importing the same file
         fileInput.value = '';
@@ -272,7 +272,7 @@ function handleImportWhitelist(event: Event) {
 
 
 // --- Filtering and Rendering ---
-function filterAndRenderErrors() {
+function updateAndRenderErrors() {
     if (!UI.whitelistInput) return;
 
     state.currentFilteredErrors = getFilteredErrors(
@@ -305,7 +305,7 @@ function saveSettings() {
         
         // Use a short timeout to allow the UI to update (e.g., show overlay) before filtering
         setTimeout(() => {
-            filterAndRenderErrors();
+            updateAndRenderErrors();
             hideLoadingOverlay(UI);
             logger.log('Filtering complete after settings change.');
         }, SETTINGS_FILTER_DEBOUNCE_MS);
@@ -530,7 +530,7 @@ async function runAnalysis(epubContent: EpubContent) {
     
     updateProgress(UI, 100, 'Hoàn tất');
     
-    filterAndRenderErrors();
+    updateAndRenderErrors();
 
     if (state.currentFilteredErrors.length > 0) {
         const firstErrorGroup = state.currentFilteredErrors[0];
@@ -626,7 +626,7 @@ async function handleFile(file: File) {
   if(UI.settingToggles.case) UI.settingToggles.case.checked = state.checkSettings.uppercase;
   if(UI.settingToggles.tone) UI.settingToggles.tone.checked = state.checkSettings.tone;
   if(UI.settingToggles.struct) UI.settingToggles.struct.checked = state.checkSettings.foreign;
-  if (UI.whitelistInput) UI.whitelistInput.value = loadWhitelistFromState();
+  updateUIWhitelistInput(UI, loadWhitelistFromState());
   if(UI.engFilterCheckbox) UI.engFilterCheckbox.checked = state.isEngFilterEnabled;
   applyReaderStyles();
 
@@ -675,8 +675,8 @@ async function handleFile(file: File) {
   UI.whitelistInput?.addEventListener('input', () => {
       clearTimeout(debounceTimer);
       debounceTimer = window.setTimeout(() => {
-          if (UI.whitelistInput) saveWhitelist(UI.whitelistInput.value);
-          filterAndRenderErrors();
+          updateUIWhitelistInput(UI, UI.whitelistInput!.value);
+          updateAndRenderErrors();
       }, DEBOUNCE_DELAY_MS);
   });
   UI.exportWhitelistBtn?.addEventListener('click', exportWhitelist);
@@ -685,7 +685,7 @@ async function handleFile(file: File) {
 
   UI.engFilterCheckbox?.addEventListener('change', () => {
       state.isEngFilterEnabled = UI.engFilterCheckbox?.checked ?? false;
-      filterAndRenderErrors();
+      updateAndRenderErrors();
   });
 
   UI.uploadSection?.addEventListener('dragover', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.add('border-blue-500/50', 'bg-slate-800/50'); });
