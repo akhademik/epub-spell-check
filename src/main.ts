@@ -17,6 +17,22 @@ import { DEBOUNCE_DELAY_MS, FILE_SIZE_LIMIT_BYTES, WHITELIST_WORD_COUNT_LIMIT, W
 
 let debounceTimer: number;
 
+let globalEventListeners: Array<{ element: EventTarget, type: string, handler: EventListener }> = [];
+
+function addGlobalListener(element: EventTarget, type: string, handler: EventListener) {
+  element.addEventListener(type, handler);
+  globalEventListeners.push({ element, type, handler });
+}
+
+function cleanupGlobalListeners() {
+  globalEventListeners.forEach(({ element, type, handler }) => {
+    element.removeEventListener(type, handler);
+  });
+  globalEventListeners = [];
+}
+
+let isUpdating = false;
+
 const handleGlobalKeydown = (e: KeyboardEvent) => {
     const activeElement = document.activeElement;
     if (activeElement && ['TEXTAREA', 'INPUT'].includes(activeElement.tagName)) {
@@ -270,21 +286,27 @@ function handleImportWhitelist(event: Event) {
 
 
 // --- Filtering and Rendering ---
-function updateAndRenderErrors() {
-    if (!UI.whitelistInput) return;
+async function updateAndRenderErrors() {
+    if (!UI.whitelistInput || isUpdating) return;
 
-    state.currentFilteredErrors = getFilteredErrors(
-        state.allDetectedErrors,
-        UI.whitelistInput.value,
-        state.isEngFilterEnabled,
-        state.checkSettings,
-        state.dictionaries.english
-    );
-
-    const totalErrorInstances = state.currentFilteredErrors.reduce((_acc: number, _g: ErrorGroup) => _acc + _g.contexts.length, 0);
-
-    updateStats(UI, state.totalWords, totalErrorInstances, state.currentFilteredErrors.length);
-    renderErrorList(UI, state.currentFilteredErrors);
+    isUpdating = true;
+    try {
+        state.currentFilteredErrors = getFilteredErrors(
+            state.allDetectedErrors,
+            UI.whitelistInput.value,
+            state.isEngFilterEnabled,
+            state.checkSettings,
+            state.dictionaries.english
+        );
+        const totalErrorInstances = state.currentFilteredErrors.reduce(
+            (_acc: number, _g: ErrorGroup) => _acc + _g.contexts.length,
+            0
+        );
+        updateStats(UI, state.totalWords, totalErrorInstances, state.currentFilteredErrors.length);
+        renderErrorList(UI, state.currentFilteredErrors);
+    } finally {
+        isUpdating = false;
+    }
 }
 
 // --- Settings Logic ---
@@ -481,7 +503,7 @@ function resetApp() {
     UI.dictStatus?.classList.remove("md:flex", "items-center", "gap-3");
     updateStats(UI, 0, 0, 0);
     logger.info('App reset.');
-    document.removeEventListener('keydown', handleGlobalKeydown);
+    cleanupGlobalListeners();
 }
 
 function closeAllModals() {
@@ -605,9 +627,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     closeModal(UI, 'settings');
     hideProcessingUI(UI);
     UI.engLoading?.classList.add('hidden');
-    const { dictionaries, status } = await loadDictionaries(UI); state.dictionaries = dictionaries;
-    state.dictionaryStatus = status;
-    logger.info('Dictionaries Loaded:', state.dictionaryStatus);
+    try {
+        const { dictionaries, status } = await loadDictionaries(UI);
+        state.dictionaries = dictionaries;
+        state.dictionaryStatus = status;
+        logger.info('Dictionaries Loaded:', state.dictionaryStatus);
+    } catch (error) {
+        logger.error('Failed to load dictionaries:', error);
+        showToast('Lỗi tải từ điển. Vui lòng tải lại trang.', 'error');
+        UI.fileInput?.setAttribute('disabled', 'true');
+        UI.uploadSection?.classList.add('opacity-50', 'pointer-events-none');
+    }
+
 
     loadStateFromLocalStorage();
 
@@ -680,77 +711,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     UI.uploadSection?.addEventListener('dragleave', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); });
     UI.uploadSection?.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); if (e.dataTransfer?.files?.[0]) handleFile(e.dataTransfer.files[0]); });
 
-    const handleGlobalKeydown = (e: KeyboardEvent) => {
-        const activeElement = document.activeElement;
-        if (activeElement && ['TEXTAREA', 'INPUT'].includes(activeElement.tagName)) {
-            return;
-        }
 
-        if (state.currentFilteredErrors.length === 0) return;
 
-        switch (e.key) {
-            case 'ArrowDown':
-                e.preventDefault();
-                navigateErrors('down');
-                break;
-            case 'ArrowUp':
-                e.preventDefault();
-                navigateErrors('up');
-                break;
-            case 'Delete':
-            case 'i':
-                if (state.currentGroup) {
-                    e.preventDefault();
-                    quickIgnore();
-                }
-                break;
-        }
-    };
-
-    document.addEventListener('keydown', handleGlobalKeydown);
+    addGlobalListener(document, 'keydown', handleGlobalKeydown as EventListener);
 
     const errorListElement = document.getElementById("error-list");
     if (errorListElement) {
         errorListElement.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
-
-            const selectBtn = target.closest('.select-btn');
-            if (selectBtn) {
-                const errorItem = selectBtn.closest('[data-group-id]') as HTMLElement;
-                if (errorItem) {
-                    const groupId = errorItem.dataset.groupId;
-                    const group = state.currentFilteredErrors.find(g => g.id === groupId);
-                    if (group) {
-                        selectGroup(group, errorItem);
-                        copyToClipboard(group.word);
-                    }
-                }
-                return;
-            }
-
-            const ignoreBtn = target.closest('.ignore-btn');
-            if (ignoreBtn) {
-                e.stopPropagation();
-                const errorItem = ignoreBtn.closest('[data-group-id]') as HTMLElement;
-                if (errorItem) {
-                    const groupId = errorItem.dataset.groupId;
-                    const group = state.currentFilteredErrors.find(g => g.id === groupId);
-                    if (group && group.word) {
-                        quickIgnoreWordFromList(group.word);
-                    }
-                }
-                return;
-            }
-
             const errorItem = target.closest('[data-group-id]') as HTMLElement;
-            if (errorItem) {
-                const groupId = errorItem.dataset.groupId;
-                const group = state.currentFilteredErrors.find(g => g.id === groupId);
-                if (group) {
-                    selectGroup(group, errorItem);
-                    copyToClipboard(group.word);
-                }
+            if (!errorItem) return;
+
+            const groupId = errorItem.dataset.groupId;
+            const group = state.currentFilteredErrors.find(g => g.id === groupId);
+            if (!group) return;
+
+            // Handle ignore button
+            if (target.closest('.ignore-btn')) {
+                e.stopPropagation();
+                quickIgnoreWordFromList(group.word);
+                return;
             }
+
+            // Handle select button or item click
+            selectGroup(group, errorItem);
+            copyToClipboard(group.word);
         });
     }
 
