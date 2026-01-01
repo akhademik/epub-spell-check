@@ -59,6 +59,21 @@ body {
   scrollbar-color: #475569 transparent; /* thumb and track color */
 }
 
+#context-view::-webkit-scrollbar {
+  width: 8px;
+}
+#context-view::-webkit-scrollbar-track {
+  background: transparent;
+}
+#context-view::-webkit-scrollbar-thumb {
+  background-color: #475569; /* slate-600 */
+  border-radius: 20px;
+}
+#context-view {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 transparent; /* thumb and track color */
+}
+
 .settings-modal-aligned {
   right: max(1rem, calc((100vw - 72rem) / 2 + 0.5rem));
 }
