@@ -7,7 +7,7 @@ Based on a recent code review, the following issues and opportunities for improv
 - **Race Condition in Debouncing:** The `debounceTimer` in `src/main.ts` is now cleared on `beforeunload` event, preventing unexpected behavior when the component unmounts. **[Addressed]**
 
 - **Memory Leaks in State:** The `resetApp` function now clears arrays (`loadedTextContent`, `allDetectedErrors`, `currentFilteredErrors`) using `array.length = 0` instead of re-assigning them, which is more efficient for garbage collection. **[Addressed]**
-- **Improved Error Boundaries:** The main `handleFile` function has a generic `catch` block. It should be improved to handle specific errors (e.g., parsing errors, malformed EPUBs) to provide better user feedback.
+- **Improved Error Boundaries:** The `handleFile` function now includes more specific error handling in its `catch` block for EPUB parsing errors, providing better user feedback for issues like malformed EPUBs or invalid Zip files. **[Addressed]**
 
 ### Medium Priority
 

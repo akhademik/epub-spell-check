@@ -617,7 +617,17 @@ async function handleFile(file: File) {
 
     } catch (err) {
         logger.error("Error processing EPUB file:", err);
-        showToast("Có lỗi xảy ra: " + (err instanceof Error ? err.message : String(err)), "error");
+        let errorMessage = "Có lỗi xảy ra trong quá trình xử lý tệp EPUB.";
+        if (err instanceof Error) {
+            if (err.message.includes("EPUB không hợp lệ")) {
+                errorMessage = err.message; // Use the specific message from epub-parser
+            } else if (err.message.includes("Zip is not a valid zip file")) { // Specific error from jszip
+                errorMessage = "Tệp EPUB bị hỏng hoặc không đúng định dạng Zip.";
+            } else {
+                errorMessage = `Lỗi không xác định: ${err.message}`;
+            }
+        }
+        showToast(errorMessage, "error");
         resetApp();
     }
 }
