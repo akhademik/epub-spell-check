@@ -329,7 +329,7 @@ function sanitizeFilename(name: string): string {
 function performExport(type: 'vctve' | 'normal') {
     if (state.currentFilteredErrors.length === 0) {
         showToast("Không có lỗi nào để xuất!", "info");
-        if (UI.exportModal) closeModal(UI.exportModal);
+        closeModal(UI, 'export');
         return;
     }
 
@@ -352,7 +352,7 @@ function performExport(type: 'vctve' | 'normal') {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    if (UI.exportModal) closeModal(UI.exportModal);
+    closeModal(UI, 'export');
 }
 
 
@@ -494,9 +494,9 @@ function resetApp() {
 }
 
 function closeAllModals() {
-    if (UI.settingsModal) closeModal(UI.settingsModal);
-    if (UI.helpModal) closeModal(UI.helpModal);
-    if (UI.exportModal) closeModal(UI.exportModal);
+    closeModal(UI, 'settings');
+    closeModal(UI, 'help');
+    closeModal(UI, 'export');
 }
 
 function prepareForNewFile(): boolean {
@@ -610,9 +610,9 @@ async function handleFile(file: File) {
     UI.resetBtn?.classList.add('hidden');
     UI.dictStatus?.classList.add('hidden');
     hideLoadingOverlay(UI); // Use helper for loading overlay
-    if (UI.exportModal) closeModal(UI.exportModal);
-    if (UI.helpModal) closeModal(UI.helpModal);
-    if (UI.settingsModal) closeModal(UI.settingsModal);
+    closeModal(UI, 'export');
+    closeModal(UI, 'help');
+    closeModal(UI, 'settings');
     // Call hideProcessingUI which internally handles processingUi, processingUiHeader, resultsSection, etc.
     hideProcessingUI(UI); 
     UI.engLoading?.classList.add('hidden');
@@ -640,14 +640,14 @@ async function handleFile(file: File) {
   (document.getElementById("btn-prev") as HTMLButtonElement)?.addEventListener('click', () => navigateInstance('prev'));
   (document.getElementById("btn-next") as HTMLButtonElement)?.addEventListener('click', () => navigateInstance('next'));
 
-  UI.settingsBtn?.addEventListener('click', () => { if (UI.settingsModal) openModal(UI.settingsModal); });
-  UI.closeSettingsBtn?.addEventListener('click', () => { if (UI.settingsModal) closeModal(UI.settingsModal); });
+  UI.settingsBtn?.addEventListener('click', () => { openModal(UI, 'settings'); });
+  UI.closeSettingsBtn?.addEventListener('click', () => { closeModal(UI, 'settings'); });
 
-  UI.helpBtn?.addEventListener('click', () => { if (UI.helpModal) openModal(UI.helpModal); });
-  UI.closeHelpBtn?.addEventListener('click', () => { if (UI.helpModal) closeModal(UI.helpModal); });
+  UI.helpBtn?.addEventListener('click', () => { openModal(UI, 'help'); });
+  UI.closeHelpBtn?.addEventListener('click', () => { closeModal(UI, 'help'); });
 
-  UI.exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); if (UI.exportModal) openModal(UI.exportModal); });
-  UI.closeExportBtn?.addEventListener('click', () => { if (UI.exportModal) closeModal(UI.exportModal); });
+  UI.exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); openModal(UI, 'export'); });
+  UI.closeExportBtn?.addEventListener('click', () => { closeModal(UI, 'export'); });
   UI.exportVctveBtn?.addEventListener('click', () => performExport('vctve'));
   UI.exportNormalBtn?.addEventListener('click', () => performExport('normal'));
 
@@ -775,22 +775,16 @@ async function handleFile(file: File) {
   // Global click handler to close modals when clicking outside
   document.addEventListener('click', (e) => {
       // Settings Modal
-      if (UI.settingsModal && !UI.settingsModal.classList.contains('hidden') &&
-          !UI.settingsModal.contains(e.target as Node) &&
-          !UI.settingsBtn?.contains(e.target as Node)) {
-          if (UI.settingsModal) closeModal(UI.settingsModal);
+      if (UI.settingsModal && !UI.settingsModal.contains(e.target as Node) && !UI.settingsBtn?.contains(e.target as Node)) {
+          closeModal(UI, 'settings');
       }
       // Help Modal
-      if (UI.helpModal && !UI.helpModal.classList.contains('hidden') &&
-          !UI.helpModalContent?.contains(e.target as Node) &&
-          !UI.helpBtn?.contains(e.target as Node)) {
-          if (UI.helpModal) closeModal(UI.helpModal);
+      if (UI.helpModal && !UI.helpModalContent?.contains(e.target as Node) && !UI.helpBtn?.contains(e.target as Node)) {
+          closeModal(UI, 'help');
       }
       // Export Modal
-      if (UI.exportModal && !UI.exportModal.classList.contains('hidden') &&
-          !UI.exportModal.contains(e.target as Node) &&
-          !UI.exportBtn?.contains(e.target as Node)) {
-          if (UI.exportModal) closeModal(UI.exportModal);
+      if (UI.exportModal && !UI.exportModal.contains(e.target as Node) && !UI.exportBtn?.contains(e.target as Node)) {
+          closeModal(UI, 'export');
       }
   });
 

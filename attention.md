@@ -17,7 +17,7 @@ Based on a recent code review, the following issues and opportunities for improv
 ### Low Priority
 
 - **Refactor Whitelist Input Validation:** The input validation logic in `handleImportWhitelist` should be extracted into its own `validateWhitelistWord` function to improve modularity and reusability.
-- **Type Safety:** The code could be made more type-safe by using more specific types (e.g., a `ModalType` for modal identifiers).
+- ✅ **Type Safety:** Enhanced type safety for modal handling by introducing a `ModalKey` union type and refactoring `openModal`/`closeModal` functions and their calls to use this type, improving clarity and reducing potential errors.
 - **Virtual Scrolling for Error List:** For books with a large number of errors, the error list could become a performance bottleneck. Implementing virtual scrolling would improve performance.
 - **Keyboard Shortcuts Help:** The application has keyboard shortcuts, but there is no easy way for the user to discover them.
 - **Accessibility (ARIA):** The application could be improved by adding ARIA labels to provide better accessibility for screen readers.
