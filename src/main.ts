@@ -349,13 +349,13 @@ function loadSettings() {
 function sanitizeFilename(name: string): string {
     const sanitized = name
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[̀-ͯ]/g, "")
         .replace(/[<>:"/\\|?*]/g, "")
         .replace(/\s+/g, "-")
         .toLowerCase()
         .trim();
     // eslint-disable-next-line no-control-regex
-    return sanitized.replace(/[\x00-\x1F]/g, "");
+    return sanitized.replace(/[ -]/g, "");
 }
 
 function performExport(type: 'vctve' | 'normal') {
@@ -509,10 +509,10 @@ function resetApp() {
   if (UI.fileInput) UI.fileInput.value = "";
   if (UI.whitelistImportFile) UI.whitelistImportFile.value = "";
   state.currentBookTitle = "";
-  state.loadedTextContent = [];
+  state.loadedTextContent.length = 0; // Modified
   state.totalWords = 0;
-  state.allDetectedErrors = [];
-  state.currentFilteredErrors = [];
+  state.allDetectedErrors.length = 0; // Modified
+  state.currentFilteredErrors.length = 0; // Modified
   state.currentGroup = null;
   state.currentInstanceIndex = 0;
   if (state.currentCoverUrl) {
