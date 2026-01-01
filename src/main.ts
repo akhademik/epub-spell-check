@@ -634,6 +634,7 @@ async function handleFile(file: File) {
 
 // --- 5. INITIALIZATION ---
   document.addEventListener('DOMContentLoaded', async () => {
+    document.body.removeAttribute('hidden');
     // Ensure elements that start hidden are indeed hidden after removing 'hidden' from HTML
     UI.exportBtn?.classList.add('hidden');
     UI.resetBtn?.classList.add('hidden');
