@@ -5,7 +5,6 @@ import { logger } from './utils/logger';
 
 const SETTINGS_KEY = "vn_spell_settings";
 const WHITELIST_KEY = "vn_spell_whitelist";
-const ENG_FILTER_KEY = "vn_spell_eng_filter";
 const READER_SETTINGS_KEY = "vn_spell_reader";
 
 const initialState: AppState = {
@@ -47,8 +46,7 @@ export function loadStateFromLocalStorage() {
     // This will be handled by the UI component, but we could store it here if we want
   }
 
-  const engFilter = localStorage.getItem(ENG_FILTER_KEY);
-  state.isEngFilterEnabled = engFilter === 'true';
+
 
   try {
     const readerSettings = localStorage.getItem(READER_SETTINGS_KEY);
@@ -72,9 +70,7 @@ export function loadWhitelist(): string {
     return localStorage.getItem(WHITELIST_KEY) || '';
 }
 
-export function saveEngFilter() {
-  localStorage.setItem(ENG_FILTER_KEY, String(state.isEngFilterEnabled));
-}
+
 
 export function saveReaderSettings() {
   localStorage.setItem(READER_SETTINGS_KEY, JSON.stringify(state.readerSettings));

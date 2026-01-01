@@ -5,7 +5,7 @@ import { logger } from './utils/logger';
 import { parseEpub } from './utils/epub-parser';
 import { EpubContent } from './types/epub';
 import { UIElements } from './types/ui';
-import { state, loadStateFromLocalStorage, saveCheckSettings, saveWhitelist, saveEngFilter as saveEngFilterState, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState } from './state';
+import { state, loadStateFromLocalStorage, saveCheckSettings, saveWhitelist, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState } from './state';
 import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
 import { ErrorGroup } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress } from './utils/ui-render';
@@ -241,11 +241,7 @@ function handleImportWhitelist(event: Event) {
 
 
 
-function _saveEngFilter() {
-    state.isEngFilterEnabled = UI.engFilterCheckbox?.checked ?? false;
-    saveEngFilterState();
-    filterAndRenderErrors();
-}
+
 
 // --- Filtering and Rendering ---
 function filterAndRenderErrors() {
@@ -444,6 +440,7 @@ function resetApp() {
   hideProcessingUI(UI); // Centralized hiding of processing UI, results, and action buttons.
   if (UI.fileInput) UI.fileInput.value = "";
   if (UI.whitelistImportFile) UI.whitelistImportFile.value = "";
+  if (UI.engFilterCheckbox) UI.engFilterCheckbox.checked = false;
   
   resetState();
 
@@ -646,7 +643,10 @@ async function handleFile(file: File) {
   UI.importWhitelistBtn?.addEventListener('click', () => UI.whitelistImportFile?.click());
   UI.whitelistImportFile?.addEventListener('change', handleImportWhitelist);
 
-  UI.engFilterCheckbox?.addEventListener('change', _saveEngFilter);
+  UI.engFilterCheckbox?.addEventListener('change', () => {
+      state.isEngFilterEnabled = UI.engFilterCheckbox?.checked ?? false;
+      filterAndRenderErrors();
+  });
 
   UI.uploadSection?.addEventListener('dragover', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.add('border-blue-500/50', 'bg-slate-800/50'); });
   UI.uploadSection?.addEventListener('dragleave', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); });
