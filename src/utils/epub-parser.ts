@@ -1,13 +1,12 @@
-// src/utils/epub-parser.ts
 import JSZip from 'jszip';
 import { BookMetadata, TextContentBlock, EpubContent } from '../types/epub';
 
 import { UIElements } from '../types/ui';
 import { updateProgress } from './ui-render';
+import { logger } from './logger';
 
 
 
-// Function to parse the EPUB file
 export async function parseEpub(
   file: File,
   ui: UIElements
@@ -15,7 +14,6 @@ export async function parseEpub(
   updateProgress(ui, 10, 'Đang giải nén tệp...');
   const zip = await JSZip.loadAsync(file);
 
-  // Check for container.xml existence
   const containerFile = zip.file("META-INF/container.xml");
   if (!containerFile) {
     throw new Error("File EPUB không hợp lệ: thiếu META-INF/container.xml");
@@ -29,12 +27,12 @@ export async function parseEpub(
     ?.getAttribute("full-path");
 
   if (!rootPath) {
-      throw new Error("EPUB không hợp lệ: không tìm thấy OPF rootfile");
+    throw new Error("EPUB không hợp lệ: không tìm thấy OPF rootfile");
   }
 
   const opfData = await zip.file(rootPath)?.async("string");
   if (!opfData) {
-      throw new Error("EPUB không hợp lệ: không tìm thấy OPF file");
+    throw new Error("EPUB không hợp lệ: không tìm thấy OPF file");
   }
   const opfXml = parser.parseFromString(opfData, "application/xml");
   const opfDir = rootPath.substring(0, rootPath.lastIndexOf("/"));
@@ -78,7 +76,7 @@ export async function parseEpub(
       }
     }
   } catch (_e) {
-    // logger.warn("Could not extract cover image.", _e); // Removed as per user request
+    logger.warn("Could not extract cover image.", _e);
   }
 
   updateProgress(ui, 30, 'Đang đọc cấu trúc sách...');
@@ -109,12 +107,12 @@ export async function parseEpub(
         )
           .map((el) => el.textContent?.trim() || "")
           .filter((text) => text.length > 0)
-          .map((text) => ({ text })); // Map to TextContentBlock
+          .map((text) => ({ text }));
 
         textBlocks.push(...paras);
       }
     }
-    if (i % 5 === 0) { // Update progress every 5 chapters
+    if (i % 5 === 0) {
       updateProgress(
         ui,
         30 + Math.round((i / spine.length) * 30),

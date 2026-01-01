@@ -1,4 +1,3 @@
-// src/types/state.d.ts
 import { Dictionaries, DictionaryStatus } from "./dictionary";
 import { ErrorGroup } from './errors';
 import { CheckSettings } from '../utils/analyzer';

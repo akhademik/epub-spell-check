@@ -1,8 +1,7 @@
-// src/utils/modal.ts
 
 
 import { UIElements, ModalKey } from "../types/ui";
-import { HIDDEN_CLASS } from "../constants"; // Import HIDDEN_CLASS
+import { HIDDEN_CLASS } from "../constants";
 
 function getModalElement(ui: UIElements, modalKey: ModalKey): HTMLElement | null {
     switch (modalKey) {
@@ -20,7 +19,7 @@ function getModalElement(ui: UIElements, modalKey: ModalKey): HTMLElement | null
 export function openModal(ui: UIElements, modalKey: ModalKey) {
     const modal = getModalElement(ui, modalKey);
     modal?.classList.remove(HIDDEN_CLASS);
-    if (modal && !modal.classList.contains('settings-modal-aligned')) { // Specific to settings modal alignment
+    if (modal && !modal.classList.contains('settings-modal-aligned')) {
         modal.classList.add('flex', 'items-center', 'justify-center');
     }
 }

@@ -1,4 +1,3 @@
-// src/utils/filter.ts
 import { ErrorGroup } from '../types/errors';
 import { AppState } from '../types/state';
 import { memoize } from './memoize';
@@ -12,7 +11,7 @@ function filterErrors(
     englishDictionary: Set<string>
 ): ErrorGroup[] {
     const { check } = parseWhitelistWithOriginalCase(whitelistValue);
-    
+
     return allDetectedErrors.filter(group => {
         const lowerWord = group.word.toLowerCase();
         if (check.has(lowerWord)) return false;
@@ -23,7 +22,7 @@ function filterErrors(
         if (!settings.uppercase && group.type === 'Uppercase') return false;
         if (!settings.tone && group.type === 'Tone') return false;
         if (!settings.foreign && ['Foreign', 'Typo', 'Spelling'].includes(group.type)) return false;
-        
+
         return true;
     });
 }

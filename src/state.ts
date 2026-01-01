@@ -1,4 +1,3 @@
-// src/state.ts
 import { AppState, ReaderSettings } from './types/state';
 
 import { logger } from './utils/logger';
@@ -68,7 +67,7 @@ export function saveWhitelist(whitelist: string) {
 }
 
 export function loadWhitelist(): string {
-    return localStorage.getItem(WHITELIST_KEY) || '';
+  return localStorage.getItem(WHITELIST_KEY) || '';
 }
 
 
@@ -78,11 +77,11 @@ export function saveReaderSettings() {
 }
 
 export function getReaderSettings(): ReaderSettings {
-    try {
-        const s = localStorage.getItem(READER_SETTINGS_KEY);
-        if (s) return JSON.parse(s);
-    } catch (e) {
-        logger.error("Failed to load reader settings", e);
-    }
-    return { fontSize: 1.25, fontFamily: "serif" };
+  try {
+    const s = localStorage.getItem(READER_SETTINGS_KEY);
+    if (s) return JSON.parse(s);
+  } catch (e) {
+    logger.error("Failed to load reader settings", e);
+  }
+  return { fontSize: 1.25, fontFamily: "serif" };
 }

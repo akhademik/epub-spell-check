@@ -1,4 +1,3 @@
-// src/constants.ts
 
 export const DEBOUNCE_DELAY_MS = 500;
 export const FILE_SIZE_LIMIT_MB = 1;
@@ -16,7 +15,6 @@ export const CONTEXT_LENGTH_CHARS = 60; // Characters before and after target wo
 export const MAX_TOASTS_DISPLAYED = 3;
 export const TOAST_AUTO_DISMISS_MS = 3000;
 
-// UI Class Names
 export const HIDDEN_CLASS = 'hidden';
 export const FLEX_CLASS_VISIBLE = ['flex', 'items-end', 'justify-between', 'mb-4'];
 export const RESULTS_SECTION_VISIBLE = ['flex', 'flex-col', 'gap-6'];

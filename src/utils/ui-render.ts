@@ -1,4 +1,3 @@
-// src/utils/ui-render.ts
 import { ErrorGroup } from "../types/errors";
 import { UIElements } from "../types/ui";
 import { logger } from "./logger";
@@ -12,7 +11,7 @@ const activeToasts: HTMLElement[] = [];
 
 export function updateProgress(ui: UIElements, percentage: number, message: string) {
     const roundedPercentage = Math.round(percentage);
-    // logger.log(`Progress: ${roundedPercentage}% - ${message}`); // Too noisy for console
+
     ui.progressBar?.style.setProperty('width', roundedPercentage + '%');
     if (ui.progressPercent) ui.progressPercent.innerText = roundedPercentage + '%';
     if (ui.statusText) ui.statusText.innerText = message;
@@ -29,36 +28,34 @@ const COLOR_PALETTE = [
     { dot: "bg-teal-500", text: "text-teal-400", bg: "bg-teal-500/20", border: "border-teal-500" },      // 7: Teal
 ];
 
-// Explicit mapping for fixed error colors
 const FIXED_ERROR_COLORS: Record<string, number> = {
     'Dictionary': 1,  // Red
     'Typo': 0,        // Blue
     'Foreign': 2,     // Green
     'Uppercase': 3,   // Yellow
-    'Tone': 4,        // Indigo (next available)
-    'Spelling': 5,    // Purple (next available)
+    'Tone': 4,        // Indigo 
+    'Spelling': 5,    // Purple 
 };
 
 function getErrorHighlights(type: string): { dot: string; text: string; bg: string; border: string } {
     if (!type || !Object.prototype.hasOwnProperty.call(FIXED_ERROR_COLORS, type)) {
-        // Fallback or default color if type is unknown
-        return COLOR_PALETTE[COLOR_PALETTE.length - 1]; // Use last color as default/fallback
+        return COLOR_PALETTE[COLOR_PALETTE.length - 1];
     }
 
     return COLOR_PALETTE[FIXED_ERROR_COLORS[type]];
 }
 
 function getContext(text: string, index: number, length: number) {
-    const contextLength = CONTEXT_LENGTH_CHARS; // Characters before and after
+    const contextLength = CONTEXT_LENGTH_CHARS;
     const start = Math.max(0, index - contextLength);
     const end = Math.min(text.length, index + length + contextLength);
 
     let prefix = text.substring(start, index);
     let suffix = text.substring(index + length, end);
 
-    if (start > 0) prefix = "..." + prefix;
-    if (end < text.length) suffix = suffix + "...";
-    
+    if (start > 0) prefix = "... " + prefix;
+    if (end < text.length) suffix = suffix + " ...";
+
     return {
         prefix: prefix,
         target: text.substr(index, length),
@@ -72,7 +69,6 @@ function escapeHtml(text: string): string {
     return d.innerHTML;
 }
 
-// --- Global Toast Management ---
 export function showToast(msg: string) {
     const toastContainer = document.getElementById("toast-container");
     if (!toastContainer) {
@@ -84,31 +80,26 @@ export function showToast(msg: string) {
     n.className =
         "toast-item relative px-4 py-3 rounded-lg shadow-xl z-[70] text-sm font-medium flex items-center gap-2 mt-2 " +
         "bg-slate-800 text-green-400 border border-slate-700 " +
-        "transition-all duration-500 ease-out transform translate-y-full opacity-0"; // Initial state for animation
+        "transition-all duration-500 ease-out transform translate-y-full opacity-0";
     n.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span>${msg}</span>`;
 
-    // Add new toast to the top of the container (visually at the bottom)
     toastContainer.prepend(n);
     activeToasts.push(n);
 
-    // Animate in
     requestAnimationFrame(() => {
         n.classList.remove("translate-y-full", "opacity-0");
     });
 
-    // Enforce max toasts limit
     if (activeToasts.length > MAX_TOASTS_DISPLAYED) {
-        const oldestToast = activeToasts.shift(); // Remove oldest from array
-        oldestToast?.classList.add("opacity-0"); // Start fade out
+        const oldestToast = activeToasts.shift();
+        oldestToast?.classList.add("opacity-0");
         oldestToast?.addEventListener("transitionend", () => oldestToast.remove(), { once: true });
     }
 
-    // Auto-dismiss after 3 seconds
     setTimeout(() => {
-        n.classList.add("opacity-0", "translate-y-full"); // Fade out and slide down
+        n.classList.add("opacity-0", "translate-y-full");
         n.addEventListener("transitionend", () => {
             n.remove();
-            // Remove from activeToasts if it hasn't been removed by the limit enforcement
             const index = activeToasts.indexOf(n);
             if (index > -1) {
                 activeToasts.splice(index, 1);
@@ -143,7 +134,6 @@ export function copyToClipboard(text: string) {
     }
 }
 
-// --- Main Rendering Functions ---
 
 export function updateStats(ui: UIElements, totalWords: number, totalErrors: number, totalGroups: number) {
     const statWords = ui.metaTitle?.ownerDocument.getElementById("stat-total-words");
@@ -164,8 +154,8 @@ export function renderErrorList(
         logger.error("UI element #error-list not found.");
         return;
     }
-    
-    errorList.innerHTML = ""; 
+
+    errorList.innerHTML = "";
 
     if (groups.length === 0) {
         errorList.innerHTML = `
@@ -194,17 +184,16 @@ export function renderErrorList(
         const buttonContainer = clone.querySelector("div") as HTMLElement;
         if (buttonContainer) {
             buttonContainer.dataset.groupId = group.id;
-            buttonContainer.dataset.groupWord = group.word; // Add word to container
+            buttonContainer.dataset.groupWord = group.word;
         }
 
 
         if (wordEl) wordEl.textContent = group.word;
         if (reasonEl) reasonEl.textContent = group.reason;
         if (countEl) countEl.textContent = String(group.contexts.length);
-        
+
         const style = getErrorHighlights(group.type);
         dotEl?.classList.add(style.dot);
-        // Removed individual onclick assignments for selectBtn and ignoreBtn
         errorList.appendChild(clone);
     });
 }
@@ -213,11 +202,11 @@ export function renderContextView(
     ui: UIElements,
     group: ErrorGroup,
     instanceIndex: number,
-    dictionaries: Dictionaries 
+    dictionaries: Dictionaries
 ) {
     const contextView = ui.metaTitle?.ownerDocument.getElementById("context-view");
     const navIndicator = ui.metaTitle?.ownerDocument.getElementById("nav-indicator");
-    const contextNavControls = ui.contextNavControls; // Use the new UI reference
+    const contextNavControls = ui.contextNavControls;
 
     if (!contextView || !navIndicator || !contextNavControls) {
         logger.error("Context view UI elements not found.");
@@ -228,25 +217,24 @@ export function renderContextView(
     const { prefix, target, suffix } = getContext(context.context.originalParagraph, context.context.matchIndex, group.word.length);
     const style = getErrorHighlights(group.type);
 
-    const suggestions = findSuggestions(group.word, dictionaries); // Call findSuggestions
+    const suggestions = findSuggestions(group.word, dictionaries);
     const suggHTML = suggestions.length > 0
         ? `<div class="mt-4 flex flex-wrap justify-center gap-2"><span class="text-sm text-slate-400 mr-1 self-center">Có thể là từ:</span>${suggestions
-              .map(
-                  (s) =>
-                      `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm">${s}</span>`
-              )
-              .join("")}</div>`
+            .map(
+                (s) =>
+                    `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-sm">${s}</span>`
+            )
+            .join("")}</div>`
         : "";
 
     contextView.innerHTML = `
         <div class="max-w-2xl text-center w-full animate-fadeIn">
             <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative">
                 <div class="reader-content">
-                    ${escapeHtml(prefix)}<span class="rounded ${style.bg} ${
-                style.text
-            } px-1 py-0.5 font-bold">${escapeHtml(target)}</span>${escapeHtml(
-                suffix
-            )}
+                    ${escapeHtml(prefix)}<span class="rounded ${style.bg} ${style.text
+        } px-1 py-0.5 font-bold">${escapeHtml(target)}</span>${escapeHtml(
+            suffix
+        )}
                 </div>
             </div>
             <div class="mt-8 flex flex-col items-center justify-center gap-4">

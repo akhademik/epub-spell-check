@@ -1,4 +1,3 @@
-// src/types/dictionary.d.ts
 
 export type Dictionary = Set<string>;
 

@@ -1,4 +1,3 @@
-// src/main.ts
 import './style.css';
 import { loadDictionaries } from './utils/dictionary';
 import { logger } from './utils/logger';
@@ -47,57 +46,57 @@ const handleGlobalKeydown = (e: KeyboardEvent) => {
 
 // --- 2. DOM ELEMENTS & STATE ---
 const UI: UIElements = {
-  dictStatus: document.getElementById("dict-status"),
-  dictDot: document.getElementById("dict-dot"),
-  dictText: document.getElementById("dict-text"),
-  fileInput: document.getElementById("file-input") as HTMLInputElement,
-  uploadSection: document.getElementById("upload-section"),
-  processingUi: document.getElementById("processing-ui"),
-  progressBar: document.getElementById("progress-bar"),
-  progressPercent: document.getElementById("progress-percent"),
-  statusText: document.getElementById("status-text"),
-  resetBtn: document.getElementById("reset-btn"),
-  exportBtn: document.getElementById("export-btn"),
-  loadingOverlay: document.getElementById("loading-overlay"),
-  processingUiHeader: document.getElementById("processing-ui-header"),
-  
-  metaTitle: document.getElementById("meta-title"),
-  metaAuthor: document.getElementById("meta-author"),
-  metaCover: document.getElementById("meta-cover") as HTMLImageElement,
-  metaCoverPlaceholder: document.getElementById("meta-cover-placeholder"),
+    dictStatus: document.getElementById("dict-status"),
+    dictDot: document.getElementById("dict-dot"),
+    dictText: document.getElementById("dict-text"),
+    fileInput: document.getElementById("file-input") as HTMLInputElement,
+    uploadSection: document.getElementById("upload-section"),
+    processingUi: document.getElementById("processing-ui"),
+    progressBar: document.getElementById("progress-bar"),
+    progressPercent: document.getElementById("progress-percent"),
+    statusText: document.getElementById("status-text"),
+    resetBtn: document.getElementById("reset-btn"),
+    exportBtn: document.getElementById("export-btn"),
+    loadingOverlay: document.getElementById("loading-overlay"),
+    processingUiHeader: document.getElementById("processing-ui-header"),
 
-  settingsBtn: document.getElementById("settings-btn"),
-  settingsModal: document.getElementById("settings-modal"),
-  closeSettingsBtn: document.getElementById("close-settings-btn"),
-  
-  helpBtn: document.getElementById("help-btn"),
-  helpModal: document.getElementById("help-modal"),
-  helpModalContent: document.getElementById("help-modal-content"),
-  closeHelpBtn: document.getElementById("close-help-btn"),
+    metaTitle: document.getElementById("meta-title"),
+    metaAuthor: document.getElementById("meta-author"),
+    metaCover: document.getElementById("meta-cover") as HTMLImageElement,
+    metaCoverPlaceholder: document.getElementById("meta-cover-placeholder"),
 
-  exportModal: document.getElementById("export-modal"),
-  closeExportBtn: document.getElementById("close-export-btn"),
-  exportVctveBtn: document.getElementById("export-vctve-btn"),
-  exportNormalBtn: document.getElementById("export-normal-btn"),
+    settingsBtn: document.getElementById("settings-btn"),
+    settingsModal: document.getElementById("settings-modal"),
+    closeSettingsBtn: document.getElementById("close-settings-btn"),
 
-  fontToggleBtn: document.getElementById("font-toggle-btn"),
-  sizeUpBtn: document.getElementById("size-up-btn"),
-  sizeDownBtn: document.getElementById("size-down-btn"),
-  contextNavControls: document.getElementById("context-nav-controls"), // New reference
+    helpBtn: document.getElementById("help-btn"),
+    helpModal: document.getElementById("help-modal"),
+    helpModalContent: document.getElementById("help-modal-content"),
+    closeHelpBtn: document.getElementById("close-help-btn"),
 
-  settingToggles: {
-      dict: document.getElementById("set-dict") as HTMLInputElement,
-      case: document.getElementById("set-case") as HTMLInputElement,
-      tone: document.getElementById("set-tone") as HTMLInputElement,
-      struct: document.getElementById("set-struct") as HTMLInputElement,
-  },
-  whitelistInput: document.getElementById("whitelist-input") as HTMLTextAreaElement,
-  importWhitelistBtn: document.getElementById("import-whitelist-btn"),
-  exportWhitelistBtn: document.getElementById("export-whitelist-btn"),
-  whitelistImportFile: document.getElementById("whitelist-import-file") as HTMLInputElement,
-  engFilterCheckbox: document.getElementById("eng-filter-checkbox") as HTMLInputElement,
-  engLoading: document.getElementById("eng-loading"), // Add engLoading here
-  resultsSection: document.getElementById("results-section"), 
+    exportModal: document.getElementById("export-modal"),
+    closeExportBtn: document.getElementById("close-export-btn"),
+    exportVctveBtn: document.getElementById("export-vctve-btn"),
+    exportNormalBtn: document.getElementById("export-normal-btn"),
+
+    fontToggleBtn: document.getElementById("font-toggle-btn"),
+    sizeUpBtn: document.getElementById("size-up-btn"),
+    sizeDownBtn: document.getElementById("size-down-btn"),
+    contextNavControls: document.getElementById("context-nav-controls"),
+
+    settingToggles: {
+        dict: document.getElementById("set-dict") as HTMLInputElement,
+        case: document.getElementById("set-case") as HTMLInputElement,
+        tone: document.getElementById("set-tone") as HTMLInputElement,
+        struct: document.getElementById("set-struct") as HTMLInputElement,
+    },
+    whitelistInput: document.getElementById("whitelist-input") as HTMLTextAreaElement,
+    importWhitelistBtn: document.getElementById("import-whitelist-btn"),
+    exportWhitelistBtn: document.getElementById("export-whitelist-btn"),
+    whitelistImportFile: document.getElementById("whitelist-import-file") as HTMLInputElement,
+    engFilterCheckbox: document.getElementById("eng-filter-checkbox") as HTMLInputElement,
+    engLoading: document.getElementById("eng-loading"),
+    resultsSection: document.getElementById("results-section"),
 };
 
 
@@ -124,7 +123,7 @@ function selectNextError(wordToIgnoreId: string, originalIndex: number) {
             targetIndex = Math.min(originalIndex, state.currentFilteredErrors.length - 1);
             if (targetIndex < 0) targetIndex = 0;
         }
-        
+
         const nextGroup = state.currentFilteredErrors[targetIndex];
         const nextElementInList = errorList?.querySelector(`[data-group-id="${nextGroup.id}"]`) as HTMLElement | null;
         if (nextElementInList) {
@@ -145,7 +144,7 @@ function quickIgnore() {
     const wordToIgnore = state.currentGroup.word;
     const wordToIgnoreId = state.currentGroup.id;
     const originalIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === wordToIgnoreId);
-    
+
     if (updateWhitelist(wordToIgnore)) {
         updateAndRenderErrors();
         selectNextError(wordToIgnoreId, originalIndex);
@@ -154,7 +153,7 @@ function quickIgnore() {
 
 function updateWhitelist(word: string): boolean {
     if (!UI.whitelistInput) return false;
-    
+
     const { display, check } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
 
     if (check.has(word.toLowerCase())) {
@@ -168,7 +167,7 @@ function updateWhitelist(word: string): boolean {
     return true;
 }
 
-function quickIgnoreWordFromList(word: string) { // Renamed original quickIgnore to avoid confusion and for specific use case
+function quickIgnoreWordFromList(word: string) {
     if (updateWhitelist(word)) {
         updateAndRenderErrors();
     }
@@ -206,7 +205,7 @@ function handleImportWhitelist(event: Event) {
         return;
     }
 
-    if (file.size > FILE_SIZE_LIMIT_BYTES) { // 1MB limit
+    if (file.size > FILE_SIZE_LIMIT_BYTES) {
         showToast("Lỗi: Kích thước tệp không được vượt quá 1MB", "error");
         fileInput.value = '';
         return;
@@ -215,7 +214,7 @@ function handleImportWhitelist(event: Event) {
     const reader = new FileReader();
     reader.onload = (e) => {
         const newContent = e.target?.result as string;
-        
+
         const { display: importedDisplay } = parseWhitelistWithOriginalCase(newContent);
 
         if (importedDisplay.length > WHITELIST_WORD_COUNT_LIMIT) {
@@ -244,7 +243,7 @@ function handleImportWhitelist(event: Event) {
 
         const currentContent = UI.whitelistInput!.value;
         const { display: currentDisplay } = parseWhitelistWithOriginalCase(currentContent);
-        
+
         const finalWhitelistMap = new Map<string, string>();
 
         for (const word of currentDisplay) {
@@ -254,14 +253,13 @@ function handleImportWhitelist(event: Event) {
         for (const word of validWords) {
             finalWhitelistMap.set(word.toLowerCase(), word);
         }
-        
+
         const finalDisplay = Array.from(finalWhitelistMap.values());
 
         updateUIWhitelistInput(UI, finalDisplay.join(", ") + (finalDisplay.length > 0 ? ", " : ""));
         saveWhitelist(UI.whitelistInput!.value);
         updateAndRenderErrors();
 
-        // Reset file input to allow re-importing the same file
         fileInput.value = '';
     };
     reader.readAsText(file);
@@ -284,9 +282,9 @@ function updateAndRenderErrors() {
     );
 
     const totalErrorInstances = state.currentFilteredErrors.reduce((_acc: number, _g: ErrorGroup) => _acc + _g.contexts.length, 0);
-    
+
     updateStats(UI, state.totalWords, totalErrorInstances, state.currentFilteredErrors.length);
-    renderErrorList(UI, state.currentFilteredErrors); // Removed selectGroup and quickIgnoreWordFromList
+    renderErrorList(UI, state.currentFilteredErrors);
 }
 
 // --- Settings Logic ---
@@ -295,15 +293,13 @@ function saveSettings() {
         dictionary: UI.settingToggles.dict?.checked ?? true,
         uppercase: UI.settingToggles.case?.checked ?? true,
         tone: UI.settingToggles.tone?.checked ?? true,
-        foreign: UI.settingToggles.struct?.checked ?? true, // This now controls multiple rule types
+        foreign: UI.settingToggles.struct?.checked ?? true,
     };
     saveCheckSettings();
-    
-    // Instead of re-analyzing, just filter and re-render
+
     if (state.loadedTextContent.length > 0) {
         showLoadingOverlay(UI);
-        
-        // Use a short timeout to allow the UI to update (e.g., show overlay) before filtering
+
         setTimeout(() => {
             updateAndRenderErrors();
             hideLoadingOverlay(UI);
@@ -343,7 +339,7 @@ function performExport(type: 'vctve' | 'normal') {
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const fileName = state.currentBookTitle ? `loi-${sanitizeFilename(state.currentBookTitle)}.txt` : "loi-khong-ro-ten.txt";
-    
+
     const a = document.createElement("a");
     a.href = url;
     a.download = fileName;
@@ -351,7 +347,7 @@ function performExport(type: 'vctve' | 'normal') {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     closeModal(UI, 'export');
 }
 
@@ -372,10 +368,9 @@ function applyReaderStyles() {
 // --- UI Interaction Logic ---
 function navigateErrors(direction: 'up' | 'down') {
     if (state.currentFilteredErrors.length === 0) {
-        // If no errors, clear current group and context view
         state.currentGroup = null;
         const contextView = document.getElementById('context-view');
-        const contextNav = UI.contextNavControls; // Use the UI reference
+        const contextNav = UI.contextNavControls;
         if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
         contextNav?.classList.add('hidden');
         return;
@@ -385,18 +380,18 @@ function navigateErrors(direction: 'up' | 'down') {
     if (state.currentGroup) {
         currentIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === state.currentGroup?.id);
     }
-    
+
     let nextIndex;
 
     if (direction === 'down') {
         if (currentIndex === -1 || currentIndex >= state.currentFilteredErrors.length - 1) {
-            nextIndex = 0; // Wrap around to the beginning or start from beginning if current not found
+            nextIndex = 0;
         } else {
             nextIndex = currentIndex + 1;
         }
-    } else { // direction === 'up'
+    } else {
         if (currentIndex === -1 || currentIndex === 0) {
-            nextIndex = state.currentFilteredErrors.length - 1; // Wrap around to the end or start from end if current not found
+            nextIndex = state.currentFilteredErrors.length - 1;
         } else {
             nextIndex = currentIndex - 1;
         }
@@ -415,16 +410,13 @@ function navigateErrors(direction: 'up' | 'down') {
 }
 
 function selectGroup(group: ErrorGroup, element: HTMLElement) {
-    // If there was a previously selected element, remove its styling
     state.selectedErrorElement?.classList.remove('bg-blue-900/30', 'border-blue-700/50', 'ring-1', 'ring-blue-500/50');
 
     state.currentGroup = group;
     state.currentInstanceIndex = 0;
-    
-    // Apply styling to the newly selected element
+
     element.classList.add('bg-blue-900/30', 'border-blue-700/50', 'ring-1', 'ring-blue-500/50');
-    
-    // Update the state with the newly selected element
+
     state.selectedErrorElement = element;
     renderContextView(UI, group, state.currentInstanceIndex, state.dictionaries);
     updateNavButtons();
@@ -461,35 +453,35 @@ function navigateInstance(direction: 'prev' | 'next') {
 }
 
 function resetApp() {
-  hideProcessingUI(UI); // Centralized hiding of processing UI, results, and action buttons.
-  if (UI.fileInput) UI.fileInput.value = "";
-  if (UI.whitelistImportFile) UI.whitelistImportFile.value = "";
-  if (UI.engFilterCheckbox) UI.engFilterCheckbox.checked = false;
-  
-  resetState();
+    hideProcessingUI(UI);
+    if (UI.fileInput) UI.fileInput.value = "";
+    if (UI.whitelistImportFile) UI.whitelistImportFile.value = "";
+    if (UI.engFilterCheckbox) UI.engFilterCheckbox.checked = false;
 
-  if (state.currentCoverUrl) {
-    URL.revokeObjectURL(state.currentCoverUrl);
-    state.currentCoverUrl = null;
-  }
-  const errorList = document.getElementById('error-list');
-  const contextView = document.getElementById('context-view');
-  const contextNav = document.getElementById('context-nav-controls');
-  if (errorList) errorList.innerHTML = '';
-  if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
-  contextNav?.classList.add('hidden');
-  if (UI.metaTitle) UI.metaTitle.innerText = "Đang tải...";
-  if (UI.metaAuthor) UI.metaAuthor.innerText = "Đang tải...";
-  if (UI.metaCover) {
-      UI.metaCover.src = "";
-      UI.metaCover.classList.add("hidden");
-  }
-  UI.metaCoverPlaceholder?.classList.remove("hidden");
-  UI.dictStatus?.classList.add("hidden");
-  UI.dictStatus?.classList.remove("md:flex", "items-center", "gap-3");
-  updateStats(UI, 0,0,0);
-  logger.log('App reset.');
-  document.removeEventListener('keydown', handleGlobalKeydown);
+    resetState();
+
+    if (state.currentCoverUrl) {
+        URL.revokeObjectURL(state.currentCoverUrl);
+        state.currentCoverUrl = null;
+    }
+    const errorList = document.getElementById('error-list');
+    const contextView = document.getElementById('context-view');
+    const contextNav = document.getElementById('context-nav-controls');
+    if (errorList) errorList.innerHTML = '';
+    if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
+    contextNav?.classList.add('hidden');
+    if (UI.metaTitle) UI.metaTitle.innerText = "Đang tải...";
+    if (UI.metaAuthor) UI.metaAuthor.innerText = "Đang tải...";
+    if (UI.metaCover) {
+        UI.metaCover.src = "";
+        UI.metaCover.classList.add("hidden");
+    }
+    UI.metaCoverPlaceholder?.classList.remove("hidden");
+    UI.dictStatus?.classList.add("hidden");
+    UI.dictStatus?.classList.remove("md:flex", "items-center", "gap-3");
+    updateStats(UI, 0, 0, 0);
+    logger.log('App reset.');
+    document.removeEventListener('keydown', handleGlobalKeydown);
 }
 
 function closeAllModals() {
@@ -524,12 +516,12 @@ function updateBookMetadata(epubContent: EpubContent) {
 async function runAnalysis(epubContent: EpubContent) {
     const fullCheckSettings: CheckSettings = { dictionary: true, uppercase: true, tone: true, foreign: true };
     const { errors, totalWords } = await analyzeText(epubContent.textBlocks, state.dictionaries, fullCheckSettings, (p: number, m: string) => updateProgress(UI, p, m));
-    
+
     state.allDetectedErrors = groupErrors(errors);
     state.totalWords = totalWords;
-    
+
     updateProgress(UI, 100, 'Hoàn tất');
-    
+
     updateAndRenderErrors();
 
     if (state.currentFilteredErrors.length > 0) {
@@ -601,194 +593,180 @@ async function handleFile(file: File) {
     }
 }
 
-// --- 5. INITIALIZATION ---
-  document.addEventListener('DOMContentLoaded', async () => {
+// --- INITIALIZATION ---
+document.addEventListener('DOMContentLoaded', async () => {
     document.body.removeAttribute('hidden');
-    // Ensure elements that start hidden are indeed hidden after removing 'hidden' from HTML
     UI.exportBtn?.classList.add('hidden');
     UI.resetBtn?.classList.add('hidden');
     UI.dictStatus?.classList.add('hidden');
-    hideLoadingOverlay(UI); // Use helper for loading overlay
+    hideLoadingOverlay(UI);
     closeModal(UI, 'export');
     closeModal(UI, 'help');
     closeModal(UI, 'settings');
-    // Call hideProcessingUI which internally handles processingUi, processingUiHeader, resultsSection, etc.
-    hideProcessingUI(UI); 
+    hideProcessingUI(UI);
     UI.engLoading?.classList.add('hidden');
-   const { dictionaries, status } = await loadDictionaries(UI);  state.dictionaries = dictionaries;
-  state.dictionaryStatus = status;
-  logger.log('Dictionaries Loaded:', state.dictionaryStatus);
-  
-  loadStateFromLocalStorage();
+    const { dictionaries, status } = await loadDictionaries(UI); state.dictionaries = dictionaries;
+    state.dictionaryStatus = status;
+    logger.log('Dictionaries Loaded:', state.dictionaryStatus);
 
-  // Update UI from the loaded state
-  if(UI.settingToggles.dict) UI.settingToggles.dict.checked = state.checkSettings.dictionary;
-  if(UI.settingToggles.case) UI.settingToggles.case.checked = state.checkSettings.uppercase;
-  if(UI.settingToggles.tone) UI.settingToggles.tone.checked = state.checkSettings.tone;
-  if(UI.settingToggles.struct) UI.settingToggles.struct.checked = state.checkSettings.foreign;
-  updateUIWhitelistInput(UI, loadWhitelistFromState());
-  if(UI.engFilterCheckbox) UI.engFilterCheckbox.checked = state.isEngFilterEnabled;
-  applyReaderStyles();
+    loadStateFromLocalStorage();
 
-
-  // Event Listeners
-  UI.fileInput?.addEventListener('change', (e) => (e.target as HTMLInputElement).files?.[0] && handleFile((e.target as HTMLInputElement).files![0]));
-  UI.uploadSection?.addEventListener('click', () => UI.fileInput?.click());
-  UI.resetBtn?.addEventListener('click', resetApp);
-  
-  (document.getElementById("btn-prev") as HTMLButtonElement)?.addEventListener('click', () => navigateInstance('prev'));
-  (document.getElementById("btn-next") as HTMLButtonElement)?.addEventListener('click', () => navigateInstance('next'));
-
-  UI.settingsBtn?.addEventListener('click', () => { openModal(UI, 'settings'); });
-  UI.closeSettingsBtn?.addEventListener('click', () => { closeModal(UI, 'settings'); });
-
-  UI.helpBtn?.addEventListener('click', () => { openModal(UI, 'help'); });
-  UI.closeHelpBtn?.addEventListener('click', () => { closeModal(UI, 'help'); });
-
-  UI.exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); openModal(UI, 'export'); });
-  UI.closeExportBtn?.addEventListener('click', () => { closeModal(UI, 'export'); });
-  UI.exportVctveBtn?.addEventListener('click', () => performExport('vctve'));
-  UI.exportNormalBtn?.addEventListener('click', () => performExport('normal'));
-
-  UI.fontToggleBtn?.addEventListener('click', () => {
-    state.readerSettings.fontFamily = state.readerSettings.fontFamily === 'serif' ? 'sans-serif' : 'serif';
-    saveReaderSettings();
+    if (UI.settingToggles.dict) UI.settingToggles.dict.checked = state.checkSettings.dictionary;
+    if (UI.settingToggles.case) UI.settingToggles.case.checked = state.checkSettings.uppercase;
+    if (UI.settingToggles.tone) UI.settingToggles.tone.checked = state.checkSettings.tone;
+    if (UI.settingToggles.struct) UI.settingToggles.struct.checked = state.checkSettings.foreign;
+    updateUIWhitelistInput(UI, loadWhitelistFromState());
+    if (UI.engFilterCheckbox) UI.engFilterCheckbox.checked = state.isEngFilterEnabled;
     applyReaderStyles();
-  });
-  UI.sizeUpBtn?.addEventListener('click', () => {
-    if (state.readerSettings.fontSize < FONT_SIZE_MAX_REM) {
-      state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
-      saveReaderSettings();
-      applyReaderStyles();
-    }
-  });
-  UI.sizeDownBtn?.addEventListener('click', () => {
-    if (state.readerSettings.fontSize > FONT_SIZE_MIN_REM) {
-      state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
-      saveReaderSettings();
-      applyReaderStyles();
-    }
-  });
 
-  Object.values(UI.settingToggles).forEach((toggle: HTMLInputElement | null) => toggle?.addEventListener('change', saveSettings));
-  
-  UI.whitelistInput?.addEventListener('input', () => {
-      clearTimeout(debounceTimer);
-      debounceTimer = window.setTimeout(() => {
-          updateUIWhitelistInput(UI, UI.whitelistInput!.value);
-          updateAndRenderErrors();
-      }, DEBOUNCE_DELAY_MS);
-  });
-  UI.exportWhitelistBtn?.addEventListener('click', exportWhitelist);
-  UI.importWhitelistBtn?.addEventListener('click', () => UI.whitelistImportFile?.click());
-  UI.whitelistImportFile?.addEventListener('change', handleImportWhitelist);
 
-  UI.engFilterCheckbox?.addEventListener('change', () => {
-      state.isEngFilterEnabled = UI.engFilterCheckbox?.checked ?? false;
-      updateAndRenderErrors();
-  });
+    UI.fileInput?.addEventListener('change', (e) => (e.target as HTMLInputElement).files?.[0] && handleFile((e.target as HTMLInputElement).files![0]));
+    UI.uploadSection?.addEventListener('click', () => UI.fileInput?.click());
+    UI.resetBtn?.addEventListener('click', resetApp);
 
-  UI.uploadSection?.addEventListener('dragover', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.add('border-blue-500/50', 'bg-slate-800/50'); });
-  UI.uploadSection?.addEventListener('dragleave', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); });
-  UI.uploadSection?.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); if (e.dataTransfer?.files?.[0]) handleFile(e.dataTransfer.files[0]); });
+    (document.getElementById("btn-prev") as HTMLButtonElement)?.addEventListener('click', () => navigateInstance('prev'));
+    (document.getElementById("btn-next") as HTMLButtonElement)?.addEventListener('click', () => navigateInstance('next'));
 
-  const handleGlobalKeydown = (e: KeyboardEvent) => {
-      const activeElement = document.activeElement;
-      if (activeElement && ['TEXTAREA', 'INPUT'].includes(activeElement.tagName)) {
-          return;
-      }
+    UI.settingsBtn?.addEventListener('click', () => { openModal(UI, 'settings'); });
+    UI.closeSettingsBtn?.addEventListener('click', () => { closeModal(UI, 'settings'); });
 
-      if (state.currentFilteredErrors.length === 0) return;
+    UI.helpBtn?.addEventListener('click', () => { openModal(UI, 'help'); });
+    UI.closeHelpBtn?.addEventListener('click', () => { closeModal(UI, 'help'); });
 
-      switch (e.key) {
-          case 'ArrowDown':
-              e.preventDefault();
-              navigateErrors('down');
-              break;
-          case 'ArrowUp':
-              e.preventDefault();
-              navigateErrors('up');
-              break;
-          case 'Delete':
-          case 'i':
-              if (state.currentGroup) {
-                  e.preventDefault();
-                  quickIgnore();
-              }
-              break;
-      }
-  };
+    UI.exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); openModal(UI, 'export'); });
+    UI.closeExportBtn?.addEventListener('click', () => { closeModal(UI, 'export'); });
+    UI.exportVctveBtn?.addEventListener('click', () => performExport('vctve'));
+    UI.exportNormalBtn?.addEventListener('click', () => performExport('normal'));
 
-  // Keyboard navigation
-  document.addEventListener('keydown', handleGlobalKeydown);
-
-  // Event delegation for error list
-  const errorListElement = document.getElementById("error-list");
-  if (errorListElement) {
-    errorListElement.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-
-      // Check if a select button was clicked
-      const selectBtn = target.closest('.select-btn');
-      if (selectBtn) {
-        const errorItem = selectBtn.closest('[data-group-id]') as HTMLElement;
-        if (errorItem) {
-          const groupId = errorItem.dataset.groupId;
-          const group = state.currentFilteredErrors.find(g => g.id === groupId);
-          if (group) {
-            selectGroup(group, errorItem);
-            copyToClipboard(group.word);
-          }
-        }
-        return;
-      }
-
-      // Check if an ignore button was clicked
-      const ignoreBtn = target.closest('.ignore-btn');
-      if (ignoreBtn) {
-        e.stopPropagation();
-        const errorItem = ignoreBtn.closest('[data-group-id]') as HTMLElement;
-        if (errorItem) {
-          const groupId = errorItem.dataset.groupId; // Get groupId to find the group object
-          const group = state.currentFilteredErrors.find(g => g.id === groupId);
-          if (group && group.word) {
-            quickIgnoreWordFromList(group.word);
-          }
-        }
-        return;
-      }
-
-      // If the click is on the error item itself (not a button), treat it as a select
-      const errorItem = target.closest('[data-group-id]') as HTMLElement;
-      if (errorItem) {
-        const groupId = errorItem.dataset.groupId;
-        const group = state.currentFilteredErrors.find(g => g.id === groupId);
-        if (group) {
-            selectGroup(group, errorItem);
-            copyToClipboard(group.word);
-        }
-      }
+    UI.fontToggleBtn?.addEventListener('click', () => {
+        state.readerSettings.fontFamily = state.readerSettings.fontFamily === 'serif' ? 'sans-serif' : 'serif';
+        saveReaderSettings();
+        applyReaderStyles();
     });
-  }
+    UI.sizeUpBtn?.addEventListener('click', () => {
+        if (state.readerSettings.fontSize < FONT_SIZE_MAX_REM) {
+            state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
+            saveReaderSettings();
+            applyReaderStyles();
+        }
+    });
+    UI.sizeDownBtn?.addEventListener('click', () => {
+        if (state.readerSettings.fontSize > FONT_SIZE_MIN_REM) {
+            state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
+            saveReaderSettings();
+            applyReaderStyles();
+        }
+    });
 
-  // Global click handler to close modals when clicking outside
-  document.addEventListener('click', (e) => {
-      // Settings Modal
-      if (UI.settingsModal && !UI.settingsModal.contains(e.target as Node) && !UI.settingsBtn?.contains(e.target as Node)) {
-          closeModal(UI, 'settings');
-      }
-      // Help Modal
-      if (UI.helpModal && !UI.helpModalContent?.contains(e.target as Node) && !UI.helpBtn?.contains(e.target as Node)) {
-          closeModal(UI, 'help');
-      }
-      // Export Modal
-      if (UI.exportModal && !UI.exportModal.contains(e.target as Node) && !UI.exportBtn?.contains(e.target as Node)) {
-          closeModal(UI, 'export');
-      }
-  });
+    Object.values(UI.settingToggles).forEach((toggle: HTMLInputElement | null) => toggle?.addEventListener('change', saveSettings));
 
-  // Clear debounce timer on page unload
-  window.addEventListener('beforeunload', () => {
-    clearTimeout(debounceTimer);
-  });
+    UI.whitelistInput?.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = window.setTimeout(() => {
+            updateUIWhitelistInput(UI, UI.whitelistInput!.value);
+            updateAndRenderErrors();
+        }, DEBOUNCE_DELAY_MS);
+    });
+    UI.exportWhitelistBtn?.addEventListener('click', exportWhitelist);
+    UI.importWhitelistBtn?.addEventListener('click', () => UI.whitelistImportFile?.click());
+    UI.whitelistImportFile?.addEventListener('change', handleImportWhitelist);
+
+    UI.engFilterCheckbox?.addEventListener('change', () => {
+        state.isEngFilterEnabled = UI.engFilterCheckbox?.checked ?? false;
+        updateAndRenderErrors();
+    });
+
+    UI.uploadSection?.addEventListener('dragover', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.add('border-blue-500/50', 'bg-slate-800/50'); });
+    UI.uploadSection?.addEventListener('dragleave', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); });
+    UI.uploadSection?.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); if (e.dataTransfer?.files?.[0]) handleFile(e.dataTransfer.files[0]); });
+
+    const handleGlobalKeydown = (e: KeyboardEvent) => {
+        const activeElement = document.activeElement;
+        if (activeElement && ['TEXTAREA', 'INPUT'].includes(activeElement.tagName)) {
+            return;
+        }
+
+        if (state.currentFilteredErrors.length === 0) return;
+
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                navigateErrors('down');
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                navigateErrors('up');
+                break;
+            case 'Delete':
+            case 'i':
+                if (state.currentGroup) {
+                    e.preventDefault();
+                    quickIgnore();
+                }
+                break;
+        }
+    };
+
+    document.addEventListener('keydown', handleGlobalKeydown);
+
+    const errorListElement = document.getElementById("error-list");
+    if (errorListElement) {
+        errorListElement.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+
+            const selectBtn = target.closest('.select-btn');
+            if (selectBtn) {
+                const errorItem = selectBtn.closest('[data-group-id]') as HTMLElement;
+                if (errorItem) {
+                    const groupId = errorItem.dataset.groupId;
+                    const group = state.currentFilteredErrors.find(g => g.id === groupId);
+                    if (group) {
+                        selectGroup(group, errorItem);
+                        copyToClipboard(group.word);
+                    }
+                }
+                return;
+            }
+
+            const ignoreBtn = target.closest('.ignore-btn');
+            if (ignoreBtn) {
+                e.stopPropagation();
+                const errorItem = ignoreBtn.closest('[data-group-id]') as HTMLElement;
+                if (errorItem) {
+                    const groupId = errorItem.dataset.groupId;
+                    const group = state.currentFilteredErrors.find(g => g.id === groupId);
+                    if (group && group.word) {
+                        quickIgnoreWordFromList(group.word);
+                    }
+                }
+                return;
+            }
+
+            const errorItem = target.closest('[data-group-id]') as HTMLElement;
+            if (errorItem) {
+                const groupId = errorItem.dataset.groupId;
+                const group = state.currentFilteredErrors.find(g => g.id === groupId);
+                if (group) {
+                    selectGroup(group, errorItem);
+                    copyToClipboard(group.word);
+                }
+            }
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        if (UI.settingsModal && !UI.settingsModal.contains(e.target as Node) && !UI.settingsBtn?.contains(e.target as Node)) {
+            closeModal(UI, 'settings');
+        }
+        if (UI.helpModal && !UI.helpModalContent?.contains(e.target as Node) && !UI.helpBtn?.contains(e.target as Node)) {
+            closeModal(UI, 'help');
+        }
+        if (UI.exportModal && !UI.exportModal.contains(e.target as Node) && !UI.exportBtn?.contains(e.target as Node)) {
+            closeModal(UI, 'export');
+        }
+    });
+
+    window.addEventListener('beforeunload', () => {
+        clearTimeout(debounceTimer);
+    });
 });

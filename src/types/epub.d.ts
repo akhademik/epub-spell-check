@@ -1,4 +1,3 @@
-// src/types/epub.d.ts
 
 export interface BookMetadata {
   title: string;
@@ -8,7 +7,6 @@ export interface BookMetadata {
 
 export interface TextContentBlock {
   text: string;
-  // Potentially add more context like chapter, paragraph index, etc.
 }
 
 export interface EpubContent {

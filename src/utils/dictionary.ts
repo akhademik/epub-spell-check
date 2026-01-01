@@ -1,19 +1,17 @@
-// src/utils/dictionary.ts
 import { Dictionaries, DictionaryStatus } from '../types/dictionary';
 import { logger } from './logger';
 
 import { UIElements } from '../types/ui';
 
 
-// Helper to fetch dictionary content with local fallback
 async function fetchLocalDict(localFilename: string): Promise<string | null> {
   try {
     const localRes = await fetch(`/${localFilename}`);
     if (localRes.ok) {
       return await localRes.text();
     } else {
-        logger.warn(`Local file ${localFilename} not found, status: ${localRes.status}`);
-        return null; // Explicitly return null if local file not found
+      logger.warn(`Local file ${localFilename} not found, status: ${localRes.status}`);
+      return null;
     }
   } catch (e) {
     logger.error(`Failed to load local file ${localFilename}:`, e);
@@ -21,7 +19,7 @@ async function fetchLocalDict(localFilename: string): Promise<string | null> {
   }
 }
 
-// Load all dictionaries
+
 export async function loadDictionaries(ui: UIElements): Promise<{
   dictionaries: Dictionaries;
   status: DictionaryStatus;
@@ -47,9 +45,8 @@ export async function loadDictionaries(ui: UIElements): Promise<{
   ui.dictDot?.classList.add("bg-yellow-500", "animate-pulse");
 
   try {
-    // Show engLoading indicator when starting English dictionary fetch
     ui.engLoading?.classList.remove("hidden");
-    ui.engLoading?.classList.add("flex"); // Ensure flex is present for display
+    ui.engLoading?.classList.add("flex");
 
     const [vnRes, enRes, customRes] = await Promise.all([
       fetchLocalDict("vn-dict.txt"),
@@ -57,17 +54,14 @@ export async function loadDictionaries(ui: UIElements): Promise<{
       fetchLocalDict("custom-dict.txt"),
     ]);
 
-    // Hide engLoading indicator once English dictionary fetch is complete
     ui.engLoading?.classList.add("hidden");
     ui.engLoading?.classList.remove("flex");
-
 
     // Process Vietnamese Dictionary
     if (vnRes) {
       vnRes.split("\n").forEach((line) => {
         let word = line.trim();
         if (!word) return;
-        // Handle potential JSON format {text: "word"}
         if (word.startsWith("{") && word.endsWith("}")) {
           try {
             word = JSON.parse(word).text;
@@ -78,7 +72,6 @@ export async function loadDictionaries(ui: UIElements): Promise<{
           cleanWord.split(/\s+/).forEach((p) => dictionaries.vietnamese.add(p));
         }
       });
-      // Add common Vietnamese words/pronouns from sample.htm
       [
         "kỹ", "mỹ", "kì", "lí", "qui", "có", "hắn", "y", "gã", "thị",
         "nó", "ta", "ngươi", "chư", "mỗ", "tại", "bị", "bởi", "chăng",
@@ -107,7 +100,6 @@ export async function loadDictionaries(ui: UIElements): Promise<{
       status.customWordCount = dictionaries.custom.size;
     }
 
-    // Update UI
     ui.dictDot?.classList.remove("bg-yellow-500", "animate-pulse");
     if (status.isVietnameseLoaded) {
       ui.dictDot?.classList.add("bg-green-500");
