@@ -13,7 +13,7 @@ const activeToasts: HTMLElement[] = [];
 export function updateProgress(ui: UIElements, percentage: number, message: string) {
     const roundedPercentage = Math.round(percentage);
     // logger.log(`Progress: ${roundedPercentage}% - ${message}`); // Too noisy for console
-    if (ui.progressBar) ui.progressBar.style.width = roundedPercentage + '%';
+    ui.progressBar?.style.setProperty('width', roundedPercentage + '%');
     if (ui.progressPercent) ui.progressPercent.innerText = roundedPercentage + '%';
     if (ui.statusText) ui.statusText.innerText = message;
 }
@@ -99,10 +99,8 @@ export function showToast(msg: string) {
     // Enforce max toasts limit
     if (activeToasts.length > MAX_TOASTS_DISPLAYED) {
         const oldestToast = activeToasts.shift(); // Remove oldest from array
-        if (oldestToast) {
-            oldestToast.classList.add("opacity-0"); // Start fade out
-            oldestToast.addEventListener("transitionend", () => oldestToast.remove(), { once: true });
-        }
+        oldestToast?.classList.add("opacity-0"); // Start fade out
+        oldestToast?.addEventListener("transitionend", () => oldestToast.remove(), { once: true });
     }
 
     // Auto-dismiss after 3 seconds
@@ -204,10 +202,8 @@ export function renderErrorList(
         if (reasonEl) reasonEl.textContent = group.reason;
         if (countEl) countEl.textContent = String(group.contexts.length);
         
-        if (dotEl) {
-            const style = getErrorHighlights(group.type);
-            dotEl.classList.add(style.dot);
-        }
+        const style = getErrorHighlights(group.type);
+        dotEl?.classList.add(style.dot);
         // Removed individual onclick assignments for selectBtn and ignoreBtn
         errorList.appendChild(clone);
     });

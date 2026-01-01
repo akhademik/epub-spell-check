@@ -7,12 +7,10 @@ import { HIDDEN_CLASS, BUTTON_VISIBLE, FLEX_CLASS_VISIBLE, RESULTS_SECTION_VISIB
  * @param ui The UIElements object.
  */
 export function showProcessingUI(ui: UIElements) {
-    if (ui.uploadSection) ui.uploadSection.classList.add(HIDDEN_CLASS);
-    if (ui.processingUi) ui.processingUi.classList.remove(HIDDEN_CLASS);
-    if (ui.processingUiHeader) {
-        ui.processingUiHeader.classList.remove(HIDDEN_CLASS);
-        ui.processingUiHeader.classList.add(...FLEX_CLASS_VISIBLE);
-    }
+    ui.uploadSection?.classList.add(HIDDEN_CLASS);
+    ui.processingUi?.classList.remove(HIDDEN_CLASS);
+    ui.processingUiHeader?.classList.remove(HIDDEN_CLASS);
+    ui.processingUiHeader?.classList.add(...FLEX_CLASS_VISIBLE);
 }
 
 /**
@@ -21,25 +19,17 @@ export function showProcessingUI(ui: UIElements) {
  * @param ui The UIElements object.
  */
 export function hideProcessingUI(ui: UIElements) {
-    if (ui.processingUi) ui.processingUi.classList.add(HIDDEN_CLASS);
-    if (ui.processingUiHeader) {
-        ui.processingUiHeader.classList.remove(...FLEX_CLASS_VISIBLE);
-        ui.processingUiHeader.classList.add(HIDDEN_CLASS);
-    }
+    ui.processingUi?.classList.add(HIDDEN_CLASS);
+    ui.processingUiHeader?.classList.remove(...FLEX_CLASS_VISIBLE);
+    ui.processingUiHeader?.classList.add(HIDDEN_CLASS);
     // These are reset related, but directly tied to processing/results view
-    if (ui.resultsSection) {
-        ui.resultsSection.classList.remove(...RESULTS_SECTION_VISIBLE);
-        ui.resultsSection.classList.add(HIDDEN_CLASS);
-    }
-    if (ui.resetBtn) {
-        ui.resetBtn.classList.remove(...BUTTON_VISIBLE);
-        ui.resetBtn.classList.add(HIDDEN_CLASS);
-    }
-    if (ui.exportBtn) {
-        ui.exportBtn.classList.remove(...BUTTON_VISIBLE);
-        ui.exportBtn.classList.add(HIDDEN_CLASS);
-    }
-    if (ui.uploadSection) ui.uploadSection.classList.remove(HIDDEN_CLASS); // Show upload again
+    ui.resultsSection?.classList.remove(...RESULTS_SECTION_VISIBLE);
+    ui.resultsSection?.classList.add(HIDDEN_CLASS);
+    ui.resetBtn?.classList.remove(...BUTTON_VISIBLE);
+    ui.resetBtn?.classList.add(HIDDEN_CLASS);
+    ui.exportBtn?.classList.remove(...BUTTON_VISIBLE);
+    ui.exportBtn?.classList.add(HIDDEN_CLASS);
+    ui.uploadSection?.classList.remove(HIDDEN_CLASS); // Show upload again
 }
 
 /**
@@ -47,18 +37,12 @@ export function hideProcessingUI(ui: UIElements) {
  * @param ui The UIElements object.
  */
 export function showResultsUI(ui: UIElements) {
-    if (ui.resultsSection) {
-        ui.resultsSection.classList.remove(HIDDEN_CLASS);
-        ui.resultsSection.classList.add(...RESULTS_SECTION_VISIBLE);
-    }
-    if (ui.resetBtn) {
-        ui.resetBtn.classList.remove(HIDDEN_CLASS);
-        ui.resetBtn.classList.add(...BUTTON_VISIBLE);
-    }
-    if (ui.exportBtn) {
-        ui.exportBtn.classList.remove(HIDDEN_CLASS);
-        ui.exportBtn.classList.add(...BUTTON_VISIBLE);
-    }
+    ui.resultsSection?.classList.remove(HIDDEN_CLASS);
+    ui.resultsSection?.classList.add(...RESULTS_SECTION_VISIBLE);
+    ui.resetBtn?.classList.remove(HIDDEN_CLASS);
+    ui.resetBtn?.classList.add(...BUTTON_VISIBLE);
+    ui.exportBtn?.classList.remove(HIDDEN_CLASS);
+    ui.exportBtn?.classList.add(...BUTTON_VISIBLE);
 }
 
 /**
@@ -66,10 +50,8 @@ export function showResultsUI(ui: UIElements) {
  * @param ui The UIElements object.
  */
 export function showLoadingOverlay(ui: UIElements) {
-    if (ui.loadingOverlay) {
-        ui.loadingOverlay.classList.remove(HIDDEN_CLASS);
-        ui.loadingOverlay.classList.add(...OVERLAY_VISIBLE);
-    }
+    ui.loadingOverlay?.classList.remove(HIDDEN_CLASS);
+    ui.loadingOverlay?.classList.add(...OVERLAY_VISIBLE);
 }
 
 /**
@@ -77,8 +59,6 @@ export function showLoadingOverlay(ui: UIElements) {
  * @param ui The UIElements object.
  */
 export function hideLoadingOverlay(ui: UIElements) {
-    if (ui.loadingOverlay) {
-        ui.loadingOverlay.classList.remove(...OVERLAY_VISIBLE);
-        ui.loadingOverlay.classList.add(HIDDEN_CLASS);
-    }
+    ui.loadingOverlay?.classList.remove(...OVERLAY_VISIBLE);
+    ui.loadingOverlay?.classList.add(HIDDEN_CLASS);
 }

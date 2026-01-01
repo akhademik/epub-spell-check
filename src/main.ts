@@ -107,7 +107,7 @@ function clearContextView() {
     const contextView = document.getElementById('context-view');
     const contextNav = document.getElementById('context-nav');
     if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
-    if (contextNav) contextNav.classList.add('hidden');
+    contextNav?.classList.add('hidden');
     state.currentGroup = null;
 }
 
@@ -323,7 +323,7 @@ function sanitizeFilename(name: string): string {
         .toLowerCase()
         .trim();
     // eslint-disable-next-line no-control-regex
-    return sanitized.replace(/[ -]/g, "");
+    return sanitized.replace(/[\u0000-\u001F]/g, "");
 }
 
 function performExport(type: 'vctve' | 'normal') {
@@ -377,7 +377,7 @@ function navigateErrors(direction: 'up' | 'down') {
         const contextView = document.getElementById('context-view');
         const contextNav = UI.contextNavControls; // Use the UI reference
         if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
-        if (contextNav) contextNav.classList.add('hidden');
+        contextNav?.classList.add('hidden');
         return;
     }
 
@@ -408,7 +408,7 @@ function navigateErrors(direction: 'up' | 'down') {
         const nextElement = errorList?.querySelector(`[data-group-id="${nextGroup.id}"]`) as HTMLElement;
         if (nextElement) {
             const selectBtn = nextElement.querySelector('.select-btn') as HTMLButtonElement;
-            if(selectBtn) selectBtn.click();
+            selectBtn?.click();
             nextElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
     }
@@ -416,9 +416,7 @@ function navigateErrors(direction: 'up' | 'down') {
 
 function selectGroup(group: ErrorGroup, element: HTMLElement) {
     // If there was a previously selected element, remove its styling
-    if (state.selectedErrorElement) {
-        state.selectedErrorElement.classList.remove('bg-blue-900/30', 'border-blue-700/50', 'ring-1', 'ring-blue-500/50');
-    }
+    state.selectedErrorElement?.classList.remove('bg-blue-900/30', 'border-blue-700/50', 'ring-1', 'ring-blue-500/50');
 
     state.currentGroup = group;
     state.currentInstanceIndex = 0;
@@ -479,15 +477,16 @@ function resetApp() {
   const contextNav = document.getElementById('context-nav-controls');
   if (errorList) errorList.innerHTML = '';
   if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
-  if (contextNav) contextNav.classList.add('hidden');
+  contextNav?.classList.add('hidden');
   if (UI.metaTitle) UI.metaTitle.innerText = "Đang tải...";
   if (UI.metaAuthor) UI.metaAuthor.innerText = "Đang tải...";
   if (UI.metaCover) {
       UI.metaCover.src = "";
       UI.metaCover.classList.add("hidden");
   }
-  if (UI.metaCoverPlaceholder) UI.metaCoverPlaceholder.classList.remove("hidden");
-  if (UI.dictStatus) { UI.dictStatus.classList.add("hidden"); UI.dictStatus.classList.remove("md:flex", "items-center", "gap-3"); }
+  UI.metaCoverPlaceholder?.classList.remove("hidden");
+  UI.dictStatus?.classList.add("hidden");
+  UI.dictStatus?.classList.remove("md:flex", "items-center", "gap-3");
   updateStats(UI, 0,0,0);
   logger.log('App reset.');
   document.removeEventListener('keydown', handleGlobalKeydown);
@@ -518,7 +517,7 @@ function updateBookMetadata(epubContent: EpubContent) {
         state.currentCoverUrl = epubContent.metadata.coverUrl;
         UI.metaCover.src = epubContent.metadata.coverUrl;
         UI.metaCover.classList.remove("hidden");
-        if (UI.metaCoverPlaceholder) UI.metaCoverPlaceholder.classList.add("hidden");
+        UI.metaCoverPlaceholder?.classList.add("hidden");
     }
 }
 
@@ -552,12 +551,12 @@ async function runAnalysis(epubContent: EpubContent) {
                     <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
                 </div>`;
         }
-        if (contextNav) contextNav.classList.add('hidden');
+        contextNav?.classList.add('hidden');
         state.currentGroup = null;
         logger.log('Book loaded. No errors found.');
     }
 
-    if (UI.processingUi) UI.processingUi.classList.add("hidden");
+    UI.processingUi?.classList.add("hidden");
     if (UI.processingUiHeader) {
         UI.processingUiHeader.classList.remove('flex', 'items-end', 'justify-between', 'mb-4');
         UI.processingUiHeader.classList.add('hidden');

@@ -40,22 +40,16 @@ export async function loadDictionaries(ui: UIElements): Promise<{
     customWordCount: 0,
   };
 
-  if (ui.dictStatus) {
-    ui.dictStatus.classList.remove("hidden");
-    ui.dictStatus.classList.add("md:flex", "items-center", "gap-3");
-  }
+  ui.dictStatus?.classList.remove("hidden");
+  ui.dictStatus?.classList.add("md:flex", "items-center", "gap-3");
   if (ui.dictText) ui.dictText.innerText = "Đang tải dữ liệu...";
-  if (ui.dictDot) {
-    ui.dictDot.classList.remove("bg-green-500", "bg-red-500");
-    ui.dictDot.classList.add("bg-yellow-500", "animate-pulse");
-  }
+  ui.dictDot?.classList.remove("bg-green-500", "bg-red-500");
+  ui.dictDot?.classList.add("bg-yellow-500", "animate-pulse");
 
   try {
     // Show engLoading indicator when starting English dictionary fetch
-    if (ui.engLoading) {
-        ui.engLoading.classList.remove("hidden");
-        ui.engLoading.classList.add("flex"); // Ensure flex is present for display
-    }
+    ui.engLoading?.classList.remove("hidden");
+    ui.engLoading?.classList.add("flex"); // Ensure flex is present for display
 
     const [vnRes, enRes, customRes] = await Promise.all([
       fetchLocalDict("vn-dict.txt"),
@@ -64,10 +58,8 @@ export async function loadDictionaries(ui: UIElements): Promise<{
     ]);
 
     // Hide engLoading indicator once English dictionary fetch is complete
-    if (ui.engLoading) {
-        ui.engLoading.classList.add("hidden");
-        ui.engLoading.classList.remove("flex");
-    }
+    ui.engLoading?.classList.add("hidden");
+    ui.engLoading?.classList.remove("flex");
 
 
     // Process Vietnamese Dictionary
@@ -116,9 +108,9 @@ export async function loadDictionaries(ui: UIElements): Promise<{
     }
 
     // Update UI
-    if (ui.dictDot) ui.dictDot.classList.remove("bg-yellow-500", "animate-pulse");
+    ui.dictDot?.classList.remove("bg-yellow-500", "animate-pulse");
     if (status.isVietnameseLoaded) {
-      if (ui.dictDot) ui.dictDot.classList.add("bg-green-500");
+      ui.dictDot?.classList.add("bg-green-500");
       if (ui.dictText) {
         ui.dictText.innerHTML = `
           <div class="flex flex-col items-start leading-snug">
@@ -128,15 +120,13 @@ export async function loadDictionaries(ui: UIElements): Promise<{
         `;
       }
     } else {
-      if (ui.dictDot) ui.dictDot.classList.add("bg-red-500");
+      ui.dictDot?.classList.add("bg-red-500");
       if (ui.dictText) ui.dictText.innerText = "Lỗi tải dữ liệu";
     }
   } catch (err) {
     logger.error("Error loading dictionaries:", err);
-    if (ui.dictDot) {
-      ui.dictDot.classList.remove("bg-yellow-500", "animate-pulse");
-      ui.dictDot.classList.add("bg-red-500");
-    }
+    ui.dictDot?.classList.remove("bg-yellow-500", "animate-pulse");
+    ui.dictDot?.classList.add("bg-red-500");
     if (ui.dictText) ui.dictText.innerText = "Lỗi kết nối";
   }
 
