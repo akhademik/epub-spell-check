@@ -10,7 +10,7 @@ Based on a recent code review, the following issues and opportunities for improv
 - ✅ ~~**Inefficient Filtering & Rendering:** `filterAndRenderErrors` is called frequently. Its performance could be improved with memoization to avoid re-calculating the filtered list unnecessarily.~~
 - ✅ ~~**Inconsistent Modal State Toggling:** Different modals use different patterns for showing and hiding, which should be standardized into helper functions.~~
 - ✅ **Event Listener Leak:** The global `keydown` event listener was not removed, which could lead to memory leaks. This has been fixed by ensuring the listener is removed during app reset.
-- **DOM Query Selectors in Loops / DOM Thrashing:** The code frequently uses `querySelectorAll` inside functions that are called often. These selectors should be cached. There are also several places where `classList` is called sequentially, which can be optimized.
+- ✅ **DOM Query Selectors in Loops / DOM Thrashing:** Optimized by caching the selected error element in `state` to prevent repeated `querySelectorAll` calls for styling. `classList` operations in UI utility functions have been refactored for more atomic and declarative class management.
 - **Event Delegation for Error List:** Instead of adding an event listener to every item in the error list, a single listener on the parent container (`error-list`) should be used to handle events for all items (event delegation).
 - **Magic Numbers and Strings:** The code uses "magic" numbers and strings directly in the logic (e.g., for file size limits, debounce delays). These should be extracted into named constants for better readability and maintainability.
 

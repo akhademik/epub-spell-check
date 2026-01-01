@@ -21,6 +21,7 @@ const initialState: AppState = {
   checkSettings: { dictionary: true, uppercase: true, tone: true, foreign: true },
   isEngFilterEnabled: false,
   readerSettings: { fontSize: 1.25, fontFamily: "serif" },
+  selectedErrorElement: null,
 };
 
 export const state: AppState = { ...initialState };

@@ -25,4 +25,5 @@ export interface AppState extends GlobalState {
     currentInstanceIndex: number;
     checkSettings: CheckSettings;
     isEngFilterEnabled: boolean;
+    selectedErrorElement: HTMLElement | null;
 }

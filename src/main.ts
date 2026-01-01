@@ -414,12 +414,19 @@ function navigateErrors(direction: 'up' | 'down') {
 }
 
 function selectGroup(group: ErrorGroup, element: HTMLElement) {
+    // If there was a previously selected element, remove its styling
+    if (state.selectedErrorElement) {
+        state.selectedErrorElement.classList.remove('bg-blue-900/30', 'border-blue-700/50', 'ring-1', 'ring-blue-500/50');
+    }
+
     state.currentGroup = group;
     state.currentInstanceIndex = 0;
-    document.querySelectorAll('#error-list > div').forEach(div => {
-        div.classList.remove('bg-blue-900/30', 'border-blue-700/50', 'ring-1', 'ring-blue-500/50');
-    });
+    
+    // Apply styling to the newly selected element
     element.classList.add('bg-blue-900/30', 'border-blue-700/50', 'ring-1', 'ring-blue-500/50');
+    
+    // Update the state with the newly selected element
+    state.selectedErrorElement = element;
     renderContextView(UI, group, state.currentInstanceIndex, state.dictionaries);
     updateNavButtons();
 }
