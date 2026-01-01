@@ -10,7 +10,7 @@ Based on a recent code review, the following issues and opportunities for improv
 
 - **Refactor Whitelist Input Validation:** The input validation logic in `handleImportWhitelist` should be extracted into its own `validateWhitelistWord` function to improve modularity and reusability.
 
-- **Keyboard Shortcuts Help:** The application has keyboard shortcuts, but there is no easy way for the user to discover them.
+- ✅ **Keyboard Shortcuts Help:** The application already has a help section for keyboard shortcuts in the help modal. (Done)
 
 - ✅ **Cache Dictionary Lookups:** Dictionary lookups are now cached to improve performance. (Done)
 - **Inconsistent Null Checks:** The code uses a mix of `if (element)` and optional chaining `?.`. A consistent style should be adopted.
