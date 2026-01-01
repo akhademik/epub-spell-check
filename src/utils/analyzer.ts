@@ -157,6 +157,22 @@ export async function analyzeText(
   let totalWords = 0;
   const allErrors: ErrorInstance[] = [];
   const totalBlocks = textBlocks.length;
+  const analysisCache = new Map<string, { type: ErrorType; reason: string } | null>();
+
+  const checkWord = (word: string): { type: ErrorType; reason: string } | null => {
+      if (analysisCache.has(word)) {
+          return analysisCache.get(word)!;
+      }
+  
+      if (word.length < 2 || dictionaries.custom.has(word)) {
+          analysisCache.set(word, null);
+          return null;
+      }
+  
+      const error = getErrorType(word, dictionaries, settings);
+      analysisCache.set(word, error);
+      return error;
+  };
 
 
   for (let i = 0; i < totalBlocks; i++) {
@@ -166,11 +182,7 @@ export async function analyzeText(
       const word = match[0];
       totalWords++;
 
-      if (word.length < 2 || dictionaries.custom.has(word)) {
-        continue;
-      }
-      
-      const error = getErrorType(word, dictionaries, settings);
+      const error = checkWord(word);
 
       if (error) {
         allErrors.push({
