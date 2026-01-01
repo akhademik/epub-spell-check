@@ -137,7 +137,7 @@ function selectNextError(wordToIgnoreId: string, originalIndex: number) {
 
 function quickIgnore() {
     if (!state.currentGroup) {
-        logger.log("No current error group to ignore.");
+        logger.info("No current error group to ignore.");
         return;
     }
 
@@ -157,7 +157,7 @@ function updateWhitelist(word: string): boolean {
     const { display, check } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
 
     if (check.has(word.toLowerCase())) {
-        logger.log(`'${word}' is already in the whitelist.`);
+        logger.info(`'${word}' is already in the whitelist.`);
         return false;
     }
 
@@ -303,7 +303,7 @@ function saveSettings() {
         setTimeout(() => {
             updateAndRenderErrors();
             hideLoadingOverlay(UI);
-            logger.log('Filtering complete after settings change.');
+            logger.info('Filtering complete after settings change.');
         }, SETTINGS_FILTER_DEBOUNCE_MS);
     }
 }
@@ -480,7 +480,7 @@ function resetApp() {
     UI.dictStatus?.classList.add("hidden");
     UI.dictStatus?.classList.remove("md:flex", "items-center", "gap-3");
     updateStats(UI, 0, 0, 0);
-    logger.log('App reset.');
+    logger.info('App reset.');
     document.removeEventListener('keydown', handleGlobalKeydown);
 }
 
@@ -532,7 +532,7 @@ async function runAnalysis(epubContent: EpubContent) {
             selectGroup(firstErrorGroup, firstErrorElement);
             firstErrorElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
-        logger.log('Book loaded and first error selected.');
+        logger.info('Book loaded and first error selected.');
     } else {
         const contextView = document.getElementById('context-view');
         const contextNav = UI.contextNavControls;
@@ -545,7 +545,7 @@ async function runAnalysis(epubContent: EpubContent) {
         }
         contextNav?.classList.add('hidden');
         state.currentGroup = null;
-        logger.log('Book loaded. No errors found.');
+        logger.info('Book loaded. No errors found.');
     }
 
     UI.processingUi?.classList.add("hidden");
@@ -607,7 +607,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     UI.engLoading?.classList.add('hidden');
     const { dictionaries, status } = await loadDictionaries(UI); state.dictionaries = dictionaries;
     state.dictionaryStatus = status;
-    logger.log('Dictionaries Loaded:', state.dictionaryStatus);
+    logger.info('Dictionaries Loaded:', state.dictionaryStatus);
 
     loadStateFromLocalStorage();
 

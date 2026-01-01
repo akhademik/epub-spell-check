@@ -1,8 +1,16 @@
-
 class Logger {
-  log(message: string, ...optionalParams: unknown[]) {
+  debug(message: string, ...optionalParams: unknown[]) {
     // eslint-disable-next-line no-console
-    console.log(message, ...optionalParams);
+    console.debug(message, ...optionalParams);
+  }
+
+  info(message: string, ...optionalParams: unknown[]) {
+    // eslint-disable-next-line no-console
+    console.info(message, ...optionalParams);
+  }
+
+  log(message: string, ...optionalParams: unknown[]) {
+    this.info(message, ...optionalParams);
   }
 
   warn(message: string, ...optionalParams: unknown[]) {
