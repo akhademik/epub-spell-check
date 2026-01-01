@@ -550,6 +550,12 @@ async function handleFile(file: File) {
 
     showProcessingUI(UI);
 
+    // Explicitly revoke the old cover URL to prevent memory leaks
+    if (state.currentCoverUrl) {
+        URL.revokeObjectURL(state.currentCoverUrl);
+        state.currentCoverUrl = null;
+    }
+
     try {
         const epubContent: EpubContent = await parseEpub(file, UI);
         state.loadedTextContent = epubContent.textBlocks;

@@ -4,7 +4,7 @@ Based on a recent code review, the following issues and opportunities for improv
 
 ### High Priority
 
-- **Memory Leak in Cover Handling:** Object URLs for cover images are not revoked when a new book is loaded, only when the application is reset. This can lead to a memory leak over time.
+- **Memory Leak in Cover Handling:** Object URLs for cover images are not revoked when a new book is loaded, only when the application is reset. This can lead to a memory leak over time. **[Addressed]**
 - **Race Condition in Debouncing:** The `debounceTimer` in `src/main.ts` is not cleared on component unmount (e.g., page unload), which could lead to unexpected behavior.
 - **Input Validation:** The whitelist import functionality now includes robust validation for file type (allows .txt and .md), file size (max 1MB), word count (max 10,000 words), and word length (max 50 characters). It also filters out invalid words (only letters and hyphens allowed) and notifies the user of excluded entries, preventing malformed data. **[Addressed]**
 - **Undo/Redo for Whitelist:** The review suggests adding undo/redo functionality for whitelist changes to improve user experience.
