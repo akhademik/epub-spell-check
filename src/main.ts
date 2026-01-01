@@ -17,19 +17,7 @@ import { DEBOUNCE_DELAY_MS, FILE_SIZE_LIMIT_BYTES, WHITELIST_WORD_COUNT_LIMIT, W
 
 let debounceTimer: number;
 
-let globalEventListeners: Array<{ element: EventTarget, type: string, handler: EventListener }> = [];
 
-function addGlobalListener(element: EventTarget, type: string, handler: EventListener) {
-  element.addEventListener(type, handler);
-  globalEventListeners.push({ element, type, handler });
-}
-
-function cleanupGlobalListeners() {
-  globalEventListeners.forEach(({ element, type, handler }) => {
-    element.removeEventListener(type, handler);
-  });
-  globalEventListeners = [];
-}
 
 let isUpdating = false;
 
@@ -424,8 +412,7 @@ function navigateErrors(direction: 'up' | 'down') {
         const errorList = document.getElementById('error-list');
         const nextElement = errorList?.querySelector(`[data-group-id="${nextGroup.id}"]`) as HTMLElement;
         if (nextElement) {
-            const selectBtn = nextElement.querySelector('.select-btn') as HTMLButtonElement;
-            selectBtn?.click();
+            selectGroup(nextGroup, nextElement);
             nextElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
     }
@@ -503,7 +490,6 @@ function resetApp() {
     UI.dictStatus?.classList.remove("md:flex", "items-center", "gap-3");
     updateStats(UI, 0, 0, 0);
     logger.info('App reset.');
-    cleanupGlobalListeners();
 }
 
 function closeAllModals() {
@@ -713,7 +699,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    addGlobalListener(document, 'keydown', handleGlobalKeydown as EventListener);
+    document.addEventListener('keydown', handleGlobalKeydown as EventListener);
 
     const errorListElement = document.getElementById("error-list");
     if (errorListElement) {
