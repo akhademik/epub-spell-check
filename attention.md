@@ -5,7 +5,7 @@ Based on a recent code review, the following issues and opportunities for improv
 ### Medium Priority
 
 - ✅ ~~**Scattered State Management:** The application's state is managed across a global `state` object, `localStorage`, and direct DOM element state. This should be centralized into a state manager for better maintainability.~~
-- **Imperative UI Updates & Tight Coupling:** The code directly manipulates the DOM for UI updates, and business logic is tightly coupled with UI code (e.g., in `quickIgnore`). A more reactive, decoupled pattern would improve code clarity.
+- 🟡 **Imperative UI Updates & Tight Coupling:** The code directly manipulates the DOM for UI updates, and business logic is tightly coupled with UI code (e.g., in `quickIgnore`). A more reactive, decoupled pattern would improve code clarity. (Partially done, `quickIgnore` refactored)
 - **Broad Function Responsibilities / High Complexity:** Functions like `handleFile` and `quickIgnore` have too many responsibilities and should be broken down into smaller, more focused functions.
 - **Inefficient Filtering & Rendering:** `filterAndRenderErrors` is called frequently. Its performance could be improved with memoization to avoid re-calculating the filtered list unnecessarily.
 - **Inconsistent Modal State Toggling:** Different modals use different patterns for showing and hiding, which should be standardized into helper functions.

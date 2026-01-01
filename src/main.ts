@@ -72,46 +72,26 @@ const UI: UIElements = {
 
 
 // --- Whitelist & Filter Logic ---
-function quickIgnore() {
-    if (!UI.whitelistInput || !state.currentGroup) {
-        logger.log("No current error group to ignore.");
-        return;
-    }
+function clearContextView() {
+    const contextView = document.getElementById('context-view');
+    const contextNav = document.getElementById('context-nav');
+    if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
+    if (contextNav) contextNav.classList.add('hidden');
+    state.currentGroup = null;
+}
 
-    const wordToIgnore = state.currentGroup.word;
-    const wordToIgnoreId = state.currentGroup.id; // Store ID before filtering
-    const originalIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === wordToIgnoreId); // Store original index
-    
-    const { display, check } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
-
-    if (check.has(wordToIgnore.toLowerCase())) {
-        logger.log(`'${wordToIgnore}' is already in the whitelist.`);
-        // Even if already in whitelist, re-filter in case state changed
-        filterAndRenderErrors();
-        return;
-    }
-
-    display.push(wordToIgnore);
-    UI.whitelistInput.value = display.join(", ");
-    saveWhitelist(UI.whitelistInput.value);
-    filterAndRenderErrors();
-
+function selectNextError(wordToIgnoreId: string, originalIndex: number) {
     const errorList = document.getElementById('error-list');
 
-    // After filtering, check if the current group still exists or select a new one
     if (state.currentFilteredErrors.length > 0) {
         let targetIndex;
-        // Try to find the *original* currentGroup in the *newly filtered* list
-        const reFoundIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === wordToIgnoreId); // Use stored ID
+        const reFoundIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === wordToIgnoreId);
 
         if (reFoundIndex !== -1) {
-            // If the original group is still present (unlikely after ignoring it, but good for robustness), select it
             targetIndex = reFoundIndex;
         } else {
-            // The original group was ignored and is no longer in the list.
-            // Try to select the error at the *original position*, or the last one if out of bounds.
             targetIndex = Math.min(originalIndex, state.currentFilteredErrors.length - 1);
-            if (targetIndex < 0) targetIndex = 0; // Ensure index is not negative if list became very small
+            if (targetIndex < 0) targetIndex = 0;
         }
         
         const nextGroup = state.currentFilteredErrors[targetIndex];
@@ -121,29 +101,46 @@ function quickIgnore() {
             nextElementInList.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
     } else {
-        // No more filtered errors, clear context view
-        const contextView = document.getElementById('context-view');
-        const contextNav = document.getElementById('context-nav');
-        if (contextView) contextView.innerHTML = '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
-        if (contextNav) contextNav.classList.add('hidden');
-        state.currentGroup = null;
+        clearContextView();
     }
 }
 
-function quickIgnoreWordFromList(word: string) { // Renamed original quickIgnore to avoid confusion and for specific use case
-    if (!UI.whitelistInput) return;
+function quickIgnore() {
+    if (!state.currentGroup) {
+        logger.log("No current error group to ignore.");
+        return;
+    }
+
+    const wordToIgnore = state.currentGroup.word;
+    const wordToIgnoreId = state.currentGroup.id;
+    const originalIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === wordToIgnoreId);
+    
+    if (updateWhitelist(wordToIgnore)) {
+        filterAndRenderErrors();
+        selectNextError(wordToIgnoreId, originalIndex);
+    }
+}
+
+function updateWhitelist(word: string): boolean {
+    if (!UI.whitelistInput) return false;
+    
     const { display, check } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
 
     if (check.has(word.toLowerCase())) {
         logger.log(`'${word}' is already in the whitelist.`);
-        filterAndRenderErrors();
-        return;
+        return false;
     }
 
     display.push(word);
     UI.whitelistInput.value = display.join(", ");
     saveWhitelist(UI.whitelistInput.value);
-    filterAndRenderErrors();
+    return true;
+}
+
+function quickIgnoreWordFromList(word: string) { // Renamed original quickIgnore to avoid confusion and for specific use case
+    if (updateWhitelist(word)) {
+        filterAndRenderErrors();
+    }
 }
 
 
