@@ -17,6 +17,33 @@ import { openModal, closeModal } from './utils/modal';
 
 let debounceTimer: number;
 
+const handleGlobalKeydown = (e: KeyboardEvent) => {
+    const activeElement = document.activeElement;
+    if (activeElement && ['TEXTAREA', 'INPUT'].includes(activeElement.tagName)) {
+        return;
+    }
+
+    if (state.currentFilteredErrors.length === 0) return;
+
+    switch (e.key) {
+        case 'ArrowDown':
+            e.preventDefault();
+            navigateErrors('down');
+            break;
+        case 'ArrowUp':
+            e.preventDefault();
+            navigateErrors('up');
+            break;
+        case 'Delete':
+        case 'i':
+            if (state.currentGroup) {
+                e.preventDefault();
+                quickIgnore();
+            }
+            break;
+    }
+};
+
 // --- 2. DOM ELEMENTS & STATE ---
 const UI: UIElements = {
   dictStatus: document.getElementById("dict-status"),
@@ -71,6 +98,7 @@ const UI: UIElements = {
   engLoading: document.getElementById("eng-loading"), // Add engLoading here
   resultsSection: document.getElementById("results-section"), 
 };
+
 
 
 // --- Whitelist & Filter Logic ---
@@ -454,6 +482,7 @@ function resetApp() {
   if (UI.dictStatus) { UI.dictStatus.classList.add("hidden"); UI.dictStatus.classList.remove("md:flex", "items-center", "gap-3"); }
   updateStats(UI, 0,0,0);
   logger.log('App reset.');
+  document.removeEventListener('keydown', handleGlobalKeydown);
 }
 
 function closeAllModals() {
@@ -656,8 +685,7 @@ async function handleFile(file: File) {
   UI.uploadSection?.addEventListener('dragleave', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); });
   UI.uploadSection?.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); if (e.dataTransfer?.files?.[0]) handleFile(e.dataTransfer.files[0]); });
 
-  // Keyboard navigation
-  document.addEventListener('keydown', (e) => {
+  const handleGlobalKeydown = (e: KeyboardEvent) => {
       const activeElement = document.activeElement;
       if (activeElement && ['TEXTAREA', 'INPUT'].includes(activeElement.tagName)) {
           return;
@@ -682,7 +710,10 @@ async function handleFile(file: File) {
               }
               break;
       }
-  });
+  };
+
+  // Keyboard navigation
+  document.addEventListener('keydown', handleGlobalKeydown);
 
   // Global click handler to close modals when clicking outside
   document.addEventListener('click', (e) => {
