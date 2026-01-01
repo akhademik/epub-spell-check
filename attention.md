@@ -2,16 +2,9 @@
 
 Based on a recent code review, the following issues and opportunities for improvement have been identified.
 
-### High Priority
-
-- **Race Condition in Debouncing:** The `debounceTimer` in `src/main.ts` is now cleared on `beforeunload` event, preventing unexpected behavior when the component unmounts. **[Addressed]**
-
-- **Memory Leaks in State:** The `resetApp` function now clears arrays (`loadedTextContent`, `allDetectedErrors`, `currentFilteredErrors`) using `array.length = 0` instead of re-assigning them, which is more efficient for garbage collection. **[Addressed]**
-- **Improved Error Boundaries:** The `handleFile` function now includes more specific error handling in its `catch` block for EPUB parsing errors, providing better user feedback for issues like malformed EPUBs or invalid Zip files. **[Addressed]**
-
 ### Medium Priority
 
-- **Scattered State Management:** The application's state is managed across a global `state` object, `localStorage`, and direct DOM element state. This should be centralized into a state manager for better maintainability.
+- ✅ ~~**Scattered State Management:** The application's state is managed across a global `state` object, `localStorage`, and direct DOM element state. This should be centralized into a state manager for better maintainability.~~
 - **Imperative UI Updates & Tight Coupling:** The code directly manipulates the DOM for UI updates, and business logic is tightly coupled with UI code (e.g., in `quickIgnore`). A more reactive, decoupled pattern would improve code clarity.
 - **Broad Function Responsibilities / High Complexity:** Functions like `handleFile` and `quickIgnore` have too many responsibilities and should be broken down into smaller, more focused functions.
 - **Inefficient Filtering & Rendering:** `filterAndRenderErrors` is called frequently. Its performance could be improved with memoization to avoid re-calculating the filtered list unnecessarily.

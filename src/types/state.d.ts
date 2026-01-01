@@ -1,5 +1,7 @@
 // src/types/state.d.ts
 import { Dictionaries, DictionaryStatus } from "./dictionary";
+import { ErrorGroup } from './errors';
+import { CheckSettings } from '../utils/analyzer';
 
 export interface ReaderSettings {
     fontSize: number;
@@ -14,4 +16,13 @@ export interface GlobalState {
     currentCoverUrl: string | null;
     totalWords: number;
     readerSettings: ReaderSettings;
+}
+
+export interface AppState extends GlobalState {
+    allDetectedErrors: ErrorGroup[];
+    currentFilteredErrors: ErrorGroup[];
+    currentGroup: ErrorGroup | null;
+    currentInstanceIndex: number;
+    checkSettings: CheckSettings;
+    isEngFilterEnabled: boolean;
 }

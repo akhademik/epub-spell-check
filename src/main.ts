@@ -5,7 +5,7 @@ import { logger } from './utils/logger';
 import { parseEpub } from './utils/epub-parser';
 import { EpubContent } from './types/epub';
 import { UIElements } from './types/ui';
-import { GlobalState } from './types/state';
+import { state, loadStateFromLocalStorage, saveCheckSettings, saveWhitelist, saveEngFilter as saveEngFilterState, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState } from './state';
 import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
 import { ErrorGroup } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress } from './utils/ui-render';
@@ -13,10 +13,6 @@ import { parseWhitelistWithOriginalCase } from './utils/whitelist-parser';
 import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay } from './utils/ui-utils';
 import { showToast } from './utils/notifications';
 
-const SETTINGS_KEY = "vn_spell_settings";
-const WHITELIST_KEY = "vn_spell_whitelist";
-const ENG_FILTER_KEY = "vn_spell_eng_filter";
-const READER_SETTINGS_KEY = "vn_spell_reader";
 let debounceTimer: number;
 
 // --- 2. DOM ELEMENTS & STATE ---
@@ -74,30 +70,6 @@ const UI: UIElements = {
   resultsSection: document.getElementById("results-section"), 
 };
 
-interface AppState extends GlobalState {
-    allDetectedErrors: ErrorGroup[];
-    currentFilteredErrors: ErrorGroup[];
-    currentGroup: ErrorGroup | null;
-    currentInstanceIndex: number;
-    checkSettings: CheckSettings;
-    isEngFilterEnabled: boolean;
-}
-
-const state: AppState = {
-  dictionaries: { vietnamese: new Set(), english: new Set(), custom: new Set() },
-  dictionaryStatus: { isVietnameseLoaded: false, isEnglishLoaded: false, isCustomLoaded: false, vietnameseWordCount: 0, englishWordCount: 0, customWordCount: 0 },
-  currentBookTitle: '',
-  loadedTextContent: [],
-  currentCoverUrl: null,
-  totalWords: 0, // Initialize totalWords here
-  allDetectedErrors: [],
-  currentFilteredErrors: [],
-  currentGroup: null,
-  currentInstanceIndex: 0,
-  checkSettings: { dictionary: true, uppercase: true, tone: true, foreign: true },
-  isEngFilterEnabled: false,
-  readerSettings: { fontSize: 1.25, fontFamily: "serif" },
-};
 
 // --- Whitelist & Filter Logic ---
 function quickIgnore() {
@@ -108,7 +80,7 @@ function quickIgnore() {
 
     const wordToIgnore = state.currentGroup.word;
     const wordToIgnoreId = state.currentGroup.id; // Store ID before filtering
-    const originalIndex = state.currentFilteredErrors.findIndex(g => g.id === wordToIgnoreId); // Store original index
+    const originalIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === wordToIgnoreId); // Store original index
     
     const { display, check } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
 
@@ -121,7 +93,7 @@ function quickIgnore() {
 
     display.push(wordToIgnore);
     UI.whitelistInput.value = display.join(", ");
-    saveWhitelist();
+    saveWhitelist(UI.whitelistInput.value);
     filterAndRenderErrors();
 
     const errorList = document.getElementById('error-list');
@@ -130,7 +102,7 @@ function quickIgnore() {
     if (state.currentFilteredErrors.length > 0) {
         let targetIndex;
         // Try to find the *original* currentGroup in the *newly filtered* list
-        const reFoundIndex = state.currentFilteredErrors.findIndex(g => g.id === wordToIgnoreId); // Use stored ID
+        const reFoundIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === wordToIgnoreId); // Use stored ID
 
         if (reFoundIndex !== -1) {
             // If the original group is still present (unlikely after ignoring it, but good for robustness), select it
@@ -170,18 +142,13 @@ function quickIgnoreWordFromList(word: string) { // Renamed original quickIgnore
 
     display.push(word);
     UI.whitelistInput.value = display.join(", ");
-    saveWhitelist();
+    saveWhitelist(UI.whitelistInput.value);
     filterAndRenderErrors();
 }
 
-function loadWhitelist() {
-    const stored = localStorage.getItem(WHITELIST_KEY);
-    if (stored && UI.whitelistInput) UI.whitelistInput.value = stored;
-}
 
-function saveWhitelist() {
-    if(UI.whitelistInput) localStorage.setItem(WHITELIST_KEY, UI.whitelistInput.value);
-}
+
+
 
 function exportWhitelist() {
     if (!UI.whitelistInput?.value.trim()) {
@@ -263,7 +230,7 @@ function handleImportWhitelist(event: Event) {
         const finalDisplay = Array.from(finalWhitelistMap.values());
 
         UI.whitelistInput!.value = finalDisplay.join(", ") + (finalDisplay.length > 0 ? ", " : "");
-        saveWhitelist();
+        saveWhitelist(UI.whitelistInput!.value);
         filterAndRenderErrors();
 
         // Reset file input to allow re-importing the same file
@@ -272,15 +239,11 @@ function handleImportWhitelist(event: Event) {
     reader.readAsText(file);
 }
 
-function loadEngFilter() {
-    const stored = localStorage.getItem(ENG_FILTER_KEY);
-    state.isEngFilterEnabled = stored === 'true';
-    if(UI.engFilterCheckbox) UI.engFilterCheckbox.checked = state.isEngFilterEnabled;
-}
 
-function saveEngFilter() {
+
+function _saveEngFilter() {
     state.isEngFilterEnabled = UI.engFilterCheckbox?.checked ?? false;
-    localStorage.setItem(ENG_FILTER_KEY, String(state.isEngFilterEnabled));
+    saveEngFilterState();
     filterAndRenderErrors();
 }
 
@@ -289,23 +252,23 @@ function filterAndRenderErrors() {
     if (!UI.whitelistInput) return;
     const { check } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
     
-    state.currentFilteredErrors = state.allDetectedErrors.filter(group => {
-        const lowerWord = group.word.toLowerCase();
+    state.currentFilteredErrors = state.allDetectedErrors.filter((_group: ErrorGroup) => {
+        const lowerWord = _group.word.toLowerCase();
         if (check.has(lowerWord)) return false;
         if (state.isEngFilterEnabled && state.dictionaries.english.has(lowerWord)) return false;
 
         // Add filtering based on checkSettings
         const settings = state.checkSettings;
-        if (!settings.dictionary && group.type === 'Dictionary') return false;
-        if (!settings.uppercase && group.type === 'Uppercase') return false;
-        if (!settings.tone && group.type === 'Tone') return false;
+        if (!settings.dictionary && _group.type === 'Dictionary') return false;
+        if (!settings.uppercase && _group.type === 'Uppercase') return false;
+        if (!settings.tone && _group.type === 'Tone') return false;
         // The 'foreign' setting in the UI corresponds to multiple error types
-        if (!settings.foreign && ['Foreign', 'Typo', 'Spelling'].includes(group.type)) return false;
+        if (!settings.foreign && ['Foreign', 'Typo', 'Spelling'].includes(_group.type)) return false;
         
         return true;
     });
 
-    const totalErrorInstances = state.currentFilteredErrors.reduce((acc, g) => acc + g.contexts.length, 0);
+    const totalErrorInstances = state.currentFilteredErrors.reduce((_acc: number, _g: ErrorGroup) => _acc + _g.contexts.length, 0);
     
     updateStats(UI, state.totalWords, totalErrorInstances, state.currentFilteredErrors.length);
     renderErrorList(UI, state.currentFilteredErrors, selectGroup, quickIgnoreWordFromList);
@@ -319,7 +282,7 @@ function saveSettings() {
         tone: UI.settingToggles.tone?.checked ?? true,
         foreign: UI.settingToggles.struct?.checked ?? true, // This now controls multiple rule types
     };
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(state.checkSettings));
+    saveCheckSettings();
     
     // Instead of re-analyzing, just filter and re-render
     if (state.loadedTextContent.length > 0) {
@@ -334,17 +297,7 @@ function saveSettings() {
     }
 }
 
-function loadSettings() {
-    try {
-        const s = localStorage.getItem(SETTINGS_KEY);
-        if (s) state.checkSettings = JSON.parse(s);
-    } catch (e) { logger.error("Failed to load settings", e); }
 
-    if(UI.settingToggles.dict) UI.settingToggles.dict.checked = state.checkSettings.dictionary;
-    if(UI.settingToggles.case) UI.settingToggles.case.checked = state.checkSettings.uppercase;
-    if(UI.settingToggles.tone) UI.settingToggles.tone.checked = state.checkSettings.tone;
-    if(UI.settingToggles.struct) UI.settingToggles.struct.checked = state.checkSettings.foreign;
-}
 
 function sanitizeFilename(name: string): string {
     const sanitized = name
@@ -367,9 +320,9 @@ function performExport(type: 'vctve' | 'normal') {
 
     let content = "";
     if (type === 'vctve') {
-        content = state.currentFilteredErrors.map((g) => `${g.word} ==>`).join("\n\n");
+        content = state.currentFilteredErrors.map((_g: ErrorGroup) => `${_g.word} ==>`).join("\n\n");
     } else {
-        content = state.currentFilteredErrors.map((g) => g.word).join("\n");
+        content = state.currentFilteredErrors.map((_g: ErrorGroup) => _g.word).join("\n");
     }
 
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
@@ -399,24 +352,7 @@ function applyReaderStyles() {
     }
 }
 
-function loadReaderSettings() {
-    try {
-        const s = localStorage.getItem(READER_SETTINGS_KEY);
-        if (s) state.readerSettings = JSON.parse(s);
-    } catch (e) {
-        logger.error("Failed to load reader settings", e);
-        state.readerSettings = { fontSize: 1.25, fontFamily: "serif" }; // Default value
-    }
-    applyReaderStyles();
-}
 
-function saveReaderSettings() {
-    localStorage.setItem(READER_SETTINGS_KEY, JSON.stringify(state.readerSettings));
-    applyReaderStyles();
-    if (state.currentGroup) {
-        renderContextView(UI, state.currentGroup, state.currentInstanceIndex, state.dictionaries);
-    }
-}
 
 // --- UI Interaction Logic ---
 function navigateErrors(direction: 'up' | 'down') {
@@ -432,7 +368,7 @@ function navigateErrors(direction: 'up' | 'down') {
 
     let currentIndex = -1;
     if (state.currentGroup) {
-        currentIndex = state.currentFilteredErrors.findIndex(g => g.id === state.currentGroup?.id);
+        currentIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === state.currentGroup?.id);
     }
     
     let nextIndex;
@@ -508,13 +444,9 @@ function resetApp() {
   hideProcessingUI(UI); // Centralized hiding of processing UI, results, and action buttons.
   if (UI.fileInput) UI.fileInput.value = "";
   if (UI.whitelistImportFile) UI.whitelistImportFile.value = "";
-  state.currentBookTitle = "";
-  state.loadedTextContent.length = 0; // Modified
-  state.totalWords = 0;
-  state.allDetectedErrors.length = 0; // Modified
-  state.currentFilteredErrors.length = 0; // Modified
-  state.currentGroup = null;
-  state.currentInstanceIndex = 0;
+  
+  resetState();
+
   if (state.currentCoverUrl) {
     URL.revokeObjectURL(state.currentCoverUrl);
     state.currentCoverUrl = null;
@@ -650,10 +582,17 @@ async function handleFile(file: File) {
   state.dictionaryStatus = status;
   logger.log('Dictionaries Loaded:', state.dictionaryStatus);
   
-  loadSettings();
-  loadWhitelist();
-  loadEngFilter();
-  loadReaderSettings();
+  loadStateFromLocalStorage();
+
+  // Update UI from the loaded state
+  if(UI.settingToggles.dict) UI.settingToggles.dict.checked = state.checkSettings.dictionary;
+  if(UI.settingToggles.case) UI.settingToggles.case.checked = state.checkSettings.uppercase;
+  if(UI.settingToggles.tone) UI.settingToggles.tone.checked = state.checkSettings.tone;
+  if(UI.settingToggles.struct) UI.settingToggles.struct.checked = state.checkSettings.foreign;
+  if (UI.whitelistInput) UI.whitelistInput.value = loadWhitelistFromState();
+  if(UI.engFilterCheckbox) UI.engFilterCheckbox.checked = state.isEngFilterEnabled;
+  applyReaderStyles();
+
 
   // Event Listeners
   UI.fileInput?.addEventListener('change', (e) => (e.target as HTMLInputElement).files?.[0] && handleFile((e.target as HTMLInputElement).files![0]));
@@ -677,17 +616,20 @@ async function handleFile(file: File) {
   UI.fontToggleBtn?.addEventListener('click', () => {
     state.readerSettings.fontFamily = state.readerSettings.fontFamily === 'serif' ? 'sans-serif' : 'serif';
     saveReaderSettings();
+    applyReaderStyles();
   });
   UI.sizeUpBtn?.addEventListener('click', () => {
     if (state.readerSettings.fontSize < 3) {
       state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
       saveReaderSettings();
+      applyReaderStyles();
     }
   });
   UI.sizeDownBtn?.addEventListener('click', () => {
     if (state.readerSettings.fontSize > 0.8) {
       state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
       saveReaderSettings();
+      applyReaderStyles();
     }
   });
 
@@ -696,7 +638,7 @@ async function handleFile(file: File) {
   UI.whitelistInput?.addEventListener('input', () => {
       clearTimeout(debounceTimer);
       debounceTimer = window.setTimeout(() => {
-          saveWhitelist();
+          if (UI.whitelistInput) saveWhitelist(UI.whitelistInput.value);
           filterAndRenderErrors();
       }, 500);
   });
@@ -704,7 +646,7 @@ async function handleFile(file: File) {
   UI.importWhitelistBtn?.addEventListener('click', () => UI.whitelistImportFile?.click());
   UI.whitelistImportFile?.addEventListener('change', handleImportWhitelist);
 
-  UI.engFilterCheckbox?.addEventListener('change', saveEngFilter);
+  UI.engFilterCheckbox?.addEventListener('change', _saveEngFilter);
 
   UI.uploadSection?.addEventListener('dragover', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.add('border-blue-500/50', 'bg-slate-800/50'); });
   UI.uploadSection?.addEventListener('dragleave', (_e) => { _e.preventDefault(); _e.stopPropagation(); UI.uploadSection?.classList.remove('border-blue-500/50', 'bg-slate-800/50'); });
