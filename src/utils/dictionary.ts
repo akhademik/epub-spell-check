@@ -72,10 +72,7 @@ export async function loadDictionaries(ui: UIElements): Promise<{
           cleanWord.split(/\s+/).forEach((p) => dictionaries.vietnamese.add(p));
         }
       });
-      [
-        "kỹ", "mỹ", "kì", "lí", "qui", "có", "hắn", "y", "gã", "thị",
-        "nó", "ta", "ngươi", "chư", "mỗ", "tại", "bị", "bởi", "chăng",
-      ].forEach((w) => dictionaries.vietnamese.add(w.toLowerCase().normalize("NFC")));
+
       status.isVietnameseLoaded = true;
       status.vietnameseWordCount = dictionaries.vietnamese.size;
     }

@@ -27,3 +27,6 @@ FedEx
 KFC
 UFO
 WTF
+XXXL
+XXX
+XL
