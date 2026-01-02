@@ -2,7 +2,6 @@ import { AppState, ReaderSettings } from './types/state';
 
 import { logger } from './utils/logger';
 
-const SETTINGS_KEY = "vn_spell_settings";
 const WHITELIST_KEY = "vn_spell_whitelist";
 const READER_SETTINGS_KEY = "vn_spell_reader";
 
@@ -32,15 +31,6 @@ export function resetState() {
 }
 
 export function loadStateFromLocalStorage() {
-  try {
-    const settings = localStorage.getItem(SETTINGS_KEY);
-    if (settings) {
-      state.checkSettings = JSON.parse(settings);
-    }
-  } catch (e) {
-    logger.error("Failed to load settings", e);
-  }
-
   const whitelist = localStorage.getItem(WHITELIST_KEY);
   if (whitelist) {
     // This will be handled by the UI component, but we could store it here if we want
@@ -58,9 +48,7 @@ export function loadStateFromLocalStorage() {
   }
 }
 
-export function saveCheckSettings() {
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(state.checkSettings));
-}
+
 
 export function saveWhitelist(whitelist: string) {
   localStorage.setItem(WHITELIST_KEY, whitelist);

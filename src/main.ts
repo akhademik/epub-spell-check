@@ -4,7 +4,7 @@ import { logger } from './utils/logger';
 import { parseEpub } from './utils/epub-parser';
 import { EpubContent } from './types/epub';
 import { UIElements } from './types/ui';
-import { state, loadStateFromLocalStorage, saveCheckSettings, saveWhitelist, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState } from './state';
+import { state, loadStateFromLocalStorage, saveWhitelist, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState } from './state';
 import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
 import { ErrorGroup } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress, copyToClipboard } from './utils/ui-render';
@@ -320,7 +320,6 @@ function saveSettings() {
         tone: UI.settingToggles.tone?.checked ?? true,
         foreign: UI.settingToggles.struct?.checked ?? true,
     };
-    saveCheckSettings();
 
     if (state.loadedTextContent.length > 0) {
         showLoadingOverlay(UI);
@@ -485,6 +484,11 @@ function resetApp() {
 
     resetState();
 
+    if (UI.settingToggles.dict) UI.settingToggles.dict.checked = state.checkSettings.dictionary;
+    if (UI.settingToggles.case) UI.settingToggles.case.checked = state.checkSettings.uppercase;
+    if (UI.settingToggles.tone) UI.settingToggles.tone.checked = state.checkSettings.tone;
+    if (UI.settingToggles.struct) UI.settingToggles.struct.checked = state.checkSettings.foreign;
+
     if (state.currentCoverUrl) {
         URL.revokeObjectURL(state.currentCoverUrl);
         state.currentCoverUrl = null;
@@ -646,10 +650,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     loadStateFromLocalStorage();
 
-    if (UI.settingToggles.dict) UI.settingToggles.dict.checked = state.checkSettings.dictionary;
-    if (UI.settingToggles.case) UI.settingToggles.case.checked = state.checkSettings.uppercase;
-    if (UI.settingToggles.tone) UI.settingToggles.tone.checked = state.checkSettings.tone;
-    if (UI.settingToggles.struct) UI.settingToggles.struct.checked = state.checkSettings.foreign;
     updateUIWhitelistInput(UI, loadWhitelistFromState());
     if (UI.engFilterCheckbox) UI.engFilterCheckbox.checked = state.isEngFilterEnabled;
     applyReaderStyles();
