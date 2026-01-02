@@ -145,6 +145,13 @@ function selectNextError(wordToIgnoreId: string, originalIndex: number) {
     }
 }
 
+function ignoreAndAdvance(wordToIgnore: string, wordToIgnoreId: string, originalIndex: number) {
+    if (updateWhitelist(wordToIgnore)) {
+        updateAndRenderErrors();
+        selectNextError(wordToIgnoreId, originalIndex);
+    }
+}
+
 function quickIgnore() {
     if (!state.currentGroup) {
         logger.info("No current error group to ignore.");
@@ -154,11 +161,7 @@ function quickIgnore() {
     const wordToIgnore = state.currentGroup.word;
     const wordToIgnoreId = state.currentGroup.id;
     const originalIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === wordToIgnoreId);
-
-    if (updateWhitelist(wordToIgnore)) {
-        updateAndRenderErrors();
-        selectNextError(wordToIgnoreId, originalIndex);
-    }
+    ignoreAndAdvance(wordToIgnore, wordToIgnoreId, originalIndex);
 }
 
 function updateWhitelist(word: string): boolean {
@@ -177,11 +180,7 @@ function updateWhitelist(word: string): boolean {
     return true;
 }
 
-function quickIgnoreWordFromList(word: string) {
-    if (updateWhitelist(word)) {
-        updateAndRenderErrors();
-    }
-}
+
 
 function clearWhitelist() {
     if (!UI.whitelistInput) return;
@@ -744,7 +743,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Handle ignore button
             if (target.closest('.ignore-btn')) {
                 e.stopPropagation();
-                quickIgnoreWordFromList(group.word);
+                // Find the original index before errors are re-rendered and potentially re-ordered/filtered
+                const originalIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === group.id);
+                ignoreAndAdvance(group.word, group.id, originalIndex);
                 return;
             }
 
