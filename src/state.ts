@@ -31,13 +31,8 @@ export function resetState() {
 }
 
 export function loadStateFromLocalStorage() {
-  const whitelist = localStorage.getItem(WHITELIST_KEY);
-  if (whitelist) {
-    // This will be handled by the UI component, but we could store it here if we want
-  }
-
-
-
+  // Whitelist loading was handled elsewhere
+  // No action needed here for whitelist
   try {
     const readerSettings = localStorage.getItem(READER_SETTINGS_KEY);
     if (readerSettings) {
