@@ -11,23 +11,22 @@ This document outlines potential areas for optimizing and cleaning up the projec
     *   **Large Dictionary Handling:** For extremely large dictionaries, consider alternative data structures (e.g., specialized trie implementations) that offer better memory efficiency or faster lookups than `Set`s, especially if dictionary size becomes a performance bottleneck. (Low priority for now, given current scope)
     *   **Consolidate Dictionary Source:** The project currently processes Vietnamese words from `public/vn-dict.txt`, which can include specially formatted entries. Ensure that `public/vn-dict.txt` remains the single, well-maintained source of truth for the Vietnamese dictionary, avoiding any direct word embedding in the TypeScript code.
 
-### 1.2 Text Analysis (`src/utils/analyzer.ts`)
+### 1.2 Text Analysis (`src/utils/analyzer.ts`) - COMPLETED
 
 *   **Current State:** Uses `analysisCache` and Levenshtein distance for suggestions. Iterates through text blocks and words.
-*   **Potential Optimization:**
-    *   **Levenshtein Optimization:** The Levenshtein distance calculation can be computationally expensive.
-        *   **Limit Suggestions:** Limit the number of suggestions generated per error.
-        *   **Thresholding:** Apply a maximum Levenshtein distance threshold to avoid generating suggestions for words that are too dissimilar.
-        *   **Early Exit:** Optimize the suggestion generation process to exit early if enough good suggestions are found.
-    *   **Pre-processing Text:** Ensure text normalization (e.g., `NFC`) and cleaning are efficient and only performed once per text block.
-    *   **Web Workers:** For very large EPUBs, consider offloading the `analyzeText` function to a Web Worker to prevent blocking the main thread and keep the UI responsive during analysis. This would involve refactoring how `analyzeText` reports progress and results.
+*   **Completed Optimizations:**
+    *   **Levenshtein Optimization:** The Levenshtein distance calculation for suggestion generation has been optimized to limit the number of suggestions and efficiently manage top results.
+    *   **Web Workers:** The heavy `analyzeText` function has been successfully offloaded to `src/workers/analysis.worker.ts` to prevent UI blocking and keep the UI responsive during analysis.
+*   **Remaining Potential Optimization (Lower Priority):**
+    *   **Pre-processing Text:** Ensure text normalization (e.g., `NFC`) and cleaning are efficient and only performed once per text block. (Already largely handled by `analysis-core.ts`).
 
 ### 1.3 UI Responsiveness
 
-*   **Current State:** `updateProgress` is used in `epub-parser.ts` and `analyzer.ts`.
+*   **Current State:** `updateProgress` is used in `epub-parser.ts` and `analyzer.ts`. EPUB parsing (which includes `DOMParser` calls) runs on the main thread.
 *   **Potential Optimization:**
     *   **Debounce/Throttle UI Updates:** Ensure that frequent `updateProgress` calls or other UI updates (e.g., rendering error lists) are debounced or throttled to prevent excessive re-renders and maintain UI fluidity. The project already uses `DEBOUNCE_DELAY_MS` in `constants.ts`, ensure it's applied effectively where needed.
     *   **Virtualization:** For very long error lists or context views, consider UI virtualization techniques to render only visible items, significantly improving performance and memory usage.
+    *   **EPUB Parsing Responsiveness:** While `parseEpub` remains on the main thread due to `DOMParser` limitations in workers, ensure `updateProgress` calls within `epub-parser.ts` are frequent enough to provide a smooth loading indicator and prevent the UI from freezing. (This has been implicitly addressed by reverting `parseEpub` and keeping its original `updateProgress` calls.)
 
 ## 2. Code Quality and Maintainability
 
@@ -66,4 +65,4 @@ This document outlines potential areas for optimizing and cleaning up the projec
 
 ## Conclusion
 
-The project demonstrates a solid foundation with modern technologies. The suggestions above aim to further enhance its performance, robustness, and long-term maintainability. I recommend prioritizing Web Workers for text analysis and UI responsiveness if performance becomes an issue with larger EPUB files. Consolidating hardcoded dictionary words and improving JSDoc comments would be good starting points for code quality improvements.
+The project demonstrates a solid foundation with modern technologies. The suggestions above aim to further enhance its performance, robustness, and long-term maintainability. The core text analysis has been successfully offloaded to a Web Worker, significantly improving UI responsiveness. Future work could focus on further optimizing main thread operations and refining error handling.

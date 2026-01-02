@@ -1,12 +1,14 @@
 import './style.css';
+import AnalysisWorker from './workers/analysis.worker?worker'; // Import the Web Worker
 import { loadDictionaries } from './utils/dictionary';
 import { logger } from './utils/logger';
 import { parseEpub } from './utils/epub-parser';
-import { EpubContent } from './types/epub';
+
+import { EpubContent } from './types/epub'; // Re-add this import
 import { UIElements } from './types/ui';
 import { state, loadStateFromLocalStorage, saveWhitelist, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState, loadReaderSettingsFromLocalStorage } from './state';
-import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
-import { ErrorGroup } from './types/errors';
+import { groupErrors, CheckSettings } from './utils/analyzer'; // Removed analyzeText
+import { ErrorGroup, ErrorInstance } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress, copyToClipboard } from './utils/ui-render';
 import { parseWhitelistWithOriginalCase } from './utils/whitelist-parser';
 import { getFilteredErrors } from './utils/filter';
@@ -544,45 +546,85 @@ function updateBookMetadata(epubContent: EpubContent) {
 
 async function runAnalysis(epubContent: EpubContent) {
     const fullCheckSettings: CheckSettings = { dictionary: true, uppercase: true, tone: true, foreign: true };
-    const { errors, totalWords } = await analyzeText(epubContent.textBlocks, state.dictionaries, fullCheckSettings, (p: number, m: string) => updateProgress(UI, p, m));
+    showProcessingUI(UI); // Ensure processing UI is shown
+    updateProgress(UI, 0, 'Khởi tạo phân tích...');
 
-    state.allDetectedErrors = groupErrors(errors);
-    state.totalWords = totalWords;
+    // Create worker instance
+            const worker = new AnalysisWorker();
+    const analysisPromise = new Promise<{ errors: ErrorInstance[], totalWords: number }>((resolve, reject) => {
+        worker.onmessage = (event) => {
+            const { type, progress, message, errors, totalWords } = event.data;
+            if (type === 'progress') {
+                // Update main UI with progress from worker
+                updateProgress(UI, 60 + (progress * 0.4), message); // Scale worker progress (0-100) to main thread (60-100)
+            } else if (type === 'complete') {
+                resolve({ errors, totalWords });
+                worker.terminate(); // Terminate worker after completion
+            }
+        };
 
-    updateProgress(UI, 100, 'Hoàn tất');
+        worker.onerror = (error) => {
+            logger.error("Worker error:", error);
+            reject(new Error("Lỗi trong quá trình phân tích văn bản."));
+            worker.terminate();
+        };
 
-    updateAndRenderErrors();
+        // Send data to worker
+        worker.postMessage({
+            textBlocks: epubContent.textBlocks,
+            dictionaries: state.dictionaries,
+            settings: fullCheckSettings,
+            chapterStartIndex: 0, // Placeholder, will need to be calculated for chunking if implemented later
+        });
+    });
 
-    if (state.currentFilteredErrors.length > 0) {
-        const firstErrorGroup = state.currentFilteredErrors[0];
-        const errorList = document.getElementById('error-list');
-        const firstErrorElement = errorList?.querySelector(`[data-group-id="${firstErrorGroup.id}"]`) as HTMLElement;
-        if (firstErrorElement) {
-            selectGroup(firstErrorGroup, firstErrorElement);
-            firstErrorElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    try {
+        const { errors, totalWords } = await analysisPromise;
+
+        state.allDetectedErrors = groupErrors(errors);
+        state.totalWords = totalWords;
+
+        updateProgress(UI, 100, 'Hoàn tất');
+
+        updateAndRenderErrors();
+
+        // ... rest of the function (error list rendering, UI updates, etc.)
+        if (state.currentFilteredErrors.length > 0) {
+            const firstErrorGroup = state.currentFilteredErrors[0];
+            const errorList = document.getElementById('error-list');
+            const firstErrorElement = errorList?.querySelector(`[data-group-id="${firstErrorGroup.id}"]`) as HTMLElement;
+            if (firstErrorElement) {
+                selectGroup(firstErrorGroup, firstErrorElement);
+                firstErrorElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+            logger.info('Book loaded and first error selected.');
+        } else {
+            const contextView = document.getElementById('context-view');
+            const contextNav = UI.contextNavControls;
+            if (contextView) {
+                contextView.innerHTML = `
+                    <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
+                        <p class="text-lg mb-2">Tuyệt vời!</p>
+                        <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
+                    </div>`;
+            }
+            contextNav?.classList.add('hidden');
+            state.currentGroup = null;
+            logger.info('Book loaded. No errors found.');
         }
-        logger.info('Book loaded and first error selected.');
-    } else {
-        const contextView = document.getElementById('context-view');
-        const contextNav = UI.contextNavControls;
-        if (contextView) {
-            contextView.innerHTML = `
-                <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
-                    <p class="text-lg mb-2">Tuyệt vời!</p>
-                    <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
-                </div>`;
-        }
-        contextNav?.classList.add('hidden');
-        state.currentGroup = null;
-        logger.info('Book loaded. No errors found.');
-    }
 
-    UI.processingUi?.classList.add("hidden");
-    if (UI.processingUiHeader) {
-        UI.processingUiHeader.classList.remove('flex', 'items-end', 'justify-between', 'mb-4');
-        UI.processingUiHeader.classList.add('hidden');
+        UI.processingUi?.classList.add("hidden");
+        if (UI.processingUiHeader) {
+            UI.processingUiHeader.classList.remove('flex', 'items-end', 'justify-between', 'mb-4');
+            UI.processingUiHeader.classList.add('hidden');
+        }
+        showResultsUI(UI);
+    } catch (error) {
+        logger.error("Analysis failed:", error);
+        showToast("Lỗi phân tích văn bản.", "error");
+        hideProcessingUI(UI);
+        throw error; // Re-throw to be caught by handleFile
     }
-    showResultsUI(UI);
 }
 
 async function handleFile(file: File) {
@@ -594,18 +636,18 @@ async function handleFile(file: File) {
     closeAllModals();
     if (!prepareForNewFile()) return;
 
-    showProcessingUI(UI);
-
     if (state.currentCoverUrl) {
         URL.revokeObjectURL(state.currentCoverUrl);
         state.currentCoverUrl = null;
     }
 
     try {
-        const epubContent: EpubContent = await parseEpub(file, UI);
+        showProcessingUI(UI); // Show processing UI immediately
+        const epubContent: EpubContent = await parseEpub(file, UI); // Directly call parseEpub
         updateBookMetadata(epubContent);
-        await runAnalysis(epubContent);
-    } catch (err) {
+        await runAnalysis(epubContent); // This will handle showing processing from 60-100%
+
+    } catch (err: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) { // Explicitly type err as any to handle various error types
         logger.error("Error processing EPUB file:", err);
         let errorMessage = "Có lỗi xảy ra trong quá trình xử lý tệp EPUB.";
         if (err instanceof Error) {
