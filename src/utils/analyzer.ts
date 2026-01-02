@@ -288,20 +288,37 @@ export function findSuggestions(word: string, dictionaries: Dictionaries): strin
   }
 
   if (dictionaries.vietnamese.size > 0) {
-    const maxDist = word.length < 4 ? 1 : 2;
-    const possibleSuggestions: { word: string; dist: number }[] = [];
+    const LEVEN_MAX_DIST = word.length < 4 ? 1 : 2; // Keep existing logic for max distance
+    const LEVEN_SUGGESTION_COUNT = 5; // Target number of dictionary-based suggestions
+    const topLevenSuggestions: { word: string; dist: number }[] = [];
 
-    dictionaries.vietnamese.forEach(dictWord => {
-      if (Math.abs(dictWord.length - low.length) <= maxDist) {
-        const d = levenshteinDistance(low, dictWord);
-        if (d <= maxDist && d > 0) {
-          possibleSuggestions.push({ word: dictWord, dist: d });
+    // Prioritize words with lower distance and fewer suggestions
+    // Iterate through dictionary, collecting suggestions up to LEVEN_SUGGESTION_COUNT
+    for (const dictWord of dictionaries.vietnamese) {
+        if (Math.abs(dictWord.length - low.length) <= LEVEN_MAX_DIST) {
+            const d = levenshteinDistance(low, dictWord);
+            if (d <= LEVEN_MAX_DIST && d > 0) {
+                // Keep the list sorted by distance to easily manage top N
+                // Insert into sorted array
+                let inserted = false;
+                for (let i = 0; i < topLevenSuggestions.length; i++) {
+                    if (d < topLevenSuggestions[i].dist) {
+                        topLevenSuggestions.splice(i, 0, { word: dictWord, dist: d });
+                        inserted = true;
+                        break;
+                    }
+                }
+                if (!inserted && topLevenSuggestions.length < LEVEN_SUGGESTION_COUNT) {
+                    topLevenSuggestions.push({ word: dictWord, dist: d });
+                }
+                // If we have more than the desired count, remove the highest distance one
+                if (topLevenSuggestions.length > LEVEN_SUGGESTION_COUNT) {
+                    topLevenSuggestions.pop();
+                }
+            }
         }
-      }
-    });
-
-    possibleSuggestions.sort((a, b) => a.dist - b.dist);
-    suggestions.push(...possibleSuggestions.slice(0, 5).map(s => s.word));
+    }
+    suggestions.push(...topLevenSuggestions.map(s => s.word));
   }
 
   return Array.from(new Set(suggestions)).slice(0, 7);
