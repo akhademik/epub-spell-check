@@ -4,7 +4,7 @@ import { logger } from './utils/logger';
 import { parseEpub } from './utils/epub-parser';
 import { EpubContent } from './types/epub';
 import { UIElements } from './types/ui';
-import { state, loadStateFromLocalStorage, saveWhitelist, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState } from './state';
+import { state, loadStateFromLocalStorage, saveWhitelist, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState, loadReaderSettingsFromLocalStorage } from './state';
 import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
 import { ErrorGroup } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress, copyToClipboard } from './utils/ui-render';
@@ -520,6 +520,7 @@ function closeAllModals() {
 
 function prepareForNewFile(): boolean {
     resetApp();
+    loadReaderSettingsFromLocalStorage(); // Reload reader settings from local storage
     if (!state.dictionaryStatus.isVietnameseLoaded) {
         showToast("Đang tải dữ liệu từ điển, vui lòng đợi giây lát...", "info");
         return false;
@@ -678,18 +679,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         applyReaderStyles();
     });
     UI.sizeUpBtn?.addEventListener('click', () => {
-        if (state.readerSettings.fontSize < FONT_SIZE_MAX_REM) {
-            state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
-            saveReaderSettings();
-            applyReaderStyles();
-        }
+        const newSize = Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
+        state.readerSettings.fontSize = Math.min(FONT_SIZE_MAX_REM, newSize);
+        saveReaderSettings();
+        applyReaderStyles();
     });
     UI.sizeDownBtn?.addEventListener('click', () => {
-        if (state.readerSettings.fontSize > FONT_SIZE_MIN_REM) {
-            state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
-            saveReaderSettings();
-            applyReaderStyles();
-        }
+        const newSize = Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
+        state.readerSettings.fontSize = Math.max(FONT_SIZE_MIN_REM, newSize);
+        saveReaderSettings();
+        applyReaderStyles();
     });
 
     Object.values(UI.settingToggles).forEach((toggle: HTMLInputElement | null) => toggle?.addEventListener('change', saveSettings));

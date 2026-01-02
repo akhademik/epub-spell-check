@@ -1,1 +1,1 @@
-2. "sí" in this context ""Hừ! Có "Vân sí điểu" - loài chim được xưng là mạnh hơn cả mũi tên nhọn đượ ..." and "sí" in this context "... n kêu lên một tiếng dài đầy oán độc, cái cánh (băng sí) nhắm ngay Hàn Lập đập một cái." why they listed as 2 different error ?
+2. in the setting of reader view, if i click to maximum font size which is 3, then next load it show 3 but if i click increase again it jump to the smallest and up, why is that having behavior ?
