@@ -1,25 +1,22 @@
 // src/workers/analysis.worker.ts
 
-// @ts-expect-error: Used for type annotation in onmessage event.data
-import type { Dictionaries } from "../types/dictionary"; // Explicit type import
-import { ErrorInstance, ErrorType } from "../types/errors";
-// @ts-expect-error: Used for type annotation in onmessage event.data
-import type { TextContentBlock } from "../types/epub"; // Explicit type import
+import { ErrorInstance, ErrorType } from "../types/errors"; // This import remains as it's for runtime values.
 
-// Import from analysis-core
+// Import from analysis-core (runtime values)
 import {
   WORD_REGEX,
   ANALYSIS_CHUNK_SIZE,
   getErrorType, // Used by checkWord function
 } from "../utils/analysis-core";
-// @ts-expect-error: Used for type annotation in onmessage event.data
-import type { CheckSettings } from "../utils/analysis-core"; // Explicit type import
 
-
-
-
-// The analyzeText function will be triggered by messages from the main thread
-self.onmessage = async (event: MessageEvent) => {
+self.onmessage = async (
+  event: MessageEvent<{
+    textBlocks: import("../types/epub").TextContentBlock[];
+    dictionaries: import("../types/dictionary").Dictionaries;
+    settings: import("../utils/analysis-core").CheckSettings;
+    chapterStartIndex: number;
+  }>
+) => {
   const { textBlocks, dictionaries, settings, chapterStartIndex } = event.data;
 
   let totalWords = 0;
