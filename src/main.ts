@@ -484,10 +484,10 @@ function resetApp() {
 
     resetState();
 
-    if (UI.settingToggles.dict) UI.settingToggles.dict.checked = state.checkSettings.dictionary;
-    if (UI.settingToggles.case) UI.settingToggles.case.checked = state.checkSettings.uppercase;
-    if (UI.settingToggles.tone) UI.settingToggles.tone.checked = state.checkSettings.tone;
-    if (UI.settingToggles.struct) UI.settingToggles.struct.checked = state.checkSettings.foreign;
+    if (UI.settingToggles.dict) UI.settingToggles.dict.checked = true;
+    if (UI.settingToggles.case) UI.settingToggles.case.checked = true;
+    if (UI.settingToggles.tone) UI.settingToggles.tone.checked = true;
+    if (UI.settingToggles.struct) UI.settingToggles.struct.checked = true;
 
     if (state.currentCoverUrl) {
         URL.revokeObjectURL(state.currentCoverUrl);
