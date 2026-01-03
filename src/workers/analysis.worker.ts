@@ -1,19 +1,24 @@
 // src/workers/analysis.worker.ts
 
-import { ErrorInstance, ErrorType } from "../types/errors"; // This import remains as it's for runtime values.
+import { ErrorInstance, ErrorType } from "../types/errors";
 
 // Import from analysis-core (runtime values)
 import {
   WORD_REGEX,
   ANALYSIS_CHUNK_SIZE,
-  getErrorType, // Used by checkWord function
+  getErrorType,
 } from "../utils/analysis-core";
+
+// Use "import type" for type-only imports - these are stripped at runtime
+import type { TextContentBlock } from "../types/epub";
+import type { Dictionaries } from "../types/dictionary";
+import type { CheckSettings } from "../utils/analysis-core";
 
 self.onmessage = async (
   event: MessageEvent<{
-    textBlocks: import("../types/epub").TextContentBlock[];
-    dictionaries: import("../types/dictionary").Dictionaries;
-    settings: import("../utils/analysis-core").CheckSettings;
+    textBlocks: TextContentBlock[];
+    dictionaries: Dictionaries;
+    settings: CheckSettings;
     chapterStartIndex: number;
   }>
 ) => {
@@ -42,7 +47,7 @@ self.onmessage = async (
   for (let i = 0; i < totalBlocks; i++) {
     const block = textBlocks[i];
     let match;
-    WORD_REGEX.lastIndex = 0; // Reset regex lastIndex for consistent results
+    WORD_REGEX.lastIndex = 0;
     while ((match = WORD_REGEX.exec(block.text)) !== null) {
       const word = match[0];
       totalWords++;
@@ -59,8 +64,8 @@ self.onmessage = async (
             originalParagraph: block.text,
             startIndex: match.index,
             endIndex: match.index + word.length,
-            chapterIndex: chapterStartIndex + i, // Adjust chapterIndex for worker
-            paragraphIndex: i, // Relative to the block list sent to worker
+            chapterIndex: chapterStartIndex + i,
+            paragraphIndex: i,
             matchIndex: match.index,
           },
         });
@@ -68,16 +73,14 @@ self.onmessage = async (
     }
 
     if (i % ANALYSIS_CHUNK_SIZE === 0) {
-      // Post progress back to the main thread
       self.postMessage({
         type: 'progress',
-        progress: (i / totalBlocks) * 100, // Progress of this worker
-        message: `Đang phân tích chương ${chapterStartIndex + i + 1}...`,
+        progress: (i / totalBlocks) * 100,
+        message: 'Đang kiểm tra chính tả...',
       });
     }
   }
 
-  // Post results back to the main thread
   self.postMessage({
     type: 'complete',
     errors: allErrors,
