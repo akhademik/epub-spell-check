@@ -4,12 +4,13 @@ This document outlines potential areas for optimizing and cleaning up the projec
 
 ## 1. Performance Optimizations
 
-### 1.1 Dictionary Management (`src/utils/dictionary.ts`)
+### 1.1 Dictionary Management (`src/utils/dictionary.ts`) - COMPLETED
 
-*   **Current State:** Dictionaries are loaded concurrently into `Set` objects using `Promise.all`. Hardcoded Vietnamese words are present.
-*   **Potential Optimization:**
+*   **Current State:** Dictionaries are loaded concurrently into `Set` objects using `Promise.all`.
+*   **Completed Improvements:**
+    *   **Verified Dictionary Source:** A codebase scan confirmed that no hardcoded Vietnamese *dictionary words* are present in the source code. All dictionary lookups are performed against word lists loaded from external `.txt` files. The Vietnamese characters present in `analysis-core.ts` are for rule-based logic (e.g., tone placement rules), not dictionary lookups.
+*   **Potential Optimization (Low Priority):**
     *   **Large Dictionary Handling:** For extremely large dictionaries, consider alternative data structures (e.g., specialized trie implementations) that offer better memory efficiency or faster lookups than `Set`s, especially if dictionary size becomes a performance bottleneck. (Low priority for now, given current scope)
-    *   **Consolidate Dictionary Source:** The project currently processes Vietnamese words from `public/vn-dict.txt`, which can include specially formatted entries. Ensure that `public/vn-dict.txt` remains the single, well-maintained source of truth for the Vietnamese dictionary, avoiding any direct word embedding in the TypeScript code.
 
 ### 1.2 Text Analysis (`src/utils/analyzer.ts`) - COMPLETED
 
