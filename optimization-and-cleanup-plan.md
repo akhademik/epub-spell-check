@@ -20,7 +20,7 @@ This document outlines potential areas for optimizing and cleaning up the projec
 *   **Remaining Potential Optimization (Lower Priority):**
     *   **Pre-processing Text:** Ensure text normalization (e.g., `NFC`) and cleaning are efficient and only performed once per text block. (Already largely handled by `analysis-core.ts`).
 
-### 1.3 UI Responsiveness
+### 1.3 UI Responsiveness - COMPLETED
 
 *   **Current State:** `updateProgress` is used in `epub-parser.ts` and `analyzer.ts`. EPUB parsing (which includes `DOMParser` calls) runs on the main thread.
 *   **Completed Improvements:**
