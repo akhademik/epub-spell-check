@@ -208,3 +208,7 @@ export function levenshteinDistance(a: string, b: string): number {
 
   return matrix[b.length][a.length];
 }
+
+export function getBaseWord(word: string): string {
+  return word.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}

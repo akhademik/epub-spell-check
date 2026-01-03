@@ -5,6 +5,7 @@ import {
   TONE_MISPLACEMENT,
   CheckSettings,
   levenshteinDistance,
+  getBaseWord,
 } from "./analysis-core";
 
 
@@ -20,36 +21,49 @@ export function findSuggestions(word: string, dictionaries: Dictionaries): strin
     }
   }
 
-  if (dictionaries.vietnamese.size > 0) {
-    const LEVEN_MAX_DIST = word.length < 4 ? 1 : 2;
-    const LEVEN_SUGGESTION_COUNT = 5;
-    const topLevenSuggestions: { word: string; dist: number }[] = [];
+  const suggestionSet = new Set(suggestions);
 
-    for (const dictWord of dictionaries.vietnamese) {
-        if (Math.abs(dictWord.length - low.length) <= LEVEN_MAX_DIST) {
-            const d = levenshteinDistance(low, dictWord);
-            if (d <= LEVEN_MAX_DIST && d > 0) {
-                let inserted = false;
-                for (let i = 0; i < topLevenSuggestions.length; i++) {
-                    if (d < topLevenSuggestions[i].dist) {
-                        topLevenSuggestions.splice(i, 0, { word: dictWord, dist: d });
-                        inserted = true;
-                        break;
-                    }
-                }
-                if (!inserted && topLevenSuggestions.length < LEVEN_SUGGESTION_COUNT) {
-                    topLevenSuggestions.push({ word: dictWord, dist: d });
-                }
-                if (topLevenSuggestions.length > LEVEN_SUGGESTION_COUNT) {
-                    topLevenSuggestions.pop();
-                }
-            }
+  const LEVEN_MAX_DIST = word.length < 5 ? 1 : 2;
+
+  const getTopSuggestions = (dictionary: Set<string>, limit: number): string[] => {
+    const candidates: { word: string; score: number }[] = [];
+    const baseLow = getBaseWord(low);
+
+    for (const dictWord of dictionary) {
+      if (Math.abs(dictWord.length - low.length) <= LEVEN_MAX_DIST) {
+        const baseDictWord = getBaseWord(dictWord);
+        const baseDistance = levenshteinDistance(baseLow, baseDictWord);
+
+        if (baseDistance <= 1) { // Only consider if base word is very similar
+          const fullDistance = levenshteinDistance(low, dictWord);
+          const score = baseDistance * 10 + fullDistance;
+          
+          if (score > 0) {
+            candidates.push({ word: dictWord, score: score });
+          }
         }
+      }
     }
-    suggestions.push(...topLevenSuggestions.map(s => s.word));
+    candidates.sort((a, b) => a.score - b.score);
+    return candidates.slice(0, limit).map(c => c.word);
+  };
+
+  // Prioritize Vietnamese suggestions
+  if (dictionaries.vietnamese.size > 0) {
+    const vnSuggestions = getTopSuggestions(dictionaries.vietnamese, MAX_SUGGESTION_COUNT);
+    vnSuggestions.forEach(s => suggestionSet.add(s));
   }
 
-  return Array.from(new Set(suggestions)).slice(0, MAX_SUGGESTION_COUNT);
+  // If we still have space, fill with English suggestions
+  if (suggestionSet.size < MAX_SUGGESTION_COUNT && dictionaries.english.size > 0) {
+    const remainingLimit = MAX_SUGGESTION_COUNT - suggestionSet.size;
+    if (remainingLimit > 0) {
+      const enSuggestions = getTopSuggestions(dictionaries.english, remainingLimit);
+      enSuggestions.forEach(s => suggestionSet.add(s));
+    }
+  }
+
+  return Array.from(suggestionSet).slice(0, MAX_SUGGESTION_COUNT);
 }
 
 export function groupErrors(errors: ErrorInstance[]): ErrorGroup[] {
