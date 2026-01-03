@@ -1,5 +1,7 @@
+Afghanistan
 Aiofe
 Aldwych
+Astrakhan
 Bazaar
 Beloozero
 Brookwood
@@ -18,14 +20,20 @@ Jonson
 Judah
 Kazan
 Kraków
+Krakow
 Marlowe
 Mycroft
 Nizhni
+Pirozkhi
 Ritz
 Robertshaw
 Ryazan
 Schleswig
+Shaftebury
+Shaftesbury
+Sherlock
 Sherrinford
+Trafalgar
 Wagner
 Warsaw
 Waterloo
@@ -39,6 +47,7 @@ Woking
 Wormerley
 Wormersley
 Wormesley
+Yoshiko
 aaa
 aaron
 ab
@@ -732,6 +741,7 @@ babes
 babette
 babies
 baby
+baccarat
 back
 backed
 backing
@@ -3152,6 +3162,7 @@ farmers
 farming
 farms
 farrah
+farthing
 fashion
 fast
 faster
@@ -5078,6 +5089,7 @@ latrice
 latrina
 latter
 latvia
+laudanum
 laugh
 launa
 launch
@@ -5703,6 +5715,7 @@ maps
 mar
 mara
 maranda
+marathon
 marble
 marc
 marcel
@@ -8240,6 +8253,7 @@ shiela
 shield
 shift
 shila
+shilling
 shiloh
 shin
 shine
@@ -9487,7 +9501,6 @@ yolonda
 yon
 yong
 yoshie
-Yoshiko
 young
 yu
 yuette
