@@ -1,22 +1,19 @@
 import { Dictionaries, DictionaryStatus } from '../types/dictionary';
-import { logger } from './logger';
+
 
 import { UIElements } from '../types/ui';
 
 
-async function fetchLocalDict(localFilename: string): Promise<string | null> {
-  try {
-    const localRes = await fetch(`/${localFilename}`);
-    if (localRes.ok) {
-      return await localRes.text();
-    } else {
-      logger.warn(`Local file ${localFilename} not found, status: ${localRes.status}`);
-      return null;
-    }
-  } catch (e) {
-    logger.error(`Failed to load local file ${localFilename}:`, e);
-    return null;
+async function fetchLocalDict(localFilename: string): Promise<string> {
+  const localRes = await fetch(`/${localFilename}`);
+  if (!localRes.ok) {
+    throw new Error(`Failed to load local file ${localFilename}, status: ${localRes.status}`);
   }
+  const contentType = localRes.headers.get('content-type');
+  if (contentType && contentType.includes('text/html')) {
+    throw new Error(`Failed to load expected text file ${localFilename}. Server returned HTML fallback.`);
+  }
+  return await localRes.text();
 }
 
 
@@ -44,79 +41,61 @@ export async function loadDictionaries(ui: UIElements): Promise<{
   ui.dictDot?.classList.remove("bg-green-500", "bg-red-500");
   ui.dictDot?.classList.add("bg-yellow-500", "animate-pulse");
 
-  try {
-    ui.engLoading?.classList.remove("hidden");
-    ui.engLoading?.classList.add("flex");
+  ui.engLoading?.classList.remove("hidden");
+  ui.engLoading?.classList.add("flex");
 
-    const [vnRes, enRes, customRes] = await Promise.all([
-      fetchLocalDict("vn-dict.txt"),
-      fetchLocalDict("en-dict.txt"),
-      fetchLocalDict("custom-dict.txt"),
-    ]);
+  const [vnRes, enRes, customRes] = await Promise.all([
+    fetchLocalDict("vn-dict.txt"),
+    fetchLocalDict("en-dict.txt"),
+    fetchLocalDict("custom-dict.txt"),
+  ]);
 
-    ui.engLoading?.classList.add("hidden");
-    ui.engLoading?.classList.remove("flex");
+  ui.engLoading?.classList.add("hidden");
+  ui.engLoading?.classList.remove("flex");
 
-    // Process Vietnamese Dictionary
-    if (vnRes) {
-      vnRes.split("\n").forEach((line) => {
-        let word = line.trim();
-        if (!word) return;
-        if (word.startsWith("{") && word.endsWith("}")) {
-          try {
-            word = JSON.parse(word).text;
-          } catch (_e) { /* intentional no-op */ }
-        }
-        const cleanWord = word.toLowerCase().normalize("NFC");
-        if (cleanWord) {
-          cleanWord.split(/\s+/).forEach((p) => dictionaries.vietnamese.add(p));
-        }
-      });
-
-      status.isVietnameseLoaded = true;
-      status.vietnameseWordCount = dictionaries.vietnamese.size;
+  // Process Vietnamese Dictionary
+  vnRes.split("\n").forEach((line) => {
+    let word = line.trim();
+    if (!word) return;
+    if (word.startsWith("{") && word.endsWith("}")) {
+      try {
+        word = JSON.parse(word).text;
+      } catch (_e) { /* intentional no-op */ }
     }
-
-    // Process English Dictionary
-    if (enRes) {
-      enRes.split(/\r?\n/).forEach((word) => {
-        const cleanWord = word.trim().toLowerCase();
-        if (cleanWord) dictionaries.english.add(cleanWord);
-      });
-      status.isEnglishLoaded = true;
-      status.englishWordCount = dictionaries.english.size;
+    const cleanWord = word.toLowerCase().normalize("NFC");
+    if (cleanWord) {
+      cleanWord.split(/\s+/).forEach((p) => dictionaries.vietnamese.add(p));
     }
+  });
 
-    // Process Custom Dictionary
-    if (customRes) {
-      customRes.split(/\r?\n/).forEach((word) => {
-        const cleanWord = word.trim();
-        if (cleanWord) dictionaries.custom.add(cleanWord);
-      });
-      status.isCustomLoaded = true;
-      status.customWordCount = dictionaries.custom.size;
-    }
+  status.isVietnameseLoaded = true;
+  status.vietnameseWordCount = dictionaries.vietnamese.size;
 
-    ui.dictDot?.classList.remove("bg-yellow-500", "animate-pulse");
-    if (status.isVietnameseLoaded) {
-      ui.dictDot?.classList.add("bg-green-500");
-      if (ui.dictText) {
-        ui.dictText.innerHTML = `
-          <div class="flex flex-col items-start leading-snug">
-            <span>VN: ${status.vietnameseWordCount.toLocaleString()} từ</span>
-            <span>EN: ${status.englishWordCount.toLocaleString()} từ</span>
-          </div>
-        `;
-      }
-    } else {
-      ui.dictDot?.classList.add("bg-red-500");
-      if (ui.dictText) ui.dictText.innerText = "Lỗi tải dữ liệu";
-    }
-  } catch (err) {
-    logger.error("Error loading dictionaries:", err);
-    ui.dictDot?.classList.remove("bg-yellow-500", "animate-pulse");
-    ui.dictDot?.classList.add("bg-red-500");
-    if (ui.dictText) ui.dictText.innerText = "Lỗi kết nối";
+  // Process English Dictionary
+  enRes.split(/\r?\n/).forEach((word) => {
+    const cleanWord = word.trim().toLowerCase();
+    if (cleanWord) dictionaries.english.add(cleanWord);
+  });
+  status.isEnglishLoaded = true;
+  status.englishWordCount = dictionaries.english.size;
+
+  // Process Custom Dictionary
+  customRes.split(/\r?\n/).forEach((word) => {
+    const cleanWord = word.trim();
+    if (cleanWord) dictionaries.custom.add(cleanWord);
+  });
+  status.isCustomLoaded = true;
+  status.customWordCount = dictionaries.custom.size;
+
+  ui.dictDot?.classList.remove("bg-yellow-500", "animate-pulse");
+  ui.dictDot?.classList.add("bg-green-500"); // Always green if no error propagated
+  if (ui.dictText) {
+    ui.dictText.innerHTML = `
+      <div class="flex flex-col items-start leading-snug">
+        <span>VN: ${status.vietnameseWordCount.toLocaleString()} từ</span>
+        <span>EN: ${status.englishWordCount.toLocaleString()} từ</span>
+      </div>
+    `;
   }
 
   return { dictionaries, status };

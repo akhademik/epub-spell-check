@@ -23,6 +23,10 @@ let debounceTimer: number;
 
 let isUpdating = false;
 
+/**
+ * Handles global keyboard shortcuts for navigation and quick actions.
+ * @param e - The KeyboardEvent object.
+ */
 const handleGlobalKeydown = (e: KeyboardEvent) => {
     const activeElement = document.activeElement;
     if (activeElement && ['TEXTAREA', 'INPUT'].includes(activeElement.tagName)) {
@@ -678,8 +682,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.dictionaries = dictionaries;
         state.dictionaryStatus = status;
         logger.info('Dictionaries Loaded:', state.dictionaryStatus);
-    } catch (error) {
-        logger.error('Failed to load dictionaries:', error);
+    } catch (error: any) { // Explicitly type as any to access error.message reliably
+        logger.error('Failed to load dictionaries:', error.message);
         showToast('Lỗi tải từ điển. Vui lòng tải lại trang.', 'error');
         UI.fileInput?.setAttribute('disabled', 'true');
         UI.uploadSection?.classList.add('opacity-50', 'pointer-events-none');
