@@ -1,5 +1,6 @@
 import { Dictionaries } from "../types/dictionary";
 import { ErrorGroup, ErrorInstance } from "../types/errors";
+import { MAX_SUGGESTION_COUNT } from "../constants";
 import {
   TONE_MISPLACEMENT,
   CheckSettings,
@@ -48,7 +49,7 @@ export function findSuggestions(word: string, dictionaries: Dictionaries): strin
     suggestions.push(...topLevenSuggestions.map(s => s.word));
   }
 
-  return Array.from(new Set(suggestions)).slice(0, 7);
+  return Array.from(new Set(suggestions)).slice(0, MAX_SUGGESTION_COUNT);
 }
 
 export function groupErrors(errors: ErrorInstance[]): ErrorGroup[] {
