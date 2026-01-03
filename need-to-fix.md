@@ -1,1 +1,0 @@
-1. the loading when import book should be process chapter ... / ..... then maybe 'processing, cause right now it say processing chapter ..../..... for the second time but that not actula chapters, more like to me number of paragraph
