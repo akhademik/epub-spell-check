@@ -47,17 +47,21 @@ This document outlines potential areas for optimizing and cleaning up the projec
         *   Standardizing error objects or classes.
         *   Potentially integrating with a simple error tracking mechanism if needed for debugging.
 
-### 2.2 Refine Constants (`src/constants.ts`)
+### 2.2 Refine Constants (`src/constants.ts`) - COMPLETED
 
 *   **Current State:** Centralizes various constants.
+*   **Completed Improvements:**
+    *   **Documentation:** Added JSDoc comments to all constants explaining their purpose and usage.
 *   **Potential Improvement:**
-    *   **Documentation:** Add JSDoc comments to all constants explaining their purpose and usage.
     *   **Grouping:** Ensure related constants are logically grouped.
 
-### 2.3 JSDoc / Type Comments
+### 2.3 JSDoc / Type Comments - COMPLETED
 
 *   **Current State:** TypeScript is used, but extensive JSDoc or type comments for functions, parameters, and complex types might be missing.
-*   **Potential Improvement:** Add comprehensive JSDoc comments to all public functions, interfaces, and complex types to improve code readability, maintainability, and tooling support. This aligns with the "clean up" aspect by making the codebase easier to understand for new developers.
+*   **Completed Improvements:**
+    *   Added comprehensive JSDoc comments to public functions in `src/utils/ui-render.ts`, `src/main.ts`, `src/utils/epub-parser.ts`, `src/utils/analyzer.ts`, `src/state.ts`, `src/utils/dictionary.ts`, `src/utils/analysis-core.ts`, and `src/workers/analysis.worker.ts`.
+    *   Removed non-essential inline and block comments from all source files, improving code readability.
+*   **Potential Improvement:** Add JSDoc comments to remaining interfaces and complex types.
 
 ### 2.4 Modularization and Separation of Concerns
 
