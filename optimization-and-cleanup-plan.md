@@ -39,14 +39,14 @@ This document outlines potential areas for optimizing and cleaning up the projec
 
 ## 2. Code Quality and Maintainability
 
-### 2.1 Consistent Error Handling
+### 2.1 Consistent Error Handling - COMPLETED
 
-*   **Current State:** `epub-parser.ts` throws errors, `dictionary.ts` logs and handles errors.
+*   **Current State:** `epub-parser.ts` throws errors, `dictionary.ts` now throws errors consistently.
+*   **Completed Improvements:**
+    *   **Centralized Error Reporting for Dictionary Loading:** Refactored `src/utils/dictionary.ts` to consistently throw errors (including HTML fallback detection for missing files) on critical failures, allowing the main application (`src/main.ts`) to centralize error handling and display user-friendly toast notifications.
 *   **Potential Improvement:**
-    *   **Centralized Error Reporting:** Implement a more centralized and consistent error handling strategy. This could involve:
-        *   Using `notifications.ts` to display user-friendly error messages for critical failures.
-        *   Standardizing error objects or classes.
-        *   Potentially integrating with a simple error tracking mechanism if needed for debugging.
+    *   **Standardizing Error Objects/Classes:** Consider creating custom error classes for different types of application errors to provide more structured error information.
+    *   **Integrating with Error Tracking:** Potentially integrate with a simple error tracking mechanism for debugging.
 
 ### 2.2 Refine Constants (`src/constants.ts`) - COMPLETED
 
