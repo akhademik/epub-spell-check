@@ -142,6 +142,8 @@ export function updateStats(ui: UIElements, totalWords: number, totalErrors: num
 
     if (statWords) statWords.innerText = totalWords.toLocaleString();
     if (statErrors) statErrors.innerText = totalErrors.toLocaleString();
+    const statErrorsMobileCount = ui.metaTitle?.ownerDocument.getElementById("stat-errors-mobile-count");
+    if (statErrorsMobileCount) statErrorsMobileCount.innerText = totalErrors.toLocaleString();
     if (statGroups) statGroups.innerText = totalGroups.toLocaleString();
 }
 

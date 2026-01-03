@@ -92,4 +92,3 @@ body {
 .settings-modal-aligned {
   right: max(1rem, calc((100vw - 72rem) / 2 + 0.5rem));
 }
-

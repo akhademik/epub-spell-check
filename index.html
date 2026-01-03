@@ -17,7 +17,7 @@
       class="sticky top-0 z-20 border-b shadow-md bg-slate-900 border-slate-800"
     >
       <div
-        class="flex items-center justify-between max-w-6xl px-4 py-3 mx-auto"
+        class="flex flex-wrap items-center justify-center max-w-6xl gap-4 px-4 py-3 mx-auto sm:justify-between sm:flex-nowrap"
       >
         <div class="flex items-center gap-3">
           <div
@@ -343,7 +343,7 @@
             <div>
               <h4 class="mb-1 font-bold text-white">2. Phím Tắt</h4>
               <div
-                class="grid grid-cols-2 gap-2 p-3 text-xs rounded-lg bg-slate-800"
+                class="grid grid-cols-1 gap-2 p-3 text-xs rounded-lg sm:grid-cols-2 bg-slate-800"
               >
                 <div class="flex items-center gap-2">
                   <kbd
@@ -461,7 +461,7 @@
       <!-- Settings Modal -->
       <div
         id="settings-modal"
-        class="fixed z-50 p-5 border shadow-2xl top-20 w-80 bg-slate-900 border-slate-700 rounded-xl animate-fadeIn settings-modal-aligned"
+        class="fixed z-50 p-5 text-sm border shadow-2xl top-20 w-80 bg-slate-900 border-slate-700 rounded-xl animate-fadeIn settings-modal-aligned"
       >
         <div
           class="flex items-center justify-between pb-2 mb-4 border-b border-slate-800"
@@ -860,7 +860,7 @@
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
           <div
-            class="relative p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800"
+            class="relative hidden p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800 md:block"
           >
             <div class="absolute top-0 right-0 p-4 opacity-5">
               <svg
@@ -901,20 +901,31 @@
                 />
               </svg>
             </div>
+            <!-- Desktop view for label and count -->
             <div
-              class="mb-1 text-sm font-medium tracking-wider text-red-400 uppercase"
+              class="hidden mb-1 text-sm font-medium tracking-wider text-red-400 uppercase md:block"
             >
               Lỗi phát hiện
             </div>
             <div
               id="stat-errors"
-              class="text-3xl font-bold text-red-500 transition-transform origin-left group-hover:scale-105"
+              class="hidden text-3xl font-bold text-red-500 transition-transform origin-left md:block group-hover:scale-105"
             >
               0
             </div>
+            <!-- Mobile view for combined label and count -->
+            <div
+              id="stat-errors-mobile"
+              class="flex items-center justify-between w-full text-lg font-bold text-red-400 md:hidden"
+            >
+              <span>Lỗi phát hiện</span>
+              <span id="stat-errors-mobile-count" class="ml-2 text-red-500"
+                >0</span
+              >
+            </div>
           </div>
           <div
-            class="relative p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800"
+            class="relative hidden p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800 md:block"
           >
             <div class="absolute top-0 right-0 p-4 text-blue-500 opacity-5">
               <svg
