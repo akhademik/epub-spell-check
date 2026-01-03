@@ -1,6 +1,5 @@
 import { Dictionaries } from "../types/dictionary";
 import { ErrorGroup, ErrorInstance } from "../types/errors";
-// Import from analysis-core
 import {
   TONE_MISPLACEMENT,
   CheckSettings,
@@ -8,7 +7,7 @@ import {
 } from "./analysis-core";
 
 
-export type { CheckSettings }; // Re-export CheckSettings from analysis-core
+export type { CheckSettings };
 
 export function findSuggestions(word: string, dictionaries: Dictionaries): string[] {
   const low = word.toLowerCase().normalize("NFC");

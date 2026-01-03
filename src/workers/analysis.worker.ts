@@ -1,19 +1,19 @@
-// src/workers/analysis.worker.ts
-
 import { ErrorInstance, ErrorType } from "../types/errors";
 
-// Import from analysis-core (runtime values)
 import {
   WORD_REGEX,
   ANALYSIS_CHUNK_SIZE,
   getErrorType,
 } from "../utils/analysis-core";
 
-// Use "import type" for type-only imports - these are stripped at runtime
 import type { TextContentBlock } from "../types/epub";
 import type { Dictionaries } from "../types/dictionary";
 import type { CheckSettings } from "../utils/analysis-core";
 
+/**
+ * Handles incoming messages from the main thread to start the analysis process.
+ * @param event - The message event containing the data needed for analysis.
+ */
 self.onmessage = async (
   event: MessageEvent<{
     textBlocks: TextContentBlock[];

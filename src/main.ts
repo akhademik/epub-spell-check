@@ -1,13 +1,13 @@
 import './style.css';
-import AnalysisWorker from './workers/analysis.worker?worker'; // Import the Web Worker
+import AnalysisWorker from './workers/analysis.worker?worker';
 import { loadDictionaries } from './utils/dictionary';
 import { logger } from './utils/logger';
 import { parseEpub } from './utils/epub-parser';
 
-import { EpubContent } from './types/epub'; // Re-add this import
+import { EpubContent } from './types/epub';
 import { UIElements } from './types/ui';
 import { state, loadStateFromLocalStorage, saveWhitelist, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState, loadReaderSettingsFromLocalStorage } from './state';
-import { groupErrors, CheckSettings } from './utils/analyzer'; // Removed analyzeText
+import { groupErrors, CheckSettings } from './utils/analyzer';
 import { ErrorGroup, ErrorInstance } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress, copyToClipboard } from './utils/ui-render';
 import { parseWhitelistWithOriginalCase } from './utils/whitelist-parser';
@@ -50,7 +50,7 @@ const handleGlobalKeydown = (e: KeyboardEvent) => {
     }
 };
 
-// --- 2. DOM ELEMENTS & STATE ---
+
 const UI: UIElements = {
     dictStatus: document.getElementById("dict-status"),
     dictDot: document.getElementById("dict-dot"),
@@ -113,7 +113,7 @@ const UI: UIElements = {
 
 
 
-// --- Whitelist & Filter Logic ---
+
 function clearContextView() {
     const contextView = document.getElementById('context-view');
     const contextNav = document.getElementById('context-nav');
@@ -217,7 +217,7 @@ function handleImportWhitelist(event: Event) {
     const file = fileInput.files?.[0];
     if (!file || !UI.whitelistInput) return;
 
-    // --- Input Validation ---
+
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
     if (!WHITELIST_FILE_EXTENSIONS.includes(fileExtension || "")) {
         showToast("Lỗi: Tệp phải là tệp văn bản (.txt, .md)", "error");
@@ -289,7 +289,7 @@ function handleImportWhitelist(event: Event) {
 
 
 
-// --- Filtering and Rendering ---
+
 async function updateAndRenderErrors() {
     if (!UI.whitelistInput || isUpdating) return;
 
@@ -313,7 +313,7 @@ async function updateAndRenderErrors() {
     }
 }
 
-// --- Settings Logic ---
+
 function saveSettings() {
     state.checkSettings = {
         dictionary: UI.settingToggles.dict?.checked ?? true,
@@ -377,7 +377,7 @@ function performExport(type: 'vctve' | 'normal') {
 }
 
 
-// --- Reader Settings Logic ---
+
 function applyReaderStyles() {
     const contextView = document.getElementById('context-view');
     if (contextView) {
@@ -390,7 +390,7 @@ function applyReaderStyles() {
 
 
 
-// --- UI Interaction Logic ---
+
 function navigateErrors(direction: 'up' | 'down') {
     if (state.currentFilteredErrors.length === 0) {
         state.currentGroup = null;
@@ -522,7 +522,7 @@ function closeAllModals() {
 
 function prepareForNewFile(): boolean {
     resetApp();
-    loadReaderSettingsFromLocalStorage(); // Reload reader settings from local storage
+    loadReaderSettingsFromLocalStorage();
     if (!state.dictionaryStatus.isVietnameseLoaded) {
         showToast("Đang tải dữ liệu từ điển, vui lòng đợi giây lát...", "info");
         return false;
@@ -546,20 +546,18 @@ function updateBookMetadata(epubContent: EpubContent) {
 
 async function runAnalysis(epubContent: EpubContent) {
     const fullCheckSettings: CheckSettings = { dictionary: true, uppercase: true, tone: true, foreign: true };
-    showProcessingUI(UI); // Ensure processing UI is shown
+    showProcessingUI(UI);
     updateProgress(UI, 0, 'Khởi tạo phân tích...');
 
-    // Create worker instance
-            const worker = new AnalysisWorker();
+    const worker = new AnalysisWorker();
     const analysisPromise = new Promise<{ errors: ErrorInstance[], totalWords: number }>((resolve, reject) => {
         worker.onmessage = (event) => {
             const { type, progress, message, errors, totalWords } = event.data;
             if (type === 'progress') {
-                // Update main UI with progress from worker
-                updateProgress(UI, 60 + (progress * 0.4), message); // Scale worker progress (0-100) to main thread (60-100)
+                updateProgress(UI, 60 + (progress * 0.4), message);
             } else if (type === 'complete') {
                 resolve({ errors, totalWords });
-                worker.terminate(); // Terminate worker after completion
+                worker.terminate();
             }
         };
 
@@ -569,12 +567,11 @@ async function runAnalysis(epubContent: EpubContent) {
             worker.terminate();
         };
 
-        // Send data to worker
         worker.postMessage({
             textBlocks: epubContent.textBlocks,
             dictionaries: state.dictionaries,
             settings: fullCheckSettings,
-            chapterStartIndex: 0, // Placeholder, will need to be calculated for chunking if implemented later
+            chapterStartIndex: 0,
         });
     });
 
@@ -588,7 +585,6 @@ async function runAnalysis(epubContent: EpubContent) {
 
         updateAndRenderErrors();
 
-        // ... rest of the function (error list rendering, UI updates, etc.)
         if (state.currentFilteredErrors.length > 0) {
             const firstErrorGroup = state.currentFilteredErrors[0];
             const errorList = document.getElementById('error-list');
@@ -642,12 +638,12 @@ async function handleFile(file: File) {
     }
 
     try {
-        showProcessingUI(UI); // Show processing UI immediately
-        const epubContent: EpubContent = await parseEpub(file, UI); // Directly call parseEpub
+        showProcessingUI(UI);
+        const epubContent: EpubContent = await parseEpub(file, UI);
         updateBookMetadata(epubContent);
-        await runAnalysis(epubContent); // This will handle showing processing from 60-100%
+        await runAnalysis(epubContent);
 
-    } catch (err: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) { // Explicitly type err as any to handle various error types
+    } catch (err: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
         logger.error("Error processing EPUB file:", err);
         let errorMessage = "Có lỗi xảy ra trong quá trình xử lý tệp EPUB.";
         if (err instanceof Error) {
@@ -664,7 +660,7 @@ async function handleFile(file: File) {
     }
 }
 
-// --- INITIALIZATION ---
+
 document.addEventListener('DOMContentLoaded', async () => {
     document.body.removeAttribute('hidden');
     UI.exportBtn?.classList.add('hidden');
@@ -781,16 +777,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const group = state.currentFilteredErrors.find(g => g.id === groupId);
             if (!group) return;
 
-            // Handle ignore button
             if (target.closest('.ignore-btn')) {
                 e.stopPropagation();
-                // Find the original index before errors are re-rendered and potentially re-ordered/filtered
                 const originalIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === group.id);
                 ignoreAndAdvance(group.word, group.id, originalIndex);
                 return;
             }
 
-            // Handle select button or item click
             selectGroup(group, errorItem);
             copyToClipboard(group.word);
         });

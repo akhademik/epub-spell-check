@@ -50,7 +50,7 @@ export async function parseEpub(
     coverUrl: null,
   };
 
-  // --- Extract Cover Image ---
+
   try {
     let coverHref: string | null = null;
     const coverMeta = opfXml.querySelector('meta[name="cover"]');

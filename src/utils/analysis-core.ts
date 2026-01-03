@@ -1,4 +1,3 @@
-// src/utils/analysis-core.ts
 
 import { Dictionaries } from "../types/dictionary";
 import { ErrorType } from "../types/errors";

@@ -65,7 +65,7 @@ export async function loadDictionaries(ui: UIElements): Promise<{
         if (word.startsWith("{") && word.endsWith("}")) {
           try {
             word = JSON.parse(word).text;
-          } catch (_e) { /* ignore parse errors */ }
+          } catch (_e) { /* intentional no-op */ }
         }
         const cleanWord = word.toLowerCase().normalize("NFC");
         if (cleanWord) {
