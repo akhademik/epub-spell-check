@@ -485,7 +485,7 @@ function resetApp() {
     hideProcessingUI(UI);
     if (UI.fileInput) UI.fileInput.value = "";
     if (UI.whitelistImportFile) UI.whitelistImportFile.value = "";
-    if (UI.engFilterCheckbox) UI.engFilterCheckbox.checked = false;
+    if (UI.engFilterCheckbox) UI.engFilterCheckbox.checked = true;
 
     resetState();
 
