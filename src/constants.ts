@@ -1,4 +1,3 @@
-
 /**
  * Debounce delay in milliseconds for expensive operations like re-filtering errors after whitelist input.
  */
@@ -44,7 +43,11 @@ export const WHITELIST_FILE_EXTENSIONS = ["txt", "md"];
 /**
  * Number of characters to show before and after a target word in the context view.
  */
-export const CONTEXT_LENGTH_CHARS = 60;
+export const CONTEXT_LENGTH_CHARS = 30;
+/**
+ * Maximum number of suggestions to display for a misspelled word.
+ */
+export const MAX_SUGGESTION_COUNT = 3;
 /**
  * Maximum number of toast notifications displayed at once.
  */
@@ -57,20 +60,25 @@ export const TOAST_AUTO_DISMISS_MS = 3000;
 /**
  * The CSS class used to hide elements.
  */
-export const HIDDEN_CLASS = 'hidden';
+export const HIDDEN_CLASS = "hidden";
 /**
  * CSS classes to make the processing UI header visible.
  */
-export const FLEX_CLASS_VISIBLE = ['flex', 'items-end', 'justify-between', 'mb-4'];
+export const FLEX_CLASS_VISIBLE = [
+  "flex",
+  "items-end",
+  "justify-between",
+  "mb-4",
+];
 /**
  * CSS classes to make the results section visible.
  */
-export const RESULTS_SECTION_VISIBLE = ['flex', 'flex-col', 'gap-6'];
+export const RESULTS_SECTION_VISIBLE = ["flex", "flex-col", "gap-6"];
 /**
  * CSS classes to make buttons visible.
  */
-export const BUTTON_VISIBLE = ['flex', 'items-center', 'gap-2'];
+export const BUTTON_VISIBLE = ["flex", "items-center", "gap-2"];
 /**
  * CSS classes to make overlays visible.
  */
-export const OVERLAY_VISIBLE = ['flex', 'items-center', 'justify-center'];
+export const OVERLAY_VISIBLE = ["flex", "items-center", "justify-center"];

@@ -17,7 +17,7 @@ const initialState: AppState = {
   currentGroup: null,
   currentInstanceIndex: 0,
   checkSettings: { dictionary: true, uppercase: true, tone: true, foreign: true },
-  isEngFilterEnabled: false,
+  isEngFilterEnabled: true,
   readerSettings: { fontSize: 1.25, fontFamily: "serif" },
   selectedErrorElement: null,
 };
