@@ -5,7 +5,7 @@
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EPUB Spell Checker</title>
+    <title>Soát Lỗi Chính Tả</title>
     <script type="module" src="/src/main.ts"></script>
   </head>
   <body
@@ -17,7 +17,7 @@
       class="sticky top-0 z-20 border-b shadow-md bg-slate-900 border-slate-800"
     >
       <div
-        class="flex items-center justify-between max-w-6xl px-4 py-3 mx-auto"
+        class="flex flex-wrap items-center justify-center max-w-6xl gap-4 px-4 py-3 mx-auto sm:justify-between sm:flex-nowrap"
       >
         <div class="flex items-center gap-3">
           <div
@@ -329,16 +329,21 @@
             <div>
               <h4 class="mb-1 font-bold text-white">1. Quy Trình</h4>
               <ul class="pl-5 space-y-1 list-disc marker:text-blue-500">
-                <li>Tải lên file <code>.epub</code> (kéo thả hoặc nhấp để chọn).</li>
+                <li>
+                  Tải lên file sách <code>.epub</code> (kéo thả hoặc nhấp để
+                  chọn).
+                </li>
                 <li>Hệ thống tự động quét lỗi chính tả.</li>
-                <li>Xem danh sách lỗi ở cột trái và ngữ cảnh chi tiết ở cột phải.</li>
+                <li>
+                  Xem danh sách lỗi ở cột trái và ngữ cảnh chi tiết ở cột phải.
+                </li>
               </ul>
             </div>
 
             <div>
               <h4 class="mb-1 font-bold text-white">2. Phím Tắt</h4>
               <div
-                class="grid grid-cols-2 gap-2 p-3 text-xs rounded-lg bg-slate-800"
+                class="grid grid-cols-1 gap-2 p-3 text-xs rounded-lg sm:grid-cols-2 bg-slate-800"
               >
                 <div class="flex items-center gap-2">
                   <kbd
@@ -373,14 +378,25 @@
               <h4 class="mb-1 font-bold text-white">3. Tính Năng</h4>
               <ul class="pl-5 space-y-1 list-disc marker:text-green-500">
                 <li>
-                  <strong>Danh sách bỏ qua (Whitelist):</strong> Nhập/Xuất danh sách từ bỏ qua, hỗ trợ chỉnh sửa trực tiếp và lưu tự động.
+                  <strong>Danh sách bỏ qua (Whitelist):</strong> Nhập/Xuất danh
+                  sách từ bỏ qua, hỗ trợ chỉnh sửa trực tiếp và lưu tự động.
                 </li>
                 <li>
-                  <strong>Xuất Báo Cáo Lỗi:</strong> Tải báo cáo lỗi với hai định dạng (VCTVEGROUP/Thông thường).
+                  <strong>Xuất Báo Cáo Lỗi:</strong> Tải báo cáo lỗi với hai
+                  định dạng (VCTVEGROUP/Thông thường).
                 </li>
-                <li><strong>Lọc Từ Tiếng Anh:</strong> Tùy chọn ẩn các lỗi là từ tiếng Anh chuẩn để tập trung vào lỗi tiếng Việt.</li>
-                <li><strong>Cấu Hình Kiểm Tra:</strong> Bật/tắt các loại lỗi muốn kiểm tra (từ điển, viết hoa, dấu thanh, từ lạ/cấu trúc).</li>
-                <li><strong>Cài Đặt Đọc Sách:</strong> Điều chỉnh cỡ chữ và font chữ (serif/sans-serif) để tối ưu trải nghiệm đọc.</li>
+                <li>
+                  <strong>Lọc Từ Tiếng Anh:</strong> Tùy chọn ẩn các lỗi là từ
+                  tiếng Anh chuẩn để tập trung vào lỗi tiếng Việt.
+                </li>
+                <li>
+                  <strong>Cấu Hình Kiểm Tra:</strong> Bật/tắt các loại lỗi muốn
+                  kiểm tra (từ điển, viết hoa, dấu thanh, từ lạ/cấu trúc).
+                </li>
+                <li>
+                  <strong>Cài Đặt Đọc Sách:</strong> Điều chỉnh cỡ chữ và font
+                  chữ (serif/sans-serif) để tối ưu trải nghiệm đọc.
+                </li>
               </ul>
             </div>
           </div>
@@ -421,20 +437,22 @@
             </button>
           </div>
           <div class="p-6 space-y-4">
-            <p class="text-sm text-slate-300">Bạn có chắc chắn muốn xoá hết danh sách bỏ soát lỗi không?</p>
+            <p class="text-sm text-slate-300">
+              Bạn có chắc chắn muốn xoá hết danh sách bỏ soát lỗi không?
+            </p>
             <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                <button
-                  id="cancel-clear-whitelist-btn"
-                  class="px-4 py-2 text-sm font-medium transition-colors border rounded-lg text-slate-300 border-slate-600 hover:bg-slate-800"
-                >
-                  Huỷ
-                </button>
-                <button
-                  id="confirm-clear-whitelist-btn"
-                  class="px-4 py-2 text-sm font-medium text-white transition-colors bg-red-600 rounded-lg hover:bg-red-500"
-                >
-                  Xoá hết
-                </button>
+              <button
+                id="cancel-clear-whitelist-btn"
+                class="px-4 py-2 text-sm font-medium transition-colors border rounded-lg text-slate-300 border-slate-600 hover:bg-slate-800"
+              >
+                Huỷ
+              </button>
+              <button
+                id="confirm-clear-whitelist-btn"
+                class="px-4 py-2 text-sm font-medium text-white transition-colors bg-red-600 rounded-lg hover:bg-red-500"
+              >
+                Xoá hết
+              </button>
             </div>
           </div>
         </div>
@@ -443,7 +461,7 @@
       <!-- Settings Modal -->
       <div
         id="settings-modal"
-        class="fixed top-20 z-50 p-5 border shadow-2xl w-80 bg-slate-900 border-slate-700 rounded-xl animate-fadeIn settings-modal-aligned"
+        class="fixed z-50 p-5 text-sm border shadow-2xl top-20 w-80 bg-slate-900 border-slate-700 rounded-xl animate-fadeIn settings-modal-aligned"
       >
         <div
           class="flex items-center justify-between pb-2 mb-4 border-b border-slate-800"
@@ -584,7 +602,7 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-2xl font-bold text-slate-200">Tải lên sách</h2>
+            <h2 class="text-2xl font-bold text-slate-200">Tải lên file sách</h2>
             <p class="mt-2 text-lg text-slate-400">
               Kéo thả hoặc nhấp để chọn tệp
             </p>
@@ -720,14 +738,25 @@
               Danh sách từ bỏ soát lỗi
             </label>
             <button
-                id="clear-whitelist-btn"
-                class="text-xs px-3 py-1.5 bg-red-900/50 hover:bg-red-800/70 border border-red-700/50 rounded text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
+              id="clear-whitelist-btn"
+              class="text-xs px-3 py-1.5 bg-red-900/50 hover:bg-red-800/70 border border-red-700/50 rounded text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-3 h-3 pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                Xoá hết
-              </button>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+              Xoá hết
+            </button>
           </div>
           <textarea
             id="whitelist-input"
@@ -831,7 +860,7 @@
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
           <div
-            class="relative p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800"
+            class="relative hidden p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800 md:block"
           >
             <div class="absolute top-0 right-0 p-4 opacity-5">
               <svg
@@ -872,20 +901,31 @@
                 />
               </svg>
             </div>
+            <!-- Desktop view for label and count -->
             <div
-              class="mb-1 text-sm font-medium tracking-wider text-red-400 uppercase"
+              class="hidden mb-1 text-sm font-medium tracking-wider text-red-400 uppercase md:block"
             >
               Lỗi phát hiện
             </div>
             <div
               id="stat-errors"
-              class="text-3xl font-bold text-red-500 transition-transform origin-left group-hover:scale-105"
+              class="hidden text-3xl font-bold text-red-500 transition-transform origin-left md:block group-hover:scale-105"
             >
               0
             </div>
+            <!-- Mobile view for combined label and count -->
+            <div
+              id="stat-errors-mobile"
+              class="flex items-center justify-between w-full text-lg font-bold text-red-400 md:hidden"
+            >
+              <span>Lỗi phát hiện</span>
+              <span id="stat-errors-mobile-count" class="ml-2 text-red-500"
+                >0</span
+              >
+            </div>
           </div>
           <div
-            class="relative p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800"
+            class="relative hidden p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800 md:block"
           >
             <div class="absolute top-0 right-0 p-4 text-blue-500 opacity-5">
               <svg

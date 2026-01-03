@@ -31,17 +31,24 @@ export function resetState() {
 }
 
 export function loadStateFromLocalStorage() {
-  // Whitelist loading was handled elsewhere
-  // No action needed here for whitelist
+  loadReaderSettingsFromLocalStorage();
+}
+
+
+export function loadReaderSettingsFromLocalStorage() {
   try {
     const readerSettings = localStorage.getItem(READER_SETTINGS_KEY);
     if (readerSettings) {
       state.readerSettings = JSON.parse(readerSettings);
+    } else {
+      state.readerSettings = { ...initialState.readerSettings };
     }
   } catch (e) {
-    logger.error("Failed to load reader settings", e);
+    logger.error("Failed to load reader settings from local storage", e);
+    state.readerSettings = { ...initialState.readerSettings };
   }
 }
+
 
 
 

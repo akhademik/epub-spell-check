@@ -7,8 +7,12 @@ import { CONTEXT_LENGTH_CHARS, MAX_TOASTS_DISPLAYED, TOAST_AUTO_DISMISS_MS } fro
 
 const activeToasts: HTMLElement[] = [];
 
-// --- Helper Functions ---
-
+/**
+ * Updates the progress bar and status text in the UI.
+ * @param ui - A reference to the UI elements collection.
+ * @param percentage - The progress percentage (0-100).
+ * @param message - The message to display as the status.
+ */
 export function updateProgress(ui: UIElements, percentage: number, message: string) {
     const roundedPercentage = Math.round(percentage);
 
@@ -18,23 +22,23 @@ export function updateProgress(ui: UIElements, percentage: number, message: stri
 }
 
 const COLOR_PALETTE = [
-    { dot: "bg-blue-500", text: "text-blue-400", bg: "bg-blue-500/20", border: "border-blue-500" },      // 0: Blue
-    { dot: "bg-red-500", text: "text-red-400", bg: "bg-red-500/20", border: "border-red-500" },       // 1: Red
-    { dot: "bg-green-500", text: "text-green-400", bg: "bg-green-500/20", border: "border-green-500" },    // 2: Green
-    { dot: "bg-yellow-500", text: "text-yellow-400", bg: "bg-yellow-500/20", border: "border-yellow-500" },  // 3: Yellow
-    { dot: "bg-indigo-500", text: "text-indigo-400", bg: "bg-indigo-500/20", border: "border-indigo-500" },  // 4: Indigo
-    { dot: "bg-purple-500", text: "text-purple-400", bg: "bg-purple-500/20", border: "border-purple-500" },  // 5: Purple
-    { dot: "bg-pink-500", text: "text-pink-400", bg: "bg-pink-500/20", border: "border-pink-500" },      // 6: Pink
-    { dot: "bg-teal-500", text: "text-teal-400", bg: "bg-teal-500/20", border: "border-teal-500" },      // 7: Teal
+    { dot: "bg-blue-500", text: "text-blue-400", bg: "bg-blue-500/20", border: "border-blue-500" },
+    { dot: "bg-red-500", text: "text-red-400", bg: "bg-red-500/20", border: "border-red-500" },
+    { dot: "bg-green-500", text: "text-green-400", bg: "bg-green-500/20", border: "border-green-500" },
+    { dot: "bg-yellow-500", text: "text-yellow-400", bg: "bg-yellow-500/20", border: "border-yellow-500" },
+    { dot: "bg-indigo-500", text: "text-indigo-400", bg: "bg-indigo-500/20", border: "border-indigo-500" },
+    { dot: "bg-purple-500", text: "text-purple-400", bg: "bg-purple-500/20", border: "border-purple-500" },
+    { dot: "bg-pink-500", text: "text-pink-400", bg: "bg-pink-500/20", border: "border-pink-500" },
+    { dot: "bg-teal-500", text: "text-teal-400", bg: "bg-teal-500/20", border: "border-teal-500" },
 ];
 
 const FIXED_ERROR_COLORS: Record<string, number> = {
-    'Dictionary': 1,  // Red
-    'Typo': 0,        // Blue
-    'Foreign': 2,     // Green
-    'Uppercase': 3,   // Yellow
-    'Tone': 4,        // Indigo 
-    'Spelling': 5,    // Purple 
+    'Dictionary': 1,
+    'Typo': 0,
+    'Foreign': 2,
+    'Uppercase': 3,
+    'Tone': 4,
+    'Spelling': 5,
 };
 
 function getErrorHighlights(type: string): { dot: string; text: string; bg: string; border: string } {
@@ -69,6 +73,10 @@ function escapeHtml(text: string): string {
     return d.innerHTML;
 }
 
+/**
+ * Displays a short-lived toast notification on the screen.
+ * @param msg - The message to display in the toast.
+ */
 export function showToast(msg: string) {
     const toastContainer = document.getElementById("toast-container");
     if (!toastContainer) {
@@ -108,6 +116,10 @@ export function showToast(msg: string) {
     }, TOAST_AUTO_DISMISS_MS);
 }
 
+/**
+ * Copies a given string to the user's clipboard.
+ * @param text - The text to copy.
+ */
 export function copyToClipboard(text: string) {
     if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(
@@ -135,6 +147,13 @@ export function copyToClipboard(text: string) {
 }
 
 
+/**
+ * Updates the statistics display in the UI.
+ * @param ui - A reference to the UI elements collection.
+ * @param totalWords - The total number of words scanned.
+ * @param totalErrors - The total number of individual errors found.
+ * @param totalGroups - The total number of grouped errors.
+ */
 export function updateStats(ui: UIElements, totalWords: number, totalErrors: number, totalGroups: number) {
     const statWords = ui.metaTitle?.ownerDocument.getElementById("stat-total-words");
     const statErrors = ui.metaTitle?.ownerDocument.getElementById("stat-errors");
@@ -142,9 +161,16 @@ export function updateStats(ui: UIElements, totalWords: number, totalErrors: num
 
     if (statWords) statWords.innerText = totalWords.toLocaleString();
     if (statErrors) statErrors.innerText = totalErrors.toLocaleString();
+    const statErrorsMobileCount = ui.metaTitle?.ownerDocument.getElementById("stat-errors-mobile-count");
+    if (statErrorsMobileCount) statErrorsMobileCount.innerText = totalErrors.toLocaleString();
     if (statGroups) statGroups.innerText = totalGroups.toLocaleString();
 }
 
+/**
+ * Renders the list of grouped errors in the sidebar.
+ * @param ui - A reference to the UI elements collection.
+ * @param groups - An array of error groups to render.
+ */
 export function renderErrorList(
     ui: UIElements,
     groups: ErrorGroup[]
@@ -198,6 +224,13 @@ export function renderErrorList(
     });
 }
 
+/**
+ * Renders the context view for a selected error, including the surrounding text and suggestions.
+ * @param ui - A reference to the UI elements collection.
+ * @param group - The error group to display.
+ * @param instanceIndex - The index of the specific error instance within the group to display.
+ * @param dictionaries - A reference to the loaded dictionaries for generating suggestions.
+ */
 export function renderContextView(
     ui: UIElements,
     group: ErrorGroup,

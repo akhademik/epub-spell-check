@@ -1,12 +1,14 @@
 import './style.css';
+import AnalysisWorker from './workers/analysis.worker?worker';
 import { loadDictionaries } from './utils/dictionary';
 import { logger } from './utils/logger';
 import { parseEpub } from './utils/epub-parser';
+
 import { EpubContent } from './types/epub';
 import { UIElements } from './types/ui';
-import { state, loadStateFromLocalStorage, saveWhitelist, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState } from './state';
-import { analyzeText, groupErrors, CheckSettings } from './utils/analyzer';
-import { ErrorGroup } from './types/errors';
+import { state, loadStateFromLocalStorage, saveWhitelist, saveReaderSettings, loadWhitelist as loadWhitelistFromState, resetState, loadReaderSettingsFromLocalStorage } from './state';
+import { groupErrors, CheckSettings } from './utils/analyzer';
+import { ErrorGroup, ErrorInstance } from './types/errors';
 import { renderErrorList, renderContextView, updateStats, updateProgress, copyToClipboard } from './utils/ui-render';
 import { parseWhitelistWithOriginalCase } from './utils/whitelist-parser';
 import { getFilteredErrors } from './utils/filter';
@@ -21,6 +23,10 @@ let debounceTimer: number;
 
 let isUpdating = false;
 
+/**
+ * Handles global keyboard shortcuts for navigation and quick actions.
+ * @param e - The KeyboardEvent object.
+ */
 const handleGlobalKeydown = (e: KeyboardEvent) => {
     const activeElement = document.activeElement;
     if (activeElement && ['TEXTAREA', 'INPUT'].includes(activeElement.tagName)) {
@@ -48,7 +54,7 @@ const handleGlobalKeydown = (e: KeyboardEvent) => {
     }
 };
 
-// --- 2. DOM ELEMENTS & STATE ---
+
 const UI: UIElements = {
     dictStatus: document.getElementById("dict-status"),
     dictDot: document.getElementById("dict-dot"),
@@ -111,7 +117,7 @@ const UI: UIElements = {
 
 
 
-// --- Whitelist & Filter Logic ---
+
 function clearContextView() {
     const contextView = document.getElementById('context-view');
     const contextNav = document.getElementById('context-nav');
@@ -145,6 +151,13 @@ function selectNextError(wordToIgnoreId: string, originalIndex: number) {
     }
 }
 
+function ignoreAndAdvance(wordToIgnore: string, wordToIgnoreId: string, originalIndex: number) {
+    if (updateWhitelist(wordToIgnore)) {
+        updateAndRenderErrors();
+        selectNextError(wordToIgnoreId, originalIndex);
+    }
+}
+
 function quickIgnore() {
     if (!state.currentGroup) {
         logger.info("No current error group to ignore.");
@@ -154,11 +167,7 @@ function quickIgnore() {
     const wordToIgnore = state.currentGroup.word;
     const wordToIgnoreId = state.currentGroup.id;
     const originalIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === wordToIgnoreId);
-
-    if (updateWhitelist(wordToIgnore)) {
-        updateAndRenderErrors();
-        selectNextError(wordToIgnoreId, originalIndex);
-    }
+    ignoreAndAdvance(wordToIgnore, wordToIgnoreId, originalIndex);
 }
 
 function updateWhitelist(word: string): boolean {
@@ -177,11 +186,7 @@ function updateWhitelist(word: string): boolean {
     return true;
 }
 
-function quickIgnoreWordFromList(word: string) {
-    if (updateWhitelist(word)) {
-        updateAndRenderErrors();
-    }
-}
+
 
 function clearWhitelist() {
     if (!UI.whitelistInput) return;
@@ -216,7 +221,7 @@ function handleImportWhitelist(event: Event) {
     const file = fileInput.files?.[0];
     if (!file || !UI.whitelistInput) return;
 
-    // --- Input Validation ---
+
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
     if (!WHITELIST_FILE_EXTENSIONS.includes(fileExtension || "")) {
         showToast("Lỗi: Tệp phải là tệp văn bản (.txt, .md)", "error");
@@ -288,7 +293,7 @@ function handleImportWhitelist(event: Event) {
 
 
 
-// --- Filtering and Rendering ---
+
 async function updateAndRenderErrors() {
     if (!UI.whitelistInput || isUpdating) return;
 
@@ -312,7 +317,7 @@ async function updateAndRenderErrors() {
     }
 }
 
-// --- Settings Logic ---
+
 function saveSettings() {
     state.checkSettings = {
         dictionary: UI.settingToggles.dict?.checked ?? true,
@@ -376,7 +381,7 @@ function performExport(type: 'vctve' | 'normal') {
 }
 
 
-// --- Reader Settings Logic ---
+
 function applyReaderStyles() {
     const contextView = document.getElementById('context-view');
     if (contextView) {
@@ -389,7 +394,7 @@ function applyReaderStyles() {
 
 
 
-// --- UI Interaction Logic ---
+
 function navigateErrors(direction: 'up' | 'down') {
     if (state.currentFilteredErrors.length === 0) {
         state.currentGroup = null;
@@ -521,6 +526,7 @@ function closeAllModals() {
 
 function prepareForNewFile(): boolean {
     resetApp();
+    loadReaderSettingsFromLocalStorage();
     if (!state.dictionaryStatus.isVietnameseLoaded) {
         showToast("Đang tải dữ liệu từ điển, vui lòng đợi giây lát...", "info");
         return false;
@@ -544,45 +550,81 @@ function updateBookMetadata(epubContent: EpubContent) {
 
 async function runAnalysis(epubContent: EpubContent) {
     const fullCheckSettings: CheckSettings = { dictionary: true, uppercase: true, tone: true, foreign: true };
-    const { errors, totalWords } = await analyzeText(epubContent.textBlocks, state.dictionaries, fullCheckSettings, (p: number, m: string) => updateProgress(UI, p, m));
+    showProcessingUI(UI);
+    updateProgress(UI, 0, 'Khởi tạo phân tích...');
 
-    state.allDetectedErrors = groupErrors(errors);
-    state.totalWords = totalWords;
+    const worker = new AnalysisWorker();
+    const analysisPromise = new Promise<{ errors: ErrorInstance[], totalWords: number }>((resolve, reject) => {
+        worker.onmessage = (event) => {
+            const { type, progress, message, errors, totalWords } = event.data;
+            if (type === 'progress') {
+                updateProgress(UI, 60 + (progress * 0.4), message);
+            } else if (type === 'complete') {
+                resolve({ errors, totalWords });
+                worker.terminate();
+            }
+        };
 
-    updateProgress(UI, 100, 'Hoàn tất');
+        worker.onerror = (error) => {
+            logger.error("Worker error:", error);
+            reject(new Error("Lỗi trong quá trình phân tích văn bản."));
+            worker.terminate();
+        };
 
-    updateAndRenderErrors();
+        worker.postMessage({
+            textBlocks: epubContent.textBlocks,
+            dictionaries: state.dictionaries,
+            settings: fullCheckSettings,
+            chapterStartIndex: 0,
+        });
+    });
 
-    if (state.currentFilteredErrors.length > 0) {
-        const firstErrorGroup = state.currentFilteredErrors[0];
-        const errorList = document.getElementById('error-list');
-        const firstErrorElement = errorList?.querySelector(`[data-group-id="${firstErrorGroup.id}"]`) as HTMLElement;
-        if (firstErrorElement) {
-            selectGroup(firstErrorGroup, firstErrorElement);
-            firstErrorElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    try {
+        const { errors, totalWords } = await analysisPromise;
+
+        state.allDetectedErrors = groupErrors(errors);
+        state.totalWords = totalWords;
+
+        updateProgress(UI, 100, 'Hoàn tất');
+
+        updateAndRenderErrors();
+
+        if (state.currentFilteredErrors.length > 0) {
+            const firstErrorGroup = state.currentFilteredErrors[0];
+            const errorList = document.getElementById('error-list');
+            const firstErrorElement = errorList?.querySelector(`[data-group-id="${firstErrorGroup.id}"]`) as HTMLElement;
+            if (firstErrorElement) {
+                selectGroup(firstErrorGroup, firstErrorElement);
+                firstErrorElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+            logger.info('Book loaded and first error selected.');
+        } else {
+            const contextView = document.getElementById('context-view');
+            const contextNav = UI.contextNavControls;
+            if (contextView) {
+                contextView.innerHTML = `
+                    <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
+                        <p class="text-lg mb-2">Tuyệt vời!</p>
+                        <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
+                    </div>`;
+            }
+            contextNav?.classList.add('hidden');
+            state.currentGroup = null;
+            logger.info('Book loaded. No errors found.');
         }
-        logger.info('Book loaded and first error selected.');
-    } else {
-        const contextView = document.getElementById('context-view');
-        const contextNav = UI.contextNavControls;
-        if (contextView) {
-            contextView.innerHTML = `
-                <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
-                    <p class="text-lg mb-2">Tuyệt vời!</p>
-                    <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
-                </div>`;
-        }
-        contextNav?.classList.add('hidden');
-        state.currentGroup = null;
-        logger.info('Book loaded. No errors found.');
-    }
 
-    UI.processingUi?.classList.add("hidden");
-    if (UI.processingUiHeader) {
-        UI.processingUiHeader.classList.remove('flex', 'items-end', 'justify-between', 'mb-4');
-        UI.processingUiHeader.classList.add('hidden');
+        UI.processingUi?.classList.add("hidden");
+        if (UI.processingUiHeader) {
+            UI.processingUiHeader.classList.remove('flex', 'items-end', 'justify-between', 'mb-4');
+            UI.processingUiHeader.classList.add('hidden');
+        }
+        showResultsUI(UI);
+    } catch (error) {
+        logger.error("Analysis failed:", error);
+        showToast("Lỗi phân tích văn bản.", "error");
+        hideProcessingUI(UI);
+        throw error; // Re-throw to be caught by handleFile
     }
-    showResultsUI(UI);
 }
 
 async function handleFile(file: File) {
@@ -594,18 +636,18 @@ async function handleFile(file: File) {
     closeAllModals();
     if (!prepareForNewFile()) return;
 
-    showProcessingUI(UI);
-
     if (state.currentCoverUrl) {
         URL.revokeObjectURL(state.currentCoverUrl);
         state.currentCoverUrl = null;
     }
 
     try {
+        showProcessingUI(UI);
         const epubContent: EpubContent = await parseEpub(file, UI);
         updateBookMetadata(epubContent);
         await runAnalysis(epubContent);
-    } catch (err) {
+
+    } catch (err: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
         logger.error("Error processing EPUB file:", err);
         let errorMessage = "Có lỗi xảy ra trong quá trình xử lý tệp EPUB.";
         if (err instanceof Error) {
@@ -622,7 +664,7 @@ async function handleFile(file: File) {
     }
 }
 
-// --- INITIALIZATION ---
+
 document.addEventListener('DOMContentLoaded', async () => {
     document.body.removeAttribute('hidden');
     UI.exportBtn?.classList.add('hidden');
@@ -640,8 +682,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.dictionaries = dictionaries;
         state.dictionaryStatus = status;
         logger.info('Dictionaries Loaded:', state.dictionaryStatus);
-    } catch (error) {
-        logger.error('Failed to load dictionaries:', error);
+    } catch (error: any) { // Explicitly type as any to access error.message reliably
+        logger.error('Failed to load dictionaries:', error.message);
         showToast('Lỗi tải từ điển. Vui lòng tải lại trang.', 'error');
         UI.fileInput?.setAttribute('disabled', 'true');
         UI.uploadSection?.classList.add('opacity-50', 'pointer-events-none');
@@ -679,18 +721,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         applyReaderStyles();
     });
     UI.sizeUpBtn?.addEventListener('click', () => {
-        if (state.readerSettings.fontSize < FONT_SIZE_MAX_REM) {
-            state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
-            saveReaderSettings();
-            applyReaderStyles();
-        }
+        const newSize = Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
+        state.readerSettings.fontSize = Math.min(FONT_SIZE_MAX_REM, newSize);
+        saveReaderSettings();
+        applyReaderStyles();
     });
     UI.sizeDownBtn?.addEventListener('click', () => {
-        if (state.readerSettings.fontSize > FONT_SIZE_MIN_REM) {
-            state.readerSettings.fontSize = Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
-            saveReaderSettings();
-            applyReaderStyles();
-        }
+        const newSize = Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
+        state.readerSettings.fontSize = Math.max(FONT_SIZE_MIN_REM, newSize);
+        saveReaderSettings();
+        applyReaderStyles();
     });
 
     Object.values(UI.settingToggles).forEach((toggle: HTMLInputElement | null) => toggle?.addEventListener('change', saveSettings));
@@ -741,14 +781,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const group = state.currentFilteredErrors.find(g => g.id === groupId);
             if (!group) return;
 
-            // Handle ignore button
             if (target.closest('.ignore-btn')) {
                 e.stopPropagation();
-                quickIgnoreWordFromList(group.word);
+                const originalIndex = state.currentFilteredErrors.findIndex((_g: ErrorGroup) => _g.id === group.id);
+                ignoreAndAdvance(group.word, group.id, originalIndex);
                 return;
             }
 
-            // Handle select button or item click
             selectGroup(group, errorItem);
             copyToClipboard(group.word);
         });
