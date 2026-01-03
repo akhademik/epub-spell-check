@@ -23,6 +23,14 @@ This document outlines potential areas for optimizing and cleaning up the projec
 ### 1.3 UI Responsiveness
 
 *   **Current State:** `updateProgress` is used in `epub-parser.ts` and `analyzer.ts`. EPUB parsing (which includes `DOMParser` calls) runs on the main thread.
+*   **Completed Improvements:**
+    *   **Responsive Header:** Implemented responsive design for the main header, allowing content to wrap and adjusting alignment on small screens for better mobile display.
+    *   **Responsive Help Modal:** Modified the keyboard shortcuts grid in the help modal to be responsive, stacking into a single column on mobile and displaying as two columns on larger screens.
+    *   **Responsive Error Statistics:** Enhanced the error statistics card display on mobile:
+        *   Hidden "Từ đã quét" (Scanned words) and "Nhóm lỗi" (Error groups) cards on mobile screens.
+        *   Combined "Lỗi phát hiện" (Errors detected) label and its count into a single line with a smaller font on mobile.
+    *   **Settings Modal Alignment:** Restored the settings modal to its original right-aligned position (fixed width, non-responsive) as per user preference, resolving previous layout conflicts.
+    *   **CSS Conflict Resolution:** Removed redundant `block` class from the `#stat-errors-mobile` div to resolve `tailwindcss-intellisense` warnings.
 *   **Potential Optimization:**
     *   **Debounce/Throttle UI Updates:** Ensure that frequent `updateProgress` calls or other UI updates (e.g., rendering error lists) are debounced or throttled to prevent excessive re-renders and maintain UI fluidity. The project already uses `DEBOUNCE_DELAY_MS` in `constants.ts`, ensure it's applied effectively where needed.
     *   **Virtualization:** For very long error lists or context views, consider UI virtualization techniques to render only visible items, significantly improving performance and memory usage.
