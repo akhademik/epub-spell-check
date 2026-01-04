@@ -46,7 +46,8 @@ interface SettingsUI {
 }
 
 interface WhitelistUI {
-  whitelistInput: HTMLTextAreaElement | null;
+  whitelistInput: HTMLInputElement | null;
+  whitelistTagsContainer: HTMLElement | null;
   importWhitelistBtn: HTMLElement | null;
   exportWhitelistBtn: HTMLElement | null;
   whitelistImportFile: HTMLInputElement | null;

@@ -82,3 +82,14 @@ export const BUTTON_VISIBLE = ["flex", "items-center", "gap-2"];
  * CSS classes to make overlays visible.
  */
 export const OVERLAY_VISIBLE = ["flex", "items-center", "justify-center"];
+
+/**
+ * A palette of Tailwind CSS color classes for the whitelist tags.
+ */
+export const TAG_COLORS = [
+    "bg-rose-700",
+    "bg-teal-700",
+    "bg-cyan-700",
+    "bg-sky-700",
+    "bg-fuchsia-700",
+];

@@ -92,3 +92,31 @@ body {
 .settings-modal-aligned {
   right: max(1rem, calc((100vw - 72rem) / 2 + 0.5rem));
 }
+
+/* Whitelist Tags */
+.whitelist-tag {
+  display: inline-flex;
+  align-items: center;
+  color: #e2e8f0; /* slate-200 */
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  gap: 0.5rem;
+}
+
+.whitelist-tag-remove {
+  color: #94a3b8; /* slate-400 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: color 0.15s ease-in-out;
+}
+
+.whitelist-tag-remove:hover {
+  color: #f8fafc; /* slate-50 */
+}

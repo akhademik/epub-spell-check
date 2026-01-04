@@ -1,6 +1,5 @@
 
 import {
-    DEBOUNCE_DELAY_MS,
     FONT_SIZE_MAX_REM,
     FONT_SIZE_MIN_REM,
   } from "../constants";
@@ -9,7 +8,9 @@ import {
   import { UIElements } from "../types/ui";
   import { closeModal, openModal } from "./modal";
   import {
+    addWordToWhitelist,
     clearWhitelist,
+    confirmClearWhitelist,
     exportWhitelist,
     handleImportWhitelist,
   } from "./whitelist-manager";
@@ -32,7 +33,6 @@ import { applyReaderStyles } from "./reader-styles";
     ) => void;
     selectGroup: (group: ErrorGroup, element: HTMLElement) => void;
     copyToClipboard: (text: string, ui: UIElements) => void;
-    updateUIWhitelistInput: (UI: UIElements, value: string) => void;
     showToast: (ui: UIElements, message: string, type: "info" | "error" | "success") => void;
     saveWhitelist: (value: string) => void;
   }
@@ -41,7 +41,7 @@ import { applyReaderStyles } from "./reader-styles";
     UI: UIElements,
     mainFunctions: MainFunctions
   ) {
-    let debounceTimer: number;
+    const debounceTimer: number = 0;
   
     UI.fileInput?.addEventListener(
       "change",
@@ -111,13 +111,18 @@ import { applyReaderStyles } from "./reader-styles";
       toggle?.addEventListener("change", mainFunctions.saveSettings)
     );
   
-    UI.whitelistInput?.addEventListener("input", () => {
-      clearTimeout(debounceTimer);
-      debounceTimer = window.setTimeout(() => {
-        mainFunctions.saveWhitelist(UI.whitelistInput!.value);
-        mainFunctions.updateAndRenderErrors();
-      }, DEBOUNCE_DELAY_MS);
+    UI.whitelistInput?.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const input = e.target as HTMLInputElement;
+            const word = input.value.trim();
+            if (word) {
+                addWordToWhitelist(word, UI, mainFunctions.saveWhitelist, mainFunctions.updateAndRenderErrors);
+                input.value = "";
+            }
+        }
     });
+
     UI.exportWhitelistBtn?.addEventListener("click", () => exportWhitelist(UI));
     UI.importWhitelistBtn?.addEventListener("click", () =>
       UI.whitelistImportFile?.click()
@@ -139,11 +144,9 @@ import { applyReaderStyles } from "./reader-styles";
       closeModal(UI, "clear-whitelist")
     );
     UI.confirmClearWhitelistBtn?.addEventListener("click", () => {
-      mainFunctions.updateUIWhitelistInput(UI, "");
-      mainFunctions.saveWhitelist("");
-      mainFunctions.updateAndRenderErrors();
-      closeModal(UI, "clear-whitelist");
-      mainFunctions.showToast(UI, "Đã xoá hết danh sách bỏ qua.", "info");
+        confirmClearWhitelist(UI, mainFunctions.saveWhitelist, mainFunctions.updateAndRenderErrors);
+        closeModal(UI, "clear-whitelist");
+        mainFunctions.showToast(UI, "Đã xoá hết danh sách bỏ qua.", "info");
     });
   
     UI.engFilterCheckbox?.addEventListener("change", () => {
@@ -230,4 +233,3 @@ import { applyReaderStyles } from "./reader-styles";
       clearTimeout(debounceTimer);
     });
   }
-  

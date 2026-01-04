@@ -1,7 +1,6 @@
 import { ErrorGroup } from '../types/errors';
 import { AppState } from '../types/state';
 import { memoize } from './memoize';
-import { parseWhitelistWithOriginalCase } from './whitelist-parser';
 
 function filterErrors(
     allDetectedErrors: ErrorGroup[],
@@ -10,7 +9,7 @@ function filterErrors(
     checkSettings: AppState['checkSettings'],
     englishDictionary: Set<string>
 ): ErrorGroup[] {
-    const { check } = parseWhitelistWithOriginalCase(whitelistValue);
+    const check = new Set(whitelistValue.split(/[\s,]+/).filter(Boolean).map(w => w.toLowerCase()));
 
     return allDetectedErrors.filter(group => {
         const lowerWord = group.word.toLowerCase();

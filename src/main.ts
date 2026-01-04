@@ -8,10 +8,11 @@ import { groupErrors, CheckSettings } from "./utils/analyzer";
 import { ErrorGroup, ErrorInstance } from "./types/errors";
 import { renderErrorList, renderContextView, updateStats, updateProgress, copyToClipboard } from "./utils/ui-render";
 import { getFilteredErrors } from "./utils/filter";
-import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay, updateUIWhitelistInput } from "./utils/ui-utils";
+import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, hideLoadingOverlay } from "./utils/ui-utils";
 import { showToast } from "./utils/notifications";
 import { closeModal } from "./utils/modal";
-import { updateWhitelist } from "./utils/whitelist-manager";
+import { getWordsFromTags } from "./utils/whitelist-tags-manager";
+import { addWordToWhitelist, confirmClearWhitelist } from "./utils/whitelist-manager";
 import AnalysisWorker from "./workers/analysis.worker?worker";
 import { parseEpub } from "./utils/epub-parser";
 import { EpubContent } from "./types/epub";
@@ -67,7 +68,8 @@ const UI: UIElements = {
       tone: document.getElementById("set-tone") as HTMLInputElement,
       struct: document.getElementById("set-struct") as HTMLInputElement,
     },
-    whitelistInput: document.getElementById("whitelist-input") as HTMLTextAreaElement,
+    whitelistInput: document.getElementById("whitelist-input") as HTMLInputElement,
+    whitelistTagsContainer: document.getElementById("whitelist-tags-container"),
     importWhitelistBtn: document.getElementById("import-whitelist-btn"),
     exportWhitelistBtn: document.getElementById("export-whitelist-btn"),
     clearWhitelistBtn: document.getElementById("clear-whitelist-btn") as HTMLButtonElement,
@@ -137,8 +139,7 @@ function ignoreAndAdvance(
     wordToIgnoreId: string,
     originalIndex: number
 ) {
-    if (updateWhitelist(wordToIgnore, UI, (value) => $whitelist.set(value))) {
-        updateAndRenderErrors();
+    if (addWordToWhitelist(wordToIgnore, UI, (value) => $whitelist.set(value), updateAndRenderErrors)) {
         selectNextError(wordToIgnoreId, originalIndex);
     }
 }
@@ -166,7 +167,7 @@ async function updateAndRenderErrors() {
         const { allDetectedErrors, isEngFilterEnabled, checkSettings, dictionaries } = $appState.get();
       const currentFilteredErrors = getFilteredErrors(
         allDetectedErrors,
-        UI.whitelistInput.value,
+        getWordsFromTags(UI).join(", "),
         isEngFilterEnabled,
         checkSettings,
         dictionaries.english
@@ -411,6 +412,8 @@ function resetApp() {
       $appState.setKey("currentCoverUrl", null);
     }
 
+    confirmClearWhitelist(UI, (value) => $whitelist.set(value), updateAndRenderErrors);
+
     if (UI.errorList) UI.errorList.innerHTML = "";
     if (UI.contextView)
       UI.contextView.innerHTML =
@@ -595,7 +598,7 @@ async function handleFile(file: File) {
 async function main() {
     initializeUI(UI);
     await loadAppData(UI, $appState.get());
-    loadUserPreferences(UI, $appState.get(), () => $whitelist.get());
+    loadUserPreferences(UI, $appState.get(), () => $whitelist.get(), (value: string) => $whitelist.set(value), updateAndRenderErrors);
 
     const mainFunctions = {
         handleFile,
@@ -608,7 +611,6 @@ async function main() {
         ignoreAndAdvance,
         selectGroup,
         copyToClipboard,
-        updateUIWhitelistInput,
         showToast,
         saveWhitelist: (value: string) => $whitelist.set(value),
     };
