@@ -1,5 +1,7 @@
 import { AppState, ReaderSettings } from './types/state';
 
+export type { AppState };
+
 import { logger } from './utils/logger';
 
 const WHITELIST_KEY = "vn_spell_whitelist";
@@ -31,7 +33,7 @@ export function resetState() {
 }
 
 export function loadStateFromLocalStorage() {
-  loadReaderSettingsFromLocalStorage();
+
 }
 
 
