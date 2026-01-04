@@ -332,7 +332,7 @@ export function renderContextView(
       ? `<div class="mt-4 flex flex-wrap justify-center gap-2"><span class="text-base text-slate-400 mr-1 self-center">Có thể là từ:</span>${suggestions
           .map(
             (s) =>
-              `<span class="bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-xl">${s}</span>`
+              `<span class="suggestion-word cursor-pointer bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-xl">${s}</span>`
           )
           .join("")}</div>`
       : "";
@@ -373,6 +373,20 @@ export function renderContextView(
             </div>
         </div>
     `;
+
+  // Attach event listeners to the suggestion words
+  if (contextView) {
+    const suggestionWords =
+      contextView.querySelectorAll<HTMLSpanElement>(".suggestion-word");
+    suggestionWords.forEach((span) => {
+      span.addEventListener("click", (e) => {
+        const target = e.target as HTMLSpanElement;
+        if (target.textContent) {
+          copyToClipboard(target.textContent);
+        }
+      });
+    });
+  }
 
   navIndicator.textContent = `${instanceIndex + 1}/${group.contexts.length}`;
   contextNavControls.classList.remove("hidden");
