@@ -1,6 +1,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { logger } from './logger';
 
 async function sortDictionaryFile(filePath: string) {
   try {
@@ -14,10 +15,10 @@ async function sortDictionaryFile(filePath: string) {
     )).sort();
 
     await fs.writeFile(filePath, sortedWords.join('\n'), 'utf-8');
-    console.log(`Successfully sorted and deduplicated words in ${filePath}`);
+    logger.info(`Successfully sorted and deduplicated words in ${filePath}`);
 
   } catch (error) {
-    console.error(`Error processing file ${filePath}:`, error);
+    logger.error(`Error processing file ${filePath}:`, error);
   }
 }
 
@@ -35,7 +36,7 @@ async function sortAllDictionaries() {
     await sortDictionaryFile(filePath);
   }
 
-  console.log('All specified dictionary files have been sorted.');
+  logger.info('All specified dictionary files have been sorted.');
 }
 
 sortAllDictionaries();
