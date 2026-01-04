@@ -293,6 +293,14 @@ export function renderErrorList(ui: UIElements, groups: ErrorGroup[]) {
   });
 }
 
+function isUpperCase(str: string): boolean {
+  return str === str.toUpperCase() && str !== str.toLowerCase();
+}
+
+function isTitleCase(str: string): boolean {
+  return str.length > 0 && str[0] === str[0].toUpperCase() && str.slice(1) === str.slice(1).toLowerCase();
+}
+
 /**
  * Renders the context view for a selected error, including the surrounding text and suggestions.
  * @param ui - A reference to the UI elements collection.
@@ -327,9 +335,23 @@ export function renderContextView(
   const style = getErrorHighlights(group.type);
 
   const suggestions = findSuggestions(group.word, dictionaries);
+
+  const isOriginalUpperCase = isUpperCase(group.word);
+  const isOriginalTitleCase = isTitleCase(group.word);
+
+  const casedSuggestions = suggestions.map(s => {
+    if (isOriginalUpperCase) {
+      return s.toUpperCase();
+    }
+    if (isOriginalTitleCase) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+    return s;
+  });
+
   const suggHTML =
-    suggestions.length > 0
-      ? `<div class="mt-4 flex flex-wrap justify-center gap-2"><span class="text-base text-slate-400 mr-1 self-center">Có thể là từ:</span>${suggestions
+    casedSuggestions.length > 0
+      ? `<div class="mt-4 flex flex-wrap justify-center gap-2"><span class="text-base text-slate-400 mr-1 self-center">Có thể là từ:</span>${casedSuggestions
           .map(
             (s) =>
               `<span class="suggestion-word cursor-pointer bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-xl">${s}</span>`
