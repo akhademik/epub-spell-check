@@ -21,6 +21,7 @@ Furness
 Gefreiter
 Glassblowers
 Glassblowes
+Halloween
 Hollywood
 Holtzinger
 Jansen
@@ -977,7 +978,6 @@ beulah
 bev
 beverly
 beyond
-Halloween
 bg
 bhutan
 bianca
