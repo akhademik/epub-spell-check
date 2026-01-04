@@ -1,5 +1,5 @@
 import "./style.css";
-import { state, loadStateFromLocalStorage, loadWhitelist as loadWhitelistFromState, saveWhitelist, resetState, loadReaderSettingsFromLocalStorage, saveReaderSettings } from "./state";
+import { $appState, $whitelist, resetState } from "./store";
 import { UIElements } from "./types/ui";
 import { initializeUI, loadAppData, loadUserPreferences } from "./utils/setup";
 import { registerUIEventListeners } from "./utils/ui-events";
@@ -91,21 +91,18 @@ const UI: UIElements = {
 let isUpdating = false;
 
 function clearContextView() {
-    const contextView = document.getElementById("context-view");
-    const contextNav = document.getElementById("context-nav");
-    if (contextView)
-      contextView.innerHTML =
+    if (UI.contextView)
+      UI.contextView.innerHTML =
         '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
-    contextNav?.classList.add("hidden");
-    state.currentGroup = null;
+    UI.contextNavControls?.classList.add("hidden");
+    $appState.setKey("currentGroup", null);
 }
 
 function selectNextError(wordToIgnoreId: string, originalIndex: number) {
-    const errorList = document.getElementById("error-list");
-  
-    if (state.currentFilteredErrors.length > 0) {
+    const { currentFilteredErrors } = $appState.get();
+    if (currentFilteredErrors.length > 0) {
       let targetIndex;
-      const reFoundIndex = state.currentFilteredErrors.findIndex(
+      const reFoundIndex = currentFilteredErrors.findIndex(
         (_g: ErrorGroup) => _g.id === wordToIgnoreId
       );
   
@@ -114,13 +111,13 @@ function selectNextError(wordToIgnoreId: string, originalIndex: number) {
       } else {
         targetIndex = Math.min(
           originalIndex,
-          state.currentFilteredErrors.length - 1
+          currentFilteredErrors.length - 1
         );
         if (targetIndex < 0) targetIndex = 0;
       }
   
-      const nextGroup = state.currentFilteredErrors[targetIndex];
-      const nextElementInList = errorList?.querySelector(
+      const nextGroup = currentFilteredErrors[targetIndex];
+      const nextElementInList = UI.errorList?.querySelector(
         `[data-group-id="${nextGroup.id}"]`
       ) as HTMLElement | null;
       if (nextElementInList) {
@@ -140,21 +137,22 @@ function ignoreAndAdvance(
     wordToIgnoreId: string,
     originalIndex: number
 ) {
-    if (updateWhitelist(wordToIgnore, UI, saveWhitelist)) {
+    if (updateWhitelist(wordToIgnore, UI, (value) => $whitelist.set(value))) {
         updateAndRenderErrors();
         selectNextError(wordToIgnoreId, originalIndex);
     }
 }
 
 function quickIgnore() {
-    if (!state.currentGroup) {
+    const { currentGroup, currentFilteredErrors } = $appState.get();
+    if (!currentGroup) {
       logger.info("No current error group to ignore.");
       return;
     }
   
-    const wordToIgnore = state.currentGroup.word;
-    const wordToIgnoreId = state.currentGroup.id;
-    const originalIndex = state.currentFilteredErrors.findIndex(
+    const wordToIgnore = currentGroup.word;
+    const wordToIgnoreId = currentGroup.id;
+    const originalIndex = currentFilteredErrors.findIndex(
       (_g: ErrorGroup) => _g.id === wordToIgnoreId
     );
     ignoreAndAdvance(wordToIgnore, wordToIgnoreId, originalIndex);
@@ -165,38 +163,42 @@ async function updateAndRenderErrors() {
   
     isUpdating = true;
     try {
-      state.currentFilteredErrors = getFilteredErrors(
-        state.allDetectedErrors,
+        const { allDetectedErrors, isEngFilterEnabled, checkSettings, dictionaries } = $appState.get();
+      const currentFilteredErrors = getFilteredErrors(
+        allDetectedErrors,
         UI.whitelistInput.value,
-        state.isEngFilterEnabled,
-        state.checkSettings,
-        state.dictionaries.english
+        isEngFilterEnabled,
+        checkSettings,
+        dictionaries.english
       );
-      const totalErrorInstances = state.currentFilteredErrors.reduce(
+      $appState.setKey("currentFilteredErrors", currentFilteredErrors);
+
+      const totalErrorInstances = currentFilteredErrors.reduce(
         (_acc: number, _g: ErrorGroup) => _acc + _g.contexts.length,
         0
       );
       updateStats(
         UI,
-        state.totalWords,
+        $appState.get().totalWords,
         totalErrorInstances,
-        state.currentFilteredErrors.length
+        currentFilteredErrors.length
       );
-      renderErrorList(UI, state.currentFilteredErrors);
+      renderErrorList(UI, currentFilteredErrors);
     } finally {
       isUpdating = false;
     }
 }
 
 function saveSettings() {
-    state.checkSettings = {
+    const newSettings = {
       dictionary: UI.settingToggles.dict?.checked ?? true,
       uppercase: UI.settingToggles.case?.checked ?? true,
       tone: UI.settingToggles.tone?.checked ?? true,
       foreign: UI.settingToggles.struct?.checked ?? true,
     };
+    $appState.setKey("checkSettings", newSettings);
   
-    if (state.loadedTextContent.length > 0) {
+    if ($appState.get().loadedTextContent.length > 0) {
       showLoadingOverlay(UI);
   
       setTimeout(() => {
@@ -216,11 +218,12 @@ function sanitizeFilename(name: string): string {
       .toLowerCase()
       .trim();
     // eslint-disable-next-line no-control-regex
-    return sanitized.replace(/[ -]/g, "");
+    return sanitized.replace(/[\u0000-\u001f]/g, "");
 }
 
 function performExport(type: "vctve" | "normal") {
-    if (state.currentFilteredErrors.length === 0) {
+    const { currentFilteredErrors, currentBookTitle } = $appState.get();
+    if (currentFilteredErrors.length === 0) {
       showToast(UI, "Không có lỗi nào để xuất!", "info");
       closeModal(UI, "export");
       return;
@@ -228,19 +231,19 @@ function performExport(type: "vctve" | "normal") {
   
     let content = "";
     if (type === "vctve") {
-      content = state.currentFilteredErrors
+      content = currentFilteredErrors
         .map((_g: ErrorGroup) => `${_g.word} ==>`)
         .join("\n\n");
     } else {
-      content = state.currentFilteredErrors
+      content = currentFilteredErrors
         .map((_g: ErrorGroup) => _g.word)
         .join("\n");
     }
   
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const fileName = state.currentBookTitle
-      ? `loi-${sanitizeFilename(state.currentBookTitle)}.txt`
+    const fileName = currentBookTitle
+      ? `loi-${sanitizeFilename(currentBookTitle)}.txt`
       : "loi-khong-ro-ten.txt";
   
     const a = document.createElement("a");
@@ -255,21 +258,20 @@ function performExport(type: "vctve" | "normal") {
 }
 
 function navigateErrors(direction: "up" | "down") {
-    if (state.currentFilteredErrors.length === 0) {
-      state.currentGroup = null;
-      const contextView = document.getElementById("context-view");
-      const contextNav = UI.contextNavControls;
-      if (contextView)
-        contextView.innerHTML =
-          '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
-      contextNav?.classList.add("hidden");
-      return;
+    const { currentFilteredErrors, currentGroup } = $appState.get();
+    if (currentFilteredErrors.length === 0) {
+        $appState.setKey("currentGroup", null);
+        if(UI.contextView)
+            UI.contextView.innerHTML =
+            '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>';
+        UI.contextNavControls?.classList.add("hidden");
+        return;
     }
   
     let currentIndex = -1;
-    if (state.currentGroup) {
-      currentIndex = state.currentFilteredErrors.findIndex(
-        (_g: ErrorGroup) => _g.id === state.currentGroup?.id
+    if (currentGroup) {
+      currentIndex = currentFilteredErrors.findIndex(
+        (_g: ErrorGroup) => _g.id === currentGroup?.id
       );
     }
   
@@ -278,7 +280,7 @@ function navigateErrors(direction: "up" | "down") {
     if (direction === "down") {
       if (
         currentIndex === -1 ||
-        currentIndex >= state.currentFilteredErrors.length - 1
+        currentIndex >= currentFilteredErrors.length - 1
       ) {
         nextIndex = 0;
       } else {
@@ -286,16 +288,15 @@ function navigateErrors(direction: "up" | "down") {
       }
     } else {
       if (currentIndex === -1 || currentIndex === 0) {
-        nextIndex = state.currentFilteredErrors.length - 1;
+        nextIndex = currentFilteredErrors.length - 1;
       } else {
         nextIndex = currentIndex - 1;
       }
     }
   
-    const nextGroup = state.currentFilteredErrors[nextIndex];
+    const nextGroup = currentFilteredErrors[nextIndex];
     if (nextGroup) {
-      const errorList = document.getElementById("error-list");
-      const nextElement = errorList?.querySelector(
+      const nextElement = UI.errorList?.querySelector(
         `[data-group-id="${nextGroup.id}"]`
       ) as HTMLElement;
       if (nextElement) {
@@ -312,7 +313,7 @@ function handleGlobalKeydown(e: KeyboardEvent) {
       return;
     }
   
-    if (state.currentFilteredErrors.length === 0) return;
+    if ($appState.get().currentFilteredErrors.length === 0) return;
   
     switch (e.key) {
       case "ArrowDown":
@@ -325,7 +326,7 @@ function handleGlobalKeydown(e: KeyboardEvent) {
         break;
       case "Delete":
       case "i":
-        if (state.currentGroup) {
+        if ($appState.get().currentGroup) {
           e.preventDefault();
           quickIgnore();
         }
@@ -334,15 +335,15 @@ function handleGlobalKeydown(e: KeyboardEvent) {
 }
 
 function selectGroup(group: ErrorGroup, element: HTMLElement) {
-    state.selectedErrorElement?.classList.remove(
+    $appState.get().selectedErrorElement?.classList.remove(
       "bg-blue-900/30",
       "border-blue-700/50",
       "ring-1",
       "ring-blue-500/50"
     );
   
-    state.currentGroup = group;
-    state.currentInstanceIndex = 0;
+    $appState.setKey("currentGroup", group);
+    $appState.setKey("currentInstanceIndex", 0);
   
     element.classList.add(
       "bg-blue-900/30",
@@ -351,43 +352,42 @@ function selectGroup(group: ErrorGroup, element: HTMLElement) {
       "ring-blue-500/50"
     );
   
-    state.selectedErrorElement = element;
-    renderContextView(UI, group, state.currentInstanceIndex, state.dictionaries);
+    $appState.setKey("selectedErrorElement", element)
+    renderContextView(UI, group, 0, $appState.get().dictionaries);
     updateNavButtons();
 }
 
 function updateNavButtons() {
-    const btnPrev = document.getElementById("btn-prev") as HTMLButtonElement;
-    const btnNext = document.getElementById("btn-next") as HTMLButtonElement;
-    if (!btnPrev || !btnNext || !state.currentGroup) return;
+    if (!UI.btnPrev || !UI.btnNext || !$appState.get().currentGroup) return;
   
-    const numInstances = state.currentGroup.contexts.length;
+    const numInstances = $appState.get().currentGroup!.contexts.length;
     const isDisabled = numInstances <= 1;
   
-    btnPrev.disabled = isDisabled;
-    btnNext.disabled = isDisabled;
+    UI.btnPrev.disabled = isDisabled;
+    UI.btnNext.disabled = isDisabled;
 }
 
 function navigateInstance(direction: "prev" | "next") {
-    if (!state.currentGroup) return;
+    const { currentGroup, currentInstanceIndex, dictionaries } = $appState.get();
+    if (!currentGroup) return;
   
-    const numInstances = state.currentGroup.contexts.length;
+    const numInstances = currentGroup.contexts.length;
   
+    let nextInstanceIndex = 0;
     if (numInstances === 0) {
-      state.currentInstanceIndex = 0;
+        nextInstanceIndex = 0;
     } else if (direction === "next") {
-      state.currentInstanceIndex =
-        (state.currentInstanceIndex + 1) % numInstances;
+        nextInstanceIndex = (currentInstanceIndex + 1) % numInstances;
     } else if (direction === "prev") {
-      state.currentInstanceIndex =
-        (state.currentInstanceIndex - 1 + numInstances) % numInstances;
+        nextInstanceIndex = (currentInstanceIndex - 1 + numInstances) % numInstances;
     }
+    $appState.setKey("currentInstanceIndex", nextInstanceIndex);
   
     renderContextView(
       UI,
-      state.currentGroup,
-      state.currentInstanceIndex,
-      state.dictionaries
+      currentGroup,
+      nextInstanceIndex,
+      dictionaries
     );
     updateNavButtons();
 }
@@ -405,18 +405,17 @@ function resetApp() {
     if (UI.settingToggles.tone) UI.settingToggles.tone.checked = true;
     if (UI.settingToggles.struct) UI.settingToggles.struct.checked = true;
   
-    if (state.currentCoverUrl) {
-      URL.revokeObjectURL(state.currentCoverUrl);
-      state.currentCoverUrl = null;
+    const { currentCoverUrl } = $appState.get();
+    if (currentCoverUrl) {
+      URL.revokeObjectURL(currentCoverUrl);
+      $appState.setKey("currentCoverUrl", null);
     }
-    const errorList = document.getElementById("error-list");
-    const contextView = document.getElementById("context-view");
-    const contextNav = document.getElementById("context-nav-controls");
-    if (errorList) errorList.innerHTML = "";
-    if (contextView)
-      contextView.innerHTML =
+
+    if (UI.errorList) UI.errorList.innerHTML = "";
+    if (UI.contextView)
+      UI.contextView.innerHTML =
         '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>';
-    contextNav?.classList.add("hidden");
+    UI.contextNavControls?.classList.add("hidden");
     if (UI.metaTitle) UI.metaTitle.innerText = "Đang tải...";
     if (UI.metaAuthor) UI.metaAuthor.innerText = "Đang tải...";
     if (UI.metaCover) {
@@ -439,8 +438,7 @@ function closeAllModals() {
 
 function prepareForNewFile(): boolean {
     resetApp();
-    loadReaderSettingsFromLocalStorage();
-    if (!state.dictionaryStatus.isVietnameseLoaded) {
+    if (!$appState.get().dictionaryStatus.isVietnameseLoaded) {
       showToast(UI, "Đang tải dữ liệu từ điển, vui lòng đợi giây lát...", "info");
       return false;
     }
@@ -448,16 +446,16 @@ function prepareForNewFile(): boolean {
 }
 
 function updateBookMetadata(epubContent: EpubContent) {
-    state.loadedTextContent = epubContent.textBlocks;
-    state.currentBookTitle = epubContent.metadata.title;
+    $appState.setKey("loadedTextContent", epubContent.textBlocks);
+    $appState.setKey("currentBookTitle", epubContent.metadata.title);
   
     if (UI.metaTitle) UI.metaTitle.innerText = epubContent.metadata.title;
     if (UI.metaAuthor) UI.metaAuthor.innerText = epubContent.metadata.author;
     if (epubContent.metadata.coverUrl && UI.metaCover) {
-      state.currentCoverUrl = epubContent.metadata.coverUrl;
-      UI.metaCover.src = epubContent.metadata.coverUrl;
-      UI.metaCover.classList.remove("hidden");
-      UI.metaCoverPlaceholder?.classList.add("hidden");
+        $appState.setKey("currentCoverUrl", epubContent.metadata.coverUrl);
+        UI.metaCover.src = epubContent.metadata.coverUrl;
+        UI.metaCover.classList.remove("hidden");
+        UI.metaCoverPlaceholder?.classList.add("hidden");
     }
 }
 
@@ -494,7 +492,7 @@ async function runAnalysis(epubContent: EpubContent) {
   
       worker.postMessage({
         textBlocks: epubContent.textBlocks,
-        dictionaries: state.dictionaries,
+        dictionaries: $appState.get().dictionaries,
         settings: fullCheckSettings,
         chapterStartIndex: 0,
       });
@@ -503,16 +501,17 @@ async function runAnalysis(epubContent: EpubContent) {
     try {
       const { errors, totalWords } = await analysisPromise;
   
-      state.allDetectedErrors = groupErrors(errors);
-      state.totalWords = totalWords;
+      $appState.setKey("allDetectedErrors", groupErrors(errors));
+      $appState.setKey("totalWords", totalWords);
   
       updateProgress(UI, 100, "Hoàn tất");
   
       updateAndRenderErrors();
   
-      if (state.currentFilteredErrors.length > 0) {
-        const firstErrorGroup = state.currentFilteredErrors[0];
-        const errorList = document.getElementById("error-list");
+      const { currentFilteredErrors } = $appState.get();
+      if (currentFilteredErrors.length > 0) {
+        const firstErrorGroup = currentFilteredErrors[0];
+        const errorList = UI.errorList;
         const firstErrorElement = errorList?.querySelector(
           `[data-group-id="${firstErrorGroup.id}"]`
         ) as HTMLElement;
@@ -525,17 +524,15 @@ async function runAnalysis(epubContent: EpubContent) {
         }
         logger.info("Book loaded and first error selected.");
       } else {
-        const contextView = document.getElementById("context-view");
-        const contextNav = UI.contextNavControls;
-        if (contextView) {
-          contextView.innerHTML = `
+        if (UI.contextView) {
+            UI.contextView.innerHTML = `
                       <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
                           <p class="text-lg mb-2">Tuyệt vời!</p>
                           <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
                       </div>`;
         }
-        contextNav?.classList.add("hidden");
-        state.currentGroup = null;
+        UI.contextNavControls?.classList.add("hidden");
+        $appState.setKey("currentGroup", null);
         logger.info("Book loaded. No errors found.");
       }
   
@@ -567,9 +564,10 @@ async function handleFile(file: File) {
     closeAllModals();
     if (!prepareForNewFile()) return;
   
-    if (state.currentCoverUrl) {
-      URL.revokeObjectURL(state.currentCoverUrl);
-      state.currentCoverUrl = null;
+    const { currentCoverUrl } = $appState.get();
+    if (currentCoverUrl) {
+      URL.revokeObjectURL(currentCoverUrl);
+      $appState.setKey("currentCoverUrl", null);
     }
   
     try {
@@ -596,10 +594,8 @@ async function handleFile(file: File) {
 
 async function main() {
     initializeUI(UI);
-    loadStateFromLocalStorage();
-    loadReaderSettingsFromLocalStorage();
-    await loadAppData(UI, state);
-    loadUserPreferences(UI, state, loadWhitelistFromState);
+    await loadAppData(UI, $appState.get());
+    loadUserPreferences(UI, $appState.get(), () => $whitelist.get());
 
     const mainFunctions = {
         handleFile,
@@ -614,11 +610,10 @@ async function main() {
         copyToClipboard,
         updateUIWhitelistInput,
         showToast,
-        saveReaderSettings,
-        saveWhitelist,
+        saveWhitelist: (value: string) => $whitelist.set(value),
     };
 
-    registerUIEventListeners(UI, state, mainFunctions);
+    registerUIEventListeners(UI, mainFunctions);
 }
 
 document.addEventListener("DOMContentLoaded", main);

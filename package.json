@@ -22,6 +22,8 @@
     "vite": "^5.2.0"
   },
   "dependencies": {
-    "jszip": "^3.10.1"
+    "@nanostores/persistent": "^1.2.0",
+    "jszip": "^3.10.1",
+    "nanostores": "^1.1.0"
   }
 }

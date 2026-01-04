@@ -14,7 +14,6 @@ export interface GlobalState {
     loadedTextContent: { text: string }[];
     currentCoverUrl: string | null;
     totalWords: number;
-    readerSettings: ReaderSettings;
 }
 
 export interface AppState extends GlobalState {

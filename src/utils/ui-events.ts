@@ -4,7 +4,7 @@ import {
     FONT_SIZE_MAX_REM,
     FONT_SIZE_MIN_REM,
   } from "../constants";
-  import { AppState } from "../state";
+  import { $appState, $readerSettings } from "../store";
   import { ErrorGroup } from "../types/errors";
   import { UIElements } from "../types/ui";
   import { closeModal, openModal } from "./modal";
@@ -34,13 +34,11 @@ import { applyReaderStyles } from "./reader-styles";
     copyToClipboard: (text: string, ui: UIElements) => void;
     updateUIWhitelistInput: (UI: UIElements, value: string) => void;
     showToast: (ui: UIElements, message: string, type: "info" | "error" | "success") => void;
-    saveReaderSettings: () => void;
     saveWhitelist: (value: string) => void;
   }
   
   export function registerUIEventListeners(
     UI: UIElements,
-    state: AppState,
     mainFunctions: MainFunctions
   ) {
     let debounceTimer: number;
@@ -92,24 +90,21 @@ import { applyReaderStyles } from "./reader-styles";
     );
   
     UI.fontToggleBtn?.addEventListener("click", () => {
-      state.readerSettings.fontFamily =
-        state.readerSettings.fontFamily === "serif" ? "sans-serif" : "serif";
-      mainFunctions.saveReaderSettings();
-      applyReaderStyles(state.readerSettings, UI);
+      const currentSettings = $readerSettings.get();
+      $readerSettings.set({ ...currentSettings, fontFamily: currentSettings.fontFamily === "serif" ? "sans-serif" : "serif" });
+      applyReaderStyles($readerSettings.get(), UI);
     });
     UI.sizeUpBtn?.addEventListener("click", () => {
-      const newSize =
-        Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
-      state.readerSettings.fontSize = Math.min(FONT_SIZE_MAX_REM, newSize);
-      mainFunctions.saveReaderSettings();
-      applyReaderStyles(state.readerSettings, UI);
+        const currentSettings = $readerSettings.get();
+      const newSize = Math.round((currentSettings.fontSize + 0.25) * 100) / 100;
+      $readerSettings.set({ ...currentSettings, fontSize: Math.min(FONT_SIZE_MAX_REM, newSize) });
+      applyReaderStyles($readerSettings.get(), UI);
     });
     UI.sizeDownBtn?.addEventListener("click", () => {
-      const newSize =
-        Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
-      state.readerSettings.fontSize = Math.max(FONT_SIZE_MIN_REM, newSize);
-      mainFunctions.saveReaderSettings();
-      applyReaderStyles(state.readerSettings, UI);
+        const currentSettings = $readerSettings.get();
+      const newSize = Math.round((currentSettings.fontSize - 0.25) * 100) / 100;
+      $readerSettings.set({ ...currentSettings, fontSize: Math.max(FONT_SIZE_MIN_REM, newSize) });
+      applyReaderStyles($readerSettings.get(), UI);
     });
   
     Object.values(UI.settingToggles).forEach((toggle: HTMLInputElement | null) =>
@@ -152,8 +147,8 @@ import { applyReaderStyles } from "./reader-styles";
     });
   
     UI.engFilterCheckbox?.addEventListener("change", () => {
-      state.isEngFilterEnabled = UI.engFilterCheckbox?.checked ?? false;
-      mainFunctions.updateAndRenderErrors();
+        $appState.setKey("isEngFilterEnabled", UI.engFilterCheckbox?.checked ?? false);
+        mainFunctions.updateAndRenderErrors();
     });
   
     UI.uploadSection?.addEventListener("dragover", (_e) => {
@@ -183,12 +178,12 @@ import { applyReaderStyles } from "./reader-styles";
         if (!errorItem) return;
   
         const groupId = errorItem.dataset.groupId;
-        const group = state.currentFilteredErrors.find((g: ErrorGroup) => g.id === groupId);
+        const group = $appState.get().currentFilteredErrors.find((g: ErrorGroup) => g.id === groupId);
         if (!group) return;
   
         if (target.closest(".ignore-btn")) {
           e.stopPropagation();
-          const originalIndex = state.currentFilteredErrors.findIndex(
+          const originalIndex = $appState.get().currentFilteredErrors.findIndex(
             (_g: ErrorGroup) => _g.id === group.id
           );
           mainFunctions.ignoreAndAdvance(group.word, group.id, originalIndex);

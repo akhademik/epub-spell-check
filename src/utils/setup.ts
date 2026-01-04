@@ -1,4 +1,5 @@
-import { AppState } from "../state";
+import { $readerSettings } from "../store";
+import { AppState } from "../types/state";
 import { UIElements } from "../types/ui";
 import { loadDictionaries } from "./dictionary";
 import { logger } from "./logger";
@@ -39,9 +40,9 @@ export async function loadAppData(UI: UIElements, state: AppState) {
     }
 }
 
-export function loadUserPreferences(UI: UIElements, state: AppState, loadWhitelistFromState: () => string) {
-    updateUIWhitelistInput(UI, loadWhitelistFromState());
+export function loadUserPreferences(UI: UIElements, state: AppState, loadWhitelist: () => string) {
+    updateUIWhitelistInput(UI, loadWhitelist());
     if (UI.engFilterCheckbox)
       UI.engFilterCheckbox.checked = state.isEngFilterEnabled;
-    applyReaderStyles(state.readerSettings, UI);
+    applyReaderStyles($readerSettings.get(), UI);
 }
