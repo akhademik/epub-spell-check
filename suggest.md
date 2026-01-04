@@ -12,7 +12,7 @@
 
 - [ ] Visual Feedback on 'Ignore': When a user ignores an error, it just disappears. I suggest adding a brief visual
   effect, like a fade-out animation, to provide clearer feedback that the action was successful.
-- [ ] Enhanced Whitelist Management: Instead of a comma-separated textarea, I recommend displaying whitelisted words as
+- [x] Enhanced Whitelist Management: Instead of a comma-separated textarea, I recommend displaying whitelisted words as
   individual "tags" with a delete button on each. This would make it much easier to manage a large list of ignored
   words. An "undo" feature would be a great addition as well.
 - [ ] "Quick Fix" for Suggestions: To improve workflow, you could add a "Replace" button next to each suggestion. This
