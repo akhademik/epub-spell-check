@@ -75,6 +75,17 @@ const UI: UIElements = {
     engFilterCheckbox: document.getElementById("eng-filter-checkbox") as HTMLInputElement,
     engLoading: document.getElementById("eng-loading"),
     resultsSection: document.getElementById("results-section"),
+    toastContainer: document.getElementById("toast-container"),
+    statTotalWords: document.getElementById("stat-total-words"),
+    statErrors: document.getElementById("stat-errors"),
+    statGroups: document.getElementById("stat-groups"),
+    statErrorsMobileCount: document.getElementById("stat-errors-mobile-count"),
+    errorList: document.getElementById("error-list"),
+    contextView: document.getElementById("context-view"),
+    errorItemTemplate: document.getElementById("error-item-template") as HTMLTemplateElement,
+    btnPrev: document.getElementById("btn-prev") as HTMLButtonElement,
+    btnNext: document.getElementById("btn-next") as HTMLButtonElement,
+    navIndicator: document.getElementById("nav-indicator"),
 };
 
 let isUpdating = false;
@@ -210,7 +221,7 @@ function sanitizeFilename(name: string): string {
 
 function performExport(type: "vctve" | "normal") {
     if (state.currentFilteredErrors.length === 0) {
-      showToast("Không có lỗi nào để xuất!", "info");
+      showToast(UI, "Không có lỗi nào để xuất!", "info");
       closeModal(UI, "export");
       return;
     }
@@ -289,7 +300,7 @@ function navigateErrors(direction: "up" | "down") {
       ) as HTMLElement;
       if (nextElement) {
         selectGroup(nextGroup, nextElement);
-        copyToClipboard(nextGroup.word);
+        copyToClipboard(nextGroup.word, UI);
         nextElement.scrollIntoView({ block: "nearest", behavior: "smooth" });
       }
     }
@@ -430,7 +441,7 @@ function prepareForNewFile(): boolean {
     resetApp();
     loadReaderSettingsFromLocalStorage();
     if (!state.dictionaryStatus.isVietnameseLoaded) {
-      showToast("Đang tải dữ liệu từ điển, vui lòng đợi giây lát...", "info");
+      showToast(UI, "Đang tải dữ liệu từ điển, vui lòng đợi giây lát...", "info");
       return false;
     }
     return true;
@@ -541,7 +552,7 @@ async function runAnalysis(epubContent: EpubContent) {
       showResultsUI(UI);
     } catch (error) {
       logger.error("Analysis failed:", error);
-      showToast("Lỗi phân tích văn bản.", "error");
+      showToast(UI, "Lỗi phân tích văn bản.", "error");
       hideProcessingUI(UI);
       throw error; // Re-throw to be caught by handleFile
     }
@@ -549,7 +560,7 @@ async function runAnalysis(epubContent: EpubContent) {
 
 async function handleFile(file: File) {
     if (!file.name.endsWith(EPUB_FILE_EXTENSION)) {
-      showToast("Vui lòng chọn file .epub", "error");
+      showToast(UI, "Vui lòng chọn file .epub", "error");
       return;
     }
   
@@ -578,7 +589,7 @@ async function handleFile(file: File) {
           errorMessage = `Lỗi không xác định: ${err.message}`;
         }
       }
-      showToast(errorMessage, "error");
+      showToast(UI, errorMessage, "error");
       resetApp();
     }
 }

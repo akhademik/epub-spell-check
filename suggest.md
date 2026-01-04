@@ -3,7 +3,7 @@
 - [x] Modularize `main.ts`: Your src/main.ts file is quite large. I suggest breaking it down into smaller, more focused
   modules (e.g., ui-events.ts, setup.ts, whitelist-manager.ts). This will make the code easier to maintain and
   understand.
-- [ ] Consistent DOM Access: The app sometimes re-queries the DOM for elements that have already been fetched. To improve
+- [x] Consistent DOM Access: The app sometimes re-queries the DOM for elements that have already been fetched. To improve
   performance and consistency, I recommend always using the central UI object to access DOM elements.
 - [ ] Adopt a Lightweight State Manager: For more predictable and traceable state updates, consider a lightweight state
   management library like Zustand or Nano Stores. This will help as the application's complexity grows.

@@ -33,7 +33,7 @@ export async function loadAppData(UI: UIElements, state: AppState) {
         } else {
             logger.error("Failed to load dictionaries:", String(error));
         }
-        showToast("Lỗi tải từ điển. Vui lòng tải lại trang.", "error");
+        showToast(UI, "Lỗi tải từ điển. Vui lòng tải lại trang.", "error");
         UI.fileInput?.setAttribute("disabled", "true");
         UI.uploadSection?.classList.add("opacity-50", "pointer-events-none");
     }
@@ -43,5 +43,5 @@ export function loadUserPreferences(UI: UIElements, state: AppState, loadWhiteli
     updateUIWhitelistInput(UI, loadWhitelistFromState());
     if (UI.engFilterCheckbox)
       UI.engFilterCheckbox.checked = state.isEngFilterEnabled;
-    applyReaderStyles(state.readerSettings);
+    applyReaderStyles(state.readerSettings, UI);
 }

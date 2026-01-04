@@ -31,9 +31,9 @@ import { applyReaderStyles } from "./reader-styles";
       originalIndex: number
     ) => void;
     selectGroup: (group: ErrorGroup, element: HTMLElement) => void;
-    copyToClipboard: (text: string) => void;
+    copyToClipboard: (text: string, ui: UIElements) => void;
     updateUIWhitelistInput: (UI: UIElements, value: string) => void;
-    showToast: (message: string, type: "info" | "error") => void;
+    showToast: (ui: UIElements, message: string, type: "info" | "error" | "success") => void;
     saveReaderSettings: () => void;
     saveWhitelist: (value: string) => void;
   }
@@ -54,11 +54,11 @@ import { applyReaderStyles } from "./reader-styles";
     UI.uploadSection?.addEventListener("click", () => UI.fileInput?.click());
     UI.resetBtn?.addEventListener("click", mainFunctions.resetApp);
   
-    (document.getElementById("btn-prev") as HTMLButtonElement)?.addEventListener(
+    UI.btnPrev?.addEventListener(
       "click",
       () => mainFunctions.navigateInstance("prev")
     );
-    (document.getElementById("btn-next") as HTMLButtonElement)?.addEventListener(
+    UI.btnNext?.addEventListener(
       "click",
       () => mainFunctions.navigateInstance("next")
     );
@@ -95,21 +95,21 @@ import { applyReaderStyles } from "./reader-styles";
       state.readerSettings.fontFamily =
         state.readerSettings.fontFamily === "serif" ? "sans-serif" : "serif";
       mainFunctions.saveReaderSettings();
-      applyReaderStyles(state.readerSettings);
+      applyReaderStyles(state.readerSettings, UI);
     });
     UI.sizeUpBtn?.addEventListener("click", () => {
       const newSize =
         Math.round((state.readerSettings.fontSize + 0.25) * 100) / 100;
       state.readerSettings.fontSize = Math.min(FONT_SIZE_MAX_REM, newSize);
       mainFunctions.saveReaderSettings();
-      applyReaderStyles(state.readerSettings);
+      applyReaderStyles(state.readerSettings, UI);
     });
     UI.sizeDownBtn?.addEventListener("click", () => {
       const newSize =
         Math.round((state.readerSettings.fontSize - 0.25) * 100) / 100;
       state.readerSettings.fontSize = Math.max(FONT_SIZE_MIN_REM, newSize);
       mainFunctions.saveReaderSettings();
-      applyReaderStyles(state.readerSettings);
+      applyReaderStyles(state.readerSettings, UI);
     });
   
     Object.values(UI.settingToggles).forEach((toggle: HTMLInputElement | null) =>
@@ -148,7 +148,7 @@ import { applyReaderStyles } from "./reader-styles";
       mainFunctions.saveWhitelist("");
       mainFunctions.updateAndRenderErrors();
       closeModal(UI, "clear-whitelist");
-      mainFunctions.showToast("Đã xoá hết danh sách bỏ qua.", "info");
+      mainFunctions.showToast(UI, "Đã xoá hết danh sách bỏ qua.", "info");
     });
   
     UI.engFilterCheckbox?.addEventListener("change", () => {
@@ -176,9 +176,8 @@ import { applyReaderStyles } from "./reader-styles";
   
     document.addEventListener("keydown", mainFunctions.handleGlobalKeydown as EventListener);
   
-    const errorListElement = document.getElementById("error-list");
-    if (errorListElement) {
-      errorListElement.addEventListener("click", (e) => {
+    if (UI.errorList) {
+      UI.errorList.addEventListener("click", (e) => {
         const target = e.target as HTMLElement;
         const errorItem = target.closest("[data-group-id]") as HTMLElement;
         if (!errorItem) return;
@@ -197,7 +196,7 @@ import { applyReaderStyles } from "./reader-styles";
         }
   
         mainFunctions.selectGroup(group, errorItem);
-        mainFunctions.copyToClipboard(group.word);
+        mainFunctions.copyToClipboard(group.word, UI);
       });
     }
   

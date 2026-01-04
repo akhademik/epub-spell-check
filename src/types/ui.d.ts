@@ -1,4 +1,3 @@
-
 interface BaseUI {
   dictStatus: HTMLElement | null;
   dictDot: HTMLElement | null;
@@ -18,6 +17,20 @@ interface BaseUI {
   metaAuthor: HTMLElement | null;
   metaCover: HTMLImageElement | null;
   metaCoverPlaceholder: HTMLElement | null;
+  toastContainer: HTMLElement | null;
+}
+
+interface StatsUI {
+  statTotalWords: HTMLElement | null;
+  statErrors: HTMLElement | null;
+  statGroups: HTMLElement | null;
+  statErrorsMobileCount: HTMLElement | null;
+}
+
+interface ResultsAreaUI {
+  errorList: HTMLElement | null;
+  contextView: HTMLElement | null;
+  errorItemTemplate: HTMLTemplateElement | null;
 }
 
 interface SettingsUI {
@@ -67,6 +80,9 @@ interface ReaderUI {
 
 interface NavigationUI {
   contextNavControls: HTMLElement | null;
+  btnPrev: HTMLButtonElement | null;
+  btnNext: HTMLButtonElement | null;
+  navIndicator: HTMLElement | null;
 }
 
 interface ClearWhitelistModalUI {
@@ -78,4 +94,4 @@ interface ClearWhitelistModalUI {
 
 export type ModalKey = 'settings' | 'help' | 'export' | 'clear-whitelist';
 
-export type UIElements = BaseUI & SettingsUI & WhitelistUI & EngFilterUI & Partial<ExportUI> & Partial<HelpUI> & Partial<ReaderUI> & Partial<NavigationUI> & Partial<ClearWhitelistModalUI>;
+export type UIElements = BaseUI & StatsUI & ResultsAreaUI & SettingsUI & WhitelistUI & EngFilterUI & Partial<ExportUI> & Partial<HelpUI> & Partial<ReaderUI> & Partial<NavigationUI> & Partial<ClearWhitelistModalUI>;

@@ -5,11 +5,7 @@ import { findSuggestions } from "./analyzer";
 import { Dictionaries } from "../types/dictionary";
 import {
   CONTEXT_LENGTH_CHARS,
-  MAX_TOASTS_DISPLAYED,
-  TOAST_AUTO_DISMISS_MS,
 } from "../constants";
-
-const activeToasts: HTMLElement[] = [];
 
 /**
  * Updates the progress bar and status text in the UI.
@@ -130,67 +126,21 @@ function escapeHtml(text: string): string {
   return d.innerHTML;
 }
 
-/**
- * Displays a short-lived toast notification on the screen.
- * @param msg - The message to display in the toast.
- */
-export function showToast(msg: string) {
-  const toastContainer = document.getElementById("toast-container");
-  if (!toastContainer) {
-    logger.error("Toast container #toast-container not found.");
-    return;
-  }
-
-  const n = document.createElement("div");
-  n.className =
-    "toast-item relative px-4 py-3 rounded-lg shadow-xl z-[70] text-sm font-medium flex items-center gap-2 mt-2 " +
-    "bg-slate-800 text-green-400 border border-slate-700 " +
-    "transition-all duration-500 ease-out transform translate-y-full opacity-0";
-  n.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span>${msg}</span>`;
-
-  toastContainer.prepend(n);
-  activeToasts.push(n);
-
-  requestAnimationFrame(() => {
-    n.classList.remove("translate-y-full", "opacity-0");
-  });
-
-  if (activeToasts.length > MAX_TOASTS_DISPLAYED) {
-    const oldestToast = activeToasts.shift();
-    oldestToast?.classList.add("opacity-0");
-    oldestToast?.addEventListener("transitionend", () => oldestToast.remove(), {
-      once: true,
-    });
-  }
-
-  setTimeout(() => {
-    n.classList.add("opacity-0", "translate-y-full");
-    n.addEventListener(
-      "transitionend",
-      () => {
-        n.remove();
-        const index = activeToasts.indexOf(n);
-        if (index > -1) {
-          activeToasts.splice(index, 1);
-        }
-      },
-      { once: true }
-    );
-  }, TOAST_AUTO_DISMISS_MS);
-}
+import { showToast } from "./notifications";
 
 /**
  * Copies a given string to the user's clipboard.
  * @param text - The text to copy.
  */
-export function copyToClipboard(text: string) {
+export function copyToClipboard(text: string, ui: UIElements) {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(
       () => {
-        showToast(`Đã copy: "${text}"`);
+        showToast(ui, `Đã copy: "${text}"`, "success");
       },
       (err) => {
         logger.error("Could not copy text: ", err);
+        showToast(ui, "Lỗi sao chép.", "error");
       }
     );
   } else {
@@ -201,9 +151,10 @@ export function copyToClipboard(text: string) {
     textarea.select();
     try {
       document.execCommand("copy");
-      showToast(`Đã copy: "${text}"`);
+      showToast(ui, `Đã copy: "${text}"`, "success");
     } catch (err) {
       logger.error("Could not copy text (fallback): ", err);
+      showToast(ui, "Lỗi sao chép.", "error");
     }
     document.body.removeChild(textarea);
   }
@@ -222,19 +173,11 @@ export function updateStats(
   totalErrors: number,
   totalGroups: number
 ) {
-  const statWords =
-    ui.metaTitle?.ownerDocument.getElementById("stat-total-words");
-  const statErrors = ui.metaTitle?.ownerDocument.getElementById("stat-errors");
-  const statGroups = ui.metaTitle?.ownerDocument.getElementById("stat-groups");
-
-  if (statWords) statWords.innerText = totalWords.toLocaleString();
-  if (statErrors) statErrors.innerText = totalErrors.toLocaleString();
-  const statErrorsMobileCount = ui.metaTitle?.ownerDocument.getElementById(
-    "stat-errors-mobile-count"
-  );
-  if (statErrorsMobileCount)
-    statErrorsMobileCount.innerText = totalErrors.toLocaleString();
-  if (statGroups) statGroups.innerText = totalGroups.toLocaleString();
+  if (ui.statTotalWords) ui.statTotalWords.innerText = totalWords.toLocaleString();
+  if (ui.statErrors) ui.statErrors.innerText = totalErrors.toLocaleString();
+  if (ui.statErrorsMobileCount)
+    ui.statErrorsMobileCount.innerText = totalErrors.toLocaleString();
+  if (ui.statGroups) ui.statGroups.innerText = totalGroups.toLocaleString();
 }
 
 /**
@@ -243,16 +186,15 @@ export function updateStats(
  * @param groups - An array of error groups to render.
  */
 export function renderErrorList(ui: UIElements, groups: ErrorGroup[]) {
-  const errorList = ui.metaTitle?.ownerDocument.getElementById("error-list");
-  if (!errorList) {
+  if (!ui.errorList) {
     logger.error("UI element #error-list not found.");
     return;
   }
 
-  errorList.innerHTML = "";
+  ui.errorList.innerHTML = "";
 
   if (groups.length === 0) {
-    errorList.innerHTML = `
+    ui.errorList.innerHTML = `
             <div class="p-10 text-center text-slate-600 flex flex-col items-center">
                 <svg class="w-16 h-16 mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -263,16 +205,13 @@ export function renderErrorList(ui: UIElements, groups: ErrorGroup[]) {
     return;
   }
 
-  const template = ui.metaTitle?.ownerDocument.getElementById(
-    "error-item-template"
-  ) as HTMLTemplateElement;
-  if (!template) {
+  if (!ui.errorItemTemplate) {
     logger.error("Template #error-item-template not found.");
     return;
   }
 
   groups.forEach((group) => {
-    const clone = template.content.cloneNode(true) as DocumentFragment;
+    const clone = ui.errorItemTemplate!.content.cloneNode(true) as DocumentFragment;
     const wordEl = clone.querySelector(".error-word");
     const reasonEl = clone.querySelector(".error-reason");
     const countEl = clone.querySelector(".error-count");
@@ -289,7 +228,9 @@ export function renderErrorList(ui: UIElements, groups: ErrorGroup[]) {
 
     const style = getErrorHighlights(group.type);
     dotEl?.classList.add(style.dot);
-    errorList.appendChild(clone);
+    if (ui.errorList) {
+      ui.errorList.appendChild(clone);
+    }
   });
 }
 
@@ -315,13 +256,8 @@ export function renderContextView(
   dictionaries: Dictionaries
 ) {
   logger.debug("renderContextView called with:", { group, instanceIndex });
-  const contextView =
-    ui.metaTitle?.ownerDocument.getElementById("context-view");
-  const navIndicator =
-    ui.metaTitle?.ownerDocument.getElementById("nav-indicator");
-  const contextNavControls = ui.contextNavControls;
 
-  if (!contextView || !navIndicator || !contextNavControls) {
+  if (!ui.contextView || !ui.navIndicator || !ui.contextNavControls) {
     logger.error("Context view UI elements not found.");
     return;
   }
@@ -359,7 +295,7 @@ export function renderContextView(
           .join("")}</div>`
       : "";
 
-  contextView.innerHTML = `
+  ui.contextView.innerHTML = `
         <div class="max-w-2xl text-center w-full animate-fadeIn">
             <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-inner relative">
                 <div class="reader-content">
@@ -397,19 +333,19 @@ export function renderContextView(
     `;
 
   // Attach event listeners to the suggestion words
-  if (contextView) {
+  if (ui.contextView) {
     const suggestionWords =
-      contextView.querySelectorAll<HTMLSpanElement>(".suggestion-word");
+      ui.contextView.querySelectorAll<HTMLSpanElement>(".suggestion-word");
     suggestionWords.forEach((span) => {
       span.addEventListener("click", (e) => {
         const target = e.target as HTMLSpanElement;
         if (target.textContent) {
-          copyToClipboard(target.textContent);
+          copyToClipboard(target.textContent, ui);
         }
       });
     });
   }
 
-  navIndicator.textContent = `${instanceIndex + 1}/${group.contexts.length}`;
-  contextNavControls.classList.remove("hidden");
+  ui.navIndicator.textContent = `${instanceIndex + 1}/${group.contexts.length}`;
+  ui.contextNavControls.classList.remove("hidden");
 }

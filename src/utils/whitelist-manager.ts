@@ -39,7 +39,7 @@ export function updateWhitelist(
 export function clearWhitelist(UI: UIElements) {
   if (!UI.whitelistInput) return;
   if (UI.whitelistInput.value.trim() === "") {
-    showToast("Danh sách đã trống.", "info");
+    showToast(UI, "Danh sách đã trống.", "info");
     return;
   }
   openModal(UI, "clear-whitelist");
@@ -47,7 +47,7 @@ export function clearWhitelist(UI: UIElements) {
 
 export function exportWhitelist(UI: UIElements) {
   if (!UI.whitelistInput?.value.trim()) {
-    showToast("Danh sách trống!", "info");
+    showToast(UI, "Danh sách trống!", "info");
     return;
   }
   const { display } = parseWhitelistWithOriginalCase(UI.whitelistInput.value);
@@ -74,13 +74,13 @@ export function handleImportWhitelist(
 
   const fileExtension = file.name.split(".").pop()?.toLowerCase();
   if (!WHITELIST_FILE_EXTENSIONS.includes(fileExtension || "")) {
-    showToast("Lỗi: Tệp phải là tệp văn bản (.txt, .md)", "error");
+    showToast(UI, "Lỗi: Tệp phải là tệp văn bản (.txt, .md)", "error");
     fileInput.value = "";
     return;
   }
 
   if (file.size > FILE_SIZE_LIMIT_BYTES) {
-    showToast("Lỗi: Kích thước tệp không được vượt quá 1MB", "error");
+    showToast(UI, "Lỗi: Kích thước tệp không được vượt quá 1MB", "error");
     fileInput.value = "";
     return;
   }
@@ -94,6 +94,7 @@ export function handleImportWhitelist(
 
     if (importedDisplay.length > WHITELIST_WORD_COUNT_LIMIT) {
       showToast(
+        UI,
         "Lỗi: Danh sách trắng không được chứa nhiều hơn 10,000 từ",
         "error"
       );
@@ -117,6 +118,7 @@ export function handleImportWhitelist(
 
     if (invalidWords.length > 0) {
       showToast(
+        UI,
         `Các từ không hợp lệ đã bị loại bỏ: ${invalidWords.join(", ")}`,
         "info"
       );
