@@ -12,7 +12,7 @@ import { showProcessingUI, hideProcessingUI, showResultsUI, showLoadingOverlay, 
 import { showToast } from "./utils/notifications";
 import { closeModal } from "./utils/modal";
 import { getWordsFromTags } from "./utils/whitelist-tags-manager";
-import { addWordToWhitelist, confirmClearWhitelist } from "./utils/whitelist-manager";
+import { addWordToWhitelist } from "./utils/whitelist-manager";
 import AnalysisWorker from "./workers/analysis.worker?worker";
 import { parseEpub } from "./utils/epub-parser";
 import { EpubContent } from "./types/epub";
@@ -411,8 +411,6 @@ function resetApp() {
       URL.revokeObjectURL(currentCoverUrl);
       $appState.setKey("currentCoverUrl", null);
     }
-
-    confirmClearWhitelist(UI, (value) => $whitelist.set(value), updateAndRenderErrors);
 
     if (UI.errorList) UI.errorList.innerHTML = "";
     if (UI.contextView)
