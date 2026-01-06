@@ -8,7 +8,6 @@ import {
   import { UIElements } from "../types/ui";
   import { closeModal, openModal } from "./modal";
   import {
-    addWordToWhitelist,
     clearWhitelist,
     confirmClearWhitelist,
     exportWhitelist,
@@ -111,17 +110,7 @@ import { applyReaderStyles } from "./reader-styles";
       toggle?.addEventListener("change", mainFunctions.saveSettings)
     );
   
-    UI.whitelistInput?.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            const input = e.target as HTMLInputElement;
-            const word = input.value.trim();
-            if (word) {
-                addWordToWhitelist(word, UI, mainFunctions.saveWhitelist, mainFunctions.updateAndRenderErrors);
-                input.value = "";
-            }
-        }
-    });
+
 
     UI.exportWhitelistBtn?.addEventListener("click", () => exportWhitelist(UI));
     UI.importWhitelistBtn?.addEventListener("click", () =>

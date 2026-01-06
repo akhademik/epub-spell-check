@@ -44,9 +44,3 @@ export function hideLoadingOverlay(ui: UIElements) {
     ui.loadingOverlay?.classList.add(HIDDEN_CLASS);
 }
 
-
-export function updateUIWhitelistInput(ui: UIElements, value: string) {
-    if (ui.whitelistInput) {
-        ui.whitelistInput.value = value;
-    }
-}

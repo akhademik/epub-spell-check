@@ -68,7 +68,7 @@ const UI: UIElements = {
       tone: document.getElementById("set-tone") as HTMLInputElement,
       struct: document.getElementById("set-struct") as HTMLInputElement,
     },
-    whitelistInput: document.getElementById("whitelist-input") as HTMLInputElement,
+
     whitelistTagsContainer: document.getElementById("whitelist-tags-container"),
     importWhitelistBtn: document.getElementById("import-whitelist-btn"),
     exportWhitelistBtn: document.getElementById("export-whitelist-btn"),
@@ -160,7 +160,7 @@ function quickIgnore() {
 }
 
 async function updateAndRenderErrors() {
-    if (!UI.whitelistInput || isUpdating) return;
+    if (isUpdating) return;
   
     isUpdating = true;
     try {
