@@ -23,7 +23,7 @@
 - [ ] Virtualize the Error List: For books with thousands of errors, rendering the entire error list at once can be slow.
   I recommend implementing list virtualization to only render the items currently visible on screen. A lightweight
   library like `virtual-list` could achieve this without a large framework.
-- [ ] Cache Dictionaries in `IndexedDB`: To speed up initial load times, especially with large custom dictionaries, you
+- [x] Cache Dictionaries in `IndexedDB`: To speed up initial load times, especially with large custom dictionaries, you
   could cache the dictionaries in the browser's IndexedDB. The app would then only need to fetch them from the
   network on the very first visit or when an update is detected.
 

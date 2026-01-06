@@ -1,8 +1,8 @@
 import { Dictionaries, DictionaryStatus } from '../types/dictionary';
-
-
 import { UIElements } from '../types/ui';
+import { getCache, setCache } from './indexed-db';
 
+const CACHE_VERSION = 2; // Increment to force cache invalidation
 
 async function fetchLocalDict(localFilename: string): Promise<string> {
   const localRes = await fetch(`/${localFilename}`);
@@ -16,6 +16,19 @@ async function fetchLocalDict(localFilename: string): Promise<string> {
   return await localRes.text();
 }
 
+async function getDictionary(dictName: 'vn' | 'en' | 'custom'): Promise<string> {
+  const cacheKey = `dict-${dictName}`;
+  const cached = await getCache<{ version: number; data: string }>(cacheKey);
+
+  if (cached && cached.version === CACHE_VERSION) {
+    return cached.data;
+  }
+
+  const filename = `${dictName}-dict.txt`;
+  const data = await fetchLocalDict(filename);
+  await setCache(cacheKey, { version: CACHE_VERSION, data });
+  return data;
+}
 
 export async function loadDictionaries(ui: UIElements): Promise<{
   dictionaries: Dictionaries;
@@ -45,9 +58,9 @@ export async function loadDictionaries(ui: UIElements): Promise<{
   ui.engLoading?.classList.add("flex");
 
   const [vnRes, enRes, customRes] = await Promise.all([
-    fetchLocalDict("vn-dict.txt"),
-    fetchLocalDict("en-dict.txt"),
-    fetchLocalDict("custom-dict.txt"),
+    getDictionary("vn"),
+    getDictionary("en"),
+    getDictionary("custom"),
   ]);
 
   ui.engLoading?.classList.add("hidden");
