@@ -20,7 +20,7 @@
 
 3. Performance Optimization
 
-- [ ] Virtualize the Error List: For books with thousands of errors, rendering the entire error list at once can be slow.
+- [x] Virtualize the Error List: For books with thousands of errors, rendering the entire error list at once can be slow.
   I recommend implementing list virtualization to only render the items currently visible on screen. A lightweight
   library like `virtual-list` could achieve this without a large framework.
 - [x] Cache Dictionaries in `IndexedDB`: To speed up initial load times, especially with large custom dictionaries, you
