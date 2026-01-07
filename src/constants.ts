@@ -87,9 +87,15 @@ export const OVERLAY_VISIBLE = ["flex", "items-center", "justify-center"];
  * A palette of Tailwind CSS color classes for the whitelist tags.
  */
 export const TAG_COLORS = [
-    "bg-rose-700",
-    "bg-teal-700",
-    "bg-cyan-700",
-    "bg-sky-700",
-    "bg-fuchsia-700",
+    "bg-rose-600",
+    "bg-pink-600",
+    "bg-fuchsia-600",
+    "bg-purple-600",
+    "bg-violet-600",
+    "bg-indigo-600",
+    "bg-blue-600",
+    "bg-sky-600",
+    "bg-cyan-600",
+    "bg-teal-600",
+    "bg-emerald-600",
 ];

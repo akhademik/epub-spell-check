@@ -1,9 +1,19 @@
 import { TAG_COLORS } from "../constants";
 import { UIElements } from "../types/ui";
 
-export function createWhitelistTag(word: string, onRemove: (word:string) => void, index: number): HTMLElement {
+function simpleHash(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return Math.abs(hash);
+}
+
+export function createWhitelistTag(word: string, onRemove: (word:string) => void): HTMLElement {
     const tag = document.createElement("div");
-    const colorIndex = index % TAG_COLORS.length;
+    const colorIndex = simpleHash(word) % TAG_COLORS.length;
     const color = TAG_COLORS[colorIndex];
     tag.className = `whitelist-tag ${color}`;
     tag.dataset.word = word;
@@ -30,8 +40,8 @@ export function getWordsFromTags(UI: UIElements): string[] {
 export function renderWhitelistTags(UI: UIElements, words: string[], onRemove: (word: string) => void) {
     if (!UI.whitelistTagsContainer) return;
     UI.whitelistTagsContainer.innerHTML = "";
-    words.forEach((word, index) => {
-        const tag = createWhitelistTag(word, onRemove, index);
+    words.forEach((word) => {
+        const tag = createWhitelistTag(word, onRemove);
         UI.whitelistTagsContainer!.appendChild(tag);
     });
 }
