@@ -503,33 +503,35 @@ async function runAnalysis(epubContent: EpubContent) {
   
       updateAndRenderErrors();
   
-      const { currentFilteredErrors } = $appState.get();
-      if (currentFilteredErrors.length > 0) {
-        const firstErrorGroup = currentFilteredErrors[0];
-        const errorList = UI.errorList;
-        const firstErrorElement = errorList?.querySelector(
-          `[data-group-id="${firstErrorGroup.id}"]`
-        ) as HTMLElement;
-        if (firstErrorElement) {
-          selectGroup(firstErrorGroup, firstErrorElement);
-          firstErrorElement.scrollIntoView({
-            block: "nearest",
-            behavior: "smooth",
-          });
+      requestAnimationFrame(() => {
+        const { currentFilteredErrors } = $appState.get();
+        if (currentFilteredErrors.length > 0) {
+          const firstErrorGroup = currentFilteredErrors[0];
+          const errorList = UI.errorList;
+          const firstErrorElement = errorList?.querySelector(
+            `[data-group-id="${firstErrorGroup.id}"]`
+          ) as HTMLElement;
+          if (firstErrorElement) {
+            selectGroup(firstErrorGroup, firstErrorElement);
+            firstErrorElement.scrollIntoView({
+              block: "nearest",
+              behavior: "smooth",
+            });
+          }
+          logger.info("Book loaded and first error selected.");
+        } else {
+          if (UI.contextView) {
+              UI.contextView.innerHTML = `
+                        <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
+                            <p class="text-lg mb-2">Tuyệt vời!</p>
+                            <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
+                        </div>`;
+          }
+          UI.contextNavControls?.classList.add("hidden");
+          $appState.setKey("currentGroup", null);
+          logger.info("Book loaded. No errors found.");
         }
-        logger.info("Book loaded and first error selected.");
-      } else {
-        if (UI.contextView) {
-            UI.contextView.innerHTML = `
-                      <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
-                          <p class="text-lg mb-2">Tuyệt vời!</p>
-                          <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
-                      </div>`;
-        }
-        UI.contextNavControls?.classList.add("hidden");
-        $appState.setKey("currentGroup", null);
-        logger.info("Book loaded. No errors found.");
-      }
+      });
   
       UI.processingUi?.classList.add("hidden");
       if (UI.processingUiHeader) {
