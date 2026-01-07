@@ -119,16 +119,18 @@ function selectNextError(wordToIgnoreId: string, originalIndex: number) {
       }
   
       const nextGroup = currentFilteredErrors[targetIndex];
-      const nextElementInList = UI.errorList?.querySelector(
-        `[data-group-id="${nextGroup.id}"]`
-      ) as HTMLElement | null;
-      if (nextElementInList) {
-        selectGroup(nextGroup, nextElementInList);
-        nextElementInList.scrollIntoView({
-          block: "nearest",
-          behavior: "smooth",
-        });
-      }
+      UI.virtualizedErrorList?.scrollToIndex(targetIndex, 'auto');
+
+      requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+              const nextElementInList = UI.errorList?.querySelector(
+                  `[data-group-id="${nextGroup.id}"]`
+              ) as HTMLElement | null;
+              if (nextElementInList) {
+                  selectGroup(nextGroup, nextElementInList);
+              }
+          });
+      });
     } else {
       clearContextView();
     }
@@ -299,14 +301,19 @@ function navigateErrors(direction: "up" | "down") {
   
     const nextGroup = currentFilteredErrors[nextIndex];
     if (nextGroup) {
-      const nextElement = UI.errorList?.querySelector(
-        `[data-group-id="${nextGroup.id}"]`
-      ) as HTMLElement;
-      if (nextElement) {
-        selectGroup(nextGroup, nextElement);
-        copyToClipboard(nextGroup.word, UI);
-        nextElement.scrollIntoView({ block: "nearest", behavior: "smooth" });
-      }
+        UI.virtualizedErrorList?.scrollToIndex(nextIndex, 'auto');
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                const nextElement = UI.errorList?.querySelector(
+                    `[data-group-id="${nextGroup.id}"]`
+                ) as HTMLElement;
+                if (nextElement) {
+                    selectGroup(nextGroup, nextElement);
+                    copyToClipboard(nextGroup.word, UI);
+                }
+            });
+        });
     }
 }
 
@@ -507,22 +514,21 @@ async function runAnalysis(epubContent: EpubContent) {
         const { currentFilteredErrors } = $appState.get();
         if (currentFilteredErrors.length > 0) {
           const firstErrorGroup = currentFilteredErrors[0];
-          const errorList = UI.errorList;
-          const firstErrorElement = errorList?.querySelector(
-            `[data-group-id="${firstErrorGroup.id}"]`
-          ) as HTMLElement;
-          if (firstErrorElement) {
-            selectGroup(firstErrorGroup, firstErrorElement);
-            firstErrorElement.scrollIntoView({
-              block: "nearest",
-              behavior: "smooth",
-            });
-          }
-          logger.info("Book loaded and first error selected.");
+          UI.virtualizedErrorList?.scrollToIndex(0, 'auto');
+          
+          requestAnimationFrame(() => {
+            const firstErrorElement = UI.errorList?.querySelector(
+              `[data-group-id="${firstErrorGroup.id}"]`
+            ) as HTMLElement;
+            if (firstErrorElement) {
+              selectGroup(firstErrorGroup, firstErrorElement);
+            }
+            logger.info("Book loaded and first error selected.");
+          });
         } else {
           if (UI.contextView) {
               UI.contextView.innerHTML = `
-                        <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
+                        <div class.center p-6 border-2 border-dashed border-slate-800 rounded-xl">
                             <p class="text-lg mb-2">Tuyệt vời!</p>
                             <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
                         </div>`;

@@ -7,7 +7,7 @@ export class SimpleVirtualScroll {
     private container: HTMLElement;
     private items: ErrorGroup[];
     private rowHeight: number;
-    private renderRow: (group: ErrorGroup, index: number) => HTMLElement;
+    private renderRow: (group: ErrorGroup) => HTMLElement;
     private visibleStart = 0;
     private visibleEnd = 0;
     private contentWrapper!: HTMLDivElement;
@@ -17,7 +17,7 @@ export class SimpleVirtualScroll {
         container: HTMLElement,
         items: ErrorGroup[],
         rowHeight: number,
-        renderRow: (group: ErrorGroup, index: number) => HTMLElement
+        renderRow: (group: ErrorGroup) => HTMLElement
     ) {
         this.container = container;
         this.items = items;
@@ -60,7 +60,7 @@ export class SimpleVirtualScroll {
         const containerHeight = this.container.clientHeight;
 
         // Calculate visible range with buffer
-        const buffer = 5;
+        const buffer = 15;
         this.visibleStart = Math.max(0, Math.floor(scrollTop / this.rowHeight) - buffer);
         this.visibleEnd = Math.min(
             this.items.length,
@@ -71,7 +71,7 @@ export class SimpleVirtualScroll {
         // A document fragment can be used to improve performance
         const fragment = document.createDocumentFragment();
         for (let i = this.visibleStart; i < this.visibleEnd; i++) {
-            const item = this.renderRow(this.items[i], i);
+            const item = this.renderRow(this.items[i]);
             item.style.position = 'absolute';
             item.style.top = `${i * this.rowHeight}px`;
             item.style.left = '0';
@@ -86,6 +86,16 @@ export class SimpleVirtualScroll {
         this.items = newItems;
         this.contentWrapper.style.height = `${this.items.length * this.rowHeight}px`;
         this.render();
+    }
+
+
+    public scrollToIndex(index: number, behavior: 'auto' | 'smooth' = 'auto') {
+        const viewportHeight = this.viewport.clientHeight;
+        const newScrollTop = (index * this.rowHeight) - (viewportHeight / 2) + (this.rowHeight / 2);
+        const maxScrollTop = (this.items.length * this.rowHeight) - viewportHeight;
+        const clampedScrollTop = Math.max(0, Math.min(newScrollTop, maxScrollTop));
+
+        this.viewport.scrollTo({ top: clampedScrollTop, behavior });
     }
 
     destroy() {

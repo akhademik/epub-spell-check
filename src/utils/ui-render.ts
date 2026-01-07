@@ -231,7 +231,7 @@ export function renderErrorList(ui: UIElements, groups: ErrorGroup[]) {
             ui.errorList!,
             groups,
             rowHeight,
-            (group: ErrorGroup, _index: number) => {
+            (group: ErrorGroup) => {
                 const style = getErrorHighlights(group.type);
 
                 const element = document.createElement('div');
