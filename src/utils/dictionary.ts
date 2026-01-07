@@ -1,8 +1,9 @@
 import { Dictionaries, DictionaryStatus } from '../types/dictionary';
 import { UIElements } from '../types/ui';
 import { getCache, setCache } from './indexed-db';
+import { logger } from './logger';
 
-const CACHE_VERSION = 2; // Increment to force cache invalidation
+const TWENTY_FOUR_HOURS_IN_MS = 24 * 60 * 60 * 1000;
 
 async function fetchLocalDict(localFilename: string): Promise<string> {
   const localRes = await fetch(`/${localFilename}`);
@@ -18,15 +19,17 @@ async function fetchLocalDict(localFilename: string): Promise<string> {
 
 async function getDictionary(dictName: 'vn' | 'en' | 'custom'): Promise<string> {
   const cacheKey = `dict-${dictName}`;
-  const cached = await getCache<{ version: number; data: string }>(cacheKey);
+  const cached = await getCache<{ timestamp: number; data: string }>(cacheKey);
 
-  if (cached && cached.version === CACHE_VERSION) {
+  if (cached && (Date.now() - cached.timestamp < TWENTY_FOUR_HOURS_IN_MS)) {
+    logger.info(`Using cached dictionary for ${dictName}`);
     return cached.data;
   }
 
+  logger.info(`Fetching fresh dictionary for ${dictName}`);
   const filename = `${dictName}-dict.txt`;
   const data = await fetchLocalDict(filename);
-  await setCache(cacheKey, { version: CACHE_VERSION, data });
+  await setCache(cacheKey, { timestamp: Date.now(), data });
   return data;
 }
 
