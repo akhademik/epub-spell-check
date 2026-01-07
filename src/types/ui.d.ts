@@ -27,10 +27,13 @@ interface StatsUI {
   statErrorsMobileCount: HTMLElement | null;
 }
 
+import {SimpleVirtualScroll} from "../utils/simple-virtual-scroll";
+
 interface ResultsAreaUI {
   errorList: HTMLElement | null;
   contextView: HTMLElement | null;
   errorItemTemplate: HTMLTemplateElement | null;
+  virtualizedErrorList?: SimpleVirtualScroll;
 }
 
 interface SettingsUI {

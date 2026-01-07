@@ -107,3 +107,14 @@ body {
 .whitelist-tag-remove:hover {
   color: #f8fafc; /* slate-50 */
 }
+
+/* Styling for selected error items */
+.selected-error-item {
+  background-color: #1e293b; /* equivalent to bg-slate-800 */
+  border-color: #475569; /* equivalent to border-slate-700 */
+  outline: none;
+}
+
+.selected-error-item .ignore-btn {
+  color: #34d399; /* equivalent to text-green-400 */
+}

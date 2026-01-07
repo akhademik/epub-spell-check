@@ -180,58 +180,112 @@ export function updateStats(
   if (ui.statGroups) ui.statGroups.innerText = totalGroups.toLocaleString();
 }
 
+import { SimpleVirtualScroll } from "./simple-virtual-scroll";
+
 /**
  * Renders the list of grouped errors in the sidebar.
  * @param ui - A reference to the UI elements collection.
  * @param groups - An array of error groups to render.
  */
 export function renderErrorList(ui: UIElements, groups: ErrorGroup[]) {
-  if (!ui.errorList) {
-    logger.error("UI element #error-list not found.");
-    return;
-  }
+    if (!ui.errorList) {
+        logger.error("UI element #error-list not found.");
+        return;
+    }
+    logger.debug("renderErrorList: groups.length =", groups.length);
 
-  ui.errorList.innerHTML = "";
-
-  if (groups.length === 0) {
-    ui.errorList.innerHTML = `
-            <div class="p-10 text-center text-slate-600 flex flex-col items-center">
-                <svg class="w-16 h-16 mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p class="text-lg font-medium">Tuyệt vời!</p>
-                <p class="text-sm mt-1">Không tìm thấy lỗi nào.</p>
-            </div>`;
-    return;
-  }
-
-  if (!ui.errorItemTemplate) {
-    logger.error("Template #error-item-template not found.");
-    return;
-  }
-
-  groups.forEach((group) => {
-    const clone = ui.errorItemTemplate!.content.cloneNode(true) as DocumentFragment;
-    const wordEl = clone.querySelector(".error-word");
-    const reasonEl = clone.querySelector(".error-reason");
-    const countEl = clone.querySelector(".error-count");
-    const dotEl = clone.querySelector(".status-dot");
-    const buttonContainer = clone.querySelector("div") as HTMLElement;
-    if (buttonContainer) {
-      buttonContainer.dataset.groupId = group.id;
-      buttonContainer.dataset.groupWord = group.word;
+    if (groups.length === 0) {
+        ui.errorList.innerHTML = `
+      <div class="p-10 text-center text-slate-600 flex flex-col items-center">
+        <svg class="w-16 h-16 mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-lg font-medium">Tuyệt vời!</p>
+        <p class="text-sm mt-1">Không tìm thấy lỗi nào.</p>
+      </div>`;
+        return;
     }
 
-    if (wordEl) wordEl.textContent = group.word;
-    if (reasonEl) reasonEl.textContent = group.reason;
-    if (countEl) countEl.textContent = String(group.contexts.length);
+    // Clear existing content
+    ui.errorList.innerHTML = "";
 
-    const style = getErrorHighlights(group.type);
-    dotEl?.classList.add(style.dot);
-    if (ui.errorList) {
-      ui.errorList.appendChild(clone);
+    // Destroy previous instance if it exists
+    if (ui.virtualizedErrorList) {
+        if (typeof ui.virtualizedErrorList.destroy === 'function') {
+            ui.virtualizedErrorList.destroy();
+        }
     }
-  });
+
+    const rowHeight = 72; // Height of one item, from template py-3 -> 12px * 2, plus other elements, lets say 72px is enough
+
+    requestAnimationFrame(() => {
+        const containerHeight = ui.errorList!.clientHeight;
+        logger.debug("Virtual scroll init - container height:", containerHeight);
+
+        if (containerHeight === 0) {
+            logger.error("Container height is 0!");
+            return;
+        }
+
+        ui.virtualizedErrorList = new SimpleVirtualScroll(
+            ui.errorList!,
+            groups,
+            rowHeight,
+            (group: ErrorGroup, _index: number) => {
+                const style = getErrorHighlights(group.type);
+
+                const element = document.createElement('div');
+                element.className = 'flex items-stretch w-full mb-1 transition-all border border-transparent rounded-lg hover:bg-slate-800 group bg-slate-900 hover:border-slate-700';
+                element.style.height = `${rowHeight}px`;
+                element.dataset.groupId = group.id;
+                element.dataset.groupWord = group.word;
+
+                const selectBtn = document.createElement('button');
+                selectBtn.className = 'flex items-center justify-between flex-grow px-4 py-3 text-left border-r rounded-l-lg select-btn focus:outline-none border-slate-800/50 group-hover:border-slate-700';
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'w-full overflow-hidden';
+
+                const topRow = document.createElement('div');
+                topRow.className = 'flex items-center gap-2';
+                
+                const dotSpan = document.createElement('span');
+                dotSpan.className = `status-dot w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-[0_0_5px_rgba(0,0,0,0.5)] ${style.dot}`;
+                
+                const wordSpan = document.createElement('span');
+                wordSpan.className = 'font-serif text-lg font-bold truncate text-slate-200 error-word';
+                wordSpan.textContent = group.word;
+
+                const countSpan = document.createElement('span');
+                countSpan.className = 'bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full error-count flex-shrink-0';
+                countSpan.textContent = String(group.contexts.length);
+
+                topRow.append(dotSpan, wordSpan, countSpan);
+
+                const reasonDiv = document.createElement('div');
+                reasonDiv.className = 'mt-1 text-xs truncate text-slate-500 error-reason';
+                reasonDiv.textContent = group.reason;
+
+                contentDiv.append(topRow, reasonDiv);
+                selectBtn.appendChild(contentDiv);
+
+                const ignoreBtn = document.createElement('button');
+                ignoreBtn.className = 'flex items-center justify-center px-3 transition-colors rounded-r-lg ignore-btn text-slate-600 hover:text-green-400 hover:bg-slate-800/50';
+                ignoreBtn.title = 'Bỏ qua (Whitelist)';
+                ignoreBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                    </svg>
+                `;
+
+                element.append(selectBtn, ignoreBtn);
+                
+                return element;
+            }
+        );
+
+        logger.debug("Virtual scroll initialized successfully");
+    });
 }
 
 function isUpperCase(str: string): boolean {

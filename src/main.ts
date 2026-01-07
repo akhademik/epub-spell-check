@@ -337,21 +337,13 @@ function handleGlobalKeydown(e: KeyboardEvent) {
 
 function selectGroup(group: ErrorGroup, element: HTMLElement) {
     $appState.get().selectedErrorElement?.classList.remove(
-      "bg-blue-900/30",
-      "border-blue-700/50",
-      "ring-1",
-      "ring-blue-500/50"
+      "selected-error-item"
     );
   
     $appState.setKey("currentGroup", group);
     $appState.setKey("currentInstanceIndex", 0);
   
-    element.classList.add(
-      "bg-blue-900/30",
-      "border-blue-700/50",
-      "ring-1",
-      "ring-blue-500/50"
-    );
+    element.classList.add("selected-error-item");
   
     $appState.setKey("selectedErrorElement", element)
     renderContextView(UI, group, 0, $appState.get().dictionaries);
