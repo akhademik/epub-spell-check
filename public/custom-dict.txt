@@ -20,6 +20,7 @@ GPA
 GPS
 GRE
 HP
+HongKong
 II
 IKEA
 IP
@@ -42,6 +43,7 @@ PCB
 QR
 SUV
 TNT
+TQ
 TV
 UFO
 UNESCO
