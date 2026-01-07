@@ -140,7 +140,9 @@ function ignoreAndAdvance(
     originalIndex: number
 ) {
     if (addWordToWhitelist(wordToIgnore, UI, (value) => $whitelist.set(value), updateAndRenderErrors)) {
-        selectNextError(wordToIgnoreId, originalIndex);
+        requestAnimationFrame(() => {
+            selectNextError(wordToIgnoreId, originalIndex);
+        });
     }
 }
 

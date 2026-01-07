@@ -180,7 +180,7 @@ export function updateStats(
   if (ui.statGroups) ui.statGroups.innerText = totalGroups.toLocaleString();
 }
 
-import { SimpleVirtualScroll } from "./simple-virtual-scroll";
+import { SimpleVirtualScroll } from "./virtual-scroll";
 
 /**
  * Renders the list of grouped errors in the sidebar.
