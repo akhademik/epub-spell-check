@@ -52,7 +52,6 @@ Jenkinson
 Jennifer
 Jonson
 Judah
-hooligan
 Kazan
 Kilimanjaro
 Kostanjoglo
@@ -4145,6 +4144,7 @@ honor
 honors
 hood
 hook
+hooligan
 hope
 hoped
 hopes
