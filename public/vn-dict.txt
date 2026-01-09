@@ -87,7 +87,7 @@ baht
 bai
 balat
 balê
-balô
+balo
 balông
 bam
 ban
@@ -4860,7 +4860,7 @@ nhếch
 nhếu
 nhều
 nhể
-nhểu
+nhễu
 nhễ
 nhệch
 nhện
