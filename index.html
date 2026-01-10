@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soát Lỗi Chính Tả</title>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body
+    hidden
+    class="flex flex-col min-h-screen transition-colors duration-300 bg-slate-950 text-slate-200"
+  >
+    <!-- Header -->
+    <header
+      class="sticky top-0 z-20 border-b shadow-md bg-slate-900 border-slate-800"
+    >
+      <div
+        class="flex flex-wrap items-center justify-center max-w-6xl gap-4 px-4 py-3 mx-auto sm:justify-between sm:flex-nowrap"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="p-2 text-white bg-blue-600 rounded-lg shadow-lg shadow-blue-900/20"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight text-slate-100">
+              Soát Lỗi Chính Tả
+            </h1>
+            <div class="text-xs font-medium text-slate-500">v3.0</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Help Button -->
+          <button
+            id="help-btn"
+            class="p-2 transition-colors rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            title="Hướng dẫn sử dụng"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </button>
+
+          <!-- Settings Button -->
+          <button
+            id="settings-btn"
+            class="p-2 transition-colors rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            title="Cấu hình"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+          </button>
+
+          <!-- Export Button -->
+          <button
+            id="export-btn"
+            class="px-4 py-2 text-sm font-medium text-white transition-colors rounded-lg shadow-lg bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            <span class="hidden sm:inline">Xuất lỗi</span>
+          </button>
+
+          <!-- Reset Button -->
+          <button
+            id="reset-btn"
+            class="px-4 py-2 text-sm font-medium text-white transition-colors bg-blue-600 rounded-lg shadow-lg hover:bg-blue-500 shadow-blue-900/20"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+            <span class="hidden sm:inline">Kiểm tra file khác</span>
+          </button>
+
+          <!-- Dict Status -->
+          <div
+            id="dict-status"
+            class="text-xs px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 h-auto"
+          >
+            <div
+              class="flex-shrink-0 w-2 h-2 bg-yellow-500 rounded-full animate-pulse"
+              id="dict-dot"
+            ></div>
+            <div
+              id="dict-text"
+              class="font-mono leading-tight text-slate-400 whitespace-nowrap"
+            >
+              Đang tải dữ liệu...
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main
+      class="relative flex flex-col flex-grow w-full max-w-6xl gap-6 px-4 py-8 mx-auto"
+    >
+      <!-- Loading Overlay -->
+      <div
+        id="loading-overlay"
+        class="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity"
+      >
+        <div
+          class="flex flex-col items-center gap-4 px-8 py-6 border shadow-2xl bg-slate-900 border-slate-700 rounded-2xl"
+        >
+          <svg
+            class="w-10 h-10 text-blue-500 pointer-events-none animate-spin"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <span class="text-lg font-medium text-slate-200 animate-pulse"
+            >Đang áp dụng...</span
+          >
+        </div>
+      </div>
+
+      <!-- Export Modal -->
+      <div
+        id="export-modal"
+        class="fixed inset-0 z-50 p-4 bg-black/50 backdrop-blur-sm animate-fadeIn"
+      >
+        <div
+          class="w-full max-w-sm overflow-hidden border shadow-2xl bg-slate-900 border-slate-700 rounded-2xl"
+          onclick="event.stopPropagation()"
+        >
+          <div
+            class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-800/50"
+          >
+            <h3 class="text-lg font-bold text-white">Chọn kiểu xuất lỗi</h3>
+            <button
+              id="close-export-btn"
+              class="transition-colors text-slate-400 hover:text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6 pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="p-6 space-y-4">
+            <button
+              id="export-vctve-btn"
+              class="flex items-center justify-center w-full gap-2 px-4 py-3 font-medium text-white transition-colors bg-blue-600 hover:bg-blue-500 rounded-xl group"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 pointer-events-none opacity-70 group-hover:opacity-100"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              Xuất cho VCTVEGROUP
+            </button>
+            <button
+              id="export-normal-btn"
+              class="flex items-center justify-center w-full gap-2 px-4 py-3 font-medium text-white transition-colors bg-slate-700 hover:bg-slate-600 rounded-xl group"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 pointer-events-none opacity-70 group-hover:opacity-100"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                />
+              </svg>
+              Xuất thông thường
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Modal -->
+      <div
+        id="help-modal"
+        class="fixed inset-0 z-50 p-4 bg-black/50 backdrop-blur-sm animate-fadeIn"
+      >
+        <div
+          id="help-modal-content"
+          class="w-full max-w-xl overflow-hidden border shadow-2xl bg-slate-900 border-slate-700 rounded-2xl"
+        >
+          <div
+            class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-800/50"
+          >
+            <h3 class="flex items-center gap-2 text-lg font-bold text-white">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 text-blue-500 pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Hướng Dẫn Sử Dụng
+            </h3>
+            <button
+              id="close-help-btn"
+              class="transition-colors text-slate-400 hover:text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6 pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="p-5 space-y-4 text-sm text-slate-300">
+            <div>
+              <h4 class="mb-1 font-bold text-white">1. Quy Trình</h4>
+              <ul class="pl-5 space-y-1 list-disc marker:text-blue-500">
+                <li>
+                  Tải lên file sách <code>.epub</code> (kéo thả hoặc nhấp để
+                  chọn).
+                </li>
+                <li>Hệ thống tự động quét lỗi chính tả.</li>
+                <li>
+                  Xem danh sách lỗi ở cột trái và ngữ cảnh chi tiết ở cột phải.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="mb-1 font-bold text-white">2. Phím Tắt</h4>
+              <div
+                class="grid grid-cols-1 gap-2 p-3 text-xs rounded-lg sm:grid-cols-2 bg-slate-800"
+              >
+                <div class="flex items-center gap-2">
+                  <kbd
+                    class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
+                    >⬆️</kbd
+                  >
+                  <span>Chọn lỗi phía trên</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <kbd
+                    class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
+                    >⬇️</kbd
+                  >
+                  <span>Chọn lỗi phía dưới</span>
+                </div>
+                <div class="flex items-center col-span-2 gap-2">
+                  <kbd
+                    class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
+                    >Del</kbd
+                  >
+                  <span class="opacity-50">/</span>
+                  <kbd
+                    class="bg-slate-700 px-2 py-0.5 rounded border border-slate-600"
+                    >I</kbd
+                  >
+                  <span>Bỏ qua từ hiện tại (thêm vào danh sách bỏ qua)</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="mb-1 font-bold text-white">3. Tính Năng</h4>
+              <ul class="pl-5 space-y-1 list-disc marker:text-green-500">
+                <li>
+                  <strong>Danh sách bỏ qua (Whitelist):</strong> Nhập/Xuất danh
+                  sách từ bỏ qua, hỗ trợ chỉnh sửa trực tiếp và lưu tự động.
+                </li>
+                <li>
+                  <strong>Xuất Báo Cáo Lỗi:</strong> Tải báo cáo lỗi với hai
+                  định dạng (VCTVEGROUP/Thông thường).
+                </li>
+                <li>
+                  <strong>Lọc Từ Tiếng Anh:</strong> Tùy chọn ẩn các lỗi là từ
+                  tiếng Anh chuẩn để tập trung vào lỗi tiếng Việt.
+                </li>
+                <li>
+                  <strong>Cấu Hình Kiểm Tra:</strong> Bật/tắt các loại lỗi muốn
+                  kiểm tra (từ điển, viết hoa, dấu thanh, từ lạ/cấu trúc).
+                </li>
+                <li>
+                  <strong>Cài Đặt Đọc Sách:</strong> Điều chỉnh cỡ chữ và font
+                  chữ (serif/sans-serif) để tối ưu trải nghiệm đọc.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clear Whitelist Modal -->
+      <div
+        id="clear-whitelist-modal"
+        class="fixed inset-0 z-50 items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn"
+      >
+        <div
+          class="w-full max-w-sm overflow-hidden border shadow-2xl bg-slate-900 border-slate-700 rounded-2xl"
+          onclick="event.stopPropagation()"
+        >
+          <div
+            class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-800/50"
+          >
+            <h3 class="text-lg font-bold text-white">Xác nhận xoá</h3>
+            <button
+              id="close-clear-whitelist-btn"
+              class="transition-colors text-slate-400 hover:text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6 pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="p-6 space-y-4">
+            <p class="text-sm text-slate-300">
+              Bạn có chắc chắn muốn xoá hết danh sách bỏ soát lỗi không?
+            </p>
+            <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
+              <button
+                id="cancel-clear-whitelist-btn"
+                class="px-4 py-2 text-sm font-medium transition-colors border rounded-lg text-slate-300 border-slate-600 hover:bg-slate-800"
+              >
+                Huỷ
+              </button>
+              <button
+                id="confirm-clear-whitelist-btn"
+                class="px-4 py-2 text-sm font-medium text-white transition-colors bg-red-600 rounded-lg hover:bg-red-500"
+              >
+                Xoá hết
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Modal -->
+      <div
+        id="settings-modal"
+        class="fixed z-50 p-5 text-sm border shadow-2xl top-20 w-80 bg-slate-900 border-slate-700 rounded-xl animate-fadeIn settings-modal-aligned"
+      >
+        <div
+          class="flex items-center justify-between pb-2 mb-4 border-b border-slate-800"
+        >
+          <h3 class="text-lg font-bold text-white">Cấu hình kiểm tra</h3>
+          <button
+            id="close-settings-btn"
+            class="text-slate-500 hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Setting Item: Dictionary Check -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300"
+              >Lỗi không có trong từ điển</span
+            >
+            <label
+              for="set-dict"
+              class="relative inline-block w-10 h-6 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                id="set-dict"
+                class="sr-only peer"
+                checked
+              />
+              <div
+                class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+              ></div>
+            </label>
+          </div>
+
+          <!-- Setting Item: Uppercase Check -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300">Lỗi viết hoa (VD: tÔI)</span>
+            <label
+              for="set-case"
+              class="relative inline-block w-10 h-6 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                id="set-case"
+                class="sr-only peer"
+                checked
+              />
+              <div
+                class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+              ></div>
+            </label>
+          </div>
+
+          <!-- Setting Item: Tone Check -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300">Lỗi đặt dấu (Hòa/Hoà)</span>
+            <label
+              for="set-tone"
+              class="relative inline-block w-10 h-6 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                id="set-tone"
+                class="sr-only peer"
+                checked
+              />
+              <div
+                class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+              ></div>
+            </label>
+          </div>
+
+          <!-- Setting Item: Foreign/Structure Check -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300">Lỗi ký tự lạ / Cấu trúc</span>
+            <label
+              for="set-struct"
+              class="relative inline-block w-10 h-6 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                id="set-struct"
+                class="sr-only peer"
+                checked
+              />
+              <div
+                class="w-10 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+              ></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Section -->
+      <div
+        id="upload-section"
+        class="relative p-12 overflow-hidden text-center transition-all border-2 border-dashed shadow-xl cursor-pointer bg-slate-900 rounded-2xl border-slate-800 hover:border-blue-500/50 hover:bg-slate-800/50 group"
+      >
+        <input type="file" id="file-input" accept=".epub" class="hidden" />
+
+        <div
+          class="absolute inset-0 transition-opacity opacity-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 group-hover:opacity-100"
+        ></div>
+
+        <div
+          class="relative z-10 flex flex-col items-center justify-center gap-6 pointer-events-none"
+        >
+          <div
+            class="flex items-center justify-center w-20 h-20 text-blue-500 transition-all duration-300 rounded-full shadow-lg bg-slate-800 group-hover:scale-110 group-hover:bg-slate-700 group-hover:text-blue-400 shadow-black/20"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-10 h-10 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-slate-200">Tải lên file sách</h2>
+            <p class="mt-2 text-lg text-slate-400">
+              Kéo thả hoặc nhấp để chọn tệp
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Processing UI -->
+      <div
+        id="processing-ui"
+        class="w-full max-w-2xl p-8 mx-auto border shadow-xl bg-slate-900 rounded-2xl border-slate-800"
+      >
+        <div id="processing-ui-header">
+          <div>
+            <h3 class="mb-1 text-lg font-semibold text-white">Đang xử lý</h3>
+            <div id="status-text" class="text-sm text-slate-400">
+              Đang khởi tạo...
+            </div>
+          </div>
+          <span id="progress-percent" class="text-3xl font-bold text-blue-500"
+            >0%</span
+          >
+        </div>
+        <div
+          class="box-border w-full h-3 overflow-hidden border rounded-full bg-slate-800 border-slate-700/50"
+        >
+          <div
+            id="progress-bar"
+            class="bg-gradient-to-r from-blue-600 to-indigo-600 h-full rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(37,99,235,0.5)]"
+            style="width: 0%"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div id="results-section">
+        <!-- Book Info -->
+        <div
+          class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-lg flex items-center gap-5 relative overflow-hidden min-h-[140px]"
+        >
+          <div
+            class="absolute top-0 right-0 p-6 pointer-events-none opacity-10"
+          >
+            <svg
+              class="w-40 h-40 text-white pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1"
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+              />
+            </svg>
+          </div>
+
+          <!-- Cover Image Container -->
+          <div
+            class="relative flex-shrink-0 w-20 overflow-hidden border rounded-lg shadow-md h-28 bg-slate-800 border-slate-700"
+          >
+            <img
+              id="meta-cover"
+              class="hidden object-cover w-full h-full"
+              alt="Bìa sách"
+            />
+            <div
+              id="meta-cover-placeholder"
+              class="flex items-center justify-center w-full h-full text-slate-600"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-8 h-8 pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div class="relative z-10">
+            <div
+              class="mb-1 text-xs font-bold tracking-wider text-blue-400 uppercase"
+            >
+              Đang kiểm tra
+            </div>
+            <h2
+              id="meta-title"
+              class="text-2xl font-bold leading-tight text-white"
+            >
+              Đang tải...
+            </h2>
+            <p
+              id="meta-author"
+              class="mt-1 font-serif text-lg italic text-slate-400"
+            >
+              Đang tải...
+            </p>
+          </div>
+        </div>
+
+        <!-- Whitelist Input -->
+        <div
+          class="p-5 border shadow-lg bg-slate-900 rounded-xl border-slate-800"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <label
+              for="whitelist-input"
+              class="flex items-center gap-2 text-sm font-bold text-slate-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4 text-green-500 pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Danh sách từ bỏ soát lỗi
+            </label>
+            <button
+              id="clear-whitelist-btn"
+              class="text-xs px-3 py-1.5 bg-red-900/50 hover:bg-red-800/70 border border-red-700/50 rounded text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-3 h-3 pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+              Xoá hết
+            </button>
+          </div>
+          <div
+            id="whitelist-tags-container"
+            class="flex flex-wrap gap-2 p-2 border rounded-lg bg-slate-950 border-slate-700 min-h-[40px]"
+          >
+            <!-- Tags will be inserted here -->
+          </div>
+
+          <div
+            class="flex flex-col items-center justify-between gap-4 pt-3 mt-4 border-t sm:flex-row border-slate-800"
+          >
+            <div class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="eng-filter-checkbox"
+                class="w-4 h-4 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+              />
+              <label
+                for="eng-filter-checkbox"
+                class="flex items-center gap-2 text-sm font-medium cursor-pointer select-none text-slate-300"
+              >
+                Kích hoạt từ điển tiếng Anh
+                <span
+                  id="eng-loading"
+                  class="flex items-center gap-1 text-xs text-yellow-500 animate-pulse"
+                >
+                  <svg
+                    class="w-3 h-3 pointer-events-none animate-spin"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Đang tải...
+                </span>
+              </label>
+            </div>
+            <div class="flex items-center gap-2">
+              <input
+                type="file"
+                id="whitelist-import-file"
+                class="hidden"
+                accept=".txt,.md"
+              />
+              <button
+                id="import-whitelist-btn"
+                class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-slate-300 transition-colors flex items-center gap-1"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-3 h-3 pointer-events-none"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                  />
+                </svg>
+                Import Whitelist
+              </button>
+              <button
+                id="export-whitelist-btn"
+                class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-slate-300 transition-colors flex items-center gap-1"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-3 h-3 pointer-events-none"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                Export Whitelist
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div
+            class="relative hidden p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800 md:block"
+          >
+            <div class="absolute top-0 right-0 p-4 opacity-5">
+              <svg
+                class="w-24 h-24 pointer-events-none"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.968 7.968 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"
+                />
+              </svg>
+            </div>
+            <div
+              class="mb-1 text-sm font-medium tracking-wider uppercase text-slate-500"
+            >
+              Từ đã quét
+            </div>
+            <div
+              id="stat-total-words"
+              class="text-3xl font-bold text-slate-100"
+            >
+              0
+            </div>
+          </div>
+          <div
+            class="relative p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800 group"
+          >
+            <div class="absolute top-0 right-0 p-4 text-red-500 opacity-5">
+              <svg
+                class="w-24 h-24 pointer-events-none"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+            <!-- Desktop view for label and count -->
+            <div
+              class="hidden mb-1 text-sm font-medium tracking-wider text-red-400 uppercase md:block"
+            >
+              Lỗi phát hiện
+            </div>
+            <div
+              id="stat-errors"
+              class="hidden text-3xl font-bold text-red-500 transition-transform origin-left md:block group-hover:scale-105"
+            >
+              0
+            </div>
+            <!-- Mobile view for combined label and count -->
+            <div
+              id="stat-errors-mobile"
+              class="flex items-center justify-between w-full text-lg font-bold text-red-400 md:hidden"
+            >
+              <span>Lỗi phát hiện</span>
+              <span id="stat-errors-mobile-count" class="ml-2 text-red-500"
+                >0</span
+              >
+            </div>
+          </div>
+          <div
+            class="relative hidden p-6 overflow-hidden border shadow-lg bg-slate-900 rounded-2xl border-slate-800 md:block"
+          >
+            <div class="absolute top-0 right-0 p-4 text-blue-500 opacity-5">
+              <svg
+                class="w-24 h-24 pointer-events-none"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
+                />
+              </svg>
+            </div>
+            <div
+              class="mb-1 text-sm font-medium tracking-wider text-blue-400 uppercase"
+            >
+              Nhóm lỗi
+            </div>
+            <div id="stat-groups" class="text-3xl font-bold text-blue-400">
+              0
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px] lg:h-[700px]"
+        >
+          <!-- Error List Sidebar -->
+          <div
+            class="flex flex-col w-full overflow-hidden border shadow-xl lg:col-span-1 bg-slate-900 rounded-2xl border-slate-800"
+          >
+            <div
+              class="flex items-center justify-between p-4 font-semibold border-b border-slate-800 bg-slate-900/50 backdrop-blur text-slate-300"
+            >
+              <span class="flex items-center gap-2">
+                <svg
+                  class="w-4 h-4 pointer-events-none text-slate-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                  />
+                </svg>
+                Danh sách lỗi
+              </span>
+              <!-- Removed Sort UI -->
+            </div>
+            <div id="error-list" class="flex-1 p-2 space-y-1 overflow-y-auto">
+              <!-- Items will be injected here -->
+            </div>
+          </div>
+
+          <!-- Context Preview -->
+          <div
+            class="flex flex-col w-full overflow-hidden border shadow-xl lg:col-span-2 bg-slate-900 rounded-2xl border-slate-800"
+          >
+            <div
+              class="flex items-center justify-between p-4 font-semibold border-b border-slate-800 bg-slate-900/50 backdrop-blur text-slate-300"
+            >
+              <div class="flex items-center gap-2">
+                <svg
+                  class="w-4 h-4 pointer-events-none text-slate-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                <span>Ngữ cảnh</span>
+              </div>
+
+              <!-- Navigation Controls (Center) -->
+              <div
+                id="context-nav-controls"
+                class="flex items-center gap-2 p-1 text-sm border rounded-lg bg-slate-800 border-slate-700"
+              >
+                <button
+                  id="btn-prev"
+                  class="p-1.5 hover:bg-slate-700 rounded-md text-slate-400 hover:text-white disabled:opacity-30 transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <span
+                  id="nav-indicator"
+                  class="font-mono text-slate-300 min-w-[3rem] text-center text-xs"
+                  >1/1</span
+                >
+                <button
+                  id="btn-next"
+                  class="p-1.5 hover:bg-slate-700 rounded-md text-slate-400 hover:text-white disabled:opacity-30 transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Reader Settings Toolbar (Right) -->
+              <div
+                class="flex items-center gap-2 p-1 border rounded-lg bg-slate-800 border-slate-700"
+              >
+                <button
+                  id="font-toggle-btn"
+                  class="p-1.5 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors"
+                  title="Đổi Font (Serif/Sans)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 4h14M12 4v16"
+                    />
+                  </svg>
+                </button>
+                <div class="w-px h-4 bg-slate-700 mx-0.5"></div>
+                <button
+                  id="size-down-btn"
+                  class="p-1.5 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors"
+                  title="Giảm cỡ chữ"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M20 12H4"
+                    />
+                  </svg>
+                </button>
+                <button
+                  id="size-up-btn"
+                  class="p-1.5 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors"
+                  title="Tăng cỡ chữ"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4 pointer-events-none"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div
+              id="context-view"
+              class="relative flex flex-col items-center justify-center flex-1 p-8 overflow-y-auto text-slate-500 bg-slate-950/50"
+            >
+              <div
+                class="p-6 text-center border-2 border-dashed border-slate-800 rounded-xl"
+              >
+                <p class="mb-2 text-lg">Chưa chọn lỗi nào</p>
+                <p class="text-sm opacity-60">
+                  Chọn một mục từ danh sách bên trái
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="py-6 mt-auto text-sm text-center text-white border-t border-slate-900 bg-slate-950"
+    >
+      <p class="font-medium">.:: Akhademik 2026 ::.</p>
+    </footer>
+
+    <!-- Templates -->
+    <template id="error-item-template">
+      <div
+        class="flex items-stretch w-full mb-1 transition-all border border-transparent rounded-lg hover:bg-slate-800 group bg-slate-900 hover:border-slate-700"
+      >
+        <button
+          class="flex items-center justify-between flex-grow px-4 py-3 text-left border-r rounded-l-lg select-btn focus:outline-none border-slate-800/50 group-hover:border-slate-700"
+        >
+          <div class="w-full overflow-hidden">
+            <div class="flex items-center gap-2">
+              <!-- Dot will be injected here -->
+              <span
+                class="status-dot w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-[0_0_5px_rgba(0,0,0,0.5)]"
+              ></span>
+              <!-- Changed text color to white/slate-200 for better contrast against dot -->
+              <span
+                class="font-serif text-lg font-bold truncate text-slate-200 error-word"
+              ></span>
+              <span
+                class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full error-count flex-shrink-0"
+              ></span>
+            </div>
+            <div
+              class="mt-1 text-xs truncate text-slate-500 error-reason"
+            ></div>
+          </div>
+        </button>
+        <button
+          class="flex items-center justify-center px-3 transition-colors rounded-r-lg ignore-btn text-slate-600 hover:text-green-400 hover:bg-slate-800/50"
+          title="Bỏ qua (Whitelist)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 pointer-events-none"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+            />
+          </svg>
+        </button>
+      </div>
+    </template>
+
+    <div
+      id="toast-container"
+      class="fixed bottom-0 right-0 p-4 flex flex-col-reverse items-end space-y-2 z-[999]"
+    ></div>
+  </body>
+</html>
