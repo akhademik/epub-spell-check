@@ -192,7 +192,7 @@ export function renderErrorList(ui: UIElements, groups: ErrorGroup[]) {
         logger.error("UI element #error-list not found.");
         return;
     }
-    logger.debug("renderErrorList: groups.length =", groups.length);
+
 
     if (groups.length === 0) {
         ui.errorList.innerHTML = `
@@ -220,7 +220,7 @@ export function renderErrorList(ui: UIElements, groups: ErrorGroup[]) {
 
     requestAnimationFrame(() => {
         const containerHeight = ui.errorList!.clientHeight;
-        logger.debug("Virtual scroll init - container height:", containerHeight);
+
 
         if (containerHeight === 0) {
             logger.error("Container height is 0!");
@@ -284,7 +284,7 @@ export function renderErrorList(ui: UIElements, groups: ErrorGroup[]) {
             }
         );
 
-        logger.debug("Virtual scroll initialized successfully");
+
     });
 }
 
@@ -309,7 +309,6 @@ export function renderContextView(
   instanceIndex: number,
   dictionaries: Dictionaries
 ) {
-  logger.debug("renderContextView called with:", { group, instanceIndex });
 
   if (!ui.contextView || !ui.navIndicator || !ui.contextNavControls) {
     logger.error("Context view UI elements not found.");

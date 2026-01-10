@@ -16,6 +16,7 @@ export async function parseEpub(
 
   const containerFile = zip.file("META-INF/container.xml");
   if (!containerFile) {
+    logger.error("Invalid EPUB: META-INF/container.xml not found.");
     throw new Error("File EPUB không hợp lệ: thiếu META-INF/container.xml");
   }
   const cData = await containerFile.async("string");
@@ -27,11 +28,13 @@ export async function parseEpub(
     ?.getAttribute("full-path");
 
   if (!rootPath) {
+    logger.error("Invalid EPUB: OPF rootfile not found in container.xml.");
     throw new Error("EPUB không hợp lệ: không tìm thấy OPF rootfile");
   }
 
   const opfData = await zip.file(rootPath)?.async("string");
   if (!opfData) {
+    logger.error(`Invalid EPUB: OPF file not found at path: ${rootPath}`);
     throw new Error("EPUB không hợp lệ: không tìm thấy OPF file");
   }
   const opfXml = parser.parseFromString(opfData, "application/xml");

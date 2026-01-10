@@ -60,11 +60,22 @@ export async function loadDictionaries(ui: UIElements): Promise<{
   ui.engLoading?.classList.remove("hidden");
   ui.engLoading?.classList.add("flex");
 
-  const [vnRes, enRes, customRes] = await Promise.all([
-    getDictionary("vn"),
-    getDictionary("en"),
-    getDictionary("custom"),
-  ]);
+  let vnRes, enRes, customRes;
+  try {
+    [vnRes, enRes, customRes] = await Promise.all([
+      getDictionary("vn"),
+      getDictionary("en"),
+      getDictionary("custom"),
+    ]);
+  } catch (error) {
+    logger.error("Failed to load one or more dictionaries:", error);
+    if (ui.dictText) ui.dictText.innerText = "Lỗi tải từ điển";
+    ui.dictDot?.classList.remove("bg-yellow-500", "animate-pulse");
+    ui.dictDot?.classList.add("bg-red-500");
+    // Re-throw the error to be handled by the caller
+    throw error;
+  }
+
 
   ui.engLoading?.classList.add("hidden");
   ui.engLoading?.classList.remove("flex");

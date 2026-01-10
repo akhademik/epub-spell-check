@@ -310,7 +310,6 @@ function navigateErrors(direction: "up" | "down") {
                 ) as HTMLElement;
                 if (nextElement) {
                     selectGroup(nextGroup, nextElement);
-                    copyToClipboard(nextGroup.word, UI);
                 }
             });
         });
