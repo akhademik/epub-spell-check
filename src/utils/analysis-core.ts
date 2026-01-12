@@ -18,7 +18,7 @@ export const TONE_MISPLACEMENT: Record<string, string> = {
   uỹ: "ũy",
   uỵ: "ụy",
   aó: "áo",
-  eó: "éo",
+  eó: "éo"
 }
 
 export const VIETNAMESE_TONE_REGEX =
@@ -44,7 +44,7 @@ export const TONE_MAP: Record<string, number> = {
   Ó: 1,
   Ọ: 2,
   Ỏ: 3,
-  Õ: 4,
+  Õ: 4
 }
 
 export const VOWEL_TABLE: Record<string, string> = {
@@ -59,12 +59,12 @@ export const VOWEL_TABLE: Record<string, string> = {
   Y: "ỲÝỴỶỸ",
   Ê: "ỀẾỆỄ",
   Ơ: "ỜỚỢỞỠ",
-  O: "ÒÓỌỎÕ",
+  O: "ÒÓỌỎÕ"
 }
 
 export function transferTone(
   charSrc: string,
-  charDest: string,
+  charDest: string
 ): [string, string] | null {
   if (!(charSrc in TONE_MAP)) return null
   const idx = TONE_MAP[charSrc]
@@ -124,7 +124,7 @@ export const isY = (c: string) => {
 }
 
 export function checkVietnameseTonePlacement(
-  word: string,
+  word: string
 ): { type: ErrorType; reason: string } | null {
   const lowerWord = word.toLowerCase().normalize("NFC")
   VIETNAMESE_TONE_REGEX.lastIndex = 0
@@ -178,7 +178,7 @@ export function checkVietnameseTonePlacement(
 export function getErrorType(
   word: string,
   dictionaries: Dictionaries,
-  settings: CheckSettings,
+  settings: CheckSettings
 ): { type: ErrorType; reason: string } | null {
   const lower = word.toLowerCase().normalize("NFC")
   const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word)
@@ -238,7 +238,7 @@ export function getErrorType(
             charAfterG
               .normalize("NFD")
               .replace(/[\u0300-\u036f]/g, "")
-              .toLowerCase(),
+              .toLowerCase()
           )
         )
           return { type: "Spelling", reason: "Sai quy tắc g" }
@@ -292,7 +292,7 @@ export function levenshteinDistance(a: string, b: string): number {
         matrix[i][j] = Math.min(
           matrix[i - 1][j - 1] + 1,
           matrix[i][j - 1] + 1,
-          matrix[i - 1][j] + 1,
+          matrix[i - 1][j] + 1
         )
       }
     }

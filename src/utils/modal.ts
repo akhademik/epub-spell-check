@@ -3,7 +3,7 @@ import type { ModalKey, UIElements } from "../types/ui"
 
 function getModalElement(
   ui: UIElements,
-  modalKey: ModalKey,
+  modalKey: ModalKey
 ): HTMLElement | null {
   switch (modalKey) {
     case "settings":

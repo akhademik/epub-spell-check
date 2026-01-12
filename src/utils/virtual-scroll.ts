@@ -17,7 +17,7 @@ export class SimpleVirtualScroll {
     container: HTMLElement,
     items: ErrorGroup[],
     rowHeight: number,
-    renderRow: (group: ErrorGroup) => HTMLElement,
+    renderRow: (group: ErrorGroup) => HTMLElement
   ) {
     this.container = container
     this.items = items
@@ -63,11 +63,11 @@ export class SimpleVirtualScroll {
     const buffer = 15
     this.visibleStart = Math.max(
       0,
-      Math.floor(scrollTop / this.rowHeight) - buffer,
+      Math.floor(scrollTop / this.rowHeight) - buffer
     )
     this.visibleEnd = Math.min(
       this.items.length,
-      Math.ceil((scrollTop + containerHeight) / this.rowHeight) + buffer,
+      Math.ceil((scrollTop + containerHeight) / this.rowHeight) + buffer
     )
 
     // Clear and render visible items

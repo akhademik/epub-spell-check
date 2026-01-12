@@ -6,7 +6,7 @@ const initialState: AppState = {
   dictionaries: {
     vietnamese: new Set(),
     english: new Set(),
-    custom: new Set(),
+    custom: new Set()
   },
   dictionaryStatus: {
     isVietnameseLoaded: false,
@@ -14,7 +14,7 @@ const initialState: AppState = {
     isCustomLoaded: false,
     vietnameseWordCount: 0,
     englishWordCount: 0,
-    customWordCount: 0,
+    customWordCount: 0
   },
   currentBookTitle: "",
   loadedTextContent: [],
@@ -28,10 +28,10 @@ const initialState: AppState = {
     dictionary: true,
     uppercase: true,
     tone: true,
-    foreign: true,
+    foreign: true
   },
   isEngFilterEnabled: true,
-  selectedErrorElement: null,
+  selectedErrorElement: null
 }
 
 export const $appState = map<AppState>(initialState)
@@ -40,12 +40,12 @@ export const $readerSettings = persistentAtom<ReaderSettings>(
   "spell-check:reader-settings",
   {
     fontSize: 1.25,
-    fontFamily: "serif",
+    fontFamily: "serif"
   },
   {
     encode: JSON.stringify,
-    decode: JSON.parse,
-  },
+    decode: JSON.parse
+  }
 )
 
 export const $whitelist = persistentAtom<string>("spell-check:whitelist", "")

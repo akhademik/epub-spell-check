@@ -5,7 +5,7 @@ import type { CheckSettings } from "../utils/analysis-core"
 import {
   ANALYSIS_CHUNK_SIZE,
   getErrorType,
-  WORD_REGEX,
+  WORD_REGEX
 } from "../utils/analysis-core"
 
 /**
@@ -18,7 +18,7 @@ self.onmessage = async (
     dictionaries: Dictionaries
     settings: CheckSettings
     chapterStartIndex: number
-  }>,
+  }>
 ) => {
   const { textBlocks, dictionaries, settings, chapterStartIndex } = event.data
 
@@ -31,7 +31,7 @@ self.onmessage = async (
   >()
 
   const checkWord = (
-    word: string,
+    word: string
   ): { type: ErrorType; reason: string } | null => {
     if (analysisCache.has(word)) {
       // biome-ignore lint/style/noNonNullAssertion: analysisCache.has(word) check ensures 'word' exists
@@ -72,8 +72,8 @@ self.onmessage = async (
             endIndex: match.index + word.length,
             chapterIndex: chapterStartIndex + i,
             paragraphIndex: i,
-            matchIndex: match.index,
-          },
+            matchIndex: match.index
+          }
         })
       }
     }
@@ -82,7 +82,7 @@ self.onmessage = async (
       self.postMessage({
         type: "progress",
         progress: (i / totalBlocks) * 100,
-        message: "Đang kiểm tra chính tả...",
+        message: "Đang kiểm tra chính tả..."
       })
     }
   }
@@ -90,6 +90,6 @@ self.onmessage = async (
   self.postMessage({
     type: "complete",
     errors: allErrors,
-    totalWords: totalWords,
+    totalWords: totalWords
   })
 }

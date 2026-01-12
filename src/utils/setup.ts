@@ -46,7 +46,7 @@ export function loadUserPreferences(
   state: AppState,
   loadWhitelist: () => string,
   saveWhitelist: (value: string) => void,
-  updateAndRenderErrors: () => void,
+  updateAndRenderErrors: () => void
 ) {
   const words = loadWhitelist()
     .split(/[\s,]+/)
@@ -57,7 +57,7 @@ export function loadUserPreferences(
       .split(/[\s,]+/)
       .filter(Boolean)
     const newWords = currentWords.filter(
-      (w) => w.toLowerCase() !== wordToRemove.toLowerCase(),
+      (w) => w.toLowerCase() !== wordToRemove.toLowerCase()
     )
     renderWhitelistTags(UI, newWords, onRemove)
     saveWhitelist(newWords.join(", "))

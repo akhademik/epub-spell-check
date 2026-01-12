@@ -3,7 +3,7 @@ import {
   FLEX_CLASS_VISIBLE,
   HIDDEN_CLASS,
   OVERLAY_VISIBLE,
-  RESULTS_SECTION_VISIBLE,
+  RESULTS_SECTION_VISIBLE
 } from "../constants"
 import type { UIElements } from "../types/ui"
 

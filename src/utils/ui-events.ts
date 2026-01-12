@@ -8,7 +8,7 @@ import {
   clearWhitelist,
   confirmClearWhitelist,
   exportWhitelist,
-  handleImportWhitelist,
+  handleImportWhitelist
 } from "./whitelist-manager"
 
 // These functions are still in main.ts, they will be passed in.
@@ -23,21 +23,21 @@ interface MainFunctions {
   ignoreAndAdvance: (
     wordToIgnore: string,
     wordToIgnoreId: string,
-    originalIndex: number,
+    originalIndex: number
   ) => void
   selectGroup: (group: ErrorGroup, element: HTMLElement) => void
   copyToClipboard: (text: string, ui: UIElements) => void
   showToast: (
     ui: UIElements,
     message: string,
-    type: "info" | "error" | "success",
+    type: "info" | "error" | "success"
   ) => void
   saveWhitelist: (value: string) => void
 }
 
 export function registerUIEventListeners(
   UI: UIElements,
-  mainFunctions: MainFunctions,
+  mainFunctions: MainFunctions
 ) {
   const debounceTimer: number = 0
 
@@ -45,16 +45,16 @@ export function registerUIEventListeners(
     "change",
     (e) =>
       (e.target as HTMLInputElement).files?.[0] &&
-      mainFunctions.handleFile((e.target as HTMLInputElement).files?.[0]),
+      mainFunctions.handleFile((e.target as HTMLInputElement).files?.[0])
   )
   UI.uploadSection?.addEventListener("click", () => UI.fileInput?.click())
   UI.resetBtn?.addEventListener("click", mainFunctions.resetApp)
 
   UI.btnPrev?.addEventListener("click", () =>
-    mainFunctions.navigateInstance("prev"),
+    mainFunctions.navigateInstance("prev")
   )
   UI.btnNext?.addEventListener("click", () =>
-    mainFunctions.navigateInstance("next"),
+    mainFunctions.navigateInstance("next")
   )
 
   UI.settingsBtn?.addEventListener("click", () => {
@@ -79,10 +79,10 @@ export function registerUIEventListeners(
     closeModal(UI, "export")
   })
   UI.exportVctveBtn?.addEventListener("click", () =>
-    mainFunctions.performExport("vctve"),
+    mainFunctions.performExport("vctve")
   )
   UI.exportNormalBtn?.addEventListener("click", () =>
-    mainFunctions.performExport("normal"),
+    mainFunctions.performExport("normal")
   )
 
   UI.fontToggleBtn?.addEventListener("click", () => {
@@ -90,7 +90,7 @@ export function registerUIEventListeners(
     $readerSettings.set({
       ...currentSettings,
       fontFamily:
-        currentSettings.fontFamily === "serif" ? "sans-serif" : "serif",
+        currentSettings.fontFamily === "serif" ? "sans-serif" : "serif"
     })
     applyReaderStyles($readerSettings.get(), UI)
   })
@@ -99,7 +99,7 @@ export function registerUIEventListeners(
     const newSize = Math.round((currentSettings.fontSize + 0.25) * 100) / 100
     $readerSettings.set({
       ...currentSettings,
-      fontSize: Math.min(FONT_SIZE_MAX_REM, newSize),
+      fontSize: Math.min(FONT_SIZE_MAX_REM, newSize)
     })
     applyReaderStyles($readerSettings.get(), UI)
   })
@@ -108,7 +108,7 @@ export function registerUIEventListeners(
     const newSize = Math.round((currentSettings.fontSize - 0.25) * 100) / 100
     $readerSettings.set({
       ...currentSettings,
-      fontSize: Math.max(FONT_SIZE_MIN_REM, newSize),
+      fontSize: Math.max(FONT_SIZE_MIN_REM, newSize)
     })
     applyReaderStyles($readerSettings.get(), UI)
   })
@@ -116,12 +116,12 @@ export function registerUIEventListeners(
   Object.values(UI.settingToggles).forEach(
     (toggle: HTMLInputElement | null) => {
       toggle?.addEventListener("change", mainFunctions.saveSettings)
-    },
+    }
   )
 
   UI.exportWhitelistBtn?.addEventListener("click", () => exportWhitelist(UI))
   UI.importWhitelistBtn?.addEventListener("click", () =>
-    UI.whitelistImportFile?.click(),
+    UI.whitelistImportFile?.click()
   )
   UI.clearWhitelistBtn?.addEventListener("click", () => clearWhitelist(UI))
   UI.whitelistImportFile?.addEventListener("change", (e) =>
@@ -129,21 +129,21 @@ export function registerUIEventListeners(
       e,
       UI,
       mainFunctions.updateAndRenderErrors,
-      mainFunctions.saveWhitelist,
-    ),
+      mainFunctions.saveWhitelist
+    )
   )
 
   UI.closeClearWhitelistBtn?.addEventListener("click", () =>
-    closeModal(UI, "clear-whitelist"),
+    closeModal(UI, "clear-whitelist")
   )
   UI.cancelClearWhitelistBtn?.addEventListener("click", () =>
-    closeModal(UI, "clear-whitelist"),
+    closeModal(UI, "clear-whitelist")
   )
   UI.confirmClearWhitelistBtn?.addEventListener("click", () => {
     confirmClearWhitelist(
       UI,
       mainFunctions.saveWhitelist,
-      mainFunctions.updateAndRenderErrors,
+      mainFunctions.updateAndRenderErrors
     )
     closeModal(UI, "clear-whitelist")
     mainFunctions.showToast(UI, "Đã xoá hết danh sách bỏ qua.", "info")
@@ -152,7 +152,7 @@ export function registerUIEventListeners(
   UI.engFilterCheckbox?.addEventListener("change", () => {
     $appState.setKey(
       "isEngFilterEnabled",
-      UI.engFilterCheckbox?.checked ?? false,
+      UI.engFilterCheckbox?.checked ?? false
     )
     mainFunctions.updateAndRenderErrors()
   })
@@ -177,7 +177,7 @@ export function registerUIEventListeners(
 
   document.addEventListener(
     "keydown",
-    mainFunctions.handleGlobalKeydown as EventListener,
+    mainFunctions.handleGlobalKeydown as EventListener
   )
 
   if (UI.errorList) {
@@ -197,7 +197,7 @@ export function registerUIEventListeners(
         const originalIndex = $appState
           .get()
           .currentFilteredErrors.findIndex(
-            (_g: ErrorGroup) => _g.id === group.id,
+            (_g: ErrorGroup) => _g.id === group.id
           )
         mainFunctions.ignoreAndAdvance(group.word, group.id, originalIndex)
         return

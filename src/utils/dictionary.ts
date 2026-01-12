@@ -9,20 +9,20 @@ async function fetchLocalDict(localFilename: string): Promise<string> {
   const localRes = await fetch(`/${localFilename}`)
   if (!localRes.ok) {
     throw new Error(
-      `Failed to load local file ${localFilename}, status: ${localRes.status}`,
+      `Failed to load local file ${localFilename}, status: ${localRes.status}`
     )
   }
   const contentType = localRes.headers.get("content-type")
   if (contentType?.includes("text/html")) {
     throw new Error(
-      `Failed to load expected text file ${localFilename}. Server returned HTML fallback.`,
+      `Failed to load expected text file ${localFilename}. Server returned HTML fallback.`
     )
   }
   return await localRes.text()
 }
 
 async function getDictionary(
-  dictName: "vn" | "en" | "custom",
+  dictName: "vn" | "en" | "custom"
 ): Promise<string> {
   const cacheKey = `dict-${dictName}`
   const cached = await getCache<{ timestamp: number; data: string }>(cacheKey)
@@ -46,7 +46,7 @@ export async function loadDictionaries(ui: UIElements): Promise<{
   const dictionaries: Dictionaries = {
     vietnamese: new Set<string>(),
     english: new Set<string>(),
-    custom: new Set<string>(),
+    custom: new Set<string>()
   }
   const status: DictionaryStatus = {
     isVietnameseLoaded: false,
@@ -54,7 +54,7 @@ export async function loadDictionaries(ui: UIElements): Promise<{
     isCustomLoaded: false,
     vietnameseWordCount: 0,
     englishWordCount: 0,
-    customWordCount: 0,
+    customWordCount: 0
   }
 
   ui.dictStatus?.classList.remove("hidden")
@@ -71,7 +71,7 @@ export async function loadDictionaries(ui: UIElements): Promise<{
     ;[vnRes, enRes, customRes] = await Promise.all([
       getDictionary("vn"),
       getDictionary("en"),
-      getDictionary("custom"),
+      getDictionary("custom")
     ])
   } catch (error) {
     logger.error("Failed to load one or more dictionaries:", error)

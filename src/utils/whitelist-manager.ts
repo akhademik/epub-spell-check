@@ -2,7 +2,7 @@ import {
   FILE_SIZE_LIMIT_BYTES,
   WHITELIST_FILE_EXTENSIONS,
   WHITELIST_WORD_COUNT_LIMIT,
-  WHITELIST_WORD_LENGTH_LIMIT,
+  WHITELIST_WORD_LENGTH_LIMIT
 } from "../constants"
 import type { UIElements } from "../types/ui"
 import { logger } from "./logger"
@@ -21,12 +21,12 @@ function setAndSaveWhitelist(
   UI: UIElements,
   words: string[],
   saveWhitelist: SaveWhitelistFn,
-  updateAndRenderErrors: UpdateAndRenderFn,
+  updateAndRenderErrors: UpdateAndRenderFn
 ) {
   const onRemove = (wordToRemove: string) => {
     const currentWords = getWhitelistWords(UI)
     const newWords = currentWords.filter(
-      (w) => w.toLowerCase() !== wordToRemove.toLowerCase(),
+      (w) => w.toLowerCase() !== wordToRemove.toLowerCase()
     )
     setAndSaveWhitelist(UI, newWords, saveWhitelist, updateAndRenderErrors)
   }
@@ -40,7 +40,7 @@ export function addWordToWhitelist(
   word: string,
   UI: UIElements,
   saveWhitelist: SaveWhitelistFn,
-  updateAndRenderErrors: UpdateAndRenderFn,
+  updateAndRenderErrors: UpdateAndRenderFn
 ): boolean {
   if (!UI.whitelistTagsContainer) return false
 
@@ -68,7 +68,7 @@ export function clearWhitelist(UI: UIElements) {
 export function confirmClearWhitelist(
   UI: UIElements,
   saveWhitelist: SaveWhitelistFn,
-  updateAndRenderErrors: UpdateAndRenderFn,
+  updateAndRenderErrors: UpdateAndRenderFn
 ) {
   setAndSaveWhitelist(UI, [], saveWhitelist, updateAndRenderErrors)
 }
@@ -80,7 +80,7 @@ export function exportWhitelist(UI: UIElements) {
     return
   }
   const blob = new Blob([words.join("\n")], {
-    type: "text/plain;charset=utf-8",
+    type: "text/plain;charset=utf-8"
   })
   const url = URL.createObjectURL(blob)
   const a = document.createElement("a")
@@ -94,7 +94,7 @@ export function handleImportWhitelist(
   event: Event,
   UI: UIElements,
   updateAndRenderErrors: UpdateAndRenderFn,
-  saveWhitelist: SaveWhitelistFn,
+  saveWhitelist: SaveWhitelistFn
 ) {
   const fileInput = event.target as HTMLInputElement
   const file = fileInput.files?.[0]
@@ -122,7 +122,7 @@ export function handleImportWhitelist(
       showToast(
         UI,
         `Lỗi: Danh sách trắng không được chứa nhiều hơn ${WHITELIST_WORD_COUNT_LIMIT} từ`,
-        "error",
+        "error"
       )
       fileInput.value = ""
       return
@@ -146,7 +146,7 @@ export function handleImportWhitelist(
       showToast(
         UI,
         `Các từ không hợp lệ đã bị loại bỏ: ${invalidWords.join(", ")}`,
-        "info",
+        "info"
       )
     }
 

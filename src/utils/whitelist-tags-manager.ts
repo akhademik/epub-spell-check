@@ -13,7 +13,7 @@ function simpleHash(str: string): number {
 
 export function createWhitelistTag(
   word: string,
-  onRemove: (word: string) => void,
+  onRemove: (word: string) => void
 ): HTMLElement {
   const tag = document.createElement("div")
   const colorIndex = simpleHash(word) % TAG_COLORS.length
@@ -45,7 +45,7 @@ export function getWordsFromTags(UI: UIElements): string[] {
 export function renderWhitelistTags(
   UI: UIElements,
   words: string[],
-  onRemove: (word: string) => void,
+  onRemove: (word: string) => void
 ) {
   if (!UI.whitelistTagsContainer) return
   UI.whitelistTagsContainer.innerHTML = ""

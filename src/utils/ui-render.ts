@@ -14,7 +14,7 @@ import { logger } from "./logger"
 export function updateProgress(
   ui: UIElements,
   percentage: number,
-  message: string,
+  message: string
 ) {
   const roundedPercentage = Math.round(percentage)
 
@@ -28,50 +28,50 @@ const COLOR_PALETTE = [
     dot: "bg-blue-500",
     text: "text-blue-400",
     bg: "bg-blue-500/20",
-    border: "border-blue-500",
+    border: "border-blue-500"
   },
   {
     dot: "bg-red-500",
     text: "text-red-400",
     bg: "bg-red-500/20",
-    border: "border-red-500",
+    border: "border-red-500"
   },
   {
     dot: "bg-green-500",
     text: "text-green-400",
     bg: "bg-green-500/20",
-    border: "border-green-500",
+    border: "border-green-500"
   },
   {
     dot: "bg-yellow-500",
     text: "text-yellow-400",
     bg: "bg-yellow-500/20",
-    border: "border-yellow-500",
+    border: "border-yellow-500"
   },
   {
     dot: "bg-indigo-500",
     text: "text-indigo-400",
     bg: "bg-indigo-500/20",
-    border: "border-indigo-500",
+    border: "border-indigo-500"
   },
   {
     dot: "bg-purple-500",
     text: "text-purple-400",
     bg: "bg-purple-500/20",
-    border: "border-purple-500",
+    border: "border-purple-500"
   },
   {
     dot: "bg-pink-500",
     text: "text-pink-400",
     bg: "bg-pink-500/20",
-    border: "border-pink-500",
+    border: "border-pink-500"
   },
   {
     dot: "bg-teal-500",
     text: "text-teal-400",
     bg: "bg-teal-500/20",
-    border: "border-teal-500",
-  },
+    border: "border-teal-500"
+  }
 ]
 
 const FIXED_ERROR_COLORS: Record<string, number> = {
@@ -80,7 +80,7 @@ const FIXED_ERROR_COLORS: Record<string, number> = {
   Foreign: 2,
   Uppercase: 3,
   Tone: 4,
-  Spelling: 5,
+  Spelling: 5
 }
 
 function getErrorHighlights(type: string): {
@@ -110,7 +110,7 @@ function getContext(text: string, index: number, length: number) {
   return {
     prefix: prefix,
     target: text.substr(index, length),
-    suffix: suffix,
+    suffix: suffix
   }
 }
 
@@ -135,7 +135,7 @@ export function copyToClipboard(text: string, ui: UIElements) {
       (err) => {
         logger.error("Could not copy text: ", err)
         showToast(ui, "Lỗi sao chép.", "error")
-      },
+      }
     )
   } else {
     const textarea = document.createElement("textarea")
@@ -165,7 +165,7 @@ export function updateStats(
   ui: UIElements,
   totalWords: number,
   totalErrors: number,
-  totalGroups: number,
+  totalGroups: number
 ) {
   if (ui.statTotalWords)
     ui.statTotalWords.innerText = totalWords.toLocaleString()
@@ -281,7 +281,7 @@ export function renderErrorList(ui: UIElements, groups: ErrorGroup[]) {
         element.append(selectBtn, ignoreBtn)
 
         return element
-      },
+      }
     )
   })
 }
@@ -309,7 +309,7 @@ export function renderContextView(
   ui: UIElements,
   group: ErrorGroup,
   instanceIndex: number,
-  dictionaries: Dictionaries,
+  dictionaries: Dictionaries
 ) {
   if (!ui.contextView || !ui.navIndicator || !ui.contextNavControls) {
     logger.error("Context view UI elements not found.")
@@ -320,7 +320,7 @@ export function renderContextView(
   const { prefix, target, suffix } = getContext(
     context.context.originalParagraph,
     context.context.matchIndex,
-    group.word.length,
+    group.word.length
   )
   const style = getErrorHighlights(group.type)
 
@@ -344,7 +344,7 @@ export function renderContextView(
       ? `<div class="mt-4 flex flex-wrap justify-center gap-2"><span class="text-base text-slate-400 mr-1 self-center">Có thể là từ:</span>${casedSuggestions
           .map(
             (s) =>
-              `<span class="suggestion-word cursor-pointer bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-xl">${s}</span>`,
+              `<span class="suggestion-word cursor-pointer bg-green-900/30 text-green-400 border border-green-700/50 px-2 py-1 rounded text-xl">${s}</span>`
           )
           .join("")}</div>`
       : ""
@@ -369,13 +369,13 @@ export function renderContextView(
                         }</span>
                     </div>
                     <a href="https://vi.wiktionary.org/wiki/${encodeURIComponent(
-                      group.word,
+                      group.word
                     )}" target="_blank" title="Tra cứu trên Wiktionary"
                        class="inline-flex items-center justify-center p-2 text-blue-400 transition-colors rounded-lg bg-slate-800 hover:text-white hover:bg-blue-600">
                         <img src="https://vi.wiktionary.org/static/favicon/piece.ico" alt="Wiktionary" class="w-5 h-5">
                     </a>
                     <a href="https://www.google.com/search?q=${encodeURIComponent(
-                      group.word,
+                      group.word
                     )}" target="_blank" title="Tìm kiếm trên Google"
                        class="inline-flex items-center justify-center p-2 text-green-400 transition-colors rounded-lg bg-slate-800 hover:text-white hover:bg-green-600">
                         <img src="https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico" alt="Google" class="w-5 h-5">

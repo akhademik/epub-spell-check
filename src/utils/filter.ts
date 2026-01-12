@@ -7,13 +7,13 @@ function filterErrors(
   whitelistValue: string,
   isEngFilterEnabled: boolean,
   checkSettings: AppState["checkSettings"],
-  englishDictionary: Set<string>,
+  englishDictionary: Set<string>
 ): ErrorGroup[] {
   const check = new Set(
     whitelistValue
       .split(/[\s,]+/)
       .filter(Boolean)
-      .map((w) => w.toLowerCase()),
+      .map((w) => w.toLowerCase())
   )
 
   return allDetectedErrors.filter((group) => {

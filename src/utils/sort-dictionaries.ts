@@ -20,7 +20,7 @@ async function sortDictionaryFile(filePath: string) {
 
     await fs.writeFile(filePath, sortedWords.join("\n"), "utf-8")
     logger.info(
-      `Successfully sorted and deduplicated words in ${path.basename(filePath)}. Original: ${originalCount}, Unique: ${uniqueCount}, Duplicates removed: ${duplicatesRemoved}`,
+      `Successfully sorted and deduplicated words in ${path.basename(filePath)}. Original: ${originalCount}, Unique: ${uniqueCount}, Duplicates removed: ${duplicatesRemoved}`
     )
   } catch (error) {
     logger.error(`Error processing file ${filePath}:`, error)
@@ -34,7 +34,7 @@ async function sortAllDictionaries() {
   const filesToSort = [
     path.join(publicDir, "en-dict.txt"),
     path.join(publicDir, "vn-dict.txt"),
-    path.join(publicDir, "custom-dict.txt"),
+    path.join(publicDir, "custom-dict.txt")
   ]
 
   for (const filePath of filesToSort) {

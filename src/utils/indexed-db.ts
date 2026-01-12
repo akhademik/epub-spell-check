@@ -49,7 +49,7 @@ export async function getCache<T>(key: string): Promise<T | undefined> {
     request.onerror = (event) => {
       logger.error(
         `Error getting ${key} from cache:`,
-        (event.target as IDBRequest).error,
+        (event.target as IDBRequest).error
       )
       reject(`Error getting ${key} from cache.`)
     }
@@ -70,7 +70,7 @@ export async function setCache(key: string, value: unknown): Promise<void> {
     request.onerror = (event) => {
       logger.error(
         `Error setting ${key} in cache:`,
-        (event.target as IDBRequest).error,
+        (event.target as IDBRequest).error
       )
       reject(`Error setting ${key} in cache.`)
     }

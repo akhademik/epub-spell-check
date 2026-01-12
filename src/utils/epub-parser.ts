@@ -7,7 +7,7 @@ import { updateProgress } from "./ui-render"
 
 export async function parseEpub(
   file: File,
-  ui: UIElements,
+  ui: UIElements
 ): Promise<EpubContent> {
   updateProgress(ui, 10, "Đang giải nén tệp...")
   const zip = await JSZip.loadAsync(file)
@@ -46,7 +46,7 @@ export async function parseEpub(
       opfXml.getElementsByTagName("dc:creator")[0]?.textContent ||
       opfXml.querySelector("creator")?.textContent ||
       "Không rõ tác giả",
-    coverUrl: null,
+    coverUrl: null
   }
 
   try {
@@ -59,7 +59,7 @@ export async function parseEpub(
     }
     if (!coverHref) {
       const coverItem = opfXml.querySelector(
-        'manifest item[properties*="cover-image"]',
+        'manifest item[properties*="cover-image"]'
       )
       if (coverItem) coverHref = coverItem.getAttribute("href")
     }
@@ -78,14 +78,14 @@ export async function parseEpub(
   updateProgress(ui, 30, "Đang đọc cấu trúc sách...")
 
   const spine = Array.from(opfXml.querySelectorAll("spine itemref")).map(
-    (ref) => ref.getAttribute("idref"),
+    (ref) => ref.getAttribute("idref")
   )
 
   const textBlocks: TextContentBlock[] = []
   for (let i = 0; i < spine.length; i++) {
     const id = spine[i]
     const item = Array.from(opfXml.querySelectorAll("manifest item")).find(
-      (it) => it.getAttribute("id") === id,
+      (it) => it.getAttribute("id") === id
     )
 
     if (item) {
@@ -99,7 +99,7 @@ export async function parseEpub(
         const html = await chapterFile.async("string")
         const doc = parser.parseFromString(html, "text/html")
         const paras = Array.from(
-          doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, div"),
+          doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, div")
         )
           .map((el) => el.textContent?.trim() || "")
           .filter((text) => text.length > 0)
@@ -112,7 +112,7 @@ export async function parseEpub(
       updateProgress(
         ui,
         30 + Math.round((i / spine.length) * 30),
-        `Đang đọc chương ${i + 1}/${spine.length}`,
+        `Đang đọc chương ${i + 1}/${spine.length}`
       )
     }
   }

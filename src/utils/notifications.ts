@@ -7,7 +7,7 @@ const activeToasts: HTMLElement[] = []
 export function showToast(
   ui: UIElements,
   message: string,
-  type: "success" | "error" | "info" = "info",
+  type: "success" | "error" | "info" = "info"
 ) {
   if (!ui.toastContainer) {
     logger.warn(`Toast container not found. Toast will not be displayed.`)
@@ -53,7 +53,7 @@ export function showToast(
     const oldestToast = activeToasts.shift()
     oldestToast?.classList.add("opacity-0")
     oldestToast?.addEventListener("transitionend", () => oldestToast.remove(), {
-      once: true,
+      once: true
     })
   }
 
@@ -68,7 +68,7 @@ export function showToast(
           activeToasts.splice(index, 1)
         }
       },
-      { once: true },
+      { once: true }
     )
   }, 5000)
 }

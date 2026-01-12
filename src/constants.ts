@@ -68,7 +68,7 @@ export const FLEX_CLASS_VISIBLE = [
   "flex",
   "items-end",
   "justify-between",
-  "mb-4",
+  "mb-4"
 ]
 /**
  * CSS classes to make the results section visible.
@@ -97,5 +97,5 @@ export const TAG_COLORS = [
   "bg-sky-600",
   "bg-cyan-600",
   "bg-teal-600",
-  "bg-emerald-600",
+  "bg-emerald-600"
 ]

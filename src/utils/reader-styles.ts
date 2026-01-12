@@ -3,7 +3,7 @@ import type { UIElements } from "../types/ui"
 
 export function applyReaderStyles(
   readerSettings: ReaderSettings,
-  ui: UIElements,
+  ui: UIElements
 ) {
   if (ui.contextView) {
     const fontStyle =

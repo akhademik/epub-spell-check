@@ -7,14 +7,14 @@ export default {
         slate: {
           850: "#1e293b",
           900: "#0f172a",
-          950: "#020617",
-        },
+          950: "#020617"
+        }
       },
       fontFamily: {
         sans: ['"Noto Sans"', "sans-serif"],
-        serif: ['"Noto Serif"', "serif"],
-      },
-    },
+        serif: ['"Noto Serif"', "serif"]
+      }
+    }
   },
-  plugins: [],
+  plugins: []
 }

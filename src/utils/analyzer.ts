@@ -5,14 +5,14 @@ import {
   type CheckSettings,
   getBaseWord,
   levenshteinDistance,
-  TONE_MISPLACEMENT,
+  TONE_MISPLACEMENT
 } from "./analysis-core"
 
 export type { CheckSettings }
 
 export function findSuggestions(
   word: string,
-  dictionaries: Dictionaries,
+  dictionaries: Dictionaries
 ): string[] {
   const low = word.toLowerCase().normalize("NFC")
   const suggestions: string[] = []
@@ -29,7 +29,7 @@ export function findSuggestions(
 
   const getTopSuggestions = (
     dictionary: Set<string>,
-    limit: number,
+    limit: number
   ): string[] => {
     const candidates: { word: string; score: number }[] = []
     const baseLow = getBaseWord(low)
@@ -58,7 +58,7 @@ export function findSuggestions(
   if (dictionaries.vietnamese.size > 0) {
     const vnSuggestions = getTopSuggestions(
       dictionaries.vietnamese,
-      MAX_SUGGESTION_COUNT,
+      MAX_SUGGESTION_COUNT
     )
     vnSuggestions.forEach((s) => {
       suggestionSet.add(s)
@@ -74,7 +74,7 @@ export function findSuggestions(
     if (remainingLimit > 0) {
       const enSuggestions = getTopSuggestions(
         dictionaries.english,
-        remainingLimit,
+        remainingLimit
       )
       enSuggestions.forEach((s) => {
         suggestionSet.add(s)
@@ -97,7 +97,7 @@ export function groupErrors(errors: ErrorInstance[]): ErrorGroup[] {
         type: error.type,
         reason: error.reason || "No specific reason",
         count: 0,
-        contexts: [],
+        contexts: []
       })
     }
     errorMap.get(groupId)?.contexts.push(error)

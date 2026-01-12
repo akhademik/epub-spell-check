@@ -17,14 +17,14 @@ import {
   renderContextView,
   renderErrorList,
   updateProgress,
-  updateStats,
+  updateStats
 } from "./utils/ui-render"
 import {
   hideLoadingOverlay,
   hideProcessingUI,
   showLoadingOverlay,
   showProcessingUI,
-  showResultsUI,
+  showResultsUI
 } from "./utils/ui-utils"
 import { addWordToWhitelist } from "./utils/whitelist-manager"
 import { getWordsFromTags } from "./utils/whitelist-tags-manager"
@@ -66,13 +66,13 @@ const UI: UIElements = {
 
   clearWhitelistModal: document.getElementById("clear-whitelist-modal"),
   closeClearWhitelistBtn: document.getElementById(
-    "close-clear-whitelist-btn",
+    "close-clear-whitelist-btn"
   ) as HTMLButtonElement,
   cancelClearWhitelistBtn: document.getElementById(
-    "cancel-clear-whitelist-btn",
+    "cancel-clear-whitelist-btn"
   ) as HTMLButtonElement,
   confirmClearWhitelistBtn: document.getElementById(
-    "confirm-clear-whitelist-btn",
+    "confirm-clear-whitelist-btn"
   ) as HTMLButtonElement,
 
   fontToggleBtn: document.getElementById("font-toggle-btn"),
@@ -84,20 +84,20 @@ const UI: UIElements = {
     dict: document.getElementById("set-dict") as HTMLInputElement,
     case: document.getElementById("set-case") as HTMLInputElement,
     tone: document.getElementById("set-tone") as HTMLInputElement,
-    struct: document.getElementById("set-struct") as HTMLInputElement,
+    struct: document.getElementById("set-struct") as HTMLInputElement
   },
 
   whitelistTagsContainer: document.getElementById("whitelist-tags-container"),
   importWhitelistBtn: document.getElementById("import-whitelist-btn"),
   exportWhitelistBtn: document.getElementById("export-whitelist-btn"),
   clearWhitelistBtn: document.getElementById(
-    "clear-whitelist-btn",
+    "clear-whitelist-btn"
   ) as HTMLButtonElement,
   whitelistImportFile: document.getElementById(
-    "whitelist-import-file",
+    "whitelist-import-file"
   ) as HTMLInputElement,
   engFilterCheckbox: document.getElementById(
-    "eng-filter-checkbox",
+    "eng-filter-checkbox"
   ) as HTMLInputElement,
   engLoading: document.getElementById("eng-loading"),
   resultsSection: document.getElementById("results-section"),
@@ -109,11 +109,11 @@ const UI: UIElements = {
   errorList: document.getElementById("error-list"),
   contextView: document.getElementById("context-view"),
   errorItemTemplate: document.getElementById(
-    "error-item-template",
+    "error-item-template"
   ) as HTMLTemplateElement,
   btnPrev: document.getElementById("btn-prev") as HTMLButtonElement,
   btnNext: document.getElementById("btn-next") as HTMLButtonElement,
-  navIndicator: document.getElementById("nav-indicator"),
+  navIndicator: document.getElementById("nav-indicator")
 }
 
 let isUpdating = false
@@ -131,7 +131,7 @@ function selectNextError(wordToIgnoreId: string, originalIndex: number) {
   if (currentFilteredErrors.length > 0) {
     let targetIndex: number
     const reFoundIndex = currentFilteredErrors.findIndex(
-      (_g: ErrorGroup) => _g.id === wordToIgnoreId,
+      (_g: ErrorGroup) => _g.id === wordToIgnoreId
     )
 
     if (reFoundIndex !== -1) {
@@ -147,7 +147,7 @@ function selectNextError(wordToIgnoreId: string, originalIndex: number) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const nextElementInList = UI.errorList?.querySelector(
-          `[data-group-id="${nextGroup.id}"]`,
+          `[data-group-id="${nextGroup.id}"]`
         ) as HTMLElement | null
         if (nextElementInList) {
           selectGroup(nextGroup, nextElementInList)
@@ -162,14 +162,14 @@ function selectNextError(wordToIgnoreId: string, originalIndex: number) {
 function ignoreAndAdvance(
   wordToIgnore: string,
   wordToIgnoreId: string,
-  originalIndex: number,
+  originalIndex: number
 ) {
   if (
     addWordToWhitelist(
       wordToIgnore,
       UI,
       (value) => $whitelist.set(value),
-      updateAndRenderErrors,
+      updateAndRenderErrors
     )
   ) {
     requestAnimationFrame(() => {
@@ -188,7 +188,7 @@ function quickIgnore() {
   const wordToIgnore = currentGroup.word
   const wordToIgnoreId = currentGroup.id
   const originalIndex = currentFilteredErrors.findIndex(
-    (_g: ErrorGroup) => _g.id === wordToIgnoreId,
+    (_g: ErrorGroup) => _g.id === wordToIgnoreId
   )
   ignoreAndAdvance(wordToIgnore, wordToIgnoreId, originalIndex)
 }
@@ -202,26 +202,26 @@ async function updateAndRenderErrors() {
       allDetectedErrors,
       isEngFilterEnabled,
       checkSettings,
-      dictionaries,
+      dictionaries
     } = $appState.get()
     const currentFilteredErrors = getFilteredErrors(
       allDetectedErrors,
       getWordsFromTags(UI).join(", "),
       isEngFilterEnabled,
       checkSettings,
-      dictionaries.english,
+      dictionaries.english
     )
     $appState.setKey("currentFilteredErrors", currentFilteredErrors)
 
     const totalErrorInstances = currentFilteredErrors.reduce(
       (_acc: number, _g: ErrorGroup) => _acc + _g.contexts.length,
-      0,
+      0
     )
     updateStats(
       UI,
       $appState.get().totalWords,
       totalErrorInstances,
-      currentFilteredErrors.length,
+      currentFilteredErrors.length
     )
     renderErrorList(UI, currentFilteredErrors)
   } finally {
@@ -234,7 +234,7 @@ function saveSettings() {
     dictionary: UI.settingToggles.dict?.checked ?? true,
     uppercase: UI.settingToggles.case?.checked ?? true,
     tone: UI.settingToggles.tone?.checked ?? true,
-    foreign: UI.settingToggles.struct?.checked ?? true,
+    foreign: UI.settingToggles.struct?.checked ?? true
   }
   $appState.setKey("checkSettings", newSettings)
 
@@ -309,7 +309,7 @@ function navigateErrors(direction: "up" | "down") {
   let currentIndex = -1
   if (currentGroup) {
     currentIndex = currentFilteredErrors.findIndex(
-      (_g: ErrorGroup) => _g.id === currentGroup?.id,
+      (_g: ErrorGroup) => _g.id === currentGroup?.id
     )
   }
 
@@ -339,7 +339,7 @@ function navigateErrors(direction: "up" | "down") {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const nextElement = UI.errorList?.querySelector(
-          `[data-group-id="${nextGroup.id}"]`,
+          `[data-group-id="${nextGroup.id}"]`
         ) as HTMLElement
         if (nextElement) {
           selectGroup(nextGroup, nextElement)
@@ -392,7 +392,7 @@ function selectGroup(group: ErrorGroup, element: HTMLElement) {
 function updateNavButtons() {
   if (!UI.btnPrev || !UI.btnNext || !$appState.get().currentGroup) return
 
-  const numInstances = $appState.get().currentGroup?.contexts.length
+  const numInstances = $appState.get().currentGroup?.contexts?.length || 0
   const isDisabled = numInstances <= 1
 
   UI.btnPrev.disabled = isDisabled
@@ -491,7 +491,7 @@ async function runAnalysis(epubContent: EpubContent) {
     dictionary: true,
     uppercase: true,
     tone: true,
-    foreign: true,
+    foreign: true
   }
   showProcessingUI(UI)
   updateProgress(UI, 0, "Khởi tạo phân tích...")
@@ -521,7 +521,7 @@ async function runAnalysis(epubContent: EpubContent) {
       textBlocks: epubContent.textBlocks,
       dictionaries: $appState.get().dictionaries,
       settings: fullCheckSettings,
-      chapterStartIndex: 0,
+      chapterStartIndex: 0
     })
   })
 
@@ -543,7 +543,7 @@ async function runAnalysis(epubContent: EpubContent) {
 
         requestAnimationFrame(() => {
           const firstErrorElement = UI.errorList?.querySelector(
-            `[data-group-id="${firstErrorGroup.id}"]`,
+            `[data-group-id="${firstErrorGroup.id}"]`
           ) as HTMLElement
           if (firstErrorElement) {
             selectGroup(firstErrorGroup, firstErrorElement)
@@ -570,7 +570,7 @@ async function runAnalysis(epubContent: EpubContent) {
         "flex",
         "items-end",
         "justify-between",
-        "mb-4",
+        "mb-4"
       )
       UI.processingUiHeader.classList.add("hidden")
     }
@@ -628,7 +628,7 @@ async function main() {
     $appState.get(),
     () => $whitelist.get(),
     (value: string) => $whitelist.set(value),
-    updateAndRenderErrors,
+    updateAndRenderErrors
   )
 
   const mainFunctions = {
@@ -643,7 +643,7 @@ async function main() {
     selectGroup,
     copyToClipboard,
     showToast,
-    saveWhitelist: (value: string) => $whitelist.set(value),
+    saveWhitelist: (value: string) => $whitelist.set(value)
   }
 
   registerUIEventListeners(UI, mainFunctions)
