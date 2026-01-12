@@ -1,14 +1,12 @@
-import { ErrorInstance, ErrorType } from "../types/errors";
-
+import type { Dictionaries } from "../types/dictionary"
+import type { TextContentBlock } from "../types/epub"
+import type { ErrorInstance, ErrorType } from "../types/errors"
+import type { CheckSettings } from "../utils/analysis-core"
 import {
-  WORD_REGEX,
   ANALYSIS_CHUNK_SIZE,
   getErrorType,
-} from "../utils/analysis-core";
-
-import type { TextContentBlock } from "../types/epub";
-import type { Dictionaries } from "../types/dictionary";
-import type { CheckSettings } from "../utils/analysis-core";
+  WORD_REGEX,
+} from "../utils/analysis-core"
 
 /**
  * Handles incoming messages from the main thread to start the analysis process.
@@ -16,43 +14,51 @@ import type { CheckSettings } from "../utils/analysis-core";
  */
 self.onmessage = async (
   event: MessageEvent<{
-    textBlocks: TextContentBlock[];
-    dictionaries: Dictionaries;
-    settings: CheckSettings;
-    chapterStartIndex: number;
-  }>
+    textBlocks: TextContentBlock[]
+    dictionaries: Dictionaries
+    settings: CheckSettings
+    chapterStartIndex: number
+  }>,
 ) => {
-  const { textBlocks, dictionaries, settings, chapterStartIndex } = event.data;
+  const { textBlocks, dictionaries, settings, chapterStartIndex } = event.data
 
-  let totalWords = 0;
-  const allErrors: ErrorInstance[] = [];
-  const totalBlocks = textBlocks.length;
-  const analysisCache = new Map<string, { type: ErrorType; reason: string } | null>();
+  let totalWords = 0
+  const allErrors: ErrorInstance[] = []
+  const totalBlocks = textBlocks.length
+  const analysisCache = new Map<
+    string,
+    { type: ErrorType; reason: string } | null
+  >()
 
-  const checkWord = (word: string): { type: ErrorType; reason: string } | null => {
+  const checkWord = (
+    word: string,
+  ): { type: ErrorType; reason: string } | null => {
     if (analysisCache.has(word)) {
-      return analysisCache.get(word)!;
+      // biome-ignore lint/style/noNonNullAssertion: analysisCache.has(word) check ensures 'word' exists
+      return analysisCache.get(word)!
     }
 
     if (word.length < 2 || dictionaries.custom.has(word)) {
-      analysisCache.set(word, null);
-      return null;
+      analysisCache.set(word, null)
+      return null
     }
 
-    const error = getErrorType(word, dictionaries, settings);
-    analysisCache.set(word, error);
-    return error;
-  };
+    const error = getErrorType(word, dictionaries, settings)
+    analysisCache.set(word, error)
+    return error
+  }
 
   for (let i = 0; i < totalBlocks; i++) {
-    const block = textBlocks[i];
-    let match;
-    WORD_REGEX.lastIndex = 0;
-    while ((match = WORD_REGEX.exec(block.text)) !== null) {
-      const word = match[0];
-      totalWords++;
+    const block = textBlocks[i]
+    let match: RegExpExecArray | null
+    WORD_REGEX.lastIndex = 0
+    while (true) {
+      match = WORD_REGEX.exec(block.text)
+      if (match === null) break
+      const word = match[0]
+      totalWords++
 
-      const error = checkWord(word);
+      const error = checkWord(word)
 
       if (error) {
         allErrors.push({
@@ -68,22 +74,22 @@ self.onmessage = async (
             paragraphIndex: i,
             matchIndex: match.index,
           },
-        });
+        })
       }
     }
 
     if (i % ANALYSIS_CHUNK_SIZE === 0) {
       self.postMessage({
-        type: 'progress',
+        type: "progress",
         progress: (i / totalBlocks) * 100,
-        message: 'Đang kiểm tra chính tả...',
-      });
+        message: "Đang kiểm tra chính tả...",
+      })
     }
   }
 
   self.postMessage({
-    type: 'complete',
+    type: "complete",
     errors: allErrors,
     totalWords: totalWords,
-  });
-};
+  })
+}

@@ -1,16 +1,14 @@
-
 export interface BookMetadata {
-  title: string;
-  author: string;
-  coverUrl: string | null;
+  title: string
+  author: string
+  coverUrl: string | null
 }
 
 export interface TextContentBlock {
-  text: string;
+  text: string
 }
 
 export interface EpubContent {
-  metadata: BookMetadata;
-  textBlocks: TextContentBlock[];
+  metadata: BookMetadata
+  textBlocks: TextContentBlock[]
 }
-

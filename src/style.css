@@ -38,10 +38,12 @@ body {
 }
 
 .reader-content {
-  font-family: var(--reader-font) !important;
-  font-size: var(--reader-size) !important;
+  font-family: var(--reader-font);
+  font-size: var(--reader-size);
   line-height: 1.8;
-  transition: font-size 0.2s, font-family 0.2s;
+  transition:
+    font-size 0.2s,
+    font-family 0.2s;
 }
 
 #error-list::-webkit-scrollbar {
@@ -73,8 +75,6 @@ body {
   scrollbar-width: thin;
   scrollbar-color: #475569 transparent; /* thumb and track color */
 }
-
-
 
 .settings-modal-aligned {
   right: max(1rem, calc((100vw - 72rem) / 2 + 0.5rem));

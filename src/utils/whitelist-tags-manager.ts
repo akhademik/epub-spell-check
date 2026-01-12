@@ -1,47 +1,56 @@
-import { TAG_COLORS } from "../constants";
-import { UIElements } from "../types/ui";
+import { TAG_COLORS } from "../constants"
+import type { UIElements } from "../types/ui"
 
 function simpleHash(str: string): number {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = (hash << 5) - hash + char;
-        hash |= 0; // Convert to 32bit integer
-    }
-    return Math.abs(hash);
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash |= 0 // Convert to 32bit integer
+  }
+  return Math.abs(hash)
 }
 
-export function createWhitelistTag(word: string, onRemove: (word:string) => void): HTMLElement {
-    const tag = document.createElement("div");
-    const colorIndex = simpleHash(word) % TAG_COLORS.length;
-    const color = TAG_COLORS[colorIndex];
-    tag.className = `whitelist-tag ${color}`;
-    tag.dataset.word = word;
+export function createWhitelistTag(
+  word: string,
+  onRemove: (word: string) => void,
+): HTMLElement {
+  const tag = document.createElement("div")
+  const colorIndex = simpleHash(word) % TAG_COLORS.length
+  const color = TAG_COLORS[colorIndex]
+  tag.className = `whitelist-tag ${color}`
+  tag.dataset.word = word
 
-    const wordSpan = document.createElement("span");
-    wordSpan.textContent = word;
-    tag.appendChild(wordSpan);
+  const wordSpan = document.createElement("span")
+  wordSpan.textContent = word
+  tag.appendChild(wordSpan)
 
-    const removeBtn = document.createElement("button");
-    removeBtn.innerHTML = "&times;";
-    removeBtn.className = "whitelist-tag-remove";
-    removeBtn.onclick = () => onRemove(word);
-    tag.appendChild(removeBtn);
+  const removeBtn = document.createElement("button")
+  removeBtn.innerHTML = "&times;"
+  removeBtn.className = "whitelist-tag-remove"
+  removeBtn.onclick = () => onRemove(word)
+  tag.appendChild(removeBtn)
 
-    return tag;
+  return tag
 }
 
 export function getWordsFromTags(UI: UIElements): string[] {
-    if (!UI.whitelistTagsContainer) return [];
-    const tags = UI.whitelistTagsContainer.querySelectorAll(".whitelist-tag");
-    return Array.from(tags).map(tag => (tag as HTMLElement).dataset.word || "").filter(Boolean);
+  if (!UI.whitelistTagsContainer) return []
+  const tags = UI.whitelistTagsContainer.querySelectorAll(".whitelist-tag")
+  return Array.from(tags)
+    .map((tag) => (tag as HTMLElement).dataset.word || "")
+    .filter(Boolean)
 }
 
-export function renderWhitelistTags(UI: UIElements, words: string[], onRemove: (word: string) => void) {
-    if (!UI.whitelistTagsContainer) return;
-    UI.whitelistTagsContainer.innerHTML = "";
-    words.forEach((word) => {
-        const tag = createWhitelistTag(word, onRemove);
-        UI.whitelistTagsContainer!.appendChild(tag);
-    });
+export function renderWhitelistTags(
+  UI: UIElements,
+  words: string[],
+  onRemove: (word: string) => void,
+) {
+  if (!UI.whitelistTagsContainer) return
+  UI.whitelistTagsContainer.innerHTML = ""
+  words.forEach((word) => {
+    const tag = createWhitelistTag(word, onRemove)
+    UI.whitelistTagsContainer?.appendChild(tag)
+  })
 }

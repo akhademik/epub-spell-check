@@ -86,8 +86,8 @@ baemin
 baht
 bai
 balat
-balê
 balo
+balê
 balông
 bam
 ban
@@ -3482,9 +3482,6 @@ lóp
 lót
 lô
 lôcôt
-ngạ
-rùi
-
 lôgic
 lôi
 lôm
@@ -4489,6 +4486,7 @@ ngưỡng
 ngược
 ngượng
 ng̃
+ngạ
 ngạc
 ngạch
 ngại
@@ -4863,8 +4861,8 @@ nhếch
 nhếu
 nhều
 nhể
-nhễu
 nhễ
+nhễu
 nhệch
 nhện
 nhệu
@@ -5990,6 +5988,7 @@ rõ
 rõi
 rù
 rùa
+rùi
 rùm
 rùn
 rùng
