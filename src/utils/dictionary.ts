@@ -59,7 +59,14 @@ export async function loadDictionaries(ui: UIElements): Promise<{
 
   ui.dictStatus?.classList.remove("hidden")
   ui.dictStatus?.classList.add("md:flex", "items-center", "gap-3")
-  if (ui.dictText) ui.dictText.innerText = "Đang tải dữ liệu..."
+  if (ui.dictText) {
+    ui.dictText.innerHTML = `
+      <div class="flex flex-col items-start leading-snug">
+        <span>Đang tải...</span>
+        <span class="opacity-0">EN: ...</span>
+      </div>
+    `
+  }
   ui.dictDot?.classList.remove("bg-green-500", "bg-red-500")
   ui.dictDot?.classList.add("bg-yellow-500", "animate-pulse")
 
@@ -75,7 +82,14 @@ export async function loadDictionaries(ui: UIElements): Promise<{
     ])
   } catch (error) {
     logger.error("Failed to load one or more dictionaries:", error)
-    if (ui.dictText) ui.dictText.innerText = "Lỗi tải từ điển"
+    if (ui.dictText) {
+      ui.dictText.innerHTML = `
+      <div class="flex flex-col items-start leading-snug">
+        <span>Lỗi tải từ điển</span>
+        <span class="opacity-0">EN: ...</span>
+      </div>
+    `
+    }
     ui.dictDot?.classList.remove("bg-yellow-500", "animate-pulse")
     ui.dictDot?.classList.add("bg-red-500")
     // Re-throw the error to be handled by the caller

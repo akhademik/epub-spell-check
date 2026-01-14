@@ -441,7 +441,7 @@ function resetApp() {
   if (UI.errorList) UI.errorList.innerHTML = ""
   if (UI.contextView)
     UI.contextView.innerHTML =
-      '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Chưa chọn lỗi nào</p><p class="text-sm opacity-60">Chọn một mục từ danh sách bên trái</p></div>'
+      '<div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl"><p class="text-lg mb-2">Tuyệt vời!</p><p class="text-sm opacity-60">Đã xử lý hết lỗi.</p></div>'
   UI.contextNavControls?.classList.add("hidden")
   if (UI.metaTitle) UI.metaTitle.innerText = "Đang tải..."
   if (UI.metaAuthor) UI.metaAuthor.innerText = "Đang tải..."
@@ -553,7 +553,7 @@ async function runAnalysis(epubContent: EpubContent) {
       } else {
         if (UI.contextView) {
           UI.contextView.innerHTML = `
-                        <div class.center p-6 border-2 border-dashed border-slate-800 rounded-xl">
+                        <div class="text-center p-6 border-2 border-dashed border-slate-800 rounded-xl">
                             <p class="text-lg mb-2">Tuyệt vời!</p>
                             <p class="text-sm opacity-60">Cuốn sách này không có lỗi nào.</p>
                         </div>`
