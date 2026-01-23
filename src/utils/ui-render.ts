@@ -80,7 +80,8 @@ const FIXED_ERROR_COLORS: Record<string, number> = {
   Foreign: 2,
   Uppercase: 3,
   Tone: 4,
-  Spelling: 5
+  Spelling: 5,
+  SpecialCharacter: 6
 }
 
 function getErrorHighlights(type: string): {

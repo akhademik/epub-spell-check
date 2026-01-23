@@ -30,6 +30,8 @@ function filterErrors(
       ["Foreign", "Typo", "Spelling"].includes(group.type)
     )
       return false
+    if (!settings.specialCharacter && group.type === "SpecialCharacter")
+      return false
 
     return true
   })

@@ -28,7 +28,8 @@ const initialState: AppState = {
     dictionary: true,
     uppercase: true,
     tone: true,
-    foreign: true
+    foreign: true,
+    specialCharacter: true
   },
   isEngFilterEnabled: true,
   selectedErrorElement: null

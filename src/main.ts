@@ -84,7 +84,8 @@ const UI: UIElements = {
     dict: document.getElementById("set-dict") as HTMLInputElement,
     case: document.getElementById("set-case") as HTMLInputElement,
     tone: document.getElementById("set-tone") as HTMLInputElement,
-    struct: document.getElementById("set-struct") as HTMLInputElement
+    struct: document.getElementById("set-struct") as HTMLInputElement,
+    special: document.getElementById("set-special") as HTMLInputElement
   },
 
   whitelistTagsContainer: document.getElementById("whitelist-tags-container"),
@@ -234,7 +235,8 @@ function saveSettings() {
     dictionary: UI.settingToggles.dict?.checked ?? true,
     uppercase: UI.settingToggles.case?.checked ?? true,
     tone: UI.settingToggles.tone?.checked ?? true,
-    foreign: UI.settingToggles.struct?.checked ?? true
+    foreign: UI.settingToggles.struct?.checked ?? true,
+    specialCharacter: UI.settingToggles.special?.checked ?? true
   }
   $appState.setKey("checkSettings", newSettings)
 
@@ -431,6 +433,7 @@ function resetApp() {
   if (UI.settingToggles.case) UI.settingToggles.case.checked = true
   if (UI.settingToggles.tone) UI.settingToggles.tone.checked = true
   if (UI.settingToggles.struct) UI.settingToggles.struct.checked = true
+  if (UI.settingToggles.special) UI.settingToggles.special.checked = true
 
   const { currentCoverUrl } = $appState.get()
   if (currentCoverUrl) {
@@ -491,7 +494,8 @@ async function runAnalysis(epubContent: EpubContent) {
     dictionary: true,
     uppercase: true,
     tone: true,
-    foreign: true
+    foreign: true,
+    specialCharacter: true
   }
   showProcessingUI(UI)
   updateProgress(UI, 0, "Khởi tạo phân tích...")

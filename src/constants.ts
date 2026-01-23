@@ -99,3 +99,10 @@ export const TAG_COLORS = [
   "bg-teal-600",
   "bg-emerald-600"
 ]
+
+/**
+ * Regex to detect words containing special characters.
+ * It matches words that contain at least one character that is not a letter, a mark, a whitespace, a hyphen, a number, or a dot.
+ */
+export const SPECIAL_CHARACTER_REGEX =
+  /\b[\p{L}\p{M}-]*[^\p{L}\p{M}\s0-9.-][\p{L}\p{M}-]*\b/gu

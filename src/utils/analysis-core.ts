@@ -102,6 +102,7 @@ export type CheckSettings = {
   uppercase: boolean
   tone: boolean
   foreign: boolean
+  specialCharacter: boolean
 }
 
 export const isFrontVowel = (c: string) => {

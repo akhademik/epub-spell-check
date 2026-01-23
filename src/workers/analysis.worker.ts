@@ -1,3 +1,4 @@
+import { SPECIAL_CHARACTER_REGEX } from "../constants"
 import type { Dictionaries } from "../types/dictionary"
 import type { TextContentBlock } from "../types/epub"
 import type { ErrorInstance, ErrorType } from "../types/errors"
@@ -75,6 +76,31 @@ self.onmessage = async (
             matchIndex: match.index
           }
         })
+      }
+    }
+
+    if (settings.specialCharacter) {
+      SPECIAL_CHARACTER_REGEX.lastIndex = 0
+      let specialMatch = SPECIAL_CHARACTER_REGEX.exec(block.text)
+      while (specialMatch !== null) {
+        const word = specialMatch[0]
+        if (word) {
+          allErrors.push({
+            word,
+            originalWord: word,
+            type: "SpecialCharacter",
+            reason: "Lỗi ký tự đặc biệt",
+            context: {
+              originalParagraph: block.text,
+              startIndex: specialMatch.index,
+              endIndex: specialMatch.index + word.length,
+              chapterIndex: chapterStartIndex + i,
+              paragraphIndex: i,
+              matchIndex: specialMatch.index
+            }
+          })
+        }
+        specialMatch = SPECIAL_CHARACTER_REGEX.exec(block.text)
       }
     }
 

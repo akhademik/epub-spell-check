@@ -5,6 +5,7 @@ export type ErrorType =
   | "Foreign"
   | "Typo"
   | "Spelling"
+  | "SpecialCharacter"
 
 export interface ErrorInstance {
   word: string

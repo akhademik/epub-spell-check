@@ -45,6 +45,7 @@ interface SettingsUI {
     case: HTMLInputElement | null
     tone: HTMLInputElement | null
     struct: HTMLInputElement | null
+    special: HTMLInputElement | null
   }
 }
 
