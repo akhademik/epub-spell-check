@@ -189,8 +189,15 @@ export function getErrorType(
 
   if (settings.uppercase) {
     const upperCount = (word.match(/[A-Z\u00C0-\u00DE]/g) || []).length
-    if (upperCount >= 2)
-      return { type: "Uppercase", reason: "Lỗi viết hoa (Nhiều ký tự hoa)" }
+    if (upperCount > 1) {
+      if (dictionaries.custom.has(word)) {
+        return null
+      }
+      return {
+        type: "Uppercase",
+        reason: "Lỗi viết hoa (Nhiều ký tự hoa)"
+      }
+    }
   }
 
   if (settings.tone) {
@@ -260,8 +267,6 @@ export function getErrorType(
         return { type: "Spelling", reason: "Sai quy tắc c" }
     }
   }
-
-  if (isCapitalized) return null
 
   if (settings.dictionary) {
     return { type: "Dictionary", reason: "Không có trong từ điển" }

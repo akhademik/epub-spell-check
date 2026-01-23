@@ -99,6 +99,7 @@ export class SimpleVirtualScroll {
     const clampedScrollTop = Math.max(0, Math.min(newScrollTop, maxScrollTop))
 
     this.viewport.scrollTo({ top: clampedScrollTop, behavior })
+    this.render()
   }
 
   destroy() {

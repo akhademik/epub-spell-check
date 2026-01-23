@@ -372,7 +372,7 @@ export function renderContextView(
                       group.word
                     )}" target="_blank" title="Tra cứu trên Wiktionary"
                        class="inline-flex items-center justify-center p-2 text-blue-400 transition-colors rounded-lg bg-slate-800 hover:text-white hover:bg-blue-600">
-                        <img src="https://vi.wiktionary.org/static/favicon/piece.ico" alt="Wiktionary" class="w-5 h-5">
+                        <img src="/piece.ico" alt="Wiktionary" class="w-5 h-5">
                     </a>
                     <a href="https://www.google.com/search?q=${encodeURIComponent(
                       group.word
