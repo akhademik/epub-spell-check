@@ -4270,7 +4270,12 @@ nghèo
 nghé
 nghén
 nghét
+Niếp
 nghê
+Uh
+Ưm
+Ưhm
+Hic
 nghênh
 nghêu
 nghì
@@ -8064,9 +8069,11 @@ xiểm
 xiển
 xiểng
 xn
+sí
 xnk
 xo
 xoa
+xử
 xoai
 xoan
 xoang
