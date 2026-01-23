@@ -1,4 +1,7 @@
 Haizz
+Hic
+Niếp
+Uh
 a
 aa
 abc
@@ -4270,12 +4273,7 @@ nghèo
 nghé
 nghén
 nghét
-Niếp
 nghê
-Uh
-Ưm
-Ưhm
-Hic
 nghênh
 nghêu
 nghì
@@ -6377,6 +6375,7 @@ sì
 sìi
 sìn
 sình
+sí
 síc
 sích
 sín
@@ -8069,11 +8068,9 @@ xiểm
 xiển
 xiểng
 xn
-sí
 xnk
 xo
 xoa
-xử
 xoai
 xoan
 xoang
@@ -8921,6 +8918,8 @@ zốt
 ơn
 ơristic
 ơơ
+Ưhm
+Ưm
 ư
 ưa
 ưng

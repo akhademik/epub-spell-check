@@ -22,7 +22,7 @@ export const TONE_MISPLACEMENT: Record<string, string> = {
 }
 
 export const VIETNAMESE_TONE_REGEX =
-  /^(?:(?<![a-zđ])(q)([ùúụủũ])([a-yơâêi]+)|([a-zđ]*)(o[àáạảã]|o[èéẹẻẽ]|(?<!q)u[ỳýỵỷỹ])|([a-zđ]*)([òóọỏõ])([ae])([a-zđ]+)|([a-zđ]*)(a)([òóọỏõ]))$/giu
+  /^(?:(q)([ùúụủũ])([a-yơâêi]+)|([a-zđ]*)(o[àáạảã]|o[èéẹẻẽ]|(?<!q)u[ỳýỵỷỹ])|([a-zđ]*)([òóọỏõ])([ae])([a-zđ]+)|([a-zđ]*)(a)([òóọỏõ])|([a-zđ]*)([ùúụủũừứựửữ])([âơê])([a-zđ]*))$/giu
 
 export const TONE_MAP: Record<string, number> = {
   ù: 0,
