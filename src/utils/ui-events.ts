@@ -41,12 +41,12 @@ export function registerUIEventListeners(
 ) {
   const debounceTimer: number = 0
 
-  UI.fileInput?.addEventListener(
-    "change",
-    (e) =>
-      (e.target as HTMLInputElement).files?.[0] &&
-      mainFunctions.handleFile((e.target as HTMLInputElement).files?.[0])
-  )
+  UI.fileInput?.addEventListener("change", (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0]
+    if (file) {
+      mainFunctions.handleFile(file)
+    }
+  })
   UI.uploadSection?.addEventListener("click", () => UI.fileInput?.click())
   UI.resetBtn?.addEventListener("click", mainFunctions.resetApp)
 
