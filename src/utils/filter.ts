@@ -1,40 +1,45 @@
+import type { CheckSettings } from "../types/analysis"
+import type { Dictionaries } from "../types/dictionary"
 import type { ErrorGroup } from "../types/errors"
-import type { AppState } from "../types/state"
-import { memoize } from "./memoize"
 
-function filterErrors(
+export function getFilteredErrors(
   allDetectedErrors: ErrorGroup[],
-  whitelistValue: string,
-  isEngFilterEnabled: boolean,
-  checkSettings: AppState["checkSettings"],
-  englishDictionary: Set<string>
+  whitelist: string[] | string,
+  checkSettings: CheckSettings,
+  dictionaries: Dictionaries
 ): ErrorGroup[] {
-  const check = new Set(
-    whitelistValue
-      .split(/[\s,]+/)
-      .filter(Boolean)
-      .map((w) => w.toLowerCase())
+  const whitelistArray = Array.isArray(whitelist)
+    ? whitelist
+    : whitelist.split(/[\s,]+/).filter(Boolean)
+
+  const whitelistSet = new Set(
+    whitelistArray.map((w) => w.toLowerCase().trim()).filter(Boolean)
   )
 
   return allDetectedErrors.filter((group) => {
     const lowerWord = group.word.toLowerCase()
-    if (check.has(lowerWord)) return false
-    if (isEngFilterEnabled && englishDictionary.has(lowerWord)) return false
 
-    const settings = checkSettings
-    if (!settings.dictionary && group.type === "Dictionary") return false
-    if (!settings.uppercase && group.type === "Uppercase") return false
-    if (!settings.tone && group.type === "Tone") return false
+    // 1. Whitelist filter (always filters out ignored words)
+    if (whitelistSet.has(lowerWord)) return false
+
+    // 2. Custom dictionary (always filters out valid custom abbreviations)
     if (
-      !settings.foreign &&
-      ["Foreign", "Typo", "Spelling"].includes(group.type)
-    )
+      dictionaries.custom.has(group.word) ||
+      dictionaries.custom.has(lowerWord)
+    ) {
       return false
-    if (!settings.specialCharacter && group.type === "SpecialCharacter")
+    }
+
+    // 3. Non-Vietnamese error toggle
+    if (!checkSettings.nonVietnamese && group.type === "NonVietnamese") {
       return false
+    }
+
+    // 4. Vietnamese error toggle (covers Dictionary, Uppercase, Typo, Spelling, SpecialCharacter)
+    if (!checkSettings.vietnamese && group.type !== "NonVietnamese") {
+      return false
+    }
 
     return true
   })
 }
-
-export const getFilteredErrors = memoize(filterErrors)

@@ -1,7 +1,13 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "includes": ["**/*", "!src/style.css"]
+    "includes": [
+      "**/*",
+      "!dist",
+      "!graphify-out",
+      "!src/style.css",
+      "!**/*.svelte"
+    ]
   },
   "assist": {
     "actions": {
@@ -13,8 +19,9 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "nursery": {}
+      "a11y": {
+        "noSvgWithoutTitle": "off"
+      }
     }
   },
   "formatter": {

@@ -5,24 +5,31 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
-    "lint": "biome check --write",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "biome check .",
     "format": "biome format --write .",
-    "sort:dicts": "bun src/utils/sort-dictionaries.ts"
+    "format:check": "biome format .",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:smoke": "vitest run tests/smoke.test.ts",
+    "test:regression": "vitest run tests/regression.test.ts",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "autoprefixer": "^10.0.0",
-    "bun-types": "latest",
     "postcss": "^8.0.0",
+    "svelte": "^5.57.0",
+    "svelte-check": "^4.7.6",
     "tailwindcss": "^3.0.0",
-    "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "typescript": "^5.9.3",
+    "vite": "^6.4.3",
+    "vitest": "^2.1.9"
   },
   "dependencies": {
-    "@nanostores/persistent": "^1.2.0",
-    "jszip": "^3.10.1",
-    "nanostores": "^1.1.0"
+    "jszip": "^3.10.1"
   }
 }

@@ -1,15 +1,12 @@
 import JSZip from "jszip"
 import type { BookMetadata, EpubContent, TextContentBlock } from "../types/epub"
-
-import type { UIElements } from "../types/ui"
 import { logger } from "./logger"
-import { updateProgress } from "./ui-render"
 
 export async function parseEpub(
   file: File,
-  ui: UIElements
+  onProgress?: (progress: number, status: string) => void
 ): Promise<EpubContent> {
-  updateProgress(ui, 10, "Đang giải nén tệp...")
+  onProgress?.(10, "Đang giải nén tệp...")
   const zip = await JSZip.loadAsync(file)
 
   const containerFile = zip.file("META-INF/container.xml")
@@ -75,7 +72,7 @@ export async function parseEpub(
     logger.warn("Could not extract cover image.", _e)
   }
 
-  updateProgress(ui, 30, "Đang đọc cấu trúc sách...")
+  onProgress?.(30, "Đang đọc cấu trúc sách...")
 
   const spine = Array.from(opfXml.querySelectorAll("spine itemref")).map(
     (ref) => ref.getAttribute("idref")
@@ -109,8 +106,7 @@ export async function parseEpub(
       }
     }
     if (i % 5 === 0) {
-      updateProgress(
-        ui,
+      onProgress?.(
         30 + Math.round((i / spine.length) * 30),
         `Đang đọc chương ${i + 1}/${spine.length}`
       )

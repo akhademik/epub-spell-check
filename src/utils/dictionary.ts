@@ -1,5 +1,4 @@
 import type { Dictionaries, DictionaryStatus } from "../types/dictionary"
-import type { UIElements } from "../types/ui"
 import { getCache, setCache } from "./indexed-db"
 import { logger } from "./logger"
 
@@ -22,87 +21,58 @@ async function fetchLocalDict(localFilename: string): Promise<string> {
 }
 
 async function getDictionary(
-  dictName: "vn" | "en" | "custom"
+  dictName: "vn" | "non-vn" | "custom"
 ): Promise<string> {
   const cacheKey = `dict-${dictName}`
-  const cached = await getCache<{ timestamp: number; data: string }>(cacheKey)
-
-  if (cached && Date.now() - cached.timestamp < TWENTY_FOUR_HOURS_IN_MS) {
-    logger.info(`Using cached dictionary for ${dictName}`)
-    return cached.data
+  try {
+    const cached = await getCache<{ timestamp: number; data: string }>(cacheKey)
+    if (cached && Date.now() - cached.timestamp < TWENTY_FOUR_HOURS_IN_MS) {
+      logger.info(`Using cached dictionary for ${dictName}`)
+      return cached.data
+    }
+  } catch (_e) {
+    logger.warn(`Failed reading IndexedDB cache for ${dictName}:`, _e)
   }
 
   logger.info(`Fetching fresh dictionary for ${dictName}`)
   const filename = `${dictName}-dict.txt`
   const data = await fetchLocalDict(filename)
-  await setCache(cacheKey, { timestamp: Date.now(), data })
+  try {
+    await setCache(cacheKey, { timestamp: Date.now(), data })
+  } catch (_e) {
+    logger.warn(`Failed setting IndexedDB cache for ${dictName}:`, _e)
+  }
   return data
 }
 
-export async function loadDictionaries(ui: UIElements): Promise<{
+export async function loadDictionaries(): Promise<{
   dictionaries: Dictionaries
   status: DictionaryStatus
 }> {
   const dictionaries: Dictionaries = {
     vietnamese: new Set<string>(),
-    english: new Set<string>(),
+    nonVietnamese: new Set<string>(),
     custom: new Set<string>()
   }
   const status: DictionaryStatus = {
     isVietnameseLoaded: false,
-    isEnglishLoaded: false,
+    isNonVietnameseLoaded: false,
     isCustomLoaded: false,
     vietnameseWordCount: 0,
-    englishWordCount: 0,
+    nonVietnameseWordCount: 0,
     customWordCount: 0
   }
 
-  ui.dictStatus?.classList.remove("hidden")
-  ui.dictStatus?.classList.add("md:flex", "items-center", "gap-3")
-  if (ui.dictText) {
-    ui.dictText.innerHTML = `
-      <div class="flex flex-col items-start leading-snug">
-        <span>Đang tải...</span>
-        <span class="opacity-0">EN: ...</span>
-      </div>
-    `
-  }
-  ui.dictDot?.classList.remove("bg-green-500", "bg-red-500")
-  ui.dictDot?.classList.add("bg-yellow-500", "animate-pulse")
+  const [vnRes, nonVnRes, customRes] = await Promise.all([
+    getDictionary("vn"),
+    getDictionary("non-vn"),
+    getDictionary("custom")
+  ])
 
-  ui.engLoading?.classList.remove("hidden")
-  ui.engLoading?.classList.add("flex")
-
-  let vnRes: string, enRes: string, customRes: string
-  try {
-    ;[vnRes, enRes, customRes] = await Promise.all([
-      getDictionary("vn"),
-      getDictionary("en"),
-      getDictionary("custom")
-    ])
-  } catch (error) {
-    logger.error("Failed to load one or more dictionaries:", error)
-    if (ui.dictText) {
-      ui.dictText.innerHTML = `
-      <div class="flex flex-col items-start leading-snug">
-        <span>Lỗi tải từ điển</span>
-        <span class="opacity-0">EN: ...</span>
-      </div>
-    `
-    }
-    ui.dictDot?.classList.remove("bg-yellow-500", "animate-pulse")
-    ui.dictDot?.classList.add("bg-red-500")
-    // Re-throw the error to be handled by the caller
-    throw error
-  }
-
-  ui.engLoading?.classList.add("hidden")
-  ui.engLoading?.classList.remove("flex")
-
-  // Process Vietnamese Dictionary
-  vnRes.split("\n").forEach((line) => {
+  // 1. Process Vietnamese Dictionary
+  for (const line of vnRes.split("\n")) {
     let word = line.trim()
-    if (!word) return
+    if (!word) continue
     if (word.startsWith("{") && word.endsWith("}")) {
       try {
         word = JSON.parse(word).text
@@ -112,41 +82,33 @@ export async function loadDictionaries(ui: UIElements): Promise<{
     }
     const cleanWord = word.toLowerCase().normalize("NFC")
     if (cleanWord) {
-      cleanWord.split(/\s+/).forEach((p) => {
+      for (const p of cleanWord.split(/\s+/)) {
         dictionaries.vietnamese.add(p)
-      })
+      }
     }
-  })
-
+  }
   status.isVietnameseLoaded = true
   status.vietnameseWordCount = dictionaries.vietnamese.size
 
-  // Process English Dictionary
-  enRes.split(/\r?\n/).forEach((word) => {
+  // 2. Process Non-Vietnamese (English, French, Italian, Spanish, German, etc.) Dictionary
+  for (const word of nonVnRes.split(/\r?\n/)) {
     const cleanWord = word.trim().toLowerCase()
-    if (cleanWord) dictionaries.english.add(cleanWord)
-  })
-  status.isEnglishLoaded = true
-  status.englishWordCount = dictionaries.english.size
+    if (cleanWord) {
+      dictionaries.nonVietnamese.add(cleanWord)
+    }
+  }
+  status.isNonVietnameseLoaded = true
+  status.nonVietnameseWordCount = dictionaries.nonVietnamese.size
 
-  // Process Custom Dictionary
-  customRes.split(/\r?\n/).forEach((word) => {
+  // 3. Process Custom Dictionary (Abbreviations, terms)
+  for (const word of customRes.split(/\r?\n/)) {
     const cleanWord = word.trim()
-    if (cleanWord) dictionaries.custom.add(cleanWord)
-  })
+    if (cleanWord) {
+      dictionaries.custom.add(cleanWord)
+    }
+  }
   status.isCustomLoaded = true
   status.customWordCount = dictionaries.custom.size
-
-  ui.dictDot?.classList.remove("bg-yellow-500", "animate-pulse")
-  ui.dictDot?.classList.add("bg-green-500") // Always green if no error propagated
-  if (ui.dictText) {
-    ui.dictText.innerHTML = `
-      <div class="flex flex-col items-start leading-snug">
-        <span>VN: ${status.vietnameseWordCount.toLocaleString()} từ</span>
-        <span>EN: ${status.englishWordCount.toLocaleString()} từ</span>
-      </div>
-    `
-  }
 
   return { dictionaries, status }
 }

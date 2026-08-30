@@ -1,108 +1,34 @@
+import type { CheckSettings } from "../types/analysis"
 import type { Dictionaries } from "../types/dictionary"
 import type { ErrorType } from "../types/errors"
-
-export const TONE_MISPLACEMENT: Record<string, string> = {
-  oá: "óa",
-  oà: "òa",
-  oả: "ỏa",
-  oã: "õa",
-  oạ: "ọa",
-  oé: "óe",
-  oè: "òe",
-  oẻ: "ỏe",
-  oẽ: "õe",
-  oẹ: "ọe",
-  uý: "úy",
-  uỳ: "ùy",
-  uỷ: "ủy",
-  uỹ: "ũy",
-  uỵ: "ụy",
-  aó: "áo",
-  eó: "éo"
-}
-
-export const VIETNAMESE_TONE_REGEX =
-  /^(?:(q)([ùúụủũ])([a-yơâêi]+)|([a-zđ]*)(o[àáạảã]|o[èéẹẻẽ]|(?<!q)u[ỳýỵỷỹ])|([a-zđ]*)([òóọỏõ])([ae])([a-zđ]+)|([a-zđ]*)(a)([òóọỏõ])|([a-zđ]*)([ùúụủũừứựửữ])([âơê])([a-zđ]*))$/giu
-
-export const TONE_MAP: Record<string, number> = {
-  ù: 0,
-  ú: 1,
-  ụ: 2,
-  ủ: 3,
-  ũ: 4,
-  ò: 0,
-  ó: 1,
-  ọ: 2,
-  ỏ: 3,
-  õ: 4,
-  Ù: 0,
-  Ú: 1,
-  Ụ: 2,
-  Ủ: 3,
-  Ũ: 4,
-  Ò: 0,
-  Ó: 1,
-  Ọ: 2,
-  Ỏ: 3,
-  Õ: 4
-}
-
-export const VOWEL_TABLE: Record<string, string> = {
-  a: "àáạảã",
-  e: "èéẹẻẽ",
-  y: "ỳýỵỷỹ",
-  ê: "ềếệểễ",
-  ơ: "ờớợởỡ",
-  o: "òóọỏõ",
-  A: "ÀÁẠẢÃ",
-  E: "ÈÉẸẺẼ",
-  Y: "ỲÝỴỶỸ",
-  Ê: "ỀẾỆỄ",
-  Ơ: "ỜỚỢỞỠ",
-  O: "ÒÓỌỎÕ"
-}
-
-export function transferTone(
-  charSrc: string,
-  charDest: string
-): [string, string] | null {
-  if (!(charSrc in TONE_MAP)) return null
-  const idx = TONE_MAP[charSrc]
-
-  let cleanSrc = ""
-  if ("ùúụủũÙÚỤỦŨ".includes(charSrc)) {
-    cleanSrc = charSrc.toUpperCase() === charSrc ? "U" : "u"
-  } else if ("òóọỏõÒÓỌỎÕ".includes(charSrc)) {
-    cleanSrc = charSrc.toUpperCase() === charSrc ? "O" : "o"
-  } else {
-    return null
-  }
-
-  const baseDest = charDest.toLowerCase()
-  if (baseDest in VOWEL_TABLE) {
-    let row = VOWEL_TABLE[baseDest]
-    if (charDest.toUpperCase() === charDest) {
-      const upperBaseDest = baseDest.toUpperCase()
-      if (VOWEL_TABLE[upperBaseDest]) {
-        row = VOWEL_TABLE[upperBaseDest]
-      }
-    }
-
-    const newDest = row[idx]
-    return [cleanSrc, newDest]
-  }
-  return null
-}
 
 export const WORD_REGEX = /[\p{L}\p{M}]+/gu
 export const ANALYSIS_CHUNK_SIZE = 50
 
-export type CheckSettings = {
-  dictionary: boolean
-  uppercase: boolean
-  tone: boolean
-  foreign: boolean
-  specialCharacter: boolean
+export const TONE_STYLE_PAIRS: [string, string][] = [
+  ["oà", "òa"],
+  ["oá", "óa"],
+  ["oả", "ỏa"],
+  ["oã", "õa"],
+  ["oạ", "ọa"],
+  ["oè", "òe"],
+  ["oé", "óe"],
+  ["oẻ", "ỏe"],
+  ["oẽ", "õe"],
+  ["oẹ", "ọe"],
+  ["uỳ", "ùy"],
+  ["uý", "úy"],
+  ["uỷ", "ủy"],
+  ["uỹ", "ũy"],
+  ["uỵ", "ụy"]
+]
+
+export function getAlternateToneStyle(word: string): string | null {
+  for (const [a, b] of TONE_STYLE_PAIRS) {
+    if (word.includes(a)) return word.replace(a, b)
+    if (word.includes(b)) return word.replace(b, a)
+  }
+  return null
 }
 
 export const isFrontVowel = (c: string) => {
@@ -124,104 +50,67 @@ export const isY = (c: string) => {
   )
 }
 
-export function checkVietnameseTonePlacement(
-  word: string
-): { type: ErrorType; reason: string } | null {
-  const lowerWord = word.toLowerCase().normalize("NFC")
-  VIETNAMESE_TONE_REGEX.lastIndex = 0
-  const match = VIETNAMESE_TONE_REGEX.exec(lowerWord)
-
-  if (!match) {
-    return null
-  }
-
-  let reason = "Sai vị trí dấu (Quy tắc chung)"
-
-  if (match[1]) {
-    const uBad = match[2]
-    const rest = match[3]
-
-    if (rest && rest.length > 0) {
-      const vHead = rest[0]
-      const trans = transferTone(uBad, vHead)
-      if (trans) {
-        reason = "Lỗi 'qu' và dấu (qùa -> quà)"
-        return { type: "Tone", reason }
-      }
-    }
-  } else if (match[5]) {
-    const oldVowel = match[5]
-    if (TONE_MISPLACEMENT[oldVowel]) {
-      reason = "Sai vị trí dấu"
-      return { type: "Tone", reason }
-    }
-  } else if (match[7]) {
-    const oBad = match[7]
-    const vowel2 = match[8]
-    const trans = transferTone(oBad, vowel2)
-    if (trans) {
-      reason = "Sai vị trí dấu"
-      return { type: "Tone", reason }
-    }
-  } else if (match[12]) {
-    const charA = match[11]
-    const charOBad = match[12]
-    const trans = transferTone(charOBad, charA)
-    if (trans) {
-      reason = "Sai vị trí dấu"
-      return { type: "Tone", reason }
-    }
-  }
-
-  return null
-}
-
 export function getErrorType(
   word: string,
   dictionaries: Dictionaries,
-  settings: CheckSettings
+  checkSettings: CheckSettings = {
+    vietnamese: true,
+    nonVietnamese: true
+  }
 ): { type: ErrorType; reason: string } | null {
   const lower = word.toLowerCase().normalize("NFC")
-  const isCapitalized = /^[A-Z\u00C0-\u00DE]/.test(word)
+  const isCapitalized = /^\p{Lu}/u.test(word)
 
-  if (dictionaries.vietnamese.has(lower)) {
+  // 1. Custom Dictionary (Always active): Abbreviations & custom terms (ATM, VIP, DNA, FBI) are never errors
+  if (dictionaries.custom.has(word) || dictionaries.custom.has(lower)) {
     return null
   }
 
-  if (settings.uppercase) {
-    const upperCount = (word.match(/[A-Z\u00C0-\u00DE]/g) || []).length
-    if (upperCount > 1) {
-      if (dictionaries.custom.has(word)) {
-        return null
-      }
-      return {
-        type: "Uppercase",
-        reason: "Lỗi viết hoa (Nhiều ký tự hoa)"
-      }
+  // 2. Non-Vietnamese Dictionary (Always active): Recognized English/French/foreign words are valid
+  const isKnownForeign = dictionaries.nonVietnamese.has(lower)
+  if (isKnownForeign) {
+    return null
+  }
+
+  // 3. Vietnamese Dictionary (Always active): Recognized standard Vietnamese words (Both old and new tone styles)
+  let isKnownVietnamese = dictionaries.vietnamese.has(lower)
+  if (!isKnownVietnamese) {
+    const altToneWord = getAlternateToneStyle(lower)
+    if (altToneWord && dictionaries.vietnamese.has(altToneWord)) {
+      isKnownVietnamese = true
     }
   }
 
-  if (settings.tone) {
-    const comprehensiveToneError = checkVietnameseTonePlacement(word)
-    if (comprehensiveToneError) {
-      return comprehensiveToneError
-    }
-
-    for (const [wrong, right] of Object.entries(TONE_MISPLACEMENT)) {
-      if (lower.includes(wrong)) {
-        const correctedWord = lower.replace(wrong, right)
-        if (dictionaries.vietnamese.has(correctedWord)) {
-          return { type: "Tone", reason: "Sai vị trí dấu" }
+  if (isKnownVietnamese) {
+    if (checkSettings.vietnamese) {
+      const hasInternalUpper = /\p{Ll}\p{Lu}/u.test(word)
+      const upperCount = (word.match(/\p{Lu}/gu) || []).length
+      if (hasInternalUpper || (upperCount > 1 && upperCount < word.length)) {
+        return {
+          type: "Uppercase",
+          reason: "Lỗi viết hoa bất thường"
         }
       }
     }
+    return null
   }
 
-  if (settings.foreign) {
-    if (/[fjwz]/i.test(lower))
-      return { type: "Foreign", reason: "Từ lạ / Tiếng nước ngoài" }
-    if (/(aa|ee|oo|uu|ii|dd|js|kx|wt)$/i.test(lower))
+  // 4. Foreign letters check (f, j, w, z)
+  if (/[fjwz]/i.test(lower)) {
+    if (checkSettings.nonVietnamese) {
+      return {
+        type: "NonVietnamese",
+        reason: "Từ lạ / Ngoại ngữ chưa có trong từ điển"
+      }
+    }
+    return null
+  }
+
+  // 5. Vietnamese Typo & Spelling Rules & Vocabulary
+  if (checkSettings.vietnamese) {
+    if (/(aa|ee|oo|uu|ii|dd|js|kx|wt)$/i.test(lower)) {
       return { type: "Typo", reason: "Lỗi gõ máy (Typo)" }
+    }
 
     if (!isCapitalized) {
       if (
@@ -267,10 +156,17 @@ export function getErrorType(
       )
         return { type: "Spelling", reason: "Sai quy tắc c" }
     }
-  }
 
-  if (settings.dictionary) {
-    return { type: "Dictionary", reason: "Không có trong từ điển" }
+    const hasInternalUpper = /\p{Ll}\p{Lu}/u.test(word)
+    const upperCount = (word.match(/\p{Lu}/gu) || []).length
+    if (hasInternalUpper || upperCount > 1) {
+      return {
+        type: "Uppercase",
+        reason: "Lỗi viết hoa bất thường"
+      }
+    }
+
+    return { type: "Dictionary", reason: "Không có trong từ điển tiếng Việt" }
   }
 
   return null
