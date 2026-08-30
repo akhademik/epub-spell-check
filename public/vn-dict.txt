@@ -678,7 +678,6 @@ cang
 càng
 cáng
 cảng
-càng...
 canh
 cành
 cánh
@@ -4782,7 +4781,6 @@ náo
 não
 nạo
 nảo
-nào...
 náp
 nạp
 nat
@@ -9031,7 +9029,6 @@ xường
 xưởng
 xượt
 xx
-xxx
 xy
 xýt
 y

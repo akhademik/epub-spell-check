@@ -201,19 +201,19 @@
         <p class="text-xs text-slate-500 mt-1">Chọn một từ lỗi ở danh sách bên trên / bên trái để xem ngữ cảnh</p>
       </div>
     {:else}
-      <div class="w-full max-w-4xl animate-fadeIn space-y-4 sm:space-y-5">
+      <div class="w-full max-w-4xl animate-fadeIn space-y-5">
         <!-- 1. Top: Error Reason Badge with matching dot color -->
         <div class="flex items-center justify-center">
-          <div class="px-3.5 py-1.5 bg-slate-950/80 text-slate-200 rounded-xl text-xs border border-slate-800 shadow-md flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full shrink-0 {getDotColor(group.type)}"></span>
-            <span class="font-semibold text-slate-300">{group.reason}</span>
+          <div class="px-3.5 py-1.5 bg-slate-800 text-slate-200 rounded-xl text-xs border border-slate-700 shadow-md flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
+            <span class="font-medium text-slate-200">{group.reason}</span>
           </div>
         </div>
 
-        <!-- 2. Middle: Paragraph reader box (Spacious Context) -->
+        <!-- 2. Middle: Paragraph reader box (Context) -->
         <div
-          class="w-full p-5 sm:p-8 rounded-2xl bg-slate-950/70 border border-slate-800/90 shadow-inner relative leading-relaxed tracking-normal text-slate-100 transition-all text-left sm:text-justify select-text"
-          style="font-size: {appState.readerSettings.fontSize}rem; font-family: {appState.readerSettings.fontFamily === 'serif' ? '\"Noto Serif\", serif' : '\"Noto Sans\", sans-serif'}; line-height: 1.9;"
+          class="w-full p-6 sm:p-8 rounded-2xl bg-slate-950/70 border border-slate-800 shadow-inner relative leading-relaxed text-slate-200 transition-all text-left sm:text-justify select-text"
+          style="font-size: {appState.readerSettings.fontSize}rem; font-family: {appState.readerSettings.fontFamily === 'serif' ? '\"Noto Serif\", serif' : '\"Noto Sans\", sans-serif'}; line-height: 1.8;"
         >
           <span>{contextSegments.prefix}</span>
           <span
@@ -232,7 +232,7 @@
             target="_blank"
             rel="noopener noreferrer"
             title="Tra cứu trên Wiktionary"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-blue-400 bg-slate-800/90 hover:bg-blue-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-md"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-blue-400 bg-slate-800 hover:bg-blue-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-md"
           >
             <img src="/piece.ico" alt="Wiktionary" class="w-4 h-4 rounded-sm" />
             <span>Wiktionary</span>
@@ -244,7 +244,7 @@
             target="_blank"
             rel="noopener noreferrer"
             title="Tìm kiếm trên Google"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-emerald-400 bg-slate-800/90 hover:bg-emerald-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-md"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-emerald-400 bg-slate-800 hover:bg-emerald-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-md"
           >
             <img src="https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico" alt="Google" class="w-4 h-4" />
             <span>Google</span>
@@ -253,7 +253,7 @@
 
         <!-- 4. Bottom: Suggestions list (click to copy) -->
         {#if suggestions.length > 0}
-          <div class="pt-3 border-t border-slate-800/80">
+          <div class="pt-4 border-t border-slate-800/80">
             <div class="text-xs text-slate-400 mb-2">Gợi ý sửa từ (Nhấp để sao chép):</div>
             <div class="flex flex-wrap items-center justify-center gap-2">
               {#each suggestions as sugg}

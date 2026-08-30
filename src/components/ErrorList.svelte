@@ -259,9 +259,9 @@
             onclick={() => handleSelect(group)}
             class="flex items-center justify-between flex-grow px-3 py-2.5 text-left rounded-l-xl focus:outline-none min-w-0"
           >
-            <div class="w-full overflow-hidden">
-              <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full shrink-0 {getDotColor(group.type)}"></span>
+            <div class="w-full">
+              <div class="flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
                 <span class="font-serif text-base font-bold truncate {isSelected ? 'text-blue-200' : 'text-slate-200'}">
                   {group.word}
                 </span>
