@@ -934,11 +934,12 @@ When code changes:
 3. Run integration tests.
 4. Run relevant E2E tests.
 5. Run FULL regression suite.
-6. Run typecheck.
-7. Run lint.
-8. Run formatting check.
-9. Inspect generated output files.
-10. Report any regression.
+6. Run typecheck (`pnpm check`).
+7. Run lint (`pnpm lint`).
+8. Run knip dead-code / dependency audit (`pnpm knip`).
+9. Run formatting check (`pnpm format:check`).
+10. Inspect generated output files.
+11. Report any regression.
 
 Never say:
 
@@ -960,11 +961,14 @@ Prefer existing scripts.
 
 Typical workflow:
 
-    pnpm test
-    pnpm test:e2e
-    pnpm lint
-    pnpm format:check
     pnpm check
+    pnpm lint
+    pnpm knip
+    pnpm format:check
+    pnpm test
+    pnpm test:regression
+    pnpm test:smoke
+    pnpm build
 
 If the project uses Bun:
 

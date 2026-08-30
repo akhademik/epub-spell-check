@@ -56,29 +56,30 @@ function sanitizeFilename(name: string): string {
 }
 
 export class AppStateModel {
-  // Dictionaries & Status (All 3 always loaded and active simultaneously)
+  // Dictionaries & Status (All 4 always loaded and active simultaneously)
   dictionaries = $state<Dictionaries>({
     vietnamese: new Set(),
     nonVietnamese: new Set(),
-    custom: new Set()
+    custom: new Set(),
+    names: new Set()
   })
 
   dictionaryStatus = $state<DictionaryStatus>({
     isVietnameseLoaded: false,
     isNonVietnameseLoaded: false,
     isCustomLoaded: false,
+    isNamesLoaded: false,
     vietnameseWordCount: 0,
     nonVietnameseWordCount: 0,
-    customWordCount: 0
+    customWordCount: 0,
+    namesWordCount: 0
   })
 
-  // Error Check Toggles (Vietnamese Check & Non-Vietnamese Check)
-  checkSettings = $state<CheckSettings>(
-    loadStorage<CheckSettings>(STORAGE_KEYS.CHECK_SETTINGS, {
-      vietnamese: true,
-      nonVietnamese: true
-    })
-  )
+  // Error Check Settings (Always active: both Vietnamese and Non-Vietnamese check enabled)
+  checkSettings = $state<CheckSettings>({
+    vietnamese: true,
+    nonVietnamese: true
+  })
 
   readerSettings = $state<ReaderSettings>(
     loadStorage<ReaderSettings>(STORAGE_KEYS.READER, {
@@ -455,7 +456,8 @@ export class AppStateModel {
         nonVietnamese: new Set(
           $state.snapshot(this.dictionaries.nonVietnamese)
         ),
-        custom: new Set($state.snapshot(this.dictionaries.custom))
+        custom: new Set($state.snapshot(this.dictionaries.custom)),
+        names: new Set($state.snapshot(this.dictionaries.names))
       }
       const rawCheckSettings: CheckSettings = {
         ...$state.snapshot(this.checkSettings)

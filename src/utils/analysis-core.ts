@@ -59,20 +59,43 @@ export function getErrorType(
   }
 ): { type: ErrorType; reason: string } | null {
   const lower = word.toLowerCase().normalize("NFC")
-  const isCapitalized = /^\p{Lu}/u.test(word)
+  const upperCount = (word.match(/\p{Lu}/gu) || []).length
+  const hasInternalUpper = /\p{Ll}\p{Lu}/u.test(word)
 
-  // 1. Custom Dictionary (Always active): Abbreviations & custom terms (ATM, VIP, DNA, FBI) are never errors
+  // 1. Words with 2+ uppercase letters (e.g. VIP, ATM, tÔi, PHARAOH) or camelCase
+  // Must exist in custom / abbreviation dictionary to be exempt, otherwise flagged as Uppercase error
+  if (upperCount >= 2 || hasInternalUpper) {
+    if (dictionaries.custom.has(word) || dictionaries.custom.has(lower)) {
+      return null
+    }
+    if (checkSettings.vietnamese) {
+      return {
+        type: "Uppercase",
+        reason: "Viết hoa bất thường"
+      }
+    }
+  }
+
+  // 2. Custom / Abbreviation Dictionary (Always active)
   if (dictionaries.custom.has(word) || dictionaries.custom.has(lower)) {
     return null
   }
 
-  // 2. Non-Vietnamese Dictionary (Always active): Recognized English/French/foreign words are valid
+  // 3. Names Dictionary (Case-insensitive: Alexander, alexander, Jeans, jeans, Olive, olive)
+  if (
+    dictionaries.names &&
+    (dictionaries.names.has(word) || dictionaries.names.has(lower))
+  ) {
+    return null
+  }
+
+  // 4. Non-Vietnamese Dictionary (Case-insensitive foreign words)
   const isKnownForeign = dictionaries.nonVietnamese.has(lower)
   if (isKnownForeign) {
     return null
   }
 
-  // 3. Vietnamese Dictionary (Always active): Recognized standard Vietnamese words (Both old and new tone styles)
+  // 5. Vietnamese Dictionary (Case-insensitive standard Vietnamese words, supporting old/new tone styles)
   let isKnownVietnamese = dictionaries.vietnamese.has(lower)
   if (!isKnownVietnamese) {
     const altToneWord = getAlternateToneStyle(lower)
@@ -82,25 +105,15 @@ export function getErrorType(
   }
 
   if (isKnownVietnamese) {
-    if (checkSettings.vietnamese) {
-      const hasInternalUpper = /\p{Ll}\p{Lu}/u.test(word)
-      const upperCount = (word.match(/\p{Lu}/gu) || []).length
-      if (hasInternalUpper || (upperCount > 1 && upperCount < word.length)) {
-        return {
-          type: "Uppercase",
-          reason: "Lỗi viết hoa bất thường"
-        }
-      }
-    }
     return null
   }
 
-  // 4. Foreign letters check (f, j, w, z)
+  // 6. Foreign letters check (f, j, w, z)
   if (/[fjwz]/i.test(lower)) {
     if (checkSettings.nonVietnamese) {
       return {
         type: "NonVietnamese",
-        reason: "Từ lạ / Ngoại ngữ chưa có trong từ điển"
+        reason: "Không có trong Non-VN dict"
       }
     }
     return null
@@ -109,9 +122,10 @@ export function getErrorType(
   // 5. Vietnamese Typo & Spelling Rules & Vocabulary
   if (checkSettings.vietnamese) {
     if (/(aa|ee|oo|uu|ii|dd|js|kx|wt)$/i.test(lower)) {
-      return { type: "Typo", reason: "Lỗi gõ máy (Typo)" }
+      return { type: "Typo", reason: "Gõ máy (Typo)" }
     }
 
+    const isCapitalized = /^\p{Lu}/u.test(word)
     if (!isCapitalized) {
       if (
         lower.startsWith("ngh") &&
@@ -157,16 +171,7 @@ export function getErrorType(
         return { type: "Spelling", reason: "Sai quy tắc c" }
     }
 
-    const hasInternalUpper = /\p{Ll}\p{Lu}/u.test(word)
-    const upperCount = (word.match(/\p{Lu}/gu) || []).length
-    if (hasInternalUpper || upperCount > 1) {
-      return {
-        type: "Uppercase",
-        reason: "Lỗi viết hoa bất thường"
-      }
-    }
-
-    return { type: "Dictionary", reason: "Không có trong từ điển tiếng Việt" }
+    return { type: "Dictionary", reason: "Không có trong VN dict" }
   }
 
   return null

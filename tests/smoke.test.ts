@@ -39,7 +39,8 @@ describe("Smoke Tests — Critical Path Workflows", () => {
       "book",
       "paris"
     ]),
-    custom: new Set(["ATM", "VIP", "DNA", "GPS", "NASA"])
+    custom: new Set(["ATM", "VIP", "DNA", "GPS", "NASA"]),
+    names: new Set(["Alexander", "Parmenion", "Persepolis", "Babylon"])
   }
 
   const defaultCheckSettings: CheckSettings = {

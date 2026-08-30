@@ -8,7 +8,8 @@ describe("Filter Module", () => {
   const mockDictionaries: Dictionaries = {
     vietnamese: new Set(["người", "sách", "quà"]),
     nonVietnamese: new Set(["hello", "world", "paris"]),
-    custom: new Set(["ATM", "VIP"])
+    custom: new Set(["ATM", "VIP"]),
+    names: new Set(["Alexander", "Parmenion"])
   }
 
   const defaultCheckSettings: CheckSettings = {

@@ -62,15 +62,15 @@
   <!-- 2. Fixed Whitelist / Ignore Words Section directly below Book Info Card -->
   <WhitelistSection />
 
-  <!-- 3. Two-Column Layout: Error List (5 cols) & Context View (7 cols) -->
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch h-[600px] max-h-[600px] min-h-0">
-    <!-- Left Column: Error List with bounded height -->
-    <div class="lg:col-span-5 h-full max-h-full flex flex-col min-h-0 overflow-hidden">
+  <!-- 3. Responsive Two-Column Layout: Error List & Context View -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch min-h-[500px] lg:h-[620px] lg:max-h-[620px]">
+    <!-- Left Column: Error List with responsive height on mobile -->
+    <div class="lg:col-span-5 h-[380px] sm:h-[450px] lg:h-full flex flex-col min-h-0 overflow-hidden">
       <ErrorList />
     </div>
 
-    <!-- Right Column: Context View with bounded height -->
-    <div class="lg:col-span-7 h-full max-h-full flex flex-col min-h-0 overflow-hidden">
+    <!-- Right Column: Context View with responsive height on mobile -->
+    <div class="lg:col-span-7 h-[420px] sm:h-[480px] lg:h-full flex flex-col min-h-0 overflow-hidden">
       <ContextView />
     </div>
   </div>

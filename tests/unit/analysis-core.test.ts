@@ -39,7 +39,14 @@ describe("Analysis Core", () => {
       "english",
       "french"
     ]),
-    custom: new Set(["ATM", "VIP", "DNA", "FBI", "GPS", "BBQ"])
+    custom: new Set(["ATM", "VIP", "DNA", "FBI", "GPS", "BBQ"]),
+    names: new Set([
+      "Alexander",
+      "Parmenion",
+      "Persepolis",
+      "Babylon",
+      "Cleopatra"
+    ])
   }
 
   const defaultCheckSettings: CheckSettings = {
@@ -113,7 +120,7 @@ describe("Analysis Core", () => {
         defaultCheckSettings
       )
       expect(error?.type).toBe("Typo")
-      expect(error?.reason).toBe("Lỗi gõ máy (Typo)")
+      expect(error?.reason).toBe("Gõ máy (Typo)")
     })
 
     it("should flag tòong as Dictionary error", () => {
@@ -123,7 +130,7 @@ describe("Analysis Core", () => {
         defaultCheckSettings
       )
       expect(error?.type).toBe("Dictionary")
-      expect(error?.reason).toBe("Không có trong từ điển tiếng Việt")
+      expect(error?.reason).toBe("Không có trong VN dict")
     })
   })
 
@@ -172,10 +179,19 @@ describe("Analysis Core", () => {
         getErrorType("ATM", mockDictionaries, defaultCheckSettings)
       ).toBeNull()
       expect(
-        getErrorType("VIP", mockDictionaries, defaultCheckSettings)
+        getErrorType("DNA", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+    })
+
+    it("should always accept Names Dictionary entries (Alexander, Parmenion, Persepolis) without errors", () => {
+      expect(
+        getErrorType("Alexander", mockDictionaries, defaultCheckSettings)
       ).toBeNull()
       expect(
-        getErrorType("DNA", mockDictionaries, defaultCheckSettings)
+        getErrorType("Parmenion", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("Persepolis", mockDictionaries, defaultCheckSettings)
       ).toBeNull()
     })
   })

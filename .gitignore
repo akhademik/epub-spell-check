@@ -21,3 +21,10 @@ bun.lock
 GEMINI.md
 dev-info.md
 .gemini/
+
+# Graphify files: ignore all internal cache/backups, keep only the 3 main artifacts
+graphify-out/*
+!graphify-out/GRAPH_REPORT.md
+!graphify-out/graph.html
+!graphify-out/graph.json
+

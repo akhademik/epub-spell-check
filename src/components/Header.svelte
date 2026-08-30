@@ -26,54 +26,37 @@
         <h1 class="text-xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
           Soát Lỗi Chính Tả        
         </h1>
-        <div class="text-xs font-medium text-slate-400">Dành riêng cho sách điện tử EPUB tiếng Việt</div>
+        <div class="text-xs font-medium text-slate-400">EPUB tiếng Việt</div>
       </div>
     </div>
 
-    <!-- Actions & Quick Controls -->
-    <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
-      <!-- Active Dictionaries Indicator -->
+    <!-- Actions & Quick Controls (Desktop: inline; Mobile: flex container with stats and action buttons) -->
+    <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-between sm:justify-end w-full sm:w-auto">
+      <!-- Active Dictionaries Indicator (Mobile: compact centered numbers; Desktop: labeled stats) -->
       <div
-        class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-xs font-mono text-slate-300"
-        title="3 tầng từ điển đang hoạt động đồng thời (Tiếng Việt + Ngoại ngữ + Viết tắt)"
+        class="flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[11px] sm:text-xs font-mono text-slate-300 mx-auto sm:mx-0"
+        title="4 tầng từ điển đang hoạt động đồng thời (Tiếng Việt + Tên riêng + Ngoại ngữ + Viết tắt)"
       >
         <span class="flex items-center gap-1 text-emerald-400">
           <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981]"></span>
-          VN: {appState.dictionaryStatus.vietnameseWordCount > 0 ? `${(appState.dictionaryStatus.vietnameseWordCount / 1000).toFixed(0)}k` : '...'}
+          <span><span class="hidden sm:inline">VN: </span>{appState.dictionaryStatus.vietnameseWordCount > 0 ? `${(appState.dictionaryStatus.vietnameseWordCount / 1000).toFixed(0)}k` : '...'}</span>
+        </span>
+        <span class="text-slate-600">|</span>
+        <span class="text-amber-400">
+          <span class="hidden sm:inline">Tên: </span>{appState.dictionaryStatus.namesWordCount > 0 ? `${(appState.dictionaryStatus.namesWordCount / 1000).toFixed(1)}k` : '...'}
         </span>
         <span class="text-slate-600">|</span>
         <span class="text-blue-400">
-          Ngoại ngữ: {appState.dictionaryStatus.nonVietnameseWordCount > 0 ? `${(appState.dictionaryStatus.nonVietnameseWordCount / 1000).toFixed(0)}k` : '...'}
+          <span class="hidden sm:inline">Ngoại ngữ: </span>{appState.dictionaryStatus.nonVietnameseWordCount > 0 ? `${(appState.dictionaryStatus.nonVietnameseWordCount / 1000).toFixed(1)}k` : '...'}
         </span>
         <span class="text-slate-600">|</span>
         <span class="text-purple-400">
-          Viết tắt: {appState.dictionaryStatus.customWordCount}
+          <span class="hidden sm:inline">Viết tắt: </span>{appState.dictionaryStatus.customWordCount}
         </span>
       </div>
 
-      <!-- Quick Error Toggles -->
-      <div class="flex items-center gap-1 px-1.5 py-1 rounded-xl bg-slate-800 border border-slate-700">
-        <button
-          type="button"
-          onclick={() => appState.toggleCheckSetting("vietnamese")}
-          class="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors {appState.checkSettings.vietnamese
-            ? 'bg-rose-600/30 text-rose-300 border border-rose-500/40'
-            : 'text-slate-500 hover:text-slate-400'}"
-          title="Bật/Tắt kiểm tra lỗi Tiếng Việt"
-        >
-          Lỗi VN {appState.checkSettings.vietnamese ? '✓' : '✗'}
-        </button>
-        <button
-          type="button"
-          onclick={() => appState.toggleCheckSetting("nonVietnamese")}
-          class="px-2.5 py-1 text-xs font-medium rounded-lg transition-colors {appState.checkSettings.nonVietnamese
-            ? 'bg-blue-600/30 text-blue-300 border border-blue-500/40'
-            : 'text-slate-500 hover:text-slate-400'}"
-          title="Bật/Tắt kiểm tra lỗi Ngoại ngữ"
-        >
-          Lỗi Ngoại ngữ {appState.checkSettings.nonVietnamese ? '✓' : '✗'}
-        </button>
-      </div>
+      <!-- Action Buttons Container -->
+      <div class="flex items-center gap-2 sm:gap-3 ml-auto sm:ml-0">
 
       <!-- Help Button -->
       <button
@@ -128,6 +111,7 @@
           <span class="hidden sm:inline">File khác</span>
         </button>
       {/if}
+      </div>
     </div>
   </div>
 </header>

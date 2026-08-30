@@ -51,7 +51,8 @@ describe("Comprehensive User Action Simulation", () => {
       "english",
       "french"
     ]),
-    custom: new Set(["ATM", "VIP", "DNA", "GPS"])
+    custom: new Set(["ATM", "VIP", "DNA", "GPS"]),
+    names: new Set(["Alexander", "Parmenion", "Persepolis", "Babylon"])
   }
 
   const initialCheckSettings: CheckSettings = {

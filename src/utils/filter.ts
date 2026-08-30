@@ -22,10 +22,13 @@ export function getFilteredErrors(
     // 1. Whitelist filter (always filters out ignored words)
     if (whitelistSet.has(lowerWord)) return false
 
-    // 2. Custom dictionary (always filters out valid custom abbreviations)
+    // 2. Custom dictionary & Names dictionary (always filters out valid custom abbreviations & names)
     if (
       dictionaries.custom.has(group.word) ||
-      dictionaries.custom.has(lowerWord)
+      dictionaries.custom.has(lowerWord) ||
+      (dictionaries.names &&
+        (dictionaries.names.has(group.word) ||
+          dictionaries.names.has(lowerWord)))
     ) {
       return false
     }

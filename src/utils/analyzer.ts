@@ -48,7 +48,20 @@ export function findSuggestions(
     }
   }
 
-  // 2. Custom suggestions
+  // 2. Names suggestions
+  if (
+    suggestionSet.size < MAX_SUGGESTION_COUNT &&
+    dictionaries.names &&
+    dictionaries.names.size > 0
+  ) {
+    const remaining = MAX_SUGGESTION_COUNT - suggestionSet.size
+    const nameSuggestions = getTopSuggestions(dictionaries.names, remaining)
+    for (const s of nameSuggestions) {
+      suggestionSet.add(s)
+    }
+  }
+
+  // 3. Custom suggestions
   if (
     suggestionSet.size < MAX_SUGGESTION_COUNT &&
     dictionaries.custom.size > 0
@@ -60,7 +73,7 @@ export function findSuggestions(
     }
   }
 
-  // 3. Non-Vietnamese suggestions
+  // 4. Non-Vietnamese suggestions
   if (
     suggestionSet.size < MAX_SUGGESTION_COUNT &&
     dictionaries.nonVietnamese.size > 0

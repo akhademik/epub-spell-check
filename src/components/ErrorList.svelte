@@ -231,9 +231,9 @@
     </div>
   </div>
 
-  <!-- Error Items List with Strictly Bounded Height and Lazy Scroll -->
+  <!-- Error Items List with Strictly Bounded Height, Soft Scrolling, and Bottom Padding -->
   <div
-    class="flex-1 min-h-0 overflow-y-auto p-2 space-y-1.5 overscroll-contain"
+    class="flex-1 min-h-0 overflow-y-auto p-3 pb-8 space-y-2 overscroll-contain"
     onscroll={handleScroll}
     tabindex="-1"
   >
@@ -272,9 +272,11 @@
                   {group.contexts.length}
                 </span>
               </div>
-              <div class="mt-0.5 text-[11px] truncate text-slate-400">
-                {group.reason}
-              </div>
+              {#if typeFilter === "all"}
+                <div class="mt-0.5 text-[11px] truncate text-slate-400">
+                  {group.reason}
+                </div>
+              {/if}
             </div>
           </button>
 
@@ -294,10 +296,11 @@
       {/each}
 
       {#if visibleCount < filteredList.length}
-        <div class="py-2 text-center text-xs text-slate-500">
+        <div class="py-3 text-center text-xs text-slate-500">
           Đang hiển thị {displayedErrors.length} / {filteredList.length} từ (Cuộn xuống để xem thêm)
         </div>
       {/if}
+      <div class="h-4"></div>
     {/if}
   </div>
 </div>

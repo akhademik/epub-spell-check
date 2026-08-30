@@ -54,7 +54,8 @@ describe("Regression Safety Net", () => {
       "URL",
       "VCTVE",
       "XML"
-    ])
+    ]),
+    names: new Set(["Alexander", "Parmenion", "Persepolis", "Babylon"])
   }
 
   const defaultCheckSettings: CheckSettings = {
@@ -106,7 +107,7 @@ describe("Regression Safety Net", () => {
         defaultCheckSettings
       )
       expect(typoError?.type).toBe("Typo")
-      expect(typoError?.reason).toBe("Lỗi gõ máy (Typo)")
+      expect(typoError?.reason).toBe("Gõ máy (Typo)")
     })
 
     it("accurately flags unknown words like tòong as Dictionary error", () => {

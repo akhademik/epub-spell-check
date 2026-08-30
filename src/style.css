@@ -46,34 +46,29 @@ body {
     font-family 0.2s;
 }
 
-#error-list::-webkit-scrollbar {
-  width: 8px;
+/* Modern Dark App Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
-#error-list::-webkit-scrollbar-track {
-  background: transparent;
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6); /* slate-900/60 */
+  border-radius: 9999px;
 }
-#error-list::-webkit-scrollbar-thumb {
-  background-color: #475569; /* slate-600 */
-  border-radius: 20px;
+::-webkit-scrollbar-thumb {
+  background: rgba(51, 65, 85, 0.8); /* slate-700 */
+  border-radius: 9999px;
+  border: 1px solid rgba(30, 41, 59, 0.5);
+  transition: background 0.2s ease-in-out;
 }
-#error-list {
-  scrollbar-width: thin;
-  scrollbar-color: #475569 transparent; /* thumb and track color */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 85, 105, 1); /* slate-600 */
 }
 
-#context-view::-webkit-scrollbar {
-  width: 8px;
-}
-#context-view::-webkit-scrollbar-track {
-  background: transparent;
-}
-#context-view::-webkit-scrollbar-thumb {
-  background-color: #475569; /* slate-600 */
-  border-radius: 20px;
-}
-#context-view {
+/* Firefox */
+* {
   scrollbar-width: thin;
-  scrollbar-color: #475569 transparent; /* thumb and track color */
+  scrollbar-color: rgba(51, 65, 85, 0.8) transparent;
 }
 
 .settings-modal-aligned {

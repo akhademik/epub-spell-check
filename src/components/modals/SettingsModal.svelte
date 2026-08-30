@@ -65,63 +65,13 @@
       </div>
 
       <div class="p-6 space-y-6 overflow-y-auto">
-        <!-- Section 1: Error Checking Toggles -->
-        <div>
-          <h4 class="text-xs font-semibold tracking-wider text-blue-400 uppercase mb-3 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Tùy chọn soát lỗi (Check Toggles)
-          </h4>
-
-          <div class="space-y-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800">
-            <!-- Vietnamese Check -->
-            <label class="flex items-center justify-between cursor-pointer group">
-              <div class="pr-4">
-                <div class="font-medium text-slate-200 group-hover:text-white transition-colors flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-                  Soát lỗi Tiếng Việt (Vietnamese)
-                </div>
-                <div class="text-xs text-slate-400 mt-0.5">
-                  Phát hiện từ không có trong từ điển tiếng Việt, lỗi viết hoa bất thường, lỗi gõ máy typo (aa, ee) và sai quy tắc chính tả.
-                </div>
-              </div>
-              <input
-                type="checkbox"
-                checked={appState.checkSettings.vietnamese}
-                onchange={() => appState.toggleCheckSetting("vietnamese")}
-                class="w-5 h-5 accent-rose-600 rounded cursor-pointer shrink-0"
-              />
-            </label>
-
-            <!-- Non-Vietnamese Check -->
-            <label class="flex items-center justify-between cursor-pointer group border-t border-slate-800/80 pt-3">
-              <div class="pr-4">
-                <div class="font-medium text-slate-200 group-hover:text-white transition-colors flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                  Soát lỗi Ngoại ngữ & Từ lạ (Non-Vietnamese)
-                </div>
-                <div class="text-xs text-slate-400 mt-0.5">
-                  Phát hiện các từ lạ, từ tiếng nước ngoài (chứa ký tự f, j, w, z) chưa có trong từ điển ngoại ngữ.
-                </div>
-              </div>
-              <input
-                type="checkbox"
-                checked={appState.checkSettings.nonVietnamese}
-                onchange={() => appState.toggleCheckSetting("nonVietnamese")}
-                class="w-5 h-5 accent-blue-600 rounded cursor-pointer shrink-0"
-              />
-            </label>
-          </div>
-        </div>
-
-        <!-- Section 2: Active Dictionaries Info -->
+        <!-- Section: Active Dictionaries Info -->
         <div>
           <h4 class="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-3 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
-            Từ điển đang sử dụng (3 tầng đồng thời)
+            Từ điển đang sử dụng (4 tầng đồng thời)
           </h4>
 
           <div class="space-y-2 bg-slate-950/40 p-4 rounded-xl border border-slate-800/80 text-xs text-slate-300">
@@ -130,16 +80,20 @@
               <span class="font-mono text-slate-400">{appState.dictionaryStatus.vietnameseWordCount.toLocaleString()} từ</span>
             </div>
             <div class="flex items-center justify-between py-1 border-b border-slate-800/60">
-              <span class="text-blue-400 font-medium">2. Từ điển Ngoại ngữ (Anh, Pháp...)</span>
+              <span class="text-amber-400 font-medium">2. Từ điển Tên riêng & Địa danh</span>
+              <span class="font-mono text-slate-400">{appState.dictionaryStatus.namesWordCount.toLocaleString()} từ</span>
+            </div>
+            <div class="flex items-center justify-between py-1 border-b border-slate-800/60">
+              <span class="text-blue-400 font-medium">3. Từ điển Ngoại ngữ (Anh, Pháp...)</span>
               <span class="font-mono text-slate-400">{appState.dictionaryStatus.nonVietnameseWordCount.toLocaleString()} từ</span>
             </div>
             <div class="flex items-center justify-between py-1">
-              <span class="text-purple-400 font-medium">3. Từ điển Viết tắt & Tuỳ chỉnh (ATM, VIP...)</span>
+              <span class="text-purple-400 font-medium">4. Từ điển Viết tắt & Tuỳ chỉnh (ATM, VIP...)</span>
               <span class="font-mono text-slate-400">{appState.dictionaryStatus.customWordCount.toLocaleString()} từ</span>
             </div>
           </div>
           <p class="text-[11px] text-slate-500 mt-2 italic">
-            * Cả 3 từ điển luôn được nạp và áp dụng tự động. Hệ thống đã loại bỏ việc bắt lỗi dấu thanh kiểu mới / kiểu cũ (hòa/hoà, hóa/hoá,...).
+            * Cả 4 từ điển luôn được nạp và áp dụng tự động. Hệ thống đã loại bỏ việc bắt lỗi dấu thanh kiểu mới / kiểu cũ (hòa/hoà, hóa/hoá,...).
           </p>
         </div>
       </div>

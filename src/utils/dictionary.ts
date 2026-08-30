@@ -1,3 +1,4 @@
+import { DICTIONARY_VERSION } from "../constants"
 import type { Dictionaries, DictionaryStatus } from "../types/dictionary"
 import { getCache, setCache } from "./indexed-db"
 import { logger } from "./logger"
@@ -21,17 +22,26 @@ async function fetchLocalDict(localFilename: string): Promise<string> {
 }
 
 async function getDictionary(
-  dictName: "vn" | "non-vn" | "custom"
+  dictName: "vn" | "non-vn" | "custom" | "names"
 ): Promise<string> {
-  const cacheKey = `dict-${dictName}`
-  try {
-    const cached = await getCache<{ timestamp: number; data: string }>(cacheKey)
-    if (cached && Date.now() - cached.timestamp < TWENTY_FOUR_HOURS_IN_MS) {
-      logger.info(`Using cached dictionary for ${dictName}`)
-      return cached.data
+  const isDev = Boolean(import.meta.env?.DEV)
+  const cacheKey = `dict-${dictName}-${DICTIONARY_VERSION}`
+  if (!isDev) {
+    try {
+      const cached = await getCache<{ timestamp: number; data: string }>(
+        cacheKey
+      )
+      if (cached && Date.now() - cached.timestamp < TWENTY_FOUR_HOURS_IN_MS) {
+        logger.info(`Using cached dictionary for ${dictName}`)
+        return cached.data
+      }
+    } catch (_e) {
+      logger.warn(`Failed reading IndexedDB cache for ${dictName}:`, _e)
     }
-  } catch (_e) {
-    logger.warn(`Failed reading IndexedDB cache for ${dictName}:`, _e)
+  } else {
+    logger.info(
+      `Dev mode active: Bypassing IndexedDB cache for fresh ${dictName} dict`
+    )
   }
 
   logger.info(`Fetching fresh dictionary for ${dictName}`)
@@ -52,21 +62,25 @@ export async function loadDictionaries(): Promise<{
   const dictionaries: Dictionaries = {
     vietnamese: new Set<string>(),
     nonVietnamese: new Set<string>(),
-    custom: new Set<string>()
+    custom: new Set<string>(),
+    names: new Set<string>()
   }
   const status: DictionaryStatus = {
     isVietnameseLoaded: false,
     isNonVietnameseLoaded: false,
     isCustomLoaded: false,
+    isNamesLoaded: false,
     vietnameseWordCount: 0,
     nonVietnameseWordCount: 0,
-    customWordCount: 0
+    customWordCount: 0,
+    namesWordCount: 0
   }
 
-  const [vnRes, nonVnRes, customRes] = await Promise.all([
+  const [vnRes, nonVnRes, customRes, namesRes] = await Promise.all([
     getDictionary("vn"),
     getDictionary("non-vn"),
-    getDictionary("custom")
+    getDictionary("custom"),
+    getDictionary("names")
   ])
 
   // 1. Process Vietnamese Dictionary
@@ -109,6 +123,17 @@ export async function loadDictionaries(): Promise<{
   }
   status.isCustomLoaded = true
   status.customWordCount = dictionaries.custom.size
+
+  // 4. Process Names Dictionary (Proper names, historical figures, places)
+  for (const word of namesRes.split(/\r?\n/)) {
+    const cleanWord = word.trim()
+    if (cleanWord) {
+      dictionaries.names.add(cleanWord)
+      dictionaries.names.add(cleanWord.toLowerCase())
+    }
+  }
+  status.isNamesLoaded = true
+  status.namesWordCount = namesRes.split(/\r?\n/).filter((w) => w.trim()).length
 
   return { dictionaries, status }
 }

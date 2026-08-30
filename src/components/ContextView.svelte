@@ -3,6 +3,25 @@
   import { appState } from "../state.svelte"
   import { findSuggestions } from "../utils/analyzer"
 
+  function getDotColor(type: string): string {
+    switch (type) {
+      case "Dictionary":
+        return "bg-rose-500 shadow-[0_0_8px_#f43f5e]"
+      case "NonVietnamese":
+        return "bg-blue-500 shadow-[0_0_8px_#3b82f6]"
+      case "Uppercase":
+        return "bg-amber-500 shadow-[0_0_8px_#f59e0b]"
+      case "Typo":
+        return "bg-orange-500 shadow-[0_0_8px_#f97316]"
+      case "Spelling":
+        return "bg-purple-500 shadow-[0_0_8px_#a855f7]"
+      case "SpecialCharacter":
+        return "bg-pink-500 shadow-[0_0_8px_#ec4899]"
+      default:
+        return "bg-slate-400 shadow-[0_0_8px_#94a3b8]"
+    }
+  }
+
   function getHighlightStyle(type: string) {
     switch (type) {
       case "Dictionary":
@@ -172,21 +191,29 @@
   </div>
 
   <!-- Context Content Area -->
-  <div class="flex-1 overflow-y-auto p-6 flex flex-col items-center justify-center text-center">
+  <div class="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col items-center justify-center text-center">
     {#if !group || !contextSegments}
-      <div class="p-8 text-center text-slate-500">
-        <svg class="w-16 h-16 mx-auto mb-3 opacity-20 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="p-6 sm:p-8 text-center text-slate-500">
+        <svg class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 opacity-20 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <p class="text-lg font-medium text-slate-300">Không có lỗi được chọn</p>
-        <p class="text-xs text-slate-500 mt-1">Chọn một từ lỗi ở danh sách bên trái để xem ngữ cảnh</p>
+        <p class="text-base sm:text-lg font-medium text-slate-300">Không có lỗi được chọn</p>
+        <p class="text-xs text-slate-500 mt-1">Chọn một từ lỗi ở danh sách bên trên / bên trái để xem ngữ cảnh</p>
       </div>
     {:else}
-      <div class="w-full max-w-2xl animate-fadeIn space-y-6">
-        <!-- Paragraph reader box -->
+      <div class="w-full max-w-4xl animate-fadeIn space-y-4 sm:space-y-5">
+        <!-- 1. Top: Error Reason Badge with matching dot color -->
+        <div class="flex items-center justify-center">
+          <div class="px-3.5 py-1.5 bg-slate-950/80 text-slate-200 rounded-xl text-xs border border-slate-800 shadow-md flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full shrink-0 {getDotColor(group.type)}"></span>
+            <span class="font-semibold text-slate-300">{group.reason}</span>
+          </div>
+        </div>
+
+        <!-- 2. Middle: Paragraph reader box (Spacious Context) -->
         <div
-          class="p-8 rounded-2xl bg-slate-950/70 border border-slate-800 shadow-inner relative leading-relaxed text-slate-200 transition-all"
-          style="font-size: {appState.readerSettings.fontSize}rem; font-family: {appState.readerSettings.fontFamily === 'serif' ? '\"Noto Serif\", serif' : '\"Noto Sans\", sans-serif'};"
+          class="w-full p-5 sm:p-8 rounded-2xl bg-slate-950/70 border border-slate-800/90 shadow-inner relative leading-relaxed tracking-normal text-slate-100 transition-all text-left sm:text-justify select-text"
+          style="font-size: {appState.readerSettings.fontSize}rem; font-family: {appState.readerSettings.fontFamily === 'serif' ? '\"Noto Serif\", serif' : '\"Noto Sans\", sans-serif'}; line-height: 1.9;"
         >
           <span>{contextSegments.prefix}</span>
           <span
@@ -197,20 +224,15 @@
           <span>{contextSegments.suffix}</span>
         </div>
 
-        <!-- Reason & Search tools -->
+        <!-- 3. Below Context: Search tools (Wiktionary & Google) -->
         <div class="flex flex-wrap items-center justify-center gap-3">
-          <div class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-xl text-xs border border-slate-700 shadow-md flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-blue-400 shadow-[0_0_6px_#60a5fa]"></span>
-            <span>{group.reason}</span>
-          </div>
-
           <!-- Wiktionary lookup -->
           <a
             href="https://vi.wiktionary.org/wiki/{encodeURIComponent(group.word)}"
             target="_blank"
             rel="noopener noreferrer"
             title="Tra cứu trên Wiktionary"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-blue-400 bg-slate-800 hover:bg-blue-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-md"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-blue-400 bg-slate-800/90 hover:bg-blue-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-md"
           >
             <img src="/piece.ico" alt="Wiktionary" class="w-4 h-4 rounded-sm" />
             <span>Wiktionary</span>
@@ -222,16 +244,16 @@
             target="_blank"
             rel="noopener noreferrer"
             title="Tìm kiếm trên Google"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-emerald-400 bg-slate-800 hover:bg-emerald-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-md"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-emerald-400 bg-slate-800/90 hover:bg-emerald-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-md"
           >
             <img src="https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico" alt="Google" class="w-4 h-4" />
             <span>Google</span>
           </a>
         </div>
 
-        <!-- Suggestions list (click to copy) -->
+        <!-- 4. Bottom: Suggestions list (click to copy) -->
         {#if suggestions.length > 0}
-          <div class="pt-4 border-t border-slate-800/80">
+          <div class="pt-3 border-t border-slate-800/80">
             <div class="text-xs text-slate-400 mb-2">Gợi ý sửa từ (Nhấp để sao chép):</div>
             <div class="flex flex-wrap items-center justify-center gap-2">
               {#each suggestions as sugg}

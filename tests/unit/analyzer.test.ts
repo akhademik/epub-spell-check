@@ -7,7 +7,8 @@ describe("Analyzer Module", () => {
   const mockDictionaries: Dictionaries = {
     vietnamese: new Set(["người", "sách", "quà", "học", "khoa", "toán"]),
     nonVietnamese: new Set(["book", "school", "science"]),
-    custom: new Set(["ATM", "VIP"])
+    custom: new Set(["ATM", "VIP"]),
+    names: new Set(["Alexander", "Parmenion"])
   }
 
   describe("Error Grouping", () => {

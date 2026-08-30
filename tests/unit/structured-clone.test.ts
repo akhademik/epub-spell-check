@@ -8,7 +8,8 @@ describe("Worker PostMessage & Structured Clone Safety", () => {
     const rawDicts: Dictionaries = {
       vietnamese: new Set(["người", "sách", "quà", "học", "hòa", "hoà"]),
       nonVietnamese: new Set(["hello", "world", "paris"]),
-      custom: new Set(["ATM", "VIP", "DNA"])
+      custom: new Set(["ATM", "VIP", "DNA"]),
+      names: new Set(["Alexander", "Parmenion"])
     }
 
     const rawCheckSettings: CheckSettings = {
