@@ -2014,7 +2014,6 @@ easy
 eat
 eating
 eau
-ebay
 eboni
 ebonite
 ebook
@@ -4534,7 +4533,6 @@ payable
 payday
 paying
 payment
-paypal
 payroll
 pays
 paz
@@ -6704,7 +6702,6 @@ wb
 we
 weather
 weber
-wechat
 wedelia
 wee
 week

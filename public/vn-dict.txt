@@ -2282,7 +2282,6 @@ event
 êu
 f
 fa
-facebook
 fan
 fara
 fát
@@ -3262,13 +3261,10 @@ instagram
 iod
 iode
 ion
-ios
 iot
 iota
 iôn
 iốt
-ipad
-iphone
 irc
 iso
 isoenzym
@@ -7742,7 +7738,6 @@ tiễu
 tiệu
 tigôn
 tiki
-tiktok
 tim
 tìm
 tím
@@ -8690,7 +8685,6 @@ watt
 wc
 web
 website
-wifi
 wiki
 won
 wushu
@@ -9060,7 +9054,6 @@ yêu
 yếu
 yểu
 yoga
-youtube
 yô
 yôga
 yuan

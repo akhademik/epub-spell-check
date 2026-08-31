@@ -1,5 +1,3 @@
-Aaa
-Ááá
 Aage
 Aaron
 Abaddon
@@ -2245,7 +2243,6 @@ Chasidy
 Chasity
 Chaska
 Chassis
-ChatGPT
 Chatham
 Chatty
 Chaucer
@@ -3674,7 +3671,6 @@ Dubay
 Dubba
 Dubois
 Dubonnet
-Dubonnnet
 Dubrow
 Dubuque
 Ducane
@@ -10175,7 +10171,6 @@ Ozzy
 ÔHoành
 Ônk
 Ôồ
-Ồồồồồ
 Ởmức
 Pablo
 Pablum
@@ -13943,7 +13938,6 @@ Vawr
 Vaya
 Vănhọc
 Vâ
-Vâââng
 Veda
 Vedanta
 Vedas
@@ -14796,7 +14790,6 @@ Yuzhin
 Yves
 Yvone
 Yvonne
-Zaaaaang
 Zabolovsky
 Zach
 Zachary
@@ -14873,7 +14866,6 @@ Zhilenkov
 Zhora
 Zhores
 Zhukov
-Ziiiing
 Zikmund
 Zilberkweit
 Zimmerman
