@@ -1,4 +1,3 @@
-️
 abbey
 abbie
 abby
@@ -505,7 +504,6 @@ aye
 az
 azelle
 azerbaijan
-ɒp
 babara
 babe
 babes
@@ -785,7 +783,6 @@ blouse
 blow
 blowing
 blowjob
-bludiště
 blues
 bluetooth
 blvd
@@ -1311,7 +1308,6 @@ chrome
 chronic
 chupacabra
 churro
-chůva
 ci
 cialis
 ciao
@@ -1779,8 +1775,6 @@ defines
 degree
 degrees
 déjà
-děláš
-dělás
 déliverez
 dem
 demand
@@ -1992,7 +1986,6 @@ duv
 duval
 dv
 dvds
-dveře
 dx
 dyan
 dye
@@ -2550,7 +2543,6 @@ forceps
 forces
 foreign
 forensische
-foręt
 forever
 forge
 forget
@@ -3363,7 +3355,6 @@ its
 itself
 itunes
 iva
-j
 já
 jacelyn
 jacet
@@ -3665,7 +3656,6 @@ lever
 lèvres
 lexmark
 lexus
-lež
 lezlie
 lf
 lg
@@ -3836,7 +3826,6 @@ maleficarum
 malt
 mañana
 mandolin
-mánesův
 mangut
 manhua
 manitou
@@ -3920,7 +3909,6 @@ message
 messina
 met
 meter
-mētēr
 meters
 methanesulfonic
 method
@@ -4303,7 +4291,6 @@ obsession
 obtain
 obvious
 oc
-ºc
 ocarina
 occultum
 occur
@@ -4536,7 +4523,6 @@ pasta
 paste
 pastel
 pasty
-patēr
 pater
 patients
 pauv
@@ -4874,7 +4860,6 @@ premier
 premium
 prepaid
 prepare
-přes
 present
 présentement
 press
@@ -4938,7 +4923,6 @@ prosecco
 proskynesis
 prospective
 prosperity
-prostřílej
 prot
 protect
 protein
@@ -5156,7 +5140,6 @@ recall
 receipt
 receive
 recent
-řečí
 recipe
 recipes
 record
@@ -5928,7 +5911,6 @@ speaker
 speaks
 spears
 spec
-spěchám
 special
 species
 specify
@@ -6165,8 +6147,6 @@ suv
 suyato
 suzuki
 sv
-svařák
-svatyně
 sven
 sw
 swap
@@ -6195,7 +6175,6 @@ syria
 sys
 system
 systems
-ʃ
 taarovot
 table
 tableau
@@ -6654,7 +6633,6 @@ vertukhai
 very
 vet
 vete
-větší
 viel
 vien
 vierfache
@@ -6817,7 +6795,6 @@ yu
 yucca
 yvette
 zahrada
-zahraniční
 zak
 zaklyuchennye
 zambia
@@ -6843,13 +6820,3 @@ zombies
 zoom
 zum
 zureichenden
-вибратор
-воду
-вы
-אֱ
-אֱמ
-אמתֶ
-אֱמֶת
-תמ
-卍
-卐

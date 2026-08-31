@@ -636,7 +636,6 @@ bửu
 bxl
 byte
 c
-c.i.f
 ca
 cà
 cá
@@ -1820,7 +1819,6 @@ dynamit
 dyne
 dzách
 đ
-đ/c
 đa
 đà
 đá
@@ -2283,7 +2281,6 @@ event
 êtô
 êu
 f
-f.o.b
 fa
 facebook
 fan
@@ -2329,7 +2326,6 @@ fuốc
 fut
 fuy
 g
-g.m.t
 ga
 gà
 gá
@@ -2689,7 +2685,6 @@ gom
 gon
 gòn
 gọn
-gòn–gia
 gọng
 gỏng
 google
@@ -2782,7 +2777,6 @@ gượng
 gỵa
 gym
 h
-h'mông
 ha
 hà
 há
@@ -2800,7 +2794,7 @@ hãi
 hại
 hải
 haiz
-Haizz
+haizz
 halôgien
 ham
 hàm
@@ -2826,7 +2820,6 @@ hãnh
 hạnh
 hảnh
 hao
-hảo
 hào
 háo
 hão
@@ -2949,7 +2942,7 @@ hĩ
 hỉ
 hị
 hia
-Hic
+hic
 hích
 hịch
 hiđro
@@ -3236,7 +3229,6 @@ hyđrô
 hypebol
 hyperbol
 hz
-hz.
 i
 ì
 í
@@ -3305,7 +3297,6 @@ ju
 jun
 jút
 k
-k’róa
 ka
 kađai
 kaki
@@ -3397,7 +3388,6 @@ khanh
 khành
 khánh
 khảnh
-khánh–hạ
 khao
 khào
 kháo
@@ -3789,9 +3779,7 @@ lãi
 lại
 lạị
 lải
-lai–ly
 lam
-làm
 làm
 lãm
 lạm
@@ -3973,7 +3961,6 @@ lì
 lí
 lĩ
 lị
-lí'
 lia
 lìa
 lía
@@ -4063,7 +4050,6 @@ loan
 loàn
 loán
 loạn
-lŏàn
 loang
 loàng
 loáng
@@ -4310,11 +4296,6 @@ lý
 lỵ
 lỹ
 m
-m'gar
-m’nhum
-m'nông
-m'ta
-m’ta
 ma
 mà
 má
@@ -4407,7 +4388,6 @@ maze
 mazut
 mắc
 mặc
-mặc.
 măk
 măm
 mắm
@@ -4648,7 +4628,6 @@ môm
 mồm
 môn
 mồn
-môn–khơ
 mông
 mống
 mồng
@@ -4899,7 +4878,6 @@ nệp
 nết
 nêu
 nếu
-ng̃
 nga
 ngà
 ngã
@@ -5626,7 +5604,7 @@ niên
 niền
 niềng
 niễng
-Niếp
+niếp
 niết
 niệt
 niêu
@@ -5638,13 +5616,11 @@ ním
 nin
 nín
 nina
-niña
 ninh
 nình
 nính
 nịnh
 nino
-niño
 níp
 nit
 nít
@@ -7225,7 +7201,6 @@ sửu
 sx
 sỹ
 t
-t’rưng
 ta
 tà
 tá
@@ -7778,7 +7753,6 @@ tín
 tĩn
 tịn
 tinh
-tình
 tình
 tính
 tĩnh
@@ -7914,8 +7888,6 @@ tơrưng
 tớt
 tp
 tr
-tr.
-tr'
 tra
 trà
 trá
@@ -8343,7 +8315,7 @@ ubnd
 ục
 uế
 uể
-Uh
+uh
 uhm
 ui
 úi
@@ -8396,8 +8368,8 @@ uýt
 ựa
 ức
 ực
-Ưhm
-Ưm
+ưhm
+ưm
 ừm
 ưng
 ứng
@@ -9070,7 +9042,6 @@ xy
 xyanua
 xýt
 y
-ý
 ý
 ỳ
 ỷ
