@@ -12,9 +12,11 @@ import type { Dictionaries, DictionaryStatus } from "./types/dictionary"
 import type { EpubContent } from "./types/epub"
 import type { ErrorGroup, ErrorInstance } from "./types/errors"
 import type { ReaderSettings, ToastNotification } from "./types/state"
-import { groupErrors } from "./utils/analyzer"
+import { matchCase } from "./utils/analysis-core"
+import { clearSuggestionCache, groupErrors } from "./utils/analyzer"
 import { loadDictionaries } from "./utils/dictionary"
 import { parseEpub } from "./utils/epub-parser"
+import { applyFixesAndRepack, type FixInstruction } from "./utils/epub-writer"
 import { getFilteredErrors } from "./utils/filter"
 import { logger } from "./utils/logger"
 import AnalysisWorker from "./workers/analysis.worker?worker"
@@ -93,12 +95,18 @@ export class AppStateModel {
   )
 
   // Loaded Book Data
+  originalFile = $state<File | null>(null)
   currentBookTitle = $state<string>("")
   currentBookAuthor = $state<string>("")
   currentCoverUrl = $state<string | null>(null)
-  loadedTextContent = $state<{ text: string }[]>([])
+  loadedTextContent = $state<{ id: string; filePath: string; text: string }[]>(
+    []
+  )
   totalWords = $state<number>(0)
   allDetectedErrors = $state<ErrorGroup[]>([])
+
+  // Applied fixes tracking: Map<instanceId, newWord>
+  appliedFixes = $state<Map<string, string>>(new Map())
 
   // Selection & Navigation
   selectedGroupId = $state<string | null>(null)
@@ -404,16 +412,209 @@ export class AppStateModel {
     }
   }
 
+  getInstanceKey(instance: ErrorInstance): string {
+    if (instance.id) return instance.id
+    const { filePath, blockId, startIndex, endIndex, paragraphIndex } =
+      instance.context
+    return `${filePath || ""}-${blockId || paragraphIndex}-${startIndex}-${endIndex}`
+  }
+
+  applyFixToInstance(instance: ErrorInstance, newWord: string) {
+    const trimmed = newWord.trim()
+    if (!trimmed) {
+      this.showToast("Từ thay thế không được để trống.", "error")
+      return
+    }
+
+    // Validate that instance currently exists in currentFilteredErrors
+    const parentGroup = this.currentFilteredErrors.find((g) =>
+      g.contexts.some(
+        (ctx) => this.getInstanceKey(ctx) === this.getInstanceKey(instance)
+      )
+    )
+
+    if (!parentGroup) {
+      logger.warn("Instance not found in active error list:", instance)
+      this.showToast(
+        "Lỗi: Không tìm thấy vị trí lỗi trong danh sách hiện tại.",
+        "error"
+      )
+      return
+    }
+
+    const key = this.getInstanceKey(instance)
+    const newApplied = new Map(this.appliedFixes)
+    newApplied.set(key, trimmed)
+    this.appliedFixes = newApplied
+
+    instance.resolved = true
+
+    // If all instances in the group are resolved, mark group as resolved
+    const allResolved = parentGroup.contexts.every(
+      (ctx) => ctx.resolved || this.appliedFixes.has(this.getInstanceKey(ctx))
+    )
+    if (allResolved) {
+      parentGroup.resolved = true
+      // Advance to next group if needed
+      const remaining = this.currentFilteredErrors.filter(
+        (g) => g.id !== parentGroup.id
+      )
+      if (remaining.length > 0) {
+        this.selectedGroupId = remaining[0].id
+        this.currentInstanceIndex = 0
+      } else {
+        this.selectedGroupId = null
+      }
+    }
+
+    this.showToast(`Đã sửa "${instance.word}" → "${trimmed}"`, "success")
+  }
+
+  applyFixToAllInstances(group: ErrorGroup, newWord: string) {
+    const trimmed = newWord.trim()
+    if (!trimmed) {
+      this.showToast("Từ thay thế không được để trống.", "error")
+      return
+    }
+
+    // Validate that group exists in currentFilteredErrors
+    const existingGroup = this.currentFilteredErrors.find(
+      (g) => g.id === group.id
+    )
+    if (!existingGroup) {
+      logger.warn("Group not found in active error list:", group)
+      this.showToast(
+        "Lỗi: Nhóm lỗi không tồn tại trong danh sách hiện tại.",
+        "error"
+      )
+      return
+    }
+
+    const newApplied = new Map(this.appliedFixes)
+    for (const ctx of existingGroup.contexts) {
+      const key = this.getInstanceKey(ctx)
+      const instanceReplacement = matchCase(
+        ctx.originalWord || ctx.word,
+        trimmed
+      )
+      newApplied.set(key, instanceReplacement)
+      ctx.resolved = true
+    }
+    this.appliedFixes = newApplied
+    existingGroup.resolved = true
+
+    // Advance selection
+    const remaining = this.currentFilteredErrors.filter(
+      (g) => g.id !== existingGroup.id
+    )
+    if (remaining.length > 0) {
+      this.selectedGroupId = remaining[0].id
+      this.currentInstanceIndex = 0
+    } else {
+      this.selectedGroupId = null
+    }
+
+    this.showToast(
+      `Đã sửa tất cả ${existingGroup.contexts.length} lần xuất hiện của "${existingGroup.word}" → "${trimmed}"`,
+      "success"
+    )
+  }
+
+  undoFix(instance: ErrorInstance) {
+    const key = this.getInstanceKey(instance)
+    if (!this.appliedFixes.has(key)) return
+
+    const newApplied = new Map(this.appliedFixes)
+    newApplied.delete(key)
+    this.appliedFixes = newApplied
+    instance.resolved = false
+
+    // Find parent group and un-resolve if it was resolved
+    for (const g of this.allDetectedErrors) {
+      if (g.contexts.some((ctx) => this.getInstanceKey(ctx) === key)) {
+        g.resolved = false
+        break
+      }
+    }
+
+    this.showToast(`Đã hoàn tác sửa lỗi "${instance.word}"`, "info")
+  }
+
+  async exportFixedEpub(): Promise<void> {
+    if (!this.originalFile) {
+      this.showToast("Không tìm thấy tệp EPUB gốc để xuất.", "error")
+      return
+    }
+
+    if (this.appliedFixes.size === 0) {
+      this.showToast("Chưa có sửa đổi nào được áp dụng.", "info")
+      return
+    }
+
+    this.isProcessing = true
+    this.progressPercent = 30
+    this.progressStatus = "Đang áp dụng các sửa đổi vào tệp EPUB..."
+
+    try {
+      // Build FixInstruction[] from appliedFixes
+      const fixInstructions: FixInstruction[] = []
+
+      for (const group of this.allDetectedErrors) {
+        for (const ctx of group.contexts) {
+          const key = this.getInstanceKey(ctx)
+          const newWord = this.appliedFixes.get(key)
+          if (newWord && ctx.context.filePath && ctx.context.blockId) {
+            fixInstructions.push({
+              filePath: ctx.context.filePath,
+              blockId: ctx.context.blockId,
+              startIndex: ctx.context.startIndex,
+              endIndex: ctx.context.endIndex,
+              newWord
+            })
+          }
+        }
+      }
+
+      this.progressPercent = 60
+      this.progressStatus = "Đang đóng gói lại tệp EPUB..."
+
+      const blob = await applyFixesAndRepack(this.originalFile, fixInstructions)
+
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      const title = this.currentBookTitle
+        ? sanitizeFilename(this.currentBookTitle)
+        : "book"
+      a.download = `${title}-da-sua.epub`
+      a.click()
+      URL.revokeObjectURL(url)
+
+      this.isProcessing = false
+      this.showToast(
+        `Đã xuất EPUB với ${fixInstructions.length} sửa đổi thành công!`,
+        "success"
+      )
+    } catch (err) {
+      this.isProcessing = false
+      logger.error("Error exporting fixed EPUB:", err)
+      this.showToast("Lỗi khi đóng gói và xuất file EPUB.", "error")
+    }
+  }
+
   resetApp() {
+    clearSuggestionCache()
     if (this.currentCoverUrl) {
       URL.revokeObjectURL(this.currentCoverUrl)
     }
+    this.originalFile = null
     this.currentBookTitle = ""
     this.currentBookAuthor = ""
     this.currentCoverUrl = null
     this.loadedTextContent = []
     this.totalWords = 0
     this.allDetectedErrors = []
+    this.appliedFixes = new Map()
     this.selectedGroupId = null
     this.currentInstanceIndex = 0
     this.isProcessing = false
@@ -429,6 +630,7 @@ export class AppStateModel {
     }
 
     this.resetApp()
+    this.originalFile = file
     this.isProcessing = true
     this.progressPercent = 5
     this.progressStatus = "Đang đọc tệp EPUB..."

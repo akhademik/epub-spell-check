@@ -268,6 +268,14 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800/90 text-slate-400 border border-slate-700/60 shrink-0 font-medium">
                   {getBadgeLabel(group.type)}
                 </span>
+                {#if group.contexts.some((ctx) => ctx.resolved || appState.appliedFixes.has(appState.getInstanceKey(ctx)))}
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Đang sửa</span>
+                  </span>
+                {/if}
                 <span class="ml-auto bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">
                   {group.contexts.length}
                 </span>

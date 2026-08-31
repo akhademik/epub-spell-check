@@ -115,6 +115,29 @@
       return s
     })
   })
+  let customFixInput = $state("")
+
+  const isCurrentInstanceResolved = $derived.by(() => {
+    if (!currentContext) return false
+    const key = appState.getInstanceKey(currentContext)
+    return currentContext.resolved || appState.appliedFixes.has(key)
+  })
+
+  const currentAppliedWord = $derived.by(() => {
+    if (!currentContext) return null
+    const key = appState.getInstanceKey(currentContext)
+    return appState.appliedFixes.get(key) || null
+  })
+
+  function handleCustomFix(isAll: boolean) {
+    if (!customFixInput.trim()) return
+    if (isAll && group) {
+      appState.applyFixToAllInstances(group, customFixInput.trim())
+    } else if (currentContext) {
+      appState.applyFixToInstance(currentContext, customFixInput.trim())
+    }
+    customFixInput = ""
+  }
 </script>
 
 <div class="flex flex-col h-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
@@ -202,12 +225,31 @@
       </div>
     {:else}
       <div class="w-full max-w-4xl animate-fadeIn space-y-5">
-        <!-- 1. Top: Error Reason Badge with matching dot color -->
-        <div class="flex items-center justify-center">
+        <!-- 1. Top: Error Reason Badge with matching dot color & Fix status -->
+        <div class="flex items-center justify-center gap-2 flex-wrap">
           <div class="px-3.5 py-1.5 bg-slate-800 text-slate-200 rounded-xl text-xs border border-slate-700 shadow-md flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
             <span class="font-medium text-slate-200">{group.reason}</span>
           </div>
+
+          {#if isCurrentInstanceResolved}
+            <div class="px-3 py-1.5 bg-emerald-950/80 text-emerald-300 rounded-xl text-xs border border-emerald-700/80 shadow-md flex items-center gap-2 font-semibold">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Đã sửa → "{currentAppliedWord}"</span>
+              {#if currentContext}
+                <button
+                  type="button"
+                  onclick={() => appState.undoFix(currentContext)}
+                  class="ml-1 text-slate-400 hover:text-white underline text-[11px]"
+                  title="Hoàn tác sửa từ này"
+                >
+                  Hoàn tác
+                </button>
+              {/if}
+            </div>
+          {/if}
         </div>
 
         <!-- 2. Middle: Paragraph reader box (Context) -->
@@ -217,9 +259,9 @@
         >
           <span>{contextSegments.prefix}</span>
           <span
-            class="px-1.5 py-0.5 rounded-lg font-bold border underline decoration-2 underline-offset-4 {getHighlightStyle(group.type)}"
+            class="px-1.5 py-0.5 rounded-lg font-bold border underline decoration-2 underline-offset-4 {isCurrentInstanceResolved ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]' : getHighlightStyle(group.type)}"
           >
-            {contextSegments.target}
+            {isCurrentInstanceResolved && currentAppliedWord ? currentAppliedWord : contextSegments.target}
           </span>
           <span>{contextSegments.suffix}</span>
         </div>
@@ -251,24 +293,86 @@
           </a>
         </div>
 
-        <!-- 4. Bottom: Suggestions list (click to copy) -->
-        {#if suggestions.length > 0}
-          <div class="pt-4 border-t border-slate-800/80">
-            <div class="text-xs text-slate-400 mb-2">Gợi ý sửa từ (Nhấp để sao chép):</div>
+        <!-- 4. Bottom: Suggestion replacement & Custom Word Fix actions -->
+        <div class="pt-4 border-t border-slate-800/80 space-y-3">
+          <div class="text-xs text-slate-400 font-medium">Gợi ý sửa từ chính xác:</div>
+
+          {#if suggestions.length > 0}
             <div class="flex flex-wrap items-center justify-center gap-2">
               {#each suggestions as sugg}
-                <button
-                  type="button"
-                  onclick={() => appState.copyText(sugg)}
-                  class="px-3 py-1.5 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-700/60 rounded-xl text-sm font-semibold transition-all hover:scale-105 shadow-md"
-                  title="Nhấp để sao chép '{sugg}'"
-                >
-                  {sugg}
-                </button>
+                <div class="inline-flex items-stretch rounded-xl border border-emerald-700/60 bg-emerald-950/40 overflow-hidden shadow-md">
+                  <!-- Main Action: Replace single instance -->
+                  <button
+                    type="button"
+                    onclick={() => currentContext && appState.applyFixToInstance(currentContext, sugg)}
+                    class="px-3 py-1.5 text-emerald-300 hover:bg-emerald-900/60 text-sm font-semibold transition-colors flex items-center gap-1.5"
+                    title="Thay từ này thành '{sugg}'"
+                  >
+                    <span>{sugg}</span>
+                  </button>
+
+                  <!-- Secondary Action: Replace all occurrences in book -->
+                  {#if group.contexts.length > 1}
+                    <button
+                      type="button"
+                      onclick={() => appState.applyFixToAllInstances(group, sugg)}
+                      class="px-2 py-1.5 text-[11px] font-medium text-emerald-400/80 hover:text-emerald-200 hover:bg-emerald-800/60 border-l border-emerald-700/50 transition-colors"
+                      title="Thay tất cả {group.contexts.length} lần xuất hiện thành '{sugg}'"
+                    >
+                      Tất cả ({group.contexts.length})
+                    </button>
+                  {/if}
+
+                  <!-- Copy button -->
+                  <button
+                    type="button"
+                    onclick={() => appState.copyText(sugg)}
+                    class="px-2 py-1.5 text-slate-400 hover:text-white hover:bg-slate-800 border-l border-emerald-700/50 transition-colors"
+                    title="Sao chép '{sugg}' vào clipboard"
+                    aria-label="Sao chép"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </button>
+                </div>
               {/each}
             </div>
+          {:else}
+            <div class="text-xs text-slate-500 italic">Không có gợi ý tự động phù hợp trong từ điển.</div>
+          {/if}
+
+          <!-- Custom Replace Word Input -->
+          <div class="pt-2 flex items-center justify-center gap-2 max-w-md mx-auto">
+            <input
+              type="text"
+              bind:value={customFixInput}
+              onkeydown={(e) => { if (e.key === "Enter") handleCustomFix(false); }}
+              placeholder="Nhập từ thay thế khác..."
+              class="flex-1 px-3 py-1.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+            />
+            <button
+              type="button"
+              onclick={() => handleCustomFix(false)}
+              disabled={!customFixInput.trim()}
+              class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-xl transition-colors shrink-0 shadow-md"
+              title="Thay đúng vị trí này"
+            >
+              Thay từ này
+            </button>
+            {#if group.contexts.length > 1}
+              <button
+                type="button"
+                onclick={() => handleCustomFix(true)}
+                disabled={!customFixInput.trim()}
+                class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-xl transition-colors shrink-0 shadow-md"
+                title="Thay tất cả {group.contexts.length} lần xuất hiện"
+              >
+                Thay tất cả ({group.contexts.length})
+              </button>
+            {/if}
           </div>
-        {/if}
+        </div>
       </div>
     {/if}
   </div>

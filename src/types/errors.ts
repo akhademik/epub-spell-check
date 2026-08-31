@@ -7,6 +7,7 @@ export type ErrorType =
   | "SpecialCharacter"
 
 export interface ErrorInstance {
+  id?: string
   word: string
   originalWord: string
   context: {
@@ -16,10 +17,13 @@ export interface ErrorInstance {
     matchIndex: number
     chapterIndex: number
     paragraphIndex: number
+    filePath?: string
+    blockId?: string
   }
   type: ErrorType
   reason?: string
   suggestions?: string[]
+  resolved?: boolean
 }
 
 export interface ErrorGroup {
@@ -30,4 +34,5 @@ export interface ErrorGroup {
   count: number
   contexts: ErrorInstance[]
   suggestions?: string[]
+  resolved?: boolean
 }

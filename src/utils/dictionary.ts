@@ -1,7 +1,37 @@
 import { DICTIONARY_VERSION } from "../constants"
-import type { Dictionaries, DictionaryStatus } from "../types/dictionary"
+import type {
+  Dictionaries,
+  DictionaryStatus,
+  IndexedDictionary
+} from "../types/dictionary"
+import { getBaseWord } from "./analysis-core"
 import { getCache, setCache } from "./indexed-db"
 import { logger } from "./logger"
+
+export function buildIndexedDictionary(
+  words: Iterable<string>
+): IndexedDictionary {
+  const wordsArr = Array.from(words)
+  const byLength = new Map<number, string[]>()
+  const baseWordCache = new Map<string, string>()
+
+  for (const word of wordsArr) {
+    const len = word.length
+    let bucket = byLength.get(len)
+    if (!bucket) {
+      bucket = []
+      byLength.set(len, bucket)
+    }
+    bucket.push(word)
+    baseWordCache.set(word, getBaseWord(word))
+  }
+
+  return {
+    words: wordsArr,
+    byLength,
+    baseWordCache
+  }
+}
 
 const TWENTY_FOUR_HOURS_IN_MS = 24 * 60 * 60 * 1000
 
@@ -134,6 +164,13 @@ export async function loadDictionaries(): Promise<{
   }
   status.isNamesLoaded = true
   status.namesWordCount = namesRes.split(/\r?\n/).filter((w) => w.trim()).length
+
+  dictionaries.indexed = {
+    vietnamese: buildIndexedDictionary(dictionaries.vietnamese),
+    nonVietnamese: buildIndexedDictionary(dictionaries.nonVietnamese),
+    custom: buildIndexedDictionary(dictionaries.custom),
+    names: buildIndexedDictionary(dictionaries.names)
+  }
 
   return { dictionaries, status }
 }

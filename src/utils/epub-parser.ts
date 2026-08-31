@@ -98,9 +98,12 @@ export async function parseEpub(
         const paras = Array.from(
           doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, div")
         )
-          .map((el) => el.textContent?.trim() || "")
-          .filter((text) => text.length > 0)
-          .map((text) => ({ text }))
+          .map((el, nodeIndex) => ({
+            id: `${fullPath}#${nodeIndex}`,
+            filePath: fullPath,
+            text: el.textContent?.trim() || ""
+          }))
+          .filter((block) => block.text.length > 0)
 
         textBlocks.push(...paras)
       }

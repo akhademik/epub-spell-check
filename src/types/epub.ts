@@ -5,6 +5,8 @@ export interface BookMetadata {
 }
 
 export interface TextContentBlock {
+  id: string
+  filePath: string
   text: string
 }
 
