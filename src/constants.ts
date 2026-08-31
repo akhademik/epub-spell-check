@@ -6,7 +6,7 @@ export const FILE_SIZE_LIMIT_MB = 50
 /**
  * Current version for dictionary files (incremented to bust stale IndexedDB cache).
  */
-export const DICTIONARY_VERSION = "v13"
+export const DICTIONARY_VERSION = "v14"
 
 /**
  * Maximum file size limit for uploads in bytes.

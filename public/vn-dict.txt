@@ -47,6 +47,7 @@ am
 amen
 amian
 amib
+amidan
 amiđan
 amin
 amino
@@ -209,6 +210,7 @@ bar
 barem
 baren
 barie
+barit
 basa
 base
 basoi
@@ -405,6 +407,7 @@ biptêt
 birr
 bis
 bismut
+bisulphat
 bit
 bít
 bịt
@@ -1214,6 +1217,7 @@ clin
 clinke
 clip
 clo
+clohidric
 clohiđric
 clohydric
 clorat
@@ -1254,6 +1258,7 @@ cỏm
 combo
 comlê
 commăng
+commốt
 compa
 con
 còn
@@ -1630,6 +1635,7 @@ diếu
 diều
 diễu
 diệu
+digan
 dim
 dìm
 dím
@@ -2446,6 +2452,7 @@ ghê
 ghế
 ghề
 ghệ
+ghếch
 ghềnh
 ghệt
 ghi
@@ -2570,6 +2577,7 @@ giềng
 giết
 giễu
 giga
+gilet
 gilê
 gìm
 gin
@@ -5090,6 +5098,7 @@ ngoạy
 ngoảy
 ngoắc
 ngoặc
+ngoặm
 ngoăn
 ngoằn
 ngoẳn
@@ -6793,6 +6802,7 @@ ruột
 rúp
 rụp
 rupee
+rupi
 rút
 rụt
 ruy
@@ -8741,6 +8751,7 @@ xảo
 xáp
 xạp
 xát
+xatanh
 xàu
 xáu
 xạu
@@ -9049,6 +9060,7 @@ xưởng
 xượt
 xx
 xy
+xyanua
 xýt
 y
 ý
