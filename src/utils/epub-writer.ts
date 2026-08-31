@@ -1,5 +1,5 @@
 import JSZip from "jszip"
-import { extractLeafTextElements } from "./epub-parser"
+import { extractLeafTextElements, parseHtmlOrXml } from "./epub-parser"
 import { logger } from "./logger"
 
 export interface FixInstruction {
@@ -183,7 +183,6 @@ export async function applyFixesAndRepack(
     list.push(fix)
   }
 
-  const parser = new DOMParser()
   const serializer = new XMLSerializer()
 
   for (const [filePath, fileFixes] of fixesByFile.entries()) {
@@ -194,21 +193,7 @@ export async function applyFixesAndRepack(
     }
 
     const content = await fileEntry.async("string")
-    const isXhtml = filePath.endsWith(".xhtml") || filePath.endsWith(".xml")
-
-    let doc = parser.parseFromString(
-      content,
-      isXhtml ? "application/xhtml+xml" : "text/html"
-    )
-
-    // Check if XML parser failed on non-standard/unclosed HTML entities
-    const hasParserError = doc.querySelector("parsererror")
-    if (hasParserError) {
-      logger.warn(
-        `XML parse error in ${filePath}. Falling back to tolerant HTML parser.`
-      )
-      doc = parser.parseFromString(content, "text/html")
-    }
+    const doc = parseHtmlOrXml(content, filePath)
 
     // Apply fixes
     applyFixesToDocument(doc, filePath, fileFixes)

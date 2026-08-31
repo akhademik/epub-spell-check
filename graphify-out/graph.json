@@ -306,7 +306,7 @@
       "source_file": "src/App.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "community_name": "state.svelte.ts",
       "norm_label": "app.svelte",
       "id": "src_app"
@@ -317,7 +317,7 @@
       "source_file": "src/components/ProcessingUI.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "community_name": "state.svelte.ts",
       "norm_label": "processingui.svelte",
       "id": "src_components_processingui"
@@ -328,7 +328,7 @@
       "source_file": "src/components/ToastContainer.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "community_name": "state.svelte.ts",
       "norm_label": "toastcontainer.svelte",
       "id": "src_components_toastcontainer"
@@ -339,7 +339,7 @@
       "source_file": "src/components/UploadSection.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "community_name": "state.svelte.ts",
       "norm_label": "uploadsection.svelte",
       "id": "src_components_uploadsection"
@@ -350,7 +350,7 @@
       "source_file": "src/components/WhitelistSection.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "community_name": "state.svelte.ts",
       "norm_label": "whitelistsection.svelte",
       "id": "src_components_whitelistsection"
@@ -362,7 +362,7 @@
       "source_location": "L25",
       "_callable": true,
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "community_name": "state.svelte.ts",
       "norm_label": "if()",
       "id": "src_components_whitelistsection_if"
@@ -373,7 +373,7 @@
       "source_file": "src/components/modals/ClearWhitelistModal.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "community_name": "state.svelte.ts",
       "norm_label": "clearwhitelistmodal.svelte",
       "id": "src_components_modals_clearwhitelistmodal"
@@ -384,7 +384,7 @@
       "source_file": "src/components/modals/HelpModal.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "community_name": "state.svelte.ts",
       "norm_label": "helpmodal.svelte",
       "id": "src_components_modals_helpmodal"
@@ -428,7 +428,7 @@
       "source_file": "src/types/analysis.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "community_name": "analysis-core.ts",
       "norm_label": "analysis.ts",
       "id": "src_types_analysis"
@@ -441,7 +441,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "community_name": "analysis-core.ts",
       "norm_label": "checksettings",
       "id": "src_types_analysis_checksettings"
@@ -452,7 +452,7 @@
       "source_file": "src/types/state.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "community_name": "analysis-core.ts",
       "norm_label": "state.ts",
       "id": "src_types_state"
@@ -465,7 +465,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "community_name": "analysis-core.ts",
       "norm_label": "readersettings",
       "id": "src_types_state_readersettings"
@@ -478,7 +478,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "community_name": "analysis-core.ts",
       "norm_label": "toastnotification",
       "id": "src_types_state_toastnotification"
@@ -491,7 +491,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "community_name": "analysis-core.ts",
       "norm_label": "appstate",
       "id": "src_types_state_appstate"
@@ -2239,7 +2239,7 @@
       "source_file": "src/components/ContextView.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "contextview.svelte",
       "community_name": "state.svelte.ts",
       "id": "src_components_contextview"
@@ -2250,7 +2250,7 @@
       "source_file": "src/components/ContextView.svelte",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "contextsegments",
       "community_name": "state.svelte.ts",
       "id": "src_components_contextview_contextsegments"
@@ -2262,7 +2262,7 @@
       "source_location": "L93",
       "_callable": true,
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "isuppercase()",
       "community_name": "state.svelte.ts",
       "id": "src_components_contextview_isuppercase"
@@ -2274,7 +2274,7 @@
       "source_location": "L97",
       "_callable": true,
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "istitlecase()",
       "community_name": "state.svelte.ts",
       "id": "src_components_contextview_istitlecase"
@@ -2285,7 +2285,7 @@
       "source_file": "src/components/ContextView.svelte",
       "source_location": "L105",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "suggestions",
       "community_name": "state.svelte.ts",
       "id": "src_components_contextview_suggestions"
@@ -2296,7 +2296,7 @@
       "source_file": "src/components/ContextView.svelte",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "customfixinput",
       "community_name": "state.svelte.ts",
       "id": "src_components_contextview_customfixinput"
@@ -2307,7 +2307,7 @@
       "source_file": "src/components/ContextView.svelte",
       "source_location": "L120",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "iscurrentinstanceresolved",
       "community_name": "state.svelte.ts",
       "id": "src_components_contextview_iscurrentinstanceresolved"
@@ -2318,7 +2318,7 @@
       "source_file": "src/components/ContextView.svelte",
       "source_location": "L126",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "currentappliedword",
       "community_name": "state.svelte.ts",
       "id": "src_components_contextview_currentappliedword"
@@ -2330,33 +2330,10 @@
       "source_location": "L132",
       "_callable": true,
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "handlecustomfix()",
       "community_name": "state.svelte.ts",
       "id": "src_components_contextview_handlecustomfix"
-    },
-    {
-      "label": "ErrorList.svelte",
-      "file_type": "code",
-      "source_file": "src/components/ErrorList.svelte",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "errorlist.svelte",
-      "community_name": "state.svelte.ts",
-      "id": "src_components_errorlist"
-    },
-    {
-      "label": "if()",
-      "file_type": "code",
-      "source_file": "src/components/ErrorList.svelte",
-      "source_location": "L86",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "if()",
-      "community_name": "state.svelte.ts",
-      "id": "src_components_errorlist_if"
     },
     {
       "label": "Header.svelte",
@@ -2364,7 +2341,7 @@
       "source_file": "src/components/Header.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "header.svelte",
       "community_name": "state.svelte.ts",
       "id": "src_components_header"
@@ -2375,7 +2352,7 @@
       "source_file": "src/components/ResultsView.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "resultsview.svelte",
       "community_name": "state.svelte.ts",
       "id": "src_components_resultsview"
@@ -2386,7 +2363,7 @@
       "source_file": "src/components/modals/SettingsModal.svelte",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "settingsmodal.svelte",
       "community_name": "state.svelte.ts",
       "id": "src_components_modals_settingsmodal"
@@ -2397,7 +2374,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "constants.ts",
       "community_name": "state.svelte.ts",
       "id": "src_constants"
@@ -2408,7 +2385,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "file_size_limit_mb",
       "community_name": "state.svelte.ts",
       "id": "src_constants_file_size_limit_mb"
@@ -2419,9 +2396,9 @@
       "source_file": "src/constants.ts",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 0,
+      "community": 9,
       "norm_label": "dictionary_version",
-      "community_name": "state.svelte.ts",
+      "community_name": "utils/dictionary.ts",
       "id": "src_constants_dictionary_version"
     },
     {
@@ -2430,7 +2407,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "file_size_limit_bytes",
       "community_name": "state.svelte.ts",
       "id": "src_constants_file_size_limit_bytes"
@@ -2441,7 +2418,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "whitelist_word_count_limit",
       "community_name": "state.svelte.ts",
       "id": "src_constants_whitelist_word_count_limit"
@@ -2452,7 +2429,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "whitelist_word_length_limit",
       "community_name": "state.svelte.ts",
       "id": "src_constants_whitelist_word_length_limit"
@@ -2463,7 +2440,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "font_size_max_rem",
       "community_name": "state.svelte.ts",
       "id": "src_constants_font_size_max_rem"
@@ -2474,7 +2451,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "font_size_min_rem",
       "community_name": "state.svelte.ts",
       "id": "src_constants_font_size_min_rem"
@@ -2485,7 +2462,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "epub_file_extension",
       "community_name": "state.svelte.ts",
       "id": "src_constants_epub_file_extension"
@@ -2496,7 +2473,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L44",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "whitelist_file_extensions",
       "community_name": "state.svelte.ts",
       "id": "src_constants_whitelist_file_extensions"
@@ -2507,7 +2484,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "context_length_chars",
       "community_name": "state.svelte.ts",
       "id": "src_constants_context_length_chars"
@@ -2518,7 +2495,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "max_suggestion_count",
       "community_name": "state.svelte.ts",
       "id": "src_constants_max_suggestion_count"
@@ -2529,7 +2506,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L59",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "max_toasts_displayed",
       "community_name": "state.svelte.ts",
       "id": "src_constants_max_toasts_displayed"
@@ -2540,7 +2517,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "toast_auto_dismiss_ms",
       "community_name": "state.svelte.ts",
       "id": "src_constants_toast_auto_dismiss_ms"
@@ -2551,7 +2528,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "tag_colors",
       "community_name": "state.svelte.ts",
       "id": "src_constants_tag_colors"
@@ -2562,7 +2539,7 @@
       "source_file": "src/constants.ts",
       "source_location": "L86",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "special_character_regex",
       "community_name": "state.svelte.ts",
       "id": "src_constants_special_character_regex"
@@ -2573,7 +2550,7 @@
       "source_file": "src/types/dictionary.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "types/dictionary.ts",
       "community_name": "analysis-core.ts",
       "id": "src_types_dictionary"
@@ -2586,7 +2563,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "dictionary",
       "community_name": "analysis-core.ts",
       "id": "src_types_dictionary_dictionary"
@@ -2599,9 +2576,9 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 9,
+      "community": 0,
       "norm_label": "indexeddictionary",
-      "community_name": "utils/dictionary.ts",
+      "community_name": "analysis-core.ts",
       "id": "src_types_dictionary_indexeddictionary"
     },
     {
@@ -2612,7 +2589,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "dictionaries",
       "community_name": "analysis-core.ts",
       "id": "src_types_dictionary_dictionaries"
@@ -2625,7 +2602,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "dictionarystatus",
       "community_name": "analysis-core.ts",
       "id": "src_types_dictionary_dictionarystatus"
@@ -2662,7 +2639,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "textcontentblock",
       "community_name": "analysis-core.ts",
       "id": "src_types_epub_textcontentblock"
@@ -2686,7 +2663,7 @@
       "source_file": "src/types/errors.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "errors.ts",
       "community_name": "analysis-core.ts",
       "id": "src_types_errors"
@@ -2699,7 +2676,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "errortype",
       "community_name": "analysis-core.ts",
       "id": "src_types_errors_errortype"
@@ -2712,7 +2689,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "errorinstance",
       "community_name": "analysis-core.ts",
       "id": "src_types_errors_errorinstance"
@@ -2725,7 +2702,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "errorgroup",
       "community_name": "analysis-core.ts",
       "id": "src_types_errors_errorgroup"
@@ -2736,7 +2713,7 @@
       "source_file": "src/utils/analyzer.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "analyzer.ts",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analyzer"
@@ -2747,7 +2724,7 @@
       "source_file": "src/utils/analyzer.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "suggestioncache",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analyzer_suggestioncache"
@@ -2759,9 +2736,9 @@
       "source_location": "L10",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 3,
       "norm_label": "clearsuggestioncache()",
-      "community_name": "analysis-core.ts",
+      "community_name": "AppStateModel",
       "id": "src_utils_analyzer_clearsuggestioncache"
     },
     {
@@ -2771,7 +2748,7 @@
       "source_location": "L14",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "findsuggestions()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analyzer_findsuggestions"
@@ -2783,7 +2760,7 @@
       "source_location": "L168",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "grouperrors()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analyzer_grouperrors"
@@ -2806,7 +2783,7 @@
       "source_location": "L11",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "buildindexeddictionary()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_dictionary_buildindexeddictionary"
@@ -2853,7 +2830,7 @@
       "source_file": "src/utils/filter.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "filter.ts",
       "community_name": "analysis-core.ts",
       "id": "src_utils_filter"
@@ -2865,7 +2842,7 @@
       "source_location": "L5",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "getfilterederrors()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_filter_getfilterederrors"
@@ -2876,7 +2853,7 @@
       "source_file": "src/workers/analysis.worker.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "analysis.worker.ts",
       "community_name": "analysis-core.ts",
       "id": "src_workers_analysis_worker"
@@ -2889,7 +2866,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "workermessage",
       "community_name": "analysis-core.ts",
       "id": "src_workers_analysis_worker_workermessage"
@@ -2900,7 +2877,7 @@
       "source_file": "tests/regression.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "regression.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_regression_test"
@@ -2911,7 +2888,7 @@
       "source_file": "tests/smoke.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "smoke.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_smoke_test"
@@ -2922,7 +2899,7 @@
       "source_file": "tests/unit/analyzer.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "analyzer.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_unit_analyzer_test"
@@ -2933,7 +2910,7 @@
       "source_file": "tests/unit/filter.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "filter.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_unit_filter_test"
@@ -2944,7 +2921,7 @@
       "source_file": "tests/unit/structured-clone.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "structured-clone.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_unit_structured_clone_test"
@@ -2955,7 +2932,7 @@
       "source_file": "tests/unit/user-workflow.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "user-workflow.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_unit_user_workflow_test"
@@ -2966,7 +2943,7 @@
       "source_file": "src/utils/analysis-core.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "analysis-core.ts",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core"
@@ -2977,7 +2954,7 @@
       "source_file": "src/utils/analysis-core.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "word_regex",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_word_regex"
@@ -2988,7 +2965,7 @@
       "source_file": "src/utils/analysis-core.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "analysis_chunk_size",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_analysis_chunk_size"
@@ -2999,7 +2976,7 @@
       "source_file": "src/utils/analysis-core.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "tone_style_pairs",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_tone_style_pairs"
@@ -3011,7 +2988,7 @@
       "source_location": "L26",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "getalternatetonestyle()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_getalternatetonestyle"
@@ -3023,7 +3000,7 @@
       "source_location": "L34",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "isfrontvowel()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_isfrontvowel"
@@ -3035,7 +3012,7 @@
       "source_location": "L43",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "isy()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_isy"
@@ -3047,7 +3024,7 @@
       "source_location": "L53",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "geterrortype()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_geterrortype"
@@ -3059,7 +3036,7 @@
       "source_location": "L180",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "levenshteindistance()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_levenshteindistance"
@@ -3071,7 +3048,7 @@
       "source_location": "L211",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "getbaseword()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_getbaseword"
@@ -3083,7 +3060,7 @@
       "source_location": "L221",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "matchcase()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_matchcase"
@@ -3094,7 +3071,7 @@
       "source_file": "tests/unit/analysis-core.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 0,
       "norm_label": "analysis-core.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_unit_analysis_core_test"
@@ -3116,7 +3093,7 @@
       "source_file": "src/state.svelte.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "state.svelte.ts",
       "community_name": "state.svelte.ts",
       "id": "src_state_svelte"
@@ -3127,7 +3104,7 @@
       "source_file": "src/state.svelte.ts",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "storage_keys",
       "community_name": "state.svelte.ts",
       "id": "src_state_svelte_storage_keys"
@@ -3140,7 +3117,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "persistedcontainer",
       "community_name": "state.svelte.ts",
       "id": "src_state_svelte_persistedcontainer"
@@ -3152,7 +3129,7 @@
       "source_location": "L37",
       "_callable": true,
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "loadstorage()",
       "community_name": "state.svelte.ts",
       "id": "src_state_svelte_loadstorage"
@@ -3524,116 +3501,10 @@
       "source_file": "src/state.svelte.ts",
       "source_location": "L747",
       "_origin": "ast",
-      "community": 0,
+      "community": 1,
       "norm_label": "appstate",
       "community_name": "state.svelte.ts",
       "id": "src_state_svelte_appstate"
-    },
-    {
-      "label": "epub-parser.ts",
-      "file_type": "code",
-      "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "epub-parser.ts",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_parser"
-    },
-    {
-      "label": "LEAF_BLOCK_SELECTOR",
-      "file_type": "code",
-      "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L6",
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "leaf_block_selector",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_parser_leaf_block_selector"
-    },
-    {
-      "label": "extractLeafTextElements()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L13",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "extractleaftextelements()",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_parser_extractleaftextelements"
-    },
-    {
-      "label": "parseEpub()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L34",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "parseepub()",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_parser_parseepub"
-    },
-    {
-      "label": "epub-writer.ts",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "epub-writer.ts",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_writer"
-    },
-    {
-      "label": "FixInstruction",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L5",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "fixinstruction",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_writer_fixinstruction"
-    },
-    {
-      "label": "locateOffsetInBlock()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L17",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "locateoffsetinblock()",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_writer_locateoffsetinblock"
-    },
-    {
-      "label": "applyFixesToDocument()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L71",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "applyfixestodocument()",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_writer_applyfixestodocument"
-    },
-    {
-      "label": "applyFixesAndRepack()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L159",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "applyfixesandrepack()",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_writer_applyfixesandrepack"
     },
     {
       "label": "leaf-extractor.test.ts",
@@ -3654,8 +3525,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "path.ts",
-      "id": "src_utils_path",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_path"
     },
     {
       "label": "resolveZipPath()",
@@ -3666,8 +3537,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "resolvezippath()",
-      "id": "src_utils_path_resolvezippath",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_path_resolvezippath"
     },
     {
       "label": "normalizeSegments()",
@@ -3678,8 +3549,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "normalizesegments()",
-      "id": "src_utils_path_normalizesegments",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_path_normalizesegments"
     },
     {
       "label": "epub-roundtrip.test.ts",
@@ -3689,7 +3560,148 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "epub-roundtrip.test.ts",
-      "id": "tests_unit_epub_roundtrip_test",
+      "community_name": "epub-parser.ts",
+      "id": "tests_unit_epub_roundtrip_test"
+    },
+    {
+      "label": "ErrorList.svelte",
+      "file_type": "code",
+      "source_file": "src/components/ErrorList.svelte",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "errorlist.svelte",
+      "id": "src_components_errorlist",
+      "community_name": "state.svelte.ts"
+    },
+    {
+      "label": "if()",
+      "file_type": "code",
+      "source_file": "src/components/ErrorList.svelte",
+      "source_location": "L86",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "if()",
+      "id": "src_components_errorlist_if",
+      "community_name": "state.svelte.ts"
+    },
+    {
+      "label": "epub-parser.ts",
+      "file_type": "code",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "epub-parser.ts",
+      "id": "src_utils_epub_parser",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "LEAF_BLOCK_SELECTOR",
+      "file_type": "code",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L6",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "leaf_block_selector",
+      "id": "src_utils_epub_parser_leaf_block_selector",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "parseHtmlOrXml()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L13",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "parsehtmlorxml()",
+      "id": "src_utils_epub_parser_parsehtmlorxml",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "extractLeafTextElements()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L37",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "extractleaftextelements()",
+      "id": "src_utils_epub_parser_extractleaftextelements",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "parseEpub()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L58",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "parseepub()",
+      "id": "src_utils_epub_parser_parseepub",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "epub-writer.ts",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "epub-writer.ts",
+      "id": "src_utils_epub_writer",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "FixInstruction",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L5",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "fixinstruction",
+      "id": "src_utils_epub_writer_fixinstruction",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "locateOffsetInBlock()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L17",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "locateoffsetinblock()",
+      "id": "src_utils_epub_writer_locateoffsetinblock",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "applyFixesToDocument()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L71",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "applyfixestodocument()",
+      "id": "src_utils_epub_writer_applyfixestodocument",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "applyFixesAndRepack()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L159",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "applyfixesandrepack()",
+      "id": "src_utils_epub_writer_applyfixesandrepack",
       "community_name": "epub-parser.ts"
     },
     {
@@ -6491,7 +6503,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L39",
+      "source_location": "L63",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_utils_epub_parser_parseepub",
@@ -6634,33 +6646,13 @@
       "target": "src_components_contextview"
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ErrorList.svelte",
-      "source_location": "L86",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_components_errorlist",
-      "target": "src_components_errorlist_if"
-    },
-    {
       "relation": "imports_from",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/ErrorList.svelte",
+      "source_file": "src/components/Header.svelte",
       "_origin": "ast",
       "confidence_score": 1.0,
-      "source": "src_components_errorlist",
+      "source": "src_components_header",
       "target": "src_state_svelte"
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ErrorList.svelte",
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_components_errorlist",
-      "target": "src_types_errors"
     },
     {
       "relation": "imports_from",
@@ -6670,15 +6662,6 @@
       "confidence_score": 1.0,
       "source": "src_components_resultsview",
       "target": "src_components_errorlist"
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/Header.svelte",
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_components_header",
-      "target": "src_state_svelte"
     },
     {
       "relation": "imports_from",
@@ -7599,6 +7582,15 @@
       "confidence_score": 1.0,
       "source": "src_utils_epub_parser",
       "target": "src_types_epub_epubcontent"
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ErrorList.svelte",
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_components_errorlist",
+      "target": "src_types_errors"
     },
     {
       "relation": "imports_from",
@@ -8886,6 +8878,15 @@
       "target": "src_utils_epub_writer_locateoffsetinblock"
     },
     {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ErrorList.svelte",
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_components_errorlist",
+      "target": "src_state_svelte"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/state.svelte.ts",
@@ -9728,10 +9729,199 @@
       "target": "src_utils_epub_parser_parseepub"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/leaf-extractor.test.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_leaf_extractor_test",
+      "target": "src_utils_epub_parser"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/leaf-extractor.test.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_leaf_extractor_test",
+      "target": "src_utils_epub_parser_extractleaftextelements"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_parser",
+      "target": "src_utils_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/path.ts",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_path",
+      "target": "src_utils_path_normalizesegments"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/path.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_path",
+      "target": "src_utils_path_resolvezippath"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/path.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_path_test",
+      "target": "src_utils_path"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_parser",
+      "target": "src_utils_path_resolvezippath"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L81",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_utils_epub_parser_parseepub",
+      "target": "src_utils_path_resolvezippath"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/path.ts",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_path_resolvezippath",
+      "target": "src_utils_path_normalizesegments"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/path.test.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_path_test",
+      "target": "src_utils_path_resolvezippath"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_roundtrip_test",
+      "target": "src_utils_epub_parser"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_roundtrip_test",
+      "target": "src_utils_epub_parser_parseepub"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_roundtrip_test",
+      "target": "src_utils_epub_writer"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_roundtrip_test",
+      "target": "src_utils_epub_writer_applyfixesandrepack"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_roundtrip_test",
+      "target": "src_utils_epub_writer_fixinstruction"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ErrorList.svelte",
+      "source_location": "L86",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_components_errorlist",
+      "target": "src_components_errorlist_if"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L13",
+      "source_location": "L37",
       "weight": 1.0,
       "_origin": "ast",
       "confidence_score": 1.0,
@@ -9753,7 +9943,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L34",
+      "source_location": "L58",
       "weight": 1.0,
       "_origin": "ast",
       "confidence_score": 1.0,
@@ -9761,28 +9951,15 @@
       "target": "src_utils_epub_parser_parseepub"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
+      "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L4",
+      "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
       "confidence_score": 1.0,
       "source": "src_utils_epub_parser",
-      "target": "src_utils_path"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_parser",
-      "target": "src_utils_path_resolvezippath"
+      "target": "src_utils_epub_parser_parsehtmlorxml"
     },
     {
       "relation": "imports_from",
@@ -9797,35 +9974,47 @@
       "target": "src_utils_epub_parser"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
+      "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
-      "source_file": "tests/unit/epub-roundtrip.test.ts",
-      "source_location": "L5",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L153",
       "weight": 1.0,
       "_origin": "ast",
       "confidence_score": 1.0,
-      "source": "tests_unit_epub_roundtrip_test",
-      "target": "src_utils_epub_parser"
+      "source": "src_utils_epub_parser_parseepub",
+      "target": "src_utils_epub_parser_parsehtmlorxml"
     },
     {
-      "relation": "imports_from",
+      "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "tests/unit/leaf-extractor.test.ts",
-      "source_location": "L3",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L2",
       "weight": 1.0,
       "_origin": "ast",
       "confidence_score": 1.0,
-      "source": "tests_unit_leaf_extractor_test",
-      "target": "src_utils_epub_parser"
+      "source": "src_utils_epub_writer",
+      "target": "src_utils_epub_parser_parsehtmlorxml"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L196",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_utils_epub_writer_applyfixesandrepack",
+      "target": "src_utils_epub_parser_parsehtmlorxml"
     },
     {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L130",
+      "source_location": "L154",
       "weight": 1.0,
       "_origin": "ast",
       "confidence_score": 1.0,
@@ -9855,42 +10044,6 @@
       "_origin": "ast",
       "source": "src_utils_epub_writer_applyfixestodocument",
       "target": "src_utils_epub_parser_extractleaftextelements"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/leaf-extractor.test.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_leaf_extractor_test",
-      "target": "src_utils_epub_parser_extractleaftextelements"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L57",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_utils_epub_parser_parseepub",
-      "target": "src_utils_path_resolvezippath"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/epub-roundtrip.test.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_epub_roundtrip_test",
-      "target": "src_utils_epub_parser_parseepub"
     },
     {
       "relation": "contains",
@@ -9937,30 +10090,6 @@
       "target": "src_utils_epub_writer_locateoffsetinblock"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/epub-roundtrip.test.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_epub_roundtrip_test",
-      "target": "src_utils_epub_writer"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/epub-roundtrip.test.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_epub_roundtrip_test",
-      "target": "src_utils_epub_writer_fixinstruction"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -9977,84 +10106,14 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L214",
+      "source_location": "L199",
       "weight": 1.0,
       "_origin": "ast",
       "confidence_score": 1.0,
       "source": "src_utils_epub_writer_applyfixesandrepack",
       "target": "src_utils_epub_writer_applyfixestodocument"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/epub-roundtrip.test.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_epub_roundtrip_test",
-      "target": "src_utils_epub_writer_applyfixesandrepack"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/path.ts",
-      "source_location": "L29",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_path",
-      "target": "src_utils_path_normalizesegments"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/path.ts",
-      "source_location": "L10",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_path",
-      "target": "src_utils_path_resolvezippath"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/path.test.ts",
-      "source_location": "L2",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_path_test",
-      "target": "src_utils_path"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/path.ts",
-      "source_location": "L22",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_path_resolvezippath",
-      "target": "src_utils_path_normalizesegments"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/path.test.ts",
-      "source_location": "L2",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_path_test",
-      "target": "src_utils_path_resolvezippath"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "3df07b020b0b8b98bc7899d2d8a3c7113b7b5d87"
+  "built_at_commit": "f03f7f675bdd3100a1c28b0395e0aec5157c37a6"
 }

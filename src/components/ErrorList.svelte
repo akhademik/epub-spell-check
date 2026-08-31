@@ -232,83 +232,88 @@
   </div>
 
   <!-- Error Items List with Strictly Bounded Height, Soft Scrolling, and Bottom Padding -->
-  <div
-    class="flex-1 min-h-0 overflow-y-auto p-3 pb-8 space-y-2 overscroll-contain"
-    onscroll={handleScroll}
-    tabindex="-1"
-  >
-    {#if displayedErrors.length === 0}
-      <div class="p-8 text-center text-slate-500 flex flex-col items-center justify-center h-full">
-        <svg class="w-12 h-12 mb-3 opacity-30 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <p class="text-base font-semibold text-slate-300">Tuyệt vời!</p>
-        <p class="text-xs mt-1 text-slate-500">Không tìm thấy lỗi chính tả nào.</p>
-      </div>
-    {:else}
-      {#each displayedErrors as group (group.id)}
-        {@const isSelected = appState.currentGroup?.id === group.id}
-        <div
-          class="flex items-stretch w-full rounded-xl transition-all duration-150 border {isSelected
-            ? 'bg-blue-950/60 border-blue-600 shadow-md shadow-blue-950/50'
-            : 'bg-slate-950/40 border-slate-800/80 hover:bg-slate-800/60 hover:border-slate-700'}"
-        >
-          <!-- Select Button -->
-          <button
-            type="button"
-            onclick={() => handleSelect(group)}
-            class="flex items-center justify-between flex-grow px-3 py-2.5 text-left rounded-l-xl focus:outline-none min-w-0"
+  <div class="relative flex-1 min-h-0 overflow-hidden">
+    <div
+      class="h-full overflow-y-auto p-3 pb-24 space-y-2 overscroll-contain scroll-smooth"
+      onscroll={handleScroll}
+      tabindex="-1"
+    >
+      {#if displayedErrors.length === 0}
+        <div class="p-8 text-center text-slate-500 flex flex-col items-center justify-center h-full">
+          <svg class="w-12 h-12 mb-3 opacity-30 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="text-base font-semibold text-slate-300">Tuyệt vời!</p>
+          <p class="text-xs mt-1 text-slate-500">Không tìm thấy lỗi chính tả nào.</p>
+        </div>
+      {:else}
+        {#each displayedErrors as group (group.id)}
+          {@const isSelected = appState.currentGroup?.id === group.id}
+          <div
+            class="flex items-stretch w-full rounded-xl transition-all duration-150 border {isSelected
+              ? 'bg-blue-950/60 border-blue-600 shadow-md shadow-blue-950/50'
+              : 'bg-slate-950/40 border-slate-800/80 hover:bg-slate-800/60 hover:border-slate-700'}"
           >
-            <div class="w-full">
-              <div class="flex items-center gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
-                <span class="font-serif text-base font-bold truncate {isSelected ? 'text-blue-200' : 'text-slate-200'}">
-                  {group.word}
-                </span>
-                <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800/90 text-slate-400 border border-slate-700/60 shrink-0 font-medium">
-                  {getBadgeLabel(group.type)}
-                </span>
-                {#if group.contexts.some((ctx) => ctx.resolved || appState.appliedFixes.has(appState.getInstanceKey(ctx)))}
-                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Đang sửa</span>
+            <!-- Select Button -->
+            <button
+              type="button"
+              onclick={() => handleSelect(group)}
+              class="flex items-center justify-between flex-grow px-3 py-2.5 text-left rounded-l-xl focus:outline-none min-w-0"
+            >
+              <div class="w-full">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
+                  <span class="font-serif text-base font-bold truncate {isSelected ? 'text-blue-200' : 'text-slate-200'}">
+                    {group.word}
                   </span>
-                {/if}
-                <span class="ml-auto bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">
-                  {group.contexts.length}
-                </span>
-              </div>
-              {#if typeFilter === "all"}
-                <div class="mt-0.5 text-[11px] truncate text-slate-400">
-                  {group.reason}
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800/90 text-slate-400 border border-slate-700/60 shrink-0 font-medium">
+                    {getBadgeLabel(group.type)}
+                  </span>
+                  {#if group.contexts.some((ctx) => ctx.resolved || appState.appliedFixes.has(appState.getInstanceKey(ctx)))}
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Đang sửa</span>
+                    </span>
+                  {/if}
+                  <span class="ml-auto bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">
+                    {group.contexts.length}
+                  </span>
                 </div>
-              {/if}
-            </div>
-          </button>
+                {#if typeFilter === "all"}
+                  <div class="mt-0.5 text-[11px] truncate text-slate-400">
+                    {group.reason}
+                  </div>
+                {/if}
+              </div>
+            </button>
 
-          <!-- Ignore (Whitelist) Button -->
-          <button
-            type="button"
-            onclick={(e) => handleIgnore(e, group)}
-            class="flex items-center justify-center px-2.5 transition-colors rounded-r-xl text-slate-500 hover:text-emerald-400 hover:bg-slate-800"
-            title="Bỏ qua từ này (Whitelist)"
-            aria-label="Bỏ qua"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-            </svg>
-          </button>
-        </div>
-      {/each}
+            <!-- Ignore (Whitelist) Button -->
+            <button
+              type="button"
+              onclick={(e) => handleIgnore(e, group)}
+              class="flex items-center justify-center px-2.5 transition-colors rounded-r-xl text-slate-500 hover:text-emerald-400 hover:bg-slate-800"
+              title="Bỏ qua từ này (Whitelist)"
+              aria-label="Bỏ qua"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+              </svg>
+            </button>
+          </div>
+        {/each}
 
-      {#if visibleCount < filteredList.length}
-        <div class="py-3 text-center text-xs text-slate-500">
-          Đang hiển thị {displayedErrors.length} / {filteredList.length} từ (Cuộn xuống để xem thêm)
-        </div>
+        {#if visibleCount < filteredList.length}
+          <div class="py-3 text-center text-xs text-slate-500">
+            Đang hiển thị {displayedErrors.length} / {filteredList.length} từ (Cuộn xuống để xem thêm)
+          </div>
+        {/if}
+        <div class="h-10"></div>
       {/if}
-      <div class="h-4"></div>
-    {/if}
+    </div>
+
+    <!-- Soft bottom gradient fade to prevent harsh hard-cuts -->
+    <div class="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent pointer-events-none"></div>
   </div>
 </div>

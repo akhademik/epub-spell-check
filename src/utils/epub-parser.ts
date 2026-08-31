@@ -7,6 +7,30 @@ export const LEAF_BLOCK_SELECTOR =
   "p, h1, h2, h3, h4, h5, h6, li, blockquote, pre, dd, dt, figcaption"
 
 /**
+ * Deterministically parses HTML/XHTML content into a DOM Document.
+ * Attempts application/xhtml+xml for XML/XHTML files and falls back to text/html on parse errors.
+ */
+export function parseHtmlOrXml(content: string, filePath: string): Document {
+  const parser = new DOMParser()
+  const isXhtml = filePath.endsWith(".xhtml") || filePath.endsWith(".xml")
+
+  let doc = parser.parseFromString(
+    content,
+    isXhtml ? "application/xhtml+xml" : "text/html"
+  )
+
+  const hasParserError = doc.querySelector("parsererror")
+  if (hasParserError) {
+    logger.warn(
+      `XML parse error in ${filePath}. Falling back to tolerant HTML parser.`
+    )
+    doc = parser.parseFromString(content, "text/html")
+  }
+
+  return doc
+}
+
+/**
  * Extracts leaf text elements from a document without duplicating nested container text.
  * Divs are only included if they contain text directly and don't contain other child block elements.
  */
@@ -126,7 +150,7 @@ export async function parseEpub(
 
       if (chapterFile) {
         const html = await chapterFile.async("string")
-        const doc = parser.parseFromString(html, "text/html")
+        const doc = parseHtmlOrXml(html, fullPath)
         const paras = extractLeafTextElements(doc)
           .map((el, nodeIndex) => ({
             id: `${fullPath}#${nodeIndex}`,

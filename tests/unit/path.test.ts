@@ -40,11 +40,23 @@ describe("Path Resolution Utility", () => {
   })
 
   it("handles URL-encoded path characters (%20, Vietnamese characters)", () => {
-    expect(resolveZipPath("OEBPS/Text", "Ch%C6%B0%C6%A1ng%201.xhtml")).toBe(
-      "OEBPS/Text/Chương 1.xhtml"
+    expect(resolveZipPath("OEBPS/Text", "../Images/My%20Cover.jpg")).toBe(
+      "OEBPS/Images/My Cover.jpg"
     )
+
+    expect(resolveZipPath("", "Text/Ch%C6%B0%C6%A1ng%201.xhtml")).toBe(
+      "Text/Chương 1.xhtml"
+    )
+
     expect(resolveZipPath("OEBPS", "../Images/my%20cover.jpg")).toBe(
       "Images/my cover.jpg"
+    )
+  })
+
+  it("safely handles malformed % encoding without throwing an exception", () => {
+    expect(() => resolveZipPath("OEBPS", "sale%zz%99.xhtml")).not.toThrow()
+    expect(resolveZipPath("OEBPS", "sale%zz%99.xhtml")).toBe(
+      "OEBPS/sale%zz%99.xhtml"
     )
   })
 })

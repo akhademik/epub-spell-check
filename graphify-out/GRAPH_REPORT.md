@@ -4,18 +4,18 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 327 nodes · 556 edges · 19 communities
+- 328 nodes · 560 edges · 19 communities
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3df07b02`
+- Built from commit: `f03f7f67`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- state.svelte.ts
 - analysis-core.ts
+- state.svelte.ts
 - EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION
 - AppStateModel
 - biome.json
@@ -38,7 +38,7 @@
 7. `Logger` - 11 edges
 8. `getErrorType()` - 9 edges
 9. `saveStorage()` - 8 edges
-10. `ErrorInstance` - 7 edges
+10. `parseEpub()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `parseEpub()` --references--> `jszip`  [EXTRACTED]
@@ -57,21 +57,21 @@
 
 ## Communities (19 total, 0 thin omitted)
 
-### Community 0 - "state.svelte.ts"
-Cohesion: 0.07
-Nodes (23): contextSegments, currentAppliedWord, customFixInput, isCurrentInstanceResolved, suggestions, CONTEXT_LENGTH_CHARS, DICTIONARY_VERSION, EPUB_FILE_EXTENSION (+15 more)
-
-### Community 1 - "analysis-core.ts"
+### Community 0 - "analysis-core.ts"
 Cohesion: 0.16
-Nodes (28): CheckSettings, Dictionaries, Dictionary, DictionaryStatus, TextContentBlock, ErrorGroup, ErrorInstance, ErrorType (+20 more)
+Nodes (28): CheckSettings, Dictionaries, Dictionary, DictionaryStatus, IndexedDictionary, TextContentBlock, ErrorGroup, ErrorInstance (+20 more)
+
+### Community 1 - "state.svelte.ts"
+Cohesion: 0.07
+Nodes (22): contextSegments, currentAppliedWord, customFixInput, isCurrentInstanceResolved, suggestions, CONTEXT_LENGTH_CHARS, EPUB_FILE_EXTENSION, FILE_SIZE_LIMIT_BYTES (+14 more)
 
 ### Community 2 - "EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION"
 Cohesion: 0.05
 Nodes (41): 10. PDF → EPUB USER FLOW, 11. EPUB EDITOR E2E, 12. EPUB CLEANER E2E, 13. EPUB VALIDATOR E2E, 14. IMAGE PROCESSING E2E, 15. WORKER TESTING, 16. REGRESSION TEST, 17. OUTPUT FILE VALIDATION (+33 more)
 
 ### Community 3 - "AppStateModel"
-Cohesion: 0.14
-Nodes (3): AppStateModel, sanitizeFilename(), saveStorage()
+Cohesion: 0.13
+Nodes (4): AppStateModel, sanitizeFilename(), saveStorage(), clearSuggestionCache()
 
 ### Community 4 - "biome.json"
 Cohesion: 0.07
@@ -87,7 +87,7 @@ Nodes (23): DOM, DOM.Iterable, ES2022, src/**/*.d.ts, src/**/*.js, src/**/*.svel
 
 ### Community 7 - "epub-parser.ts"
 Cohesion: 0.18
-Nodes (14): jszip, dependencies, jszip, BookMetadata, EpubContent, extractLeafTextElements(), LEAF_BLOCK_SELECTOR, parseEpub() (+6 more)
+Nodes (15): jszip, dependencies, jszip, BookMetadata, EpubContent, extractLeafTextElements(), LEAF_BLOCK_SELECTOR, parseEpub() (+7 more)
 
 ### Community 8 - "scripts"
 Cohesion: 0.11
@@ -95,7 +95,7 @@ Nodes (18): name, private, scripts, build, check, dev, format, format:check (+10
 
 ### Community 9 - "utils/dictionary.ts"
 Cohesion: 0.22
-Nodes (8): IndexedDictionary, fetchLocalDict(), getDictionary(), loadDictionaries(), getCache(), openDB(), setCache(), Logger
+Nodes (8): DICTIONARY_VERSION, fetchLocalDict(), getDictionary(), loadDictionaries(), getCache(), openDB(), setCache(), Logger
 
 ### Community 10 - "🧱 2. Kiến trúc Hệ Thống Kiểm Thử 4 Tầng (4-Tier Testing Strategy)"
 Cohesion: 0.15
@@ -123,10 +123,10 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `$schema`, `**/*`, `!dist` to the rest of the system?**
   _138 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `state.svelte.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06866002214839424 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07084785133565621 - nodes in this community are weakly interconnected._
 - **Should `EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION` be split into smaller, more focused modules?**
   _Cohesion score 0.047619047619047616 - nodes in this community are weakly interconnected._
 - **Should `AppStateModel` be split into smaller, more focused modules?**
-  _Cohesion score 0.135632183908046 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.12903225806451613 - nodes in this community are weakly interconnected._
 - **Should `biome.json` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
