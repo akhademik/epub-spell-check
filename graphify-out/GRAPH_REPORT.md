@@ -4,19 +4,19 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 326 nodes · 551 edges · 19 communities
+- 327 nodes · 556 edges · 19 communities
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e3aae47e`
+- Built from commit: `3df07b02`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - state.svelte.ts
-- EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION
 - analysis-core.ts
+- EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION
 - AppStateModel
 - biome.json
 - devDependencies
@@ -58,20 +58,20 @@
 ## Communities (19 total, 0 thin omitted)
 
 ### Community 0 - "state.svelte.ts"
-Cohesion: 0.06
-Nodes (25): contextSegments, currentAppliedWord, customFixInput, isCurrentInstanceResolved, suggestions, CONTEXT_LENGTH_CHARS, DICTIONARY_VERSION, EPUB_FILE_EXTENSION (+17 more)
+Cohesion: 0.07
+Nodes (23): contextSegments, currentAppliedWord, customFixInput, isCurrentInstanceResolved, suggestions, CONTEXT_LENGTH_CHARS, DICTIONARY_VERSION, EPUB_FILE_EXTENSION (+15 more)
 
-### Community 1 - "EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION"
+### Community 1 - "analysis-core.ts"
+Cohesion: 0.16
+Nodes (28): CheckSettings, Dictionaries, Dictionary, DictionaryStatus, TextContentBlock, ErrorGroup, ErrorInstance, ErrorType (+20 more)
+
+### Community 2 - "EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION"
 Cohesion: 0.05
 Nodes (41): 10. PDF → EPUB USER FLOW, 11. EPUB EDITOR E2E, 12. EPUB CLEANER E2E, 13. EPUB VALIDATOR E2E, 14. IMAGE PROCESSING E2E, 15. WORKER TESTING, 16. REGRESSION TEST, 17. OUTPUT FILE VALIDATION (+33 more)
 
-### Community 2 - "analysis-core.ts"
-Cohesion: 0.17
-Nodes (26): CheckSettings, Dictionaries, Dictionary, DictionaryStatus, IndexedDictionary, TextContentBlock, ErrorGroup, ErrorInstance (+18 more)
-
 ### Community 3 - "AppStateModel"
-Cohesion: 0.13
-Nodes (4): AppStateModel, sanitizeFilename(), saveStorage(), clearSuggestionCache()
+Cohesion: 0.14
+Nodes (3): AppStateModel, sanitizeFilename(), saveStorage()
 
 ### Community 4 - "biome.json"
 Cohesion: 0.07
@@ -86,7 +86,7 @@ Cohesion: 0.08
 Nodes (23): DOM, DOM.Iterable, ES2022, src/**/*.d.ts, src/**/*.js, src/**/*.svelte, src/**/*.ts, compilerOptions (+15 more)
 
 ### Community 7 - "epub-parser.ts"
-Cohesion: 0.17
+Cohesion: 0.18
 Nodes (14): jszip, dependencies, jszip, BookMetadata, EpubContent, extractLeafTextElements(), LEAF_BLOCK_SELECTOR, parseEpub() (+6 more)
 
 ### Community 8 - "scripts"
@@ -94,8 +94,8 @@ Cohesion: 0.11
 Nodes (18): name, private, scripts, build, check, dev, format, format:check (+10 more)
 
 ### Community 9 - "utils/dictionary.ts"
-Cohesion: 0.24
-Nodes (7): fetchLocalDict(), getDictionary(), loadDictionaries(), getCache(), openDB(), setCache(), Logger
+Cohesion: 0.22
+Nodes (8): IndexedDictionary, fetchLocalDict(), getDictionary(), loadDictionaries(), getCache(), openDB(), setCache(), Logger
 
 ### Community 10 - "🧱 2. Kiến trúc Hệ Thống Kiểm Thử 4 Tầng (4-Tier Testing Strategy)"
 Cohesion: 0.15
@@ -119,14 +119,14 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `dependencies` connect `epub-parser.ts` to `scripts`?**
   _High betweenness centrality (0.151) - this node is a cross-community bridge._
 - **Why does `devDependencies` connect `devDependencies` to `scripts`?**
-  _High betweenness centrality (0.097) - this node is a cross-community bridge._
+  _High betweenness centrality (0.096) - this node is a cross-community bridge._
 - **What connects `$schema`, `**/*`, `!dist` to the rest of the system?**
   _138 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `state.svelte.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06464646464646465 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06866002214839424 - nodes in this community are weakly interconnected._
 - **Should `EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION` be split into smaller, more focused modules?**
   _Cohesion score 0.047619047619047616 - nodes in this community are weakly interconnected._
 - **Should `AppStateModel` be split into smaller, more focused modules?**
-  _Cohesion score 0.12903225806451613 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.135632183908046 - nodes in this community are weakly interconnected._
 - **Should `biome.json` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._

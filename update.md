@@ -1,278 +1,211 @@
-6. Có một vấn đề EPUB mình vẫn muốn bạn sửa
+Nhưng mình phát hiện thêm 2 vấn đề
 
-Đây là điểm kỹ thuật quan trọng nhất còn lại.
+Và một cái trong số đó mình đánh giá là khá quan trọng.
 
-Trong writer:
+⚠️ 1. resolveZipPath() chưa decode URL-encoded href
 
-const serializer = new XMLSerializer()
+EPUB manifest hoàn toàn có thể có:
 
-sau đó:
+href="Text/Ch%C6%B0%C6%A1ng%201.xhtml"
 
-serializer.serializeToString(doc)
+hoặc:
 
-Bạn đang parse XHTML rồi serialize toàn bộ document lại.
+href="../Images/my%20cover.jpg"
 
-Điều này có nguy cơ làm thay đổi những thứ không liên quan đến spelling fix:
+Hiện tại:
 
-namespace formatting
-attribute representation
-empty elements
-entity representation
-HTML/XHTML serialization
-casing/formatting
-một số metadata trong XHTML
+const cleanRelative = relativePath.trim().replace(/\\/g, "/")
 
-Bạn đã cố giữ XML declaration, nhưng vẫn chưa đảm bảo:
+chưa có:
 
-EPUB input → sửa một vài chữ → mọi thứ khác byte/semantic-preserving tối đa
+decodeURIComponent(...)
 
-Đặc biệt EPUB thực tế có thể rất "dị".
+nên ZIP lookup có thể tìm:
 
-Mình khuyên
+Text/Ch%C6%B0%C6%A1ng%201.xhtml
 
-Nếu muốn project đạt mức production-grade:
+thay vì:
 
-Không serialize lại toàn bộ XHTML nếu không cần.
+Text/Chương 1.xhtml
+Mình khuyên sửa
 
-Thay vào đó nên có chiến lược:
+Trong resolveZipPath():
 
-parse DOM
-↓
-locate exact text range
-↓
-modify text
-↓
-serialize
+let cleanRelative = relativePath.trim().replace(/\\/g, "/")
 
-hoặc tốt hơn nữa, nếu có thể:
+try {
+cleanRelative = decodeURIComponent(cleanRelative)
+} catch {
+// Keep original path if malformed URI encoding
+}
 
-original XHTML string
-↓
-calculate offsets
-↓
-patch exact text ranges
-↓
-keep everything else unchanged
-
-Cách thứ hai khó hơn nhưng cực kỳ phù hợp với một EPUB spell checker.
+## Priority: P1
 
 ---
 
-7. EPUB parser còn một vấn đề khá đáng chú ý
+⚠️ 2. extractLeafTextElements() vẫn có khả năng sai với nested inline/block structure
 
-Hiện tại bạn lấy:
+Bạn đang kiểm tra:
 
-doc.querySelectorAll(
-"p, h1, h2, h3, h4, h5, h6, li, div"
-)
+!div.querySelector(LEAF_BLOCK_SELECTOR) &&
+!div.querySelector("div")
 
-Điều này có một edge case:
+Cái này xử lý tốt div > p.
+
+Nhưng hãy chú ý trường hợp EPUB kiểu:
 
 <div>
-  <p>Hello</p>
-  <p>World</p>
+  <span>Hello</span>
+  <span>world</span>
 </div>
 
-Bạn sẽ lấy cả:
-
-div → Hello World
-p → Hello
-p → World
-
-Tức là nested container có thể tạo duplicate text blocks.
-
-Với EPUB được tạo sạch thì thường không gây lỗi trực tiếp vì spell checking chỉ đánh từng block, nhưng:
-
-div có thể chứa toàn bộ chapter
-nested <div>
-
-<section>
-<article>
-<blockquote>
-
-có thể khiến textBlocks phình rất mạnh.
-
-Mình đề xuất
-
-Thay vì lấy cả div, nên xác định leaf text blocks.
-
-Ví dụ ưu tiên:
-
-p
-h1-h6
-li
-blockquote
-pre
-...
-
-và chỉ dùng div nếu nó thực sự chứa text trực tiếp mà không có block children.
-
-Đây là thứ mình sẽ ưu tiên sửa trước khi tối ưu thêm performance.
-
---
-
-8. Một vấn đề khác: path resolution
-
-Bạn đang:
-
-const opfDir = rootPath.substring(0, rootPath.lastIndexOf("/"))
-
-const resolvePath = (p: string) =>
-opfDir ? `${opfDir}/${p}` : p
-
-Cách này không xử lý chuẩn relative path.
-
-Ví dụ OPF:
-
-OEBPS/content.opf
-
-và:
-
-href="../Images/cover.jpg"
-
-thì bạn tạo:
-
-OEBPS/../Images/cover.jpg
-
-Trong khi ZIP entry thực tế có thể là:
-
-Images/cover.jpg
-
-JSZip.file() không phải filesystem resolver.
-
-Nên có một resolveZipPath()
-
-Normalize:
-
-OEBPS/../Images/cover.jpg
-↓
-Images/cover.jpg
-
-## Đây là edge case EPUB rất đáng xử lý.
-
-Dictionary loading: tốt nhưng vẫn có một bottleneck
-
-Bạn đang load:
-
-Promise.all([
-getDictionary("vn"),
-getDictionary("non-vn"),
-getDictionary("custom"),
-getDictionary("names")
-])
-
-sau đó build 4 indexed dictionaries:
-
-dictionaries.indexed = {
-vietnamese: buildIndexedDictionary(...),
-nonVietnamese: buildIndexedDictionary(...),
-custom: buildIndexedDictionary(...),
-names: buildIndexedDictionary(...)
-}
-
-Điều này rất hợp lý về runtime lookup nhưng tốn RAM.
-
-Đặc biệt:
-
-wordsArr
-byLength
-baseWordCache
-Set
-
-có thể khiến cùng một vocabulary tồn tại qua nhiều structure.
-
-Với dictionary 100k–500k words, memory footprint có thể đáng kể.
+→ được coi là một block, điều này tốt.
 
 Nhưng:
 
-Hiện tại mình chưa khuyên tối ưu chỗ này.
+<div>
+  Hello
+  <section>
+    <p>World</p>
+  </section>
+</div>
 
-Nếu thực tế EPUB 1–2 MB → vài chục nghìn words thì chưa đáng.
+thì div không có p trực tiếp nhưng querySelector(LEAF_BLOCK_SELECTOR) vẫn bắt được p, nên loại div.
 
-## Đừng premature optimize.
+Cũng tốt.
 
-10. state.svelte.ts đang hơi quá lớn
+Tuy nhiên các block element khác chưa nằm trong selector, ví dụ:
 
-Đây là architectural issue mình vẫn thấy.
+<section>
+<article>
+<main>
+<table>
+<tr>
+<td>
 
-AppStateModel hiện đang quản:
+có thể tạo structure hơi bất ngờ.
 
-dictionaries
-dictionary status
-check settings
-reader settings
-whitelist
-EPUB data
-errors
-fixes
-navigation
-UI state
-toast
-storage
-EPUB parsing
-EPUB writing
-exporting
-whitelist import/export
+Nhưng:
 
-Nó đang trở thành một kiểu:
+Mình không muốn bạn tiếp tục mở rộng selector vô hạn.
 
-God Object
+Với spell checker, tốt hơn là định nghĩa rõ:
 
-Chưa phải vấn đề ngay lập tức, nhưng project sẽ khó maintain khi thêm feature.
+"Những element nào là text block mà spell checker cần kiểm tra?"
 
-Mình sẽ chia dần thành:
+Hiện tại danh sách của bạn đã khá hợp lý.
 
-state/
-├── app-state.svelte.ts
-├── book-state.svelte.ts
-├── analysis-state.svelte.ts
-├── whitelist-state.svelte.ts
-└── ui-state.svelte.ts
+## Không cần sửa ngay.
 
-hoặc giữ một AppStateModel nhưng delegate:
+⚠️ 3. Mình vẫn giữ nguyên cảnh báo lớn về XMLSerializer
 
-AppStateModel
-├── DictionaryService
-├── AnalysisService
-├── EpubService
-├── WhitelistService
-└── StorageService
+Writer hiện vẫn:
 
-## Không cần refactor ngay. Nhưng đây là technical debt lớn nhất về architecture hiện tại.
+const serializer = new XMLSerializer()
 
-11. Một điểm nhỏ nhưng đáng sửa: localStorage
+rồi:
 
-Bạn đang:
+serializer.serializeToString(doc)
 
-localStorage.getItem()
-JSON.parse()
+Tức là:
 
-và:
+EPUB XHTML
+↓
+DOM
+↓
+modify
+↓
+serialize EVERYTHING
 
-localStorage.setItem()
+Thay vì:
 
-cho settings/whitelist.
+EPUB XHTML
+↓
+DOM
+↓
+modify exact text
+↓
+serialize
 
-Cái này ổn.
+Vấn đề không phải là output không hợp lệ.
 
-Nhưng whitelist có:
-
-WHITELIST_WORD_COUNT_LIMIT
-WHITELIST_WORD_LENGTH_LIMIT
-
-nên bạn đã có guard khá tốt.
-
-Mình chỉ muốn thêm:
-
-schema version
-
-cho persisted settings.
+Vấn đề là bạn có thể làm thay đổi formatting/serialization của XHTML mà user không hề yêu cầu.
 
 Ví dụ:
 
-{
-version: 2,
-data: ...
-}
+<br />
 
-Sau này đổi structure sẽ dễ migrate hơn.
+có thể thành representation khác.
+
+Namespace/attribute ordering/entity representation cũng có thể thay đổi.
+
+Tuy nhiên
+
+Sau khi xem bản mới, mình hạ mức độ nghiêm trọng của vấn đề này.
+
+Nếu mục tiêu của app là:
+
+sửa EPUB rồi đọc bình thường trên Kobo/Calibre/Apple Books
+
+thì XMLSerializer có thể hoàn toàn chấp nhận được, miễn là integration tests xác nhận EPUB output vẫn hợp lệ.
+
+Nếu mục tiêu là:
+
+preserve EPUB source càng nguyên vẹn càng tốt
+
+## thì mới cần làm surgical string patch.
+
+Việc mình khuyên làm tiếp
+
+Đừng refactor architecture lúc này.
+
+Mình sẽ khóa các phần hiện tại bằng integration tests trước.
+
+Test matrix mình muốn có:
+
+1. plain <p>
+2. <p>Hello <b>world</b></p>
+3. <p>Hello <i>world</i></p>
+4. multiple fixes in one paragraph
+5. multiple fixes across paragraphs
+6. same word appearing multiple times
+7. fix crossing text nodes
+8. nested div/p
+9. ../ path
+10. ./ path
+11. URL-encoded path
+12. EPUB with XHTML namespace
+13. EPUB with XML declaration
+14. EPUB with cover
+15. repack → reopen with JSZip
+
+Đặc biệt test cuối:
+
+original EPUB
+↓
+parse
+↓
+detect errors
+↓
+apply fixes
+↓
+repack
+↓
+parse output EPUB again
+↓
+assert:
+✓ container exists
+✓ OPF exists
+✓ spine works
+✓ chapters exist
+✓ fixed words exist
+✓ EPUB remains readable
+
+Nếu bộ này pass thì mình sẽ coi phần EPUB core của project đã khá chắc.
+-Một việc nhỏ nên sửa ngay
+
+Chỉ còn:
+
+decodeURIComponent() trong resolveZipPath().
+
+Sau đó mình nghĩ không cần tiếp tục chase các edge case nhỏ nữa, mà nên chuyển sang integration testing với EPUB thực tế. Đây sẽ mang lại giá trị lớn hơn nhiều so với tiếp tục soi từng utility function.

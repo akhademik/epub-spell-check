@@ -428,7 +428,7 @@
       "source_file": "src/types/analysis.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "community_name": "analysis-core.ts",
       "norm_label": "analysis.ts",
       "id": "src_types_analysis"
@@ -441,7 +441,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "community_name": "analysis-core.ts",
       "norm_label": "checksettings",
       "id": "src_types_analysis_checksettings"
@@ -452,7 +452,7 @@
       "source_file": "src/types/state.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "community_name": "analysis-core.ts",
       "norm_label": "state.ts",
       "id": "src_types_state"
@@ -465,8 +465,8 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 0,
-      "community_name": "state.svelte.ts",
+      "community": 1,
+      "community_name": "analysis-core.ts",
       "norm_label": "readersettings",
       "id": "src_types_state_readersettings"
     },
@@ -478,8 +478,8 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 0,
-      "community_name": "state.svelte.ts",
+      "community": 1,
+      "community_name": "analysis-core.ts",
       "norm_label": "toastnotification",
       "id": "src_types_state_toastnotification"
     },
@@ -491,7 +491,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "community_name": "analysis-core.ts",
       "norm_label": "appstate",
       "id": "src_types_state_appstate"
@@ -1128,7 +1128,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "test_workflow.md",
       "id": "test_workflow"
@@ -1139,7 +1139,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "ebook-tools \u2014 full regression testing instruction",
       "id": "test_workflow_ebook_tools_full_regression_testing_instruction"
@@ -1150,7 +1150,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "1. nguyen tac test",
       "id": "test_workflow_1_nguy\u00ean_t\u1eafc_test"
@@ -1161,7 +1161,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L57",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "2. truoc khi viet test",
       "id": "test_workflow_2_tr\u01b0\u1edbc_khi_vi\u1ebft_test"
@@ -1172,7 +1172,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L98",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "3. test fixtures",
       "id": "test_workflow_3_test_fixtures"
@@ -1183,7 +1183,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L144",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "4. unit test",
       "id": "test_workflow_4_unit_test"
@@ -1194,7 +1194,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L222",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "5. integration test",
       "id": "test_workflow_5_integration_test"
@@ -1205,7 +1205,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L270",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "6. full end-to-end browser test",
       "id": "test_workflow_6_full_end_to_end_browser_test"
@@ -1216,7 +1216,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L306",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "7. txt \u2192 epub user flow",
       "id": "test_workflow_7_txt_epub_user_flow"
@@ -1227,7 +1227,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L342",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "8. markdown \u2192 epub user flow",
       "id": "test_workflow_8_markdown_epub_user_flow"
@@ -1238,7 +1238,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L376",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "9. epub \u2192 txt user flow",
       "id": "test_workflow_9_epub_txt_user_flow"
@@ -1249,7 +1249,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L408",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "10. pdf \u2192 epub user flow",
       "id": "test_workflow_10_pdf_epub_user_flow"
@@ -1260,7 +1260,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L443",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "11. epub editor e2e",
       "id": "test_workflow_11_epub_editor_e2e"
@@ -1271,7 +1271,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L475",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "12. epub cleaner e2e",
       "id": "test_workflow_12_epub_cleaner_e2e"
@@ -1282,7 +1282,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L506",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "13. epub validator e2e",
       "id": "test_workflow_13_epub_validator_e2e"
@@ -1293,7 +1293,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L533",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "14. image processing e2e",
       "id": "test_workflow_14_image_processing_e2e"
@@ -1304,7 +1304,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L556",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "15. worker testing",
       "id": "test_workflow_15_worker_testing"
@@ -1315,7 +1315,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L562",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "success",
       "id": "test_workflow_success"
@@ -1326,7 +1326,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L570",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "error",
       "id": "test_workflow_error"
@@ -1337,7 +1337,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L580",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "cancellation",
       "id": "test_workflow_cancellation"
@@ -1348,7 +1348,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L598",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "repeated execution",
       "id": "test_workflow_repeated_execution"
@@ -1359,7 +1359,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L611",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "16. regression test",
       "id": "test_workflow_16_regression_test"
@@ -1370,7 +1370,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L641",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "17. output file validation",
       "id": "test_workflow_17_output_file_validation"
@@ -1381,7 +1381,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L673",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "18. round-trip tests",
       "id": "test_workflow_18_round_trip_tests"
@@ -1392,7 +1392,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L726",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "19. large file / stress test",
       "id": "test_workflow_19_large_file_stress_test"
@@ -1403,7 +1403,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L762",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "20. ui testing",
       "id": "test_workflow_20_ui_testing"
@@ -1414,7 +1414,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L790",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "21. error testing",
       "id": "test_workflow_21_error_testing"
@@ -1425,7 +1425,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L822",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "22. test data should be realistic",
       "id": "test_workflow_22_test_data_should_be_realistic"
@@ -1436,7 +1436,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L846",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "23. test matrix",
       "id": "test_workflow_23_test_matrix"
@@ -1447,7 +1447,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L869",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "24. test naming",
       "id": "test_workflow_24_test_naming"
@@ -1458,7 +1458,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L895",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "25. do not over-mock",
       "id": "test_workflow_25_do_not_over_mock"
@@ -1469,7 +1469,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L926",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "26. after every refactor",
       "id": "test_workflow_26_after_every_refactor"
@@ -1480,7 +1480,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L954",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "27. test commands",
       "id": "test_workflow_27_test_commands"
@@ -1491,7 +1491,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L992",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "28. ci",
       "id": "test_workflow_28_ci"
@@ -1502,7 +1502,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L1017",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "29. bug discovery rule",
       "id": "test_workflow_29_bug_discovery_rule"
@@ -1513,7 +1513,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L1037",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "30. final qa report",
       "id": "test_workflow_30_final_qa_report"
@@ -1524,7 +1524,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L1043",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "summary",
       "id": "test_workflow_summary"
@@ -1535,7 +1535,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L1050",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "feature coverage",
       "id": "test_workflow_feature_coverage"
@@ -1546,7 +1546,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L1062",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "e2e coverage",
       "id": "test_workflow_e2e_coverage"
@@ -1557,7 +1557,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L1066",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "regressions",
       "id": "test_workflow_regressions"
@@ -1568,7 +1568,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L1080",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "remaining gaps",
       "id": "test_workflow_remaining_gaps"
@@ -1579,7 +1579,7 @@
       "source_file": "TEST_WORKFLOW.md",
       "source_location": "L1086",
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "EBOOK-TOOLS \u2014 FULL REGRESSION TESTING INSTRUCTION",
       "norm_label": "31. most important requirement",
       "id": "test_workflow_31_most_important_requirement"
@@ -2573,7 +2573,7 @@
       "source_file": "src/types/dictionary.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "types/dictionary.ts",
       "community_name": "analysis-core.ts",
       "id": "src_types_dictionary"
@@ -2586,7 +2586,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "dictionary",
       "community_name": "analysis-core.ts",
       "id": "src_types_dictionary_dictionary"
@@ -2599,9 +2599,9 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 9,
       "norm_label": "indexeddictionary",
-      "community_name": "analysis-core.ts",
+      "community_name": "utils/dictionary.ts",
       "id": "src_types_dictionary_indexeddictionary"
     },
     {
@@ -2612,7 +2612,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "dictionaries",
       "community_name": "analysis-core.ts",
       "id": "src_types_dictionary_dictionaries"
@@ -2625,7 +2625,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "dictionarystatus",
       "community_name": "analysis-core.ts",
       "id": "src_types_dictionary_dictionarystatus"
@@ -2662,7 +2662,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "textcontentblock",
       "community_name": "analysis-core.ts",
       "id": "src_types_epub_textcontentblock"
@@ -2686,7 +2686,7 @@
       "source_file": "src/types/errors.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "errors.ts",
       "community_name": "analysis-core.ts",
       "id": "src_types_errors"
@@ -2699,7 +2699,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "errortype",
       "community_name": "analysis-core.ts",
       "id": "src_types_errors_errortype"
@@ -2712,7 +2712,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "errorinstance",
       "community_name": "analysis-core.ts",
       "id": "src_types_errors_errorinstance"
@@ -2725,7 +2725,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "errorgroup",
       "community_name": "analysis-core.ts",
       "id": "src_types_errors_errorgroup"
@@ -2736,7 +2736,7 @@
       "source_file": "src/utils/analyzer.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "analyzer.ts",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analyzer"
@@ -2747,7 +2747,7 @@
       "source_file": "src/utils/analyzer.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "suggestioncache",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analyzer_suggestioncache"
@@ -2759,9 +2759,9 @@
       "source_location": "L10",
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
+      "community": 1,
       "norm_label": "clearsuggestioncache()",
-      "community_name": "AppStateModel",
+      "community_name": "analysis-core.ts",
       "id": "src_utils_analyzer_clearsuggestioncache"
     },
     {
@@ -2771,7 +2771,7 @@
       "source_location": "L14",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "findsuggestions()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analyzer_findsuggestions"
@@ -2783,7 +2783,7 @@
       "source_location": "L168",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "grouperrors()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analyzer_grouperrors"
@@ -2806,7 +2806,7 @@
       "source_location": "L11",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "buildindexeddictionary()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_dictionary_buildindexeddictionary"
@@ -2853,7 +2853,7 @@
       "source_file": "src/utils/filter.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "filter.ts",
       "community_name": "analysis-core.ts",
       "id": "src_utils_filter"
@@ -2865,7 +2865,7 @@
       "source_location": "L5",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "getfilterederrors()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_filter_getfilterederrors"
@@ -2876,7 +2876,7 @@
       "source_file": "src/workers/analysis.worker.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "analysis.worker.ts",
       "community_name": "analysis-core.ts",
       "id": "src_workers_analysis_worker"
@@ -2889,7 +2889,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "workermessage",
       "community_name": "analysis-core.ts",
       "id": "src_workers_analysis_worker_workermessage"
@@ -2900,7 +2900,7 @@
       "source_file": "tests/regression.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "regression.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_regression_test"
@@ -2911,7 +2911,7 @@
       "source_file": "tests/smoke.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "smoke.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_smoke_test"
@@ -2922,7 +2922,7 @@
       "source_file": "tests/unit/analyzer.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "analyzer.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_unit_analyzer_test"
@@ -2933,7 +2933,7 @@
       "source_file": "tests/unit/filter.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "filter.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_unit_filter_test"
@@ -2944,7 +2944,7 @@
       "source_file": "tests/unit/structured-clone.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "structured-clone.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_unit_structured_clone_test"
@@ -2955,7 +2955,7 @@
       "source_file": "tests/unit/user-workflow.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "user-workflow.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_unit_user_workflow_test"
@@ -2966,7 +2966,7 @@
       "source_file": "src/utils/analysis-core.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "analysis-core.ts",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core"
@@ -2977,7 +2977,7 @@
       "source_file": "src/utils/analysis-core.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "word_regex",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_word_regex"
@@ -2988,7 +2988,7 @@
       "source_file": "src/utils/analysis-core.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "analysis_chunk_size",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_analysis_chunk_size"
@@ -2999,7 +2999,7 @@
       "source_file": "src/utils/analysis-core.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "tone_style_pairs",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_tone_style_pairs"
@@ -3011,7 +3011,7 @@
       "source_location": "L26",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "getalternatetonestyle()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_getalternatetonestyle"
@@ -3023,7 +3023,7 @@
       "source_location": "L34",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "isfrontvowel()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_isfrontvowel"
@@ -3035,7 +3035,7 @@
       "source_location": "L43",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "isy()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_isy"
@@ -3047,7 +3047,7 @@
       "source_location": "L53",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "geterrortype()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_geterrortype"
@@ -3059,7 +3059,7 @@
       "source_location": "L180",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "levenshteindistance()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_levenshteindistance"
@@ -3071,7 +3071,7 @@
       "source_location": "L211",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "getbaseword()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_getbaseword"
@@ -3083,7 +3083,7 @@
       "source_location": "L221",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "matchcase()",
       "community_name": "analysis-core.ts",
       "id": "src_utils_analysis_core_matchcase"
@@ -3094,7 +3094,7 @@
       "source_file": "tests/unit/analysis-core.test.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 1,
       "norm_label": "analysis-core.test.ts",
       "community_name": "analysis-core.ts",
       "id": "tests_unit_analysis_core_test"
@@ -3118,8 +3118,8 @@
       "_origin": "ast",
       "community": 0,
       "norm_label": "state.svelte.ts",
-      "id": "src_state_svelte",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_state_svelte"
     },
     {
       "label": "STORAGE_KEYS",
@@ -3129,8 +3129,8 @@
       "_origin": "ast",
       "community": 0,
       "norm_label": "storage_keys",
-      "id": "src_state_svelte_storage_keys",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_state_svelte_storage_keys"
     },
     {
       "label": "PersistedContainer",
@@ -3142,8 +3142,8 @@
       "_origin": "ast",
       "community": 0,
       "norm_label": "persistedcontainer",
-      "id": "src_state_svelte_persistedcontainer",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_state_svelte_persistedcontainer"
     },
     {
       "label": "loadStorage()",
@@ -3154,8 +3154,8 @@
       "_origin": "ast",
       "community": 0,
       "norm_label": "loadstorage()",
-      "id": "src_state_svelte_loadstorage",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_state_svelte_loadstorage"
     },
     {
       "label": "saveStorage()",
@@ -3166,8 +3166,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": "savestorage()",
-      "id": "src_state_svelte_savestorage",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_savestorage"
     },
     {
       "label": "sanitizeFilename()",
@@ -3178,8 +3178,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": "sanitizefilename()",
-      "id": "src_state_svelte_sanitizefilename",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_sanitizefilename"
     },
     {
       "label": "AppStateModel",
@@ -3191,8 +3191,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": "appstatemodel",
-      "id": "src_state_svelte_appstatemodel",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel"
     },
     {
       "label": ".init()",
@@ -3203,8 +3203,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".init()",
-      "id": "src_state_svelte_appstatemodel_init",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_init"
     },
     {
       "label": ".showToast()",
@@ -3215,8 +3215,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".showtoast()",
-      "id": "src_state_svelte_appstatemodel_showtoast",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_showtoast"
     },
     {
       "label": ".removeToast()",
@@ -3227,8 +3227,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".removetoast()",
-      "id": "src_state_svelte_appstatemodel_removetoast",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_removetoast"
     },
     {
       "label": ".openModal()",
@@ -3239,8 +3239,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".openmodal()",
-      "id": "src_state_svelte_appstatemodel_openmodal",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_openmodal"
     },
     {
       "label": ".closeModal()",
@@ -3251,8 +3251,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".closemodal()",
-      "id": "src_state_svelte_appstatemodel_closemodal",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_closemodal"
     },
     {
       "label": ".toggleCheckSetting()",
@@ -3263,8 +3263,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".togglechecksetting()",
-      "id": "src_state_svelte_appstatemodel_togglechecksetting",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_togglechecksetting"
     },
     {
       "label": ".setFontSize()",
@@ -3275,8 +3275,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".setfontsize()",
-      "id": "src_state_svelte_appstatemodel_setfontsize",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_setfontsize"
     },
     {
       "label": ".toggleFontFamily()",
@@ -3287,8 +3287,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".togglefontfamily()",
-      "id": "src_state_svelte_appstatemodel_togglefontfamily",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_togglefontfamily"
     },
     {
       "label": ".selectGroup()",
@@ -3299,8 +3299,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".selectgroup()",
-      "id": "src_state_svelte_appstatemodel_selectgroup",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_selectgroup"
     },
     {
       "label": ".navigateGroup()",
@@ -3311,8 +3311,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".navigategroup()",
-      "id": "src_state_svelte_appstatemodel_navigategroup",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_navigategroup"
     },
     {
       "label": ".navigateInstance()",
@@ -3323,8 +3323,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".navigateinstance()",
-      "id": "src_state_svelte_appstatemodel_navigateinstance",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_navigateinstance"
     },
     {
       "label": ".addWhitelistWord()",
@@ -3335,8 +3335,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".addwhitelistword()",
-      "id": "src_state_svelte_appstatemodel_addwhitelistword",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_addwhitelistword"
     },
     {
       "label": ".removeWhitelistWord()",
@@ -3347,8 +3347,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".removewhitelistword()",
-      "id": "src_state_svelte_appstatemodel_removewhitelistword",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_removewhitelistword"
     },
     {
       "label": ".clearWhitelist()",
@@ -3359,8 +3359,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".clearwhitelist()",
-      "id": "src_state_svelte_appstatemodel_clearwhitelist",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_clearwhitelist"
     },
     {
       "label": ".importWhitelist()",
@@ -3371,8 +3371,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".importwhitelist()",
-      "id": "src_state_svelte_appstatemodel_importwhitelist",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_importwhitelist"
     },
     {
       "label": ".exportWhitelist()",
@@ -3383,8 +3383,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".exportwhitelist()",
-      "id": "src_state_svelte_appstatemodel_exportwhitelist",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_exportwhitelist"
     },
     {
       "label": ".ignoreAndAdvance()",
@@ -3395,8 +3395,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".ignoreandadvance()",
-      "id": "src_state_svelte_appstatemodel_ignoreandadvance",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_ignoreandadvance"
     },
     {
       "label": ".quickIgnore()",
@@ -3407,8 +3407,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".quickignore()",
-      "id": "src_state_svelte_appstatemodel_quickignore",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_quickignore"
     },
     {
       "label": ".exportErrors()",
@@ -3419,8 +3419,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".exporterrors()",
-      "id": "src_state_svelte_appstatemodel_exporterrors",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_exporterrors"
     },
     {
       "label": ".copyText()",
@@ -3431,8 +3431,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".copytext()",
-      "id": "src_state_svelte_appstatemodel_copytext",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_copytext"
     },
     {
       "label": ".getInstanceKey()",
@@ -3443,8 +3443,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".getinstancekey()",
-      "id": "src_state_svelte_appstatemodel_getinstancekey",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_getinstancekey"
     },
     {
       "label": ".applyFixToInstance()",
@@ -3455,8 +3455,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".applyfixtoinstance()",
-      "id": "src_state_svelte_appstatemodel_applyfixtoinstance",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_applyfixtoinstance"
     },
     {
       "label": ".applyFixToAllInstances()",
@@ -3467,8 +3467,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".applyfixtoallinstances()",
-      "id": "src_state_svelte_appstatemodel_applyfixtoallinstances",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_applyfixtoallinstances"
     },
     {
       "label": ".undoFix()",
@@ -3479,8 +3479,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".undofix()",
-      "id": "src_state_svelte_appstatemodel_undofix",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_undofix"
     },
     {
       "label": ".exportFixedEpub()",
@@ -3491,8 +3491,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".exportfixedepub()",
-      "id": "src_state_svelte_appstatemodel_exportfixedepub",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_exportfixedepub"
     },
     {
       "label": ".resetApp()",
@@ -3503,8 +3503,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".resetapp()",
-      "id": "src_state_svelte_appstatemodel_resetapp",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_resetapp"
     },
     {
       "label": ".handleFile()",
@@ -3515,8 +3515,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".handlefile()",
-      "id": "src_state_svelte_appstatemodel_handlefile",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_handlefile"
     },
     {
       "label": "appState",
@@ -3526,8 +3526,8 @@
       "_origin": "ast",
       "community": 0,
       "norm_label": "appstate",
-      "id": "src_state_svelte_appstate",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_state_svelte_appstate"
     },
     {
       "label": "epub-parser.ts",
@@ -3537,8 +3537,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "epub-parser.ts",
-      "id": "src_utils_epub_parser",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_parser"
     },
     {
       "label": "LEAF_BLOCK_SELECTOR",
@@ -3548,8 +3548,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "leaf_block_selector",
-      "id": "src_utils_epub_parser_leaf_block_selector",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_parser_leaf_block_selector"
     },
     {
       "label": "extractLeafTextElements()",
@@ -3560,8 +3560,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "extractleaftextelements()",
-      "id": "src_utils_epub_parser_extractleaftextelements",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_parser_extractleaftextelements"
     },
     {
       "label": "parseEpub()",
@@ -3572,8 +3572,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "parseepub()",
-      "id": "src_utils_epub_parser_parseepub",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_parser_parseepub"
     },
     {
       "label": "epub-writer.ts",
@@ -3583,8 +3583,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "epub-writer.ts",
-      "id": "src_utils_epub_writer",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_writer"
     },
     {
       "label": "FixInstruction",
@@ -3596,8 +3596,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "fixinstruction",
-      "id": "src_utils_epub_writer_fixinstruction",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_writer_fixinstruction"
     },
     {
       "label": "locateOffsetInBlock()",
@@ -3608,8 +3608,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "locateoffsetinblock()",
-      "id": "src_utils_epub_writer_locateoffsetinblock",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_writer_locateoffsetinblock"
     },
     {
       "label": "applyFixesToDocument()",
@@ -3620,8 +3620,8 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "applyfixestodocument()",
-      "id": "src_utils_epub_writer_applyfixestodocument",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_writer_applyfixestodocument"
     },
     {
       "label": "applyFixesAndRepack()",
@@ -3632,8 +3632,19 @@
       "_origin": "ast",
       "community": 7,
       "norm_label": "applyfixesandrepack()",
-      "id": "src_utils_epub_writer_applyfixesandrepack",
-      "community_name": "epub-parser.ts"
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_writer_applyfixesandrepack"
+    },
+    {
+      "label": "leaf-extractor.test.ts",
+      "file_type": "code",
+      "source_file": "tests/unit/leaf-extractor.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "leaf-extractor.test.ts",
+      "community_name": "epub-parser.ts",
+      "id": "tests_unit_leaf_extractor_test"
     },
     {
       "label": "path.ts",
@@ -3662,7 +3673,7 @@
       "label": "normalizeSegments()",
       "file_type": "code",
       "source_file": "src/utils/path.ts",
-      "source_location": "L23",
+      "source_location": "L29",
       "_callable": true,
       "_origin": "ast",
       "community": 7,
@@ -3671,14 +3682,14 @@
       "community_name": "epub-parser.ts"
     },
     {
-      "label": "leaf-extractor.test.ts",
+      "label": "epub-roundtrip.test.ts",
       "file_type": "code",
-      "source_file": "tests/unit/leaf-extractor.test.ts",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
       "source_location": "L1",
       "_origin": "ast",
       "community": 7,
-      "norm_label": "leaf-extractor.test.ts",
-      "id": "tests_unit_leaf_extractor_test",
+      "norm_label": "epub-roundtrip.test.ts",
+      "id": "tests_unit_epub_roundtrip_test",
       "community_name": "epub-parser.ts"
     },
     {
@@ -9789,6 +9800,18 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_roundtrip_test",
+      "target": "src_utils_epub_parser"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/unit/leaf-extractor.test.ts",
       "source_location": "L3",
       "weight": 1.0,
@@ -9858,6 +9881,18 @@
       "target": "src_utils_path_resolvezippath"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_roundtrip_test",
+      "target": "src_utils_epub_parser_parseepub"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/epub-writer.ts",
@@ -9902,6 +9937,30 @@
       "target": "src_utils_epub_writer_locateoffsetinblock"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_roundtrip_test",
+      "target": "src_utils_epub_writer"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_roundtrip_test",
+      "target": "src_utils_epub_writer_fixinstruction"
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -9926,10 +9985,22 @@
       "target": "src_utils_epub_writer_applyfixestodocument"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-roundtrip.test.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_roundtrip_test",
+      "target": "src_utils_epub_writer_applyfixesandrepack"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/path.ts",
-      "source_location": "L23",
+      "source_location": "L29",
       "weight": 1.0,
       "_origin": "ast",
       "confidence_score": 1.0,
@@ -9964,7 +10035,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/path.ts",
-      "source_location": "L16",
+      "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
       "confidence_score": 1.0,
@@ -9985,5 +10056,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "e3aae47e9c4563c6e6f5be7601b946074fc3cf9d"
+  "built_at_commit": "3df07b020b0b8b98bc7899d2d8a3c7113b7b5d87"
 }

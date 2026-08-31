@@ -38,4 +38,13 @@ describe("Path Resolution Utility", () => {
       "Images/cover.jpg"
     )
   })
+
+  it("handles URL-encoded path characters (%20, Vietnamese characters)", () => {
+    expect(resolveZipPath("OEBPS/Text", "Ch%C6%B0%C6%A1ng%201.xhtml")).toBe(
+      "OEBPS/Text/Chương 1.xhtml"
+    )
+    expect(resolveZipPath("OEBPS", "../Images/my%20cover.jpg")).toBe(
+      "Images/my cover.jpg"
+    )
+  })
 })

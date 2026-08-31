@@ -8,8 +8,14 @@
  * resolveZipPath("", "content.opf") -> "content.opf"
  */
 export function resolveZipPath(baseDir: string, relativePath: string): string {
-  const cleanRelative = relativePath.trim().replace(/\\/g, "/")
+  let cleanRelative = relativePath.trim().replace(/\\/g, "/")
   if (!cleanRelative) return baseDir
+
+  try {
+    cleanRelative = decodeURIComponent(cleanRelative)
+  } catch {
+    // Keep original path if malformed URI encoding
+  }
 
   // If path starts with leading slash, treat as root-relative in zip
   if (cleanRelative.startsWith("/")) {
