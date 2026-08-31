@@ -17,6 +17,7 @@ acmonica
 acquy
 acre
 acten
+actisô
 ad
 admin
 adn
@@ -51,6 +52,7 @@ amin
 amino
 aminoacid
 amip
+amôniăc
 ampe
 ampli
 an
@@ -699,6 +701,7 @@ caosu
 cáp
 cạp
 cara
+caramen
 carat
 caravat
 carbonat
@@ -716,6 +719,7 @@ catket
 catôt
 catsê
 catxet
+cátxét
 cau
 càu
 cáu
@@ -728,6 +732,7 @@ cày
 cáy
 cạy
 cảy
+cazắc
 cắc
 cặc
 căm
@@ -787,6 +792,7 @@ cellulos
 cen
 centi
 centimet
+centimét
 ceo
 ch
 cha
@@ -2289,6 +2295,7 @@ file
 fin
 fix
 fizê
+flanen
 flo
 florua
 fluor
@@ -2784,6 +2791,7 @@ hại
 hải
 haiz
 Haizz
+halôgien
 ham
 hàm
 hám
@@ -3255,6 +3263,7 @@ ion
 ios
 iot
 iota
+iôn
 iốt
 ipad
 iphone
@@ -3677,6 +3686,9 @@ kilomet
 kilooat
 kilô
 kilôgam
+kilôgram
+kilômét
+kilômet
 kim
 kìm
 kỉm
@@ -4526,6 +4538,7 @@ miều
 miểu
 miễu
 mili
+miligram
 milimét
 milli
 mim
@@ -4639,6 +4652,7 @@ một
 môtip
 môtô
 môtơ
+môzaic
 mơ
 mớ
 mờ
@@ -5995,6 +6009,7 @@ phào
 pháo
 phạo
 pháp
+pharaon
 phát
 phạt
 phau
@@ -6099,6 +6114,7 @@ phoi
 phòi
 phom
 phòm
+phomat
 phon
 phón
 phong
@@ -6132,6 +6148,7 @@ phộng
 phốp
 phốt
 phôtô
+phôtôcopy
 phơ
 phớ
 phờ
@@ -6670,6 +6687,7 @@ rồ
 rổ
 rỗ
 rộ
+rôbốt
 rốc
 rộc
 rối
@@ -8549,6 +8567,7 @@ vính
 vĩnh
 vịnh
 viola
+viôlông
 vip
 virus
 visa

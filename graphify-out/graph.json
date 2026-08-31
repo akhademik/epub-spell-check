@@ -3453,8 +3453,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "errorlist.svelte",
-      "id": "src_components_errorlist",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_components_errorlist"
     },
     {
       "label": "if()",
@@ -3465,8 +3465,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "if()",
-      "id": "src_components_errorlist_if",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_components_errorlist_if"
     },
     {
       "label": "ToastContainer.svelte",
@@ -3476,8 +3476,68 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "toastcontainer.svelte",
-      "id": "src_components_toastcontainer",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_components_toastcontainer"
+    },
+    {
+      "label": "epub-writer.ts",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "epub-writer.ts",
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_writer"
+    },
+    {
+      "label": "FixInstruction",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L5",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "fixinstruction",
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_writer_fixinstruction"
+    },
+    {
+      "label": "locateOffsetInBlock()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L17",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "locateoffsetinblock()",
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_writer_locateoffsetinblock"
+    },
+    {
+      "label": "applyFixesToDocument()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L72",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "applyfixestodocument()",
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_writer_applyfixestodocument"
+    },
+    {
+      "label": "applyFixesAndRepack()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L160",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "applyfixesandrepack()",
+      "community_name": "epub-parser.ts",
+      "id": "src_utils_epub_writer_applyfixesandrepack"
     },
     {
       "label": "constants.ts",
@@ -3654,66 +3714,6 @@
       "norm_label": "special_character_regex",
       "id": "src_constants_special_character_regex",
       "community_name": "state.svelte.ts"
-    },
-    {
-      "label": "epub-writer.ts",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "epub-writer.ts",
-      "id": "src_utils_epub_writer",
-      "community_name": "epub-parser.ts"
-    },
-    {
-      "label": "FixInstruction",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L5",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "fixinstruction",
-      "id": "src_utils_epub_writer_fixinstruction",
-      "community_name": "epub-parser.ts"
-    },
-    {
-      "label": "locateOffsetInBlock()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L17",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "locateoffsetinblock()",
-      "id": "src_utils_epub_writer_locateoffsetinblock",
-      "community_name": "epub-parser.ts"
-    },
-    {
-      "label": "applyFixesToDocument()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L72",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "applyfixestodocument()",
-      "id": "src_utils_epub_writer_applyfixestodocument",
-      "community_name": "epub-parser.ts"
-    },
-    {
-      "label": "applyFixesAndRepack()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L160",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "norm_label": "applyfixesandrepack()",
-      "id": "src_utils_epub_writer_applyfixesandrepack",
-      "community_name": "epub-parser.ts"
     }
   ],
   "links": [
@@ -9883,6 +9883,74 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L160",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer",
+      "target": "src_utils_epub_writer_applyfixesandrepack"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L72",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer",
+      "target": "src_utils_epub_writer_applyfixestodocument"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer",
+      "target": "src_utils_epub_writer_fixinstruction"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer",
+      "target": "src_utils_epub_writer_locateoffsetinblock"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L111",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer_applyfixestodocument",
+      "target": "src_utils_epub_writer_locateoffsetinblock"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L200",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer_applyfixesandrepack",
+      "target": "src_utils_epub_writer_applyfixestodocument"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/constants.ts",
       "source_location": "L49",
       "weight": 1.0,
@@ -10044,76 +10112,8 @@
       "confidence_score": 1.0,
       "source": "src_constants",
       "target": "src_constants_whitelist_word_length_limit"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L160",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer",
-      "target": "src_utils_epub_writer_applyfixesandrepack"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L72",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer",
-      "target": "src_utils_epub_writer_applyfixestodocument"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer",
-      "target": "src_utils_epub_writer_fixinstruction"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer",
-      "target": "src_utils_epub_writer_locateoffsetinblock"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L111",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer_applyfixestodocument",
-      "target": "src_utils_epub_writer_locateoffsetinblock"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L200",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer_applyfixesandrepack",
-      "target": "src_utils_epub_writer_applyfixestodocument"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d9ea4aa5064a8993f54f1b2c41f3b514e42a7db1"
+  "built_at_commit": "d686b96c8c462d7190fba9eded2a36bb70d4d354"
 }
