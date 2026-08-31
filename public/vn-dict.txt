@@ -176,6 +176,7 @@ bải
 balat
 balê
 balo
+balô
 balông
 bam
 bàm
@@ -562,6 +563,7 @@ bùm
 bũm
 bụm
 bủm
+búm
 bùn
 bún
 bủn
@@ -4985,6 +4987,7 @@ ngấy
 ngầy
 ngậy
 ngẹt
+ngếch
 ngh
 nghe
 nghè
@@ -5648,6 +5651,7 @@ nít
 nịt
 nitơ
 nitrat
+nitrát
 niu
 níu
 nịu
@@ -5919,6 +5923,7 @@ ozone
 ôxi
 ôxít
 ôxy
+ôzôn
 ơ
 ớ
 ờ
@@ -8494,6 +8499,7 @@ vất
 vật
 vấu
 vẩu
+vầu
 vây
 vấy
 vầy
@@ -8751,6 +8757,7 @@ xảo
 xáp
 xạp
 xát
+xạt
 xatanh
 xàu
 xáu
