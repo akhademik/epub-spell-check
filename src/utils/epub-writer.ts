@@ -18,21 +18,13 @@ export function locateOffsetInBlock(
   blockElement: Element,
   globalOffset: number
 ): { textNode: Text; localOffset: number } | null {
-  const rawText = (blockElement.textContent || "").normalize("NFC")
-  const trimmed = rawText.trim()
-  if (!trimmed) return null
-
-  // Calculate leading whitespace count trimmed by epub-parser
-  const leadingTrimCount = rawText.indexOf(trimmed)
-  const actualRawOffset = globalOffset + leadingTrimCount
-
   const doc = blockElement.ownerDocument || document
   const walker = doc.createTreeWalker(blockElement, NodeFilter.SHOW_TEXT, null)
 
   const textNodes: Text[] = []
   let n = walker.nextNode()
   while (n) {
-    // Normalize text node value to NFC in DOM if needed
+    // Normalize text node value to NFC in DOM first
     const textNode = n as Text
     if (textNode.nodeValue) {
       textNode.nodeValue = textNode.nodeValue.normalize("NFC")
@@ -40,6 +32,15 @@ export function locateOffsetInBlock(
     textNodes.push(textNode)
     n = walker.nextNode()
   }
+
+  // Calculate rawText and trimmed offset on the fully normalized DOM
+  const rawText = blockElement.textContent || ""
+  const trimmed = rawText.trim()
+  if (!trimmed) return null
+
+  // Calculate leading whitespace count trimmed by epub-parser
+  const leadingTrimCount = rawText.indexOf(trimmed)
+  const actualRawOffset = globalOffset + leadingTrimCount
 
   let accumulated = 0
   for (let i = 0; i < textNodes.length; i++) {

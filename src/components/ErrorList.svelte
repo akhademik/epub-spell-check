@@ -3,7 +3,6 @@
   import type { ErrorGroup, ErrorType } from "../types/errors"
 
   let searchQuery = $state("")
-  let sortMode = $state<"count" | "az" | "za">("count")
   let typeFilter = $state<"all" | ErrorType>("all")
   let visibleCount = $state(30)
 
@@ -60,19 +59,8 @@
       )
     }
 
-    // Sort order
-    if (sortMode === "az") {
-      list.sort((a, b) =>
-        a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
-      )
-    } else if (sortMode === "za") {
-      list.sort((a, b) =>
-        b.word.localeCompare(a.word, "vi", { sensitivity: "base" })
-      )
-    } else {
-      // Default sort by frequency count descending
-      list.sort((a, b) => b.count - a.count)
-    }
+    // Default sort by frequency count descending
+    list.sort((a, b) => b.count - a.count)
 
     return list
   })
@@ -194,47 +182,13 @@
           Chính tả
         </button>
       </div>
-
-      <!-- Sort buttons -->
-      <div class="flex items-center gap-1 bg-slate-950/60 p-0.5 rounded-lg border border-slate-800 ml-auto">
-        <button
-          type="button"
-          onclick={() => { sortMode = "count"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-md font-medium text-[11px] transition-colors {sortMode === 'count'
-            ? 'bg-blue-600 text-white font-bold'
-            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
-          title="Sắp xếp theo số lần xuất hiện giảm dần"
-        >
-          Số lần
-        </button>
-        <button
-          type="button"
-          onclick={() => { sortMode = "az"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-md font-medium text-[11px] transition-colors {sortMode === 'az'
-            ? 'bg-blue-600 text-white font-bold'
-            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
-          title="Sắp xếp theo thứ tự A → Z"
-        >
-          A → Z
-        </button>
-        <button
-          type="button"
-          onclick={() => { sortMode = "za"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-md font-medium text-[11px] transition-colors {sortMode === 'za'
-            ? 'bg-blue-600 text-white font-bold'
-            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
-          title="Sắp xếp theo thứ tự Z → A"
-        >
-          Z → A
-        </button>
-      </div>
     </div>
   </div>
 
   <!-- Error Items List with Strictly Bounded Height, Soft Scrolling, and Bottom Padding -->
   <div class="relative flex-1 min-h-0 overflow-hidden">
     <div
-      class="h-full overflow-y-auto p-3 pb-24 space-y-2 overscroll-contain scroll-smooth"
+      class="h-full overflow-y-auto p-3 pb-24 space-y-1.5 overscroll-contain scroll-smooth"
       onscroll={handleScroll}
       tabindex="-1"
     >
@@ -258,34 +212,27 @@
             <button
               type="button"
               onclick={() => handleSelect(group)}
-              class="flex items-center justify-between flex-grow px-3 py-2.5 text-left rounded-l-xl focus:outline-none min-w-0"
+              class="flex items-center justify-between flex-grow px-3 py-2 text-left rounded-l-xl focus:outline-none min-w-0"
             >
-              <div class="w-full">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
-                  <span class="font-serif text-base font-bold truncate {isSelected ? 'text-blue-200' : 'text-slate-200'}">
-                    {group.word}
+              <div class="w-full flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
+                <span class="font-serif text-base font-bold truncate {isSelected ? 'text-blue-200' : 'text-slate-200'}">
+                  {group.word}
+                </span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800/90 text-slate-400 border border-slate-700/60 shrink-0 font-medium">
+                  {getBadgeLabel(group.type)}
+                </span>
+                {#if group.contexts.some((ctx) => ctx.resolved || appState.appliedFixes.has(appState.getInstanceKey(ctx)))}
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Đang sửa</span>
                   </span>
-                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800/90 text-slate-400 border border-slate-700/60 shrink-0 font-medium">
-                    {getBadgeLabel(group.type)}
-                  </span>
-                  {#if group.contexts.some((ctx) => ctx.resolved || appState.appliedFixes.has(appState.getInstanceKey(ctx)))}
-                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>Đang sửa</span>
-                    </span>
-                  {/if}
-                  <span class="ml-auto bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">
-                    {group.contexts.length}
-                  </span>
-                </div>
-                {#if typeFilter === "all"}
-                  <div class="mt-0.5 text-[11px] truncate text-slate-400">
-                    {group.reason}
-                  </div>
                 {/if}
+                <span class="ml-auto bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">
+                  {group.contexts.length}
+                </span>
               </div>
             </button>
 

@@ -56,7 +56,7 @@ export const MAX_SUGGESTION_COUNT = 4
 /**
  * Maximum number of toast notifications displayed at once.
  */
-export const MAX_TOASTS_DISPLAYED = 3
+export const MAX_TOASTS_DISPLAYED = 2
 
 /**
  * Time in milliseconds before a toast notification automatically dismisses.
