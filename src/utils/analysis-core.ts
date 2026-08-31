@@ -119,7 +119,7 @@ export function getErrorType(
     return null
   }
 
-  // 5. Vietnamese Typo & Spelling Rules & Vocabulary
+  // 7. Vietnamese Typo & Spelling Rules & Vocabulary
   if (checkSettings.vietnamese) {
     if (/(aa|ee|oo|uu|ii|dd|js|kx|wt)$/i.test(lower)) {
       return { type: "Typo", reason: "Gõ máy (Typo)" }
@@ -210,4 +210,37 @@ export function levenshteinDistance(a: string, b: string): number {
 
 export function getBaseWord(word: string): string {
   return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+}
+
+/**
+ * Adapt the casing of replacementWord to match the casing style of originalWord:
+ * - ALL UPPERCASE: "HELLO" -> "WORLD"
+ * - TitleCase: "Hello" -> "World"
+ * - lowercase: "hello" -> "world"
+ */
+export function matchCase(
+  originalWord: string,
+  replacementWord: string
+): string {
+  if (!originalWord || !replacementWord) return replacementWord
+
+  const isUpper =
+    originalWord === originalWord.toUpperCase() &&
+    originalWord !== originalWord.toLowerCase()
+  if (isUpper) {
+    return replacementWord.toUpperCase()
+  }
+
+  const isTitle =
+    originalWord.length > 0 &&
+    originalWord[0] === originalWord[0].toUpperCase() &&
+    originalWord.slice(1) === originalWord.slice(1).toLowerCase()
+  if (isTitle) {
+    return (
+      replacementWord.charAt(0).toUpperCase() +
+      replacementWord.slice(1).toLowerCase()
+    )
+  }
+
+  return replacementWord
 }

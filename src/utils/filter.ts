@@ -17,6 +17,9 @@ export function getFilteredErrors(
   )
 
   return allDetectedErrors.filter((group) => {
+    // 0. Resolved errors (already fixed by user)
+    if (group.resolved) return false
+
     const lowerWord = group.word.toLowerCase()
 
     // 1. Whitelist filter (always filters out ignored words)

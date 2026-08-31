@@ -6,7 +6,7 @@ export const FILE_SIZE_LIMIT_MB = 50
 /**
  * Current version for dictionary files (incremented to bust stale IndexedDB cache).
  */
-export const DICTIONARY_VERSION = "v12"
+export const DICTIONARY_VERSION = "v18"
 
 /**
  * Maximum file size limit for uploads in bytes.
@@ -56,7 +56,7 @@ export const MAX_SUGGESTION_COUNT = 4
 /**
  * Maximum number of toast notifications displayed at once.
  */
-export const MAX_TOASTS_DISPLAYED = 3
+export const MAX_TOASTS_DISPLAYED = 2
 
 /**
  * Time in milliseconds before a toast notification automatically dismisses.

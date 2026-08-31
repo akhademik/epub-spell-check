@@ -6,7 +6,8 @@ import {
   getErrorType,
   isFrontVowel,
   isY,
-  levenshteinDistance
+  levenshteinDistance,
+  matchCase
 } from "../../src/utils/analysis-core"
 
 describe("Analysis Core", () => {
@@ -206,6 +207,23 @@ describe("Analysis Core", () => {
     it("should extract base unaccented word", () => {
       expect(getBaseWord("Tiếng")).toBe("Tieng")
       expect(getBaseWord("Việt")).toBe("Viet")
+    })
+  })
+
+  describe("Smart Case Matching (matchCase)", () => {
+    it("preserves TitleCase when original word is capitalized", () => {
+      expect(matchCase("Alexandaer", "alexander")).toBe("Alexander")
+      expect(matchCase("Việt", "việt")).toBe("Việt")
+    })
+
+    it("preserves UPPERCASE when original word is ALL CAPS", () => {
+      expect(matchCase("ALEXANDAER", "alexander")).toBe("ALEXANDER")
+      expect(matchCase("HELLLO", "hello")).toBe("HELLO")
+    })
+
+    it("preserves lowercase when original word is lowercase", () => {
+      expect(matchCase("alexandaer", "alexander")).toBe("alexander")
+      expect(matchCase("alexandaer", "Alexander")).toBe("Alexander")
     })
   })
 })

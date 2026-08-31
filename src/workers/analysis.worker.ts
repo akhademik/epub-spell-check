@@ -53,8 +53,10 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         if (errorInfo) {
           const startIndex = match.index
           const endIndex = startIndex + originalWord.length
+          const instanceId = `${paragraph.id || paragraphIndex}-${startIndex}-${endIndex}`
 
           allErrors.push({
+            id: instanceId,
             word: originalWord,
             originalWord,
             context: {
@@ -63,7 +65,9 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
               endIndex,
               matchIndex: startIndex,
               chapterIndex: chapterStartIndex,
-              paragraphIndex
+              paragraphIndex,
+              filePath: paragraph.filePath,
+              blockId: paragraph.id
             },
             type: errorInfo.type,
             reason: errorInfo.reason

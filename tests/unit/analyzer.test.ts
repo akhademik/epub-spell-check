@@ -77,5 +77,11 @@ describe("Analyzer Module", () => {
       const suggestions = findSuggestions("sciense", mockDictionaries)
       expect(suggestions).toContain("science")
     })
+
+    it("should return cached results on repeated calls", () => {
+      const first = findSuggestions("họp", mockDictionaries)
+      const second = findSuggestions("họp", mockDictionaries)
+      expect(first).toBe(second)
+    })
   })
 })

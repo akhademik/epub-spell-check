@@ -17,6 +17,7 @@ acmonica
 acquy
 acre
 acten
+actisô
 ad
 admin
 adn
@@ -46,11 +47,13 @@ am
 amen
 amian
 amib
+amidan
 amiđan
 amin
 amino
 aminoacid
 amip
+amôniăc
 ampe
 ampli
 an
@@ -173,6 +176,7 @@ bải
 balat
 balê
 balo
+balô
 balông
 bam
 bàm
@@ -207,6 +211,7 @@ bar
 barem
 baren
 barie
+barit
 basa
 base
 basoi
@@ -403,6 +408,7 @@ biptêt
 birr
 bis
 bismut
+bisulphat
 bit
 bít
 bịt
@@ -557,6 +563,7 @@ bùm
 bũm
 bụm
 bủm
+búm
 bùn
 bún
 bủn
@@ -629,7 +636,6 @@ bửu
 bxl
 byte
 c
-c.i.f
 ca
 cà
 cá
@@ -699,6 +705,7 @@ caosu
 cáp
 cạp
 cara
+caramen
 carat
 caravat
 carbonat
@@ -716,6 +723,7 @@ catket
 catôt
 catsê
 catxet
+cátxét
 cau
 càu
 cáu
@@ -728,6 +736,7 @@ cày
 cáy
 cạy
 cảy
+cazắc
 cắc
 cặc
 căm
@@ -744,7 +753,6 @@ cắng
 cẳng
 cẵng
 căngtin
-cẳón
 cắp
 cặp
 cắt
@@ -787,6 +795,7 @@ cellulos
 cen
 centi
 centimet
+centimét
 ceo
 ch
 cha
@@ -827,7 +836,6 @@ cháo
 chão
 chạo
 chảo
-chạồm
 chạp
 chat
 chát
@@ -1185,7 +1193,6 @@ chựng
 chước
 chược
 chưởi
-chưởì
 chườm
 chương
 chướng
@@ -1208,6 +1215,7 @@ clin
 clinke
 clip
 clo
+clohidric
 clohiđric
 clohydric
 clorat
@@ -1248,6 +1256,7 @@ cỏm
 combo
 comlê
 commăng
+commốt
 compa
 con
 còn
@@ -1438,11 +1447,9 @@ cửng
 cước
 cược
 cưới
-cướì
 cười
 cưởi
 cưỡi
-cưỡì
 cườm
 cương
 cướng
@@ -1488,7 +1495,6 @@ dang
 dàng
 dáng
 dạng
-dángdại
 danh
 dành
 dảnh
@@ -1616,7 +1622,6 @@ diện
 diềng
 diếp
 diệp
-dịệp
 diết
 diệt
 diêu
@@ -1624,6 +1629,7 @@ diếu
 diều
 diễu
 diệu
+digan
 dim
 dìm
 dím
@@ -1788,7 +1794,6 @@ dửng
 dựng
 dược
 dưới
-dướỉ
 dượi
 dướn
 dương
@@ -1806,7 +1811,6 @@ dynamit
 dyne
 dzách
 đ
-đ/c
 đa
 đà
 đá
@@ -2269,9 +2273,7 @@ event
 êtô
 êu
 f
-f.o.b
 fa
-facebook
 fan
 fara
 fát
@@ -2289,6 +2291,7 @@ file
 fin
 fix
 fizê
+flanen
 flo
 florua
 fluor
@@ -2314,7 +2317,6 @@ fuốc
 fut
 fuy
 g
-g.m.t
 ga
 gà
 gá
@@ -2439,6 +2441,7 @@ ghê
 ghế
 ghề
 ghệ
+ghếch
 ghềnh
 ghệt
 ghi
@@ -2518,7 +2521,6 @@ giắng
 giằng
 giắt
 giặt
-gìặt
 giấc
 giâm
 giấm
@@ -2563,6 +2565,7 @@ giềng
 giết
 giễu
 giga
+gilet
 gilê
 gìm
 gin
@@ -2636,7 +2639,6 @@ giuộc
 giúp
 giừ
 giữ
-gĩữ
 giữa
 giương
 giướng
@@ -2672,7 +2674,6 @@ gom
 gon
 gòn
 gọn
-gòn–gia
 gọng
 gỏng
 google
@@ -2765,7 +2766,6 @@ gượng
 gỵa
 gym
 h
-h'mông
 ha
 hà
 há
@@ -2783,7 +2783,8 @@ hãi
 hại
 hải
 haiz
-Haizz
+haizz
+halôgien
 ham
 hàm
 hám
@@ -2808,7 +2809,6 @@ hãnh
 hạnh
 hảnh
 hao
-hảo
 hào
 háo
 hão
@@ -2931,7 +2931,7 @@ hĩ
 hỉ
 hị
 hia
-Hic
+hic
 hích
 hịch
 hiđro
@@ -2954,7 +2954,6 @@ hiếu
 hiểu
 hiệu
 hihi
-hìhì
 hìinh
 him
 hĩm
@@ -3218,7 +3217,6 @@ hyđrô
 hypebol
 hyperbol
 hz
-hz.
 i
 ì
 í
@@ -3252,12 +3250,10 @@ instagram
 iod
 iode
 ion
-ios
 iot
 iota
+iôn
 iốt
-ipad
-iphone
 irc
 iso
 isoenzym
@@ -3267,7 +3263,6 @@ it
 ịt
 iu
 ỉu
-iý
 ja
 javel
 javen
@@ -3286,7 +3281,6 @@ ju
 jun
 jút
 k
-k’róa
 ka
 kađai
 kaki
@@ -3378,7 +3372,6 @@ khanh
 khành
 khánh
 khảnh
-khánh–hạ
 khao
 khào
 kháo
@@ -3677,6 +3670,9 @@ kilomet
 kilooat
 kilô
 kilôgam
+kilôgram
+kilômét
+kilômet
 kim
 kìm
 kỉm
@@ -3765,11 +3761,8 @@ lài
 lái
 lãi
 lại
-lạị
 lải
-lai–ly
 lam
-làm
 làm
 lãm
 lạm
@@ -3909,7 +3902,6 @@ lenin
 leninit
 leo
 lèo
-lèõ
 léo
 lẹo
 lẻo
@@ -3951,7 +3943,6 @@ lì
 lí
 lĩ
 lị
-lí'
 lia
 lìa
 lía
@@ -4041,7 +4032,6 @@ loan
 loàn
 loán
 loạn
-lŏàn
 loang
 loàng
 loáng
@@ -4261,9 +4251,6 @@ lưới
 lười
 lưởi
 lưỡi
-lưỡì
-lưỡí
-lưỡỉ
 lươm
 lườm
 lượm
@@ -4288,11 +4275,6 @@ lý
 lỵ
 lỹ
 m
-m'gar
-m’nhum
-m'nông
-m'ta
-m’ta
 ma
 mà
 má
@@ -4385,7 +4367,6 @@ maze
 mazut
 mắc
 mặc
-mặc.
 măk
 măm
 mắm
@@ -4447,7 +4428,6 @@ mẽ
 méc
 mẹc
 media
-mèềm
 mega
 melo
 mem
@@ -4526,6 +4506,7 @@ miều
 miểu
 miễu
 mili
+miligram
 milimét
 milli
 mim
@@ -4625,20 +4606,19 @@ môm
 mồm
 môn
 mồn
-môn–khơ
 mông
 mống
 mồng
 mổng
 mộng
 môngtagiơ
-mộngtriệu
 môt
 mốt
 một
 môtip
 môtô
 môtơ
+môzaic
 mơ
 mớ
 mờ
@@ -4650,7 +4630,6 @@ mới
 mời
 mớm
 mờm
-mớmớ
 mơn
 mớn
 mởn
@@ -4875,7 +4854,6 @@ nệp
 nết
 nêu
 nếu
-ng̃
 nga
 ngà
 ngã
@@ -4963,6 +4941,7 @@ ngấy
 ngầy
 ngậy
 ngẹt
+ngếch
 ngh
 nghe
 nghè
@@ -5076,6 +5055,7 @@ ngoạy
 ngoảy
 ngoắc
 ngoặc
+ngoặm
 ngoăn
 ngoằn
 ngoẳn
@@ -5135,7 +5115,6 @@ ngốc
 ngộc
 ngôi
 ngồi
-ngồí
 ngỗi
 ngồm
 ngổm
@@ -5167,7 +5146,6 @@ ngơn
 ngớn
 ngởn
 ngỡn
-ngờõ
 ngớp
 ngợp
 ngớt
@@ -5240,8 +5218,6 @@ ngược
 ngươi
 ngươí
 người
-ngườì
-ngườí
 ngươn
 ngường
 ngưởng
@@ -5600,7 +5576,7 @@ niên
 niền
 niềng
 niễng
-Niếp
+niếp
 niết
 niệt
 niêu
@@ -5612,19 +5588,18 @@ ním
 nin
 nín
 nina
-niña
 ninh
 nình
 nính
 nịnh
 nino
-niño
 níp
 nit
 nít
 nịt
 nitơ
 nitrat
+nitrát
 niu
 níu
 nịu
@@ -5896,6 +5871,7 @@ ozone
 ôxi
 ôxít
 ôxy
+ôzôn
 ơ
 ớ
 ờ
@@ -5995,6 +5971,7 @@ phào
 pháo
 phạo
 pháp
+pharaon
 phát
 phạt
 phau
@@ -6099,6 +6076,7 @@ phoi
 phòi
 phom
 phòm
+phomat
 phon
 phón
 phong
@@ -6119,7 +6097,6 @@ phộc
 phôi
 phối
 phổi
-phổí
 phôm
 phồm
 phôn
@@ -6132,6 +6109,7 @@ phộng
 phốp
 phốt
 phôtô
+phôtôcopy
 phơ
 phớ
 phờ
@@ -6670,6 +6648,7 @@ rồ
 rổ
 rỗ
 rộ
+rôbốt
 rốc
 rộc
 rối
@@ -6775,6 +6754,7 @@ ruột
 rúp
 rụp
 rupee
+rupi
 rút
 rụt
 ruy
@@ -7192,7 +7172,6 @@ sửu
 sx
 sỹ
 t
-t’rưng
 ta
 tà
 tá
@@ -7361,7 +7340,6 @@ tha
 thà
 thá
 thả
-thảẳm
 thác
 thạc
 thách
@@ -7734,7 +7712,6 @@ tiễu
 tiệu
 tigôn
 tiki
-tiktok
 tim
 tìm
 tím
@@ -7745,7 +7722,6 @@ tín
 tĩn
 tịn
 tinh
-tình
 tình
 tính
 tĩnh
@@ -7881,8 +7857,6 @@ tơrưng
 tớt
 tp
 tr
-tr.
-tr'
 tra
 trà
 trá
@@ -8310,7 +8284,7 @@ ubnd
 ục
 uế
 uể
-Uh
+uh
 uhm
 ui
 úi
@@ -8363,8 +8337,8 @@ uýt
 ựa
 ức
 ực
-Ưhm
-Ưm
+ưhm
+ưm
 ừm
 ưng
 ứng
@@ -8466,6 +8440,7 @@ vất
 vật
 vấu
 vẩu
+vầu
 vây
 vấy
 vầy
@@ -8549,6 +8524,7 @@ vính
 vĩnh
 vịnh
 viola
+viôlông
 vip
 virus
 visa
@@ -8683,7 +8659,6 @@ watt
 wc
 web
 website
-wifi
 wiki
 won
 wushu
@@ -8722,6 +8697,8 @@ xảo
 xáp
 xạp
 xát
+xạt
+xatanh
 xàu
 xáu
 xạu
@@ -9030,9 +9007,9 @@ xưởng
 xượt
 xx
 xy
+xyanua
 xýt
 y
-ý
 ý
 ỳ
 ỷ
@@ -9051,7 +9028,6 @@ yêu
 yếu
 yểu
 yoga
-youtube
 yô
 yôga
 yuan

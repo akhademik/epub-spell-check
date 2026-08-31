@@ -18,8 +18,16 @@ describe("Worker PostMessage & Structured Clone Safety", () => {
     }
 
     const textBlocks: TextContentBlock[] = [
-      { text: "Đây là một đoạn văn bản tiếng Việt kiểm tra phân tích." },
-      { text: "Tôi đi rút tiền ở cây ATM và mua món quà từ Paris." }
+      {
+        id: "chap1.xhtml#0",
+        filePath: "chap1.xhtml",
+        text: "Đây là một đoạn văn bản tiếng Việt kiểm tra phân tích."
+      },
+      {
+        id: "chap1.xhtml#1",
+        filePath: "chap1.xhtml",
+        text: "Tôi đi rút tiền ở cây ATM và mua món quà từ Paris."
+      }
     ]
 
     const payload = {
