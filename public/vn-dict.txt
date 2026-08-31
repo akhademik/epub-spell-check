@@ -753,7 +753,6 @@ cắng
 cẳng
 cẵng
 căngtin
-cẳón
 cắp
 cặp
 cắt
@@ -837,7 +836,6 @@ cháo
 chão
 chạo
 chảo
-chạồm
 chạp
 chat
 chát
@@ -1195,7 +1193,6 @@ chựng
 chước
 chược
 chưởi
-chưởì
 chườm
 chương
 chướng
@@ -1450,11 +1447,9 @@ cửng
 cước
 cược
 cưới
-cướì
 cười
 cưởi
 cưỡi
-cưỡì
 cườm
 cương
 cướng
@@ -1500,7 +1495,6 @@ dang
 dàng
 dáng
 dạng
-dángdại
 danh
 dành
 dảnh
@@ -1628,7 +1622,6 @@ diện
 diềng
 diếp
 diệp
-dịệp
 diết
 diệt
 diêu
@@ -1801,7 +1794,6 @@ dửng
 dựng
 dược
 dưới
-dướỉ
 dượi
 dướn
 dương
@@ -2529,7 +2521,6 @@ giắng
 giằng
 giắt
 giặt
-gìặt
 giấc
 giâm
 giấm
@@ -2648,7 +2639,6 @@ giuộc
 giúp
 giừ
 giữ
-gĩữ
 giữa
 giương
 giướng
@@ -2964,7 +2954,6 @@ hiếu
 hiểu
 hiệu
 hihi
-hìhì
 hìinh
 him
 hĩm
@@ -3274,7 +3263,6 @@ it
 ịt
 iu
 ỉu
-iý
 ja
 javel
 javen
@@ -3773,7 +3761,6 @@ lài
 lái
 lãi
 lại
-lạị
 lải
 lam
 làm
@@ -3915,7 +3902,6 @@ lenin
 leninit
 leo
 lèo
-lèõ
 léo
 lẹo
 lẻo
@@ -4265,9 +4251,6 @@ lưới
 lười
 lưởi
 lưỡi
-lưỡì
-lưỡí
-lưỡỉ
 lươm
 lườm
 lượm
@@ -4445,7 +4428,6 @@ mẽ
 méc
 mẹc
 media
-mèềm
 mega
 melo
 mem
@@ -4630,7 +4612,6 @@ mồng
 mổng
 mộng
 môngtagiơ
-mộngtriệu
 môt
 mốt
 một
@@ -4649,7 +4630,6 @@ mới
 mời
 mớm
 mờm
-mớmớ
 mơn
 mớn
 mởn
@@ -5135,7 +5115,6 @@ ngốc
 ngộc
 ngôi
 ngồi
-ngồí
 ngỗi
 ngồm
 ngổm
@@ -5167,7 +5146,6 @@ ngơn
 ngớn
 ngởn
 ngỡn
-ngờõ
 ngớp
 ngợp
 ngớt
@@ -5240,8 +5218,6 @@ ngược
 ngươi
 ngươí
 người
-ngườì
-ngườí
 ngươn
 ngường
 ngưởng
@@ -6121,7 +6097,6 @@ phộc
 phôi
 phối
 phổi
-phổí
 phôm
 phồm
 phôn
@@ -7365,7 +7340,6 @@ tha
 thà
 thá
 thả
-thảẳm
 thác
 thạc
 thách
