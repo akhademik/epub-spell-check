@@ -101,7 +101,7 @@ export async function parseEpub(
           .map((el, nodeIndex) => ({
             id: `${fullPath}#${nodeIndex}`,
             filePath: fullPath,
-            text: el.textContent?.trim() || ""
+            text: (el.textContent?.trim() || "").normalize("NFC")
           }))
           .filter((block) => block.text.length > 0)
 

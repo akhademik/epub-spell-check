@@ -2848,89 +2848,6 @@
       "id": "src_utils_dictionary_loaddictionaries"
     },
     {
-      "label": "epub-parser.ts",
-      "file_type": "code",
-      "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 9,
-      "norm_label": "epub-parser.ts",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_parser"
-    },
-    {
-      "label": "parseEpub()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L5",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "norm_label": "parseepub()",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_parser_parseepub"
-    },
-    {
-      "label": "epub-writer.ts",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 9,
-      "norm_label": "epub-writer.ts",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_writer"
-    },
-    {
-      "label": "FixInstruction",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L4",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "norm_label": "fixinstruction",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_writer_fixinstruction"
-    },
-    {
-      "label": "locateOffsetInBlock()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L16",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "norm_label": "locateoffsetinblock()",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_writer_locateoffsetinblock"
-    },
-    {
-      "label": "applyFixesToDocument()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L65",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "norm_label": "applyfixestodocument()",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_writer_applyfixestodocument"
-    },
-    {
-      "label": "applyFixesAndRepack()",
-      "file_type": "code",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L155",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "norm_label": "applyfixesandrepack()",
-      "community_name": "epub-parser.ts",
-      "id": "src_utils_epub_writer_applyfixesandrepack"
-    },
-    {
       "label": "filter.ts",
       "file_type": "code",
       "source_file": "src/utils/filter.ts",
@@ -3011,17 +2928,6 @@
       "id": "tests_unit_analyzer_test"
     },
     {
-      "label": "epub-writer.test.ts",
-      "file_type": "code",
-      "source_file": "tests/unit/epub-writer.test.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 9,
-      "norm_label": "epub-writer.test.ts",
-      "community_name": "epub-parser.ts",
-      "id": "tests_unit_epub_writer_test"
-    },
-    {
       "label": "filter.test.ts",
       "file_type": "code",
       "source_file": "tests/unit/filter.test.ts",
@@ -3062,8 +2968,8 @@
       "_origin": "ast",
       "community": 0,
       "norm_label": "state.svelte.ts",
-      "id": "src_state_svelte",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_state_svelte"
     },
     {
       "label": "STORAGE_KEYS",
@@ -3073,8 +2979,8 @@
       "_origin": "ast",
       "community": 0,
       "norm_label": "storage_keys",
-      "id": "src_state_svelte_storage_keys",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_state_svelte_storage_keys"
     },
     {
       "label": "loadStorage()",
@@ -3085,8 +2991,8 @@
       "_origin": "ast",
       "community": 0,
       "norm_label": "loadstorage()",
-      "id": "src_state_svelte_loadstorage",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_state_svelte_loadstorage"
     },
     {
       "label": "saveStorage()",
@@ -3097,8 +3003,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": "savestorage()",
-      "id": "src_state_svelte_savestorage",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_savestorage"
     },
     {
       "label": "sanitizeFilename()",
@@ -3109,8 +3015,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": "sanitizefilename()",
-      "id": "src_state_svelte_sanitizefilename",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_sanitizefilename"
     },
     {
       "label": "AppStateModel",
@@ -3122,8 +3028,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": "appstatemodel",
-      "id": "src_state_svelte_appstatemodel",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel"
     },
     {
       "label": ".init()",
@@ -3134,8 +3040,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".init()",
-      "id": "src_state_svelte_appstatemodel_init",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_init"
     },
     {
       "label": ".showToast()",
@@ -3146,8 +3052,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".showtoast()",
-      "id": "src_state_svelte_appstatemodel_showtoast",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_showtoast"
     },
     {
       "label": ".removeToast()",
@@ -3158,8 +3064,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".removetoast()",
-      "id": "src_state_svelte_appstatemodel_removetoast",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_removetoast"
     },
     {
       "label": ".openModal()",
@@ -3170,8 +3076,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".openmodal()",
-      "id": "src_state_svelte_appstatemodel_openmodal",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_openmodal"
     },
     {
       "label": ".closeModal()",
@@ -3182,8 +3088,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".closemodal()",
-      "id": "src_state_svelte_appstatemodel_closemodal",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_closemodal"
     },
     {
       "label": ".toggleCheckSetting()",
@@ -3194,8 +3100,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".togglechecksetting()",
-      "id": "src_state_svelte_appstatemodel_togglechecksetting",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_togglechecksetting"
     },
     {
       "label": ".setFontSize()",
@@ -3206,8 +3112,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".setfontsize()",
-      "id": "src_state_svelte_appstatemodel_setfontsize",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_setfontsize"
     },
     {
       "label": ".toggleFontFamily()",
@@ -3218,8 +3124,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".togglefontfamily()",
-      "id": "src_state_svelte_appstatemodel_togglefontfamily",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_togglefontfamily"
     },
     {
       "label": ".selectGroup()",
@@ -3230,8 +3136,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".selectgroup()",
-      "id": "src_state_svelte_appstatemodel_selectgroup",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_selectgroup"
     },
     {
       "label": ".navigateGroup()",
@@ -3242,8 +3148,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".navigategroup()",
-      "id": "src_state_svelte_appstatemodel_navigategroup",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_navigategroup"
     },
     {
       "label": ".navigateInstance()",
@@ -3254,8 +3160,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".navigateinstance()",
-      "id": "src_state_svelte_appstatemodel_navigateinstance",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_navigateinstance"
     },
     {
       "label": ".addWhitelistWord()",
@@ -3266,8 +3172,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".addwhitelistword()",
-      "id": "src_state_svelte_appstatemodel_addwhitelistword",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_addwhitelistword"
     },
     {
       "label": ".removeWhitelistWord()",
@@ -3278,8 +3184,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".removewhitelistword()",
-      "id": "src_state_svelte_appstatemodel_removewhitelistword",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_removewhitelistword"
     },
     {
       "label": ".clearWhitelist()",
@@ -3290,8 +3196,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".clearwhitelist()",
-      "id": "src_state_svelte_appstatemodel_clearwhitelist",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_clearwhitelist"
     },
     {
       "label": ".importWhitelist()",
@@ -3302,8 +3208,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".importwhitelist()",
-      "id": "src_state_svelte_appstatemodel_importwhitelist",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_importwhitelist"
     },
     {
       "label": ".exportWhitelist()",
@@ -3314,8 +3220,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".exportwhitelist()",
-      "id": "src_state_svelte_appstatemodel_exportwhitelist",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_exportwhitelist"
     },
     {
       "label": ".ignoreAndAdvance()",
@@ -3326,8 +3232,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".ignoreandadvance()",
-      "id": "src_state_svelte_appstatemodel_ignoreandadvance",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_ignoreandadvance"
     },
     {
       "label": ".quickIgnore()",
@@ -3338,8 +3244,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".quickignore()",
-      "id": "src_state_svelte_appstatemodel_quickignore",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_quickignore"
     },
     {
       "label": ".exportErrors()",
@@ -3350,8 +3256,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".exporterrors()",
-      "id": "src_state_svelte_appstatemodel_exporterrors",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_exporterrors"
     },
     {
       "label": ".copyText()",
@@ -3362,8 +3268,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".copytext()",
-      "id": "src_state_svelte_appstatemodel_copytext",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_copytext"
     },
     {
       "label": ".getInstanceKey()",
@@ -3374,8 +3280,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".getinstancekey()",
-      "id": "src_state_svelte_appstatemodel_getinstancekey",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_getinstancekey"
     },
     {
       "label": ".applyFixToInstance()",
@@ -3386,8 +3292,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".applyfixtoinstance()",
-      "id": "src_state_svelte_appstatemodel_applyfixtoinstance",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_applyfixtoinstance"
     },
     {
       "label": ".applyFixToAllInstances()",
@@ -3398,8 +3304,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".applyfixtoallinstances()",
-      "id": "src_state_svelte_appstatemodel_applyfixtoallinstances",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_applyfixtoallinstances"
     },
     {
       "label": ".undoFix()",
@@ -3410,8 +3316,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".undofix()",
-      "id": "src_state_svelte_appstatemodel_undofix",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_undofix"
     },
     {
       "label": ".exportFixedEpub()",
@@ -3422,8 +3328,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".exportfixedepub()",
-      "id": "src_state_svelte_appstatemodel_exportfixedepub",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_exportfixedepub"
     },
     {
       "label": ".resetApp()",
@@ -3434,8 +3340,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".resetapp()",
-      "id": "src_state_svelte_appstatemodel_resetapp",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_resetapp"
     },
     {
       "label": ".handleFile()",
@@ -3446,8 +3352,8 @@
       "_origin": "ast",
       "community": 3,
       "norm_label": ".handlefile()",
-      "id": "src_state_svelte_appstatemodel_handlefile",
-      "community_name": "AppStateModel"
+      "community_name": "AppStateModel",
+      "id": "src_state_svelte_appstatemodel_handlefile"
     },
     {
       "label": "appState",
@@ -3457,8 +3363,8 @@
       "_origin": "ast",
       "community": 0,
       "norm_label": "appstate",
-      "id": "src_state_svelte_appstate",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_state_svelte_appstate"
     },
     {
       "label": "analysis-core.ts",
@@ -3468,8 +3374,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "analysis-core.ts",
-      "id": "src_utils_analysis_core",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "src_utils_analysis_core"
     },
     {
       "label": "WORD_REGEX",
@@ -3479,8 +3385,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "word_regex",
-      "id": "src_utils_analysis_core_word_regex",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "src_utils_analysis_core_word_regex"
     },
     {
       "label": "ANALYSIS_CHUNK_SIZE",
@@ -3490,8 +3396,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "analysis_chunk_size",
-      "id": "src_utils_analysis_core_analysis_chunk_size",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "src_utils_analysis_core_analysis_chunk_size"
     },
     {
       "label": "TONE_STYLE_PAIRS",
@@ -3501,8 +3407,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "tone_style_pairs",
-      "id": "src_utils_analysis_core_tone_style_pairs",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "src_utils_analysis_core_tone_style_pairs"
     },
     {
       "label": "getAlternateToneStyle()",
@@ -3513,8 +3419,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "getalternatetonestyle()",
-      "id": "src_utils_analysis_core_getalternatetonestyle",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "src_utils_analysis_core_getalternatetonestyle"
     },
     {
       "label": "isFrontVowel()",
@@ -3525,8 +3431,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "isfrontvowel()",
-      "id": "src_utils_analysis_core_isfrontvowel",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "src_utils_analysis_core_isfrontvowel"
     },
     {
       "label": "isY()",
@@ -3537,8 +3443,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "isy()",
-      "id": "src_utils_analysis_core_isy",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "src_utils_analysis_core_isy"
     },
     {
       "label": "getErrorType()",
@@ -3549,8 +3455,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "geterrortype()",
-      "id": "src_utils_analysis_core_geterrortype",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "src_utils_analysis_core_geterrortype"
     },
     {
       "label": "levenshteinDistance()",
@@ -3561,8 +3467,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "levenshteindistance()",
-      "id": "src_utils_analysis_core_levenshteindistance",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "src_utils_analysis_core_levenshteindistance"
     },
     {
       "label": "getBaseWord()",
@@ -3573,8 +3479,8 @@
       "_origin": "ast",
       "community": 8,
       "norm_label": "getbaseword()",
-      "id": "src_utils_analysis_core_getbaseword",
-      "community_name": "utils/dictionary.ts"
+      "community_name": "utils/dictionary.ts",
+      "id": "src_utils_analysis_core_getbaseword"
     },
     {
       "label": "matchCase()",
@@ -3585,8 +3491,8 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "matchcase()",
-      "id": "src_utils_analysis_core_matchcase",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "src_utils_analysis_core_matchcase"
     },
     {
       "label": "analysis-core.test.ts",
@@ -3596,8 +3502,102 @@
       "_origin": "ast",
       "community": 2,
       "norm_label": "analysis-core.test.ts",
-      "id": "tests_unit_analysis_core_test",
-      "community_name": "analysis-core.ts"
+      "community_name": "analysis-core.ts",
+      "id": "tests_unit_analysis_core_test"
+    },
+    {
+      "label": "epub-parser.ts",
+      "file_type": "code",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "epub-parser.ts",
+      "id": "src_utils_epub_parser",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "parseEpub()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L5",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "parseepub()",
+      "id": "src_utils_epub_parser_parseepub",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "epub-writer.ts",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "epub-writer.ts",
+      "id": "src_utils_epub_writer",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "FixInstruction",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L4",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "fixinstruction",
+      "id": "src_utils_epub_writer_fixinstruction",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "locateOffsetInBlock()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L16",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "locateoffsetinblock()",
+      "id": "src_utils_epub_writer_locateoffsetinblock",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "applyFixesToDocument()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L70",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "applyfixestodocument()",
+      "id": "src_utils_epub_writer_applyfixestodocument",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "applyFixesAndRepack()",
+      "file_type": "code",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L160",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "applyfixesandrepack()",
+      "id": "src_utils_epub_writer_applyfixesandrepack",
+      "community_name": "epub-parser.ts"
+    },
+    {
+      "label": "epub-writer.test.ts",
+      "file_type": "code",
+      "source_file": "tests/unit/epub-writer.test.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 9,
+      "norm_label": "epub-writer.test.ts",
+      "id": "tests_unit_epub_writer_test",
+      "community_name": "epub-parser.ts"
     }
   ],
   "links": [
@@ -6399,7 +6399,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L168",
+      "source_location": "L173",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_utils_epub_writer_applyfixesandrepack",
@@ -8234,217 +8234,6 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L18",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_state_svelte",
-      "target": "src_utils_epub_parser"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-parser.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_parser",
-      "target": "src_utils_epub_parser_parseepub"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/state.svelte.ts",
-      "source_location": "L18",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_state_svelte",
-      "target": "src_utils_epub_parser_parseepub"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/state.svelte.ts",
-      "source_location": "L639",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_state_svelte_appstatemodel_handlefile",
-      "target": "src_utils_epub_parser_parseepub"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/state.svelte.ts",
-      "source_location": "L19",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_state_svelte",
-      "target": "src_utils_epub_writer"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L155",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer",
-      "target": "src_utils_epub_writer_applyfixesandrepack"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L65",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer",
-      "target": "src_utils_epub_writer_applyfixestodocument"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer",
-      "target": "src_utils_epub_writer_fixinstruction"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L16",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer",
-      "target": "src_utils_epub_writer_locateoffsetinblock"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/epub-writer.test.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_epub_writer_test",
-      "target": "src_utils_epub_writer"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/state.svelte.ts",
-      "source_location": "L19",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_state_svelte",
-      "target": "src_utils_epub_writer_fixinstruction"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L106",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer_applyfixestodocument",
-      "target": "src_utils_epub_writer_locateoffsetinblock"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/epub-writer.test.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_epub_writer_test",
-      "target": "src_utils_epub_writer_locateoffsetinblock"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/utils/epub-writer.ts",
-      "source_location": "L200",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_utils_epub_writer_applyfixesandrepack",
-      "target": "src_utils_epub_writer_applyfixestodocument"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/epub-writer.test.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_epub_writer_test",
-      "target": "src_utils_epub_writer_applyfixestodocument"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/state.svelte.ts",
-      "source_location": "L19",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "src_state_svelte",
-      "target": "src_utils_epub_writer_applyfixesandrepack"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/state.svelte.ts",
-      "source_location": "L581",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_state_svelte_appstatemodel_exportfixedepub",
-      "target": "src_utils_epub_writer_applyfixesandrepack"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/unit/epub-writer.test.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "tests_unit_epub_writer_test",
-      "target": "src_utils_epub_writer_applyfixesandrepack"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/state.svelte.ts",
       "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
@@ -8767,6 +8556,66 @@
       "confidence_score": 1.0,
       "source": "src_state_svelte",
       "target": "src_utils_analysis_core_matchcase"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/state.svelte.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_state_svelte",
+      "target": "src_utils_epub_parser"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/state.svelte.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_state_svelte",
+      "target": "src_utils_epub_parser_parseepub"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/state.svelte.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_state_svelte",
+      "target": "src_utils_epub_writer"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/state.svelte.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_state_svelte",
+      "target": "src_utils_epub_writer_applyfixesandrepack"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/state.svelte.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_state_svelte",
+      "target": "src_utils_epub_writer_fixinstruction"
     },
     {
       "relation": "calls",
@@ -9453,6 +9302,18 @@
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/state.svelte.ts",
+      "source_location": "L581",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_state_svelte_appstatemodel_exportfixedepub",
+      "target": "src_utils_epub_writer_applyfixesandrepack"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
       "source_file": "src/state.svelte.ts",
       "source_location": "L632",
       "weight": 1.0,
@@ -9460,6 +9321,18 @@
       "confidence_score": 1.0,
       "source": "src_state_svelte_appstatemodel_handlefile",
       "target": "src_state_svelte_appstatemodel_resetapp"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/state.svelte.ts",
+      "source_location": "L639",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_state_svelte_appstatemodel_handlefile",
+      "target": "src_utils_epub_parser_parseepub"
     },
     {
       "relation": "contains",
@@ -9690,8 +9563,135 @@
       "confidence_score": 1.0,
       "source": "tests_unit_analysis_core_test",
       "target": "src_utils_analysis_core_matchcase"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-parser.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_parser",
+      "target": "src_utils_epub_parser_parseepub"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L160",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer",
+      "target": "src_utils_epub_writer_applyfixesandrepack"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer",
+      "target": "src_utils_epub_writer_applyfixestodocument"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer",
+      "target": "src_utils_epub_writer_fixinstruction"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer",
+      "target": "src_utils_epub_writer_locateoffsetinblock"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-writer.test.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_writer_test",
+      "target": "src_utils_epub_writer"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L111",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer_applyfixestodocument",
+      "target": "src_utils_epub_writer_locateoffsetinblock"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-writer.test.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_writer_test",
+      "target": "src_utils_epub_writer_locateoffsetinblock"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/epub-writer.ts",
+      "source_location": "L215",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "src_utils_epub_writer_applyfixesandrepack",
+      "target": "src_utils_epub_writer_applyfixestodocument"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-writer.test.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_writer_test",
+      "target": "src_utils_epub_writer_applyfixestodocument"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/epub-writer.test.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "tests_unit_epub_writer_test",
+      "target": "src_utils_epub_writer_applyfixesandrepack"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "3fd4752b62c528207cb1ae196f41ae004740468a"
+  "built_at_commit": "e375b24b5a9bfd747eaac80b113202edbb9f7869"
 }

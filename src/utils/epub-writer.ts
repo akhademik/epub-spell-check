@@ -17,7 +17,7 @@ export function locateOffsetInBlock(
   blockElement: Element,
   globalOffset: number
 ): { textNode: Text; localOffset: number } | null {
-  const rawText = blockElement.textContent || ""
+  const rawText = (blockElement.textContent || "").normalize("NFC")
   const trimmed = rawText.trim()
   if (!trimmed) return null
 
@@ -31,7 +31,12 @@ export function locateOffsetInBlock(
   const textNodes: Text[] = []
   let n = walker.nextNode()
   while (n) {
-    textNodes.push(n as Text)
+    // Normalize text node value to NFC in DOM if needed
+    const textNode = n as Text
+    if (textNode.nodeValue) {
+      textNode.nodeValue = textNode.nodeValue.normalize("NFC")
+    }
+    textNodes.push(textNode)
     n = walker.nextNode()
   }
 
@@ -191,10 +196,20 @@ export async function applyFixesAndRepack(
 
     const content = await fileEntry.async("string")
     const isXhtml = filePath.endsWith(".xhtml") || filePath.endsWith(".xml")
-    const doc = parser.parseFromString(
+
+    let doc = parser.parseFromString(
       content,
       isXhtml ? "application/xhtml+xml" : "text/html"
     )
+
+    // Check if XML parser failed on non-standard/unclosed HTML entities
+    const hasParserError = doc.querySelector("parsererror")
+    if (hasParserError) {
+      logger.warn(
+        `XML parse error in ${filePath}. Falling back to tolerant HTML parser.`
+      )
+      doc = parser.parseFromString(content, "text/html")
+    }
 
     // Apply fixes
     applyFixesToDocument(doc, filePath, fileFixes)
@@ -213,9 +228,20 @@ export async function applyFixesAndRepack(
     zip.file(filePath, updatedContent)
   }
 
-  // Repack to Blob preserving epub mimetype
+  // Ensure mimetype file is explicitly STORED (uncompressed) as required by EPUB specification
+  const mimetypeEntry = zip.file("mimetype")
+  if (mimetypeEntry) {
+    const mimetypeContent = await mimetypeEntry.async("string")
+    zip.file("mimetype", mimetypeContent.trim(), { compression: "STORE" })
+  }
+
+  // Repack to Blob with DEFLATE level 9 compression for optimal file size
   return await zip.generateAsync({
     type: "blob",
-    mimeType: "application/epub+zip"
+    mimeType: "application/epub+zip",
+    compression: "DEFLATE",
+    compressionOptions: {
+      level: 9
+    }
   })
 }
