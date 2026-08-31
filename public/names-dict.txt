@@ -5458,6 +5458,7 @@ Gulag
 Gulden
 Gulfstream
 Gulielmi
+Gulik
 Gullickson
 Gulnare
 Gum
@@ -10936,6 +10937,7 @@ Pintsov
 Pip
 Pipeline
 Piper
+Pippin
 Pippo
 Pips
 Piranesi
@@ -11311,6 +11313,7 @@ Rachmaninoff
 Rackman
 Racquel
 Radames
+Radcliffe
 Radclyffe
 Radek
 Rademacher
@@ -11330,6 +11333,7 @@ Rafaela
 Rafe
 Raffaello
 Raggedy
+Ragnarok
 Railton
 Raimundo
 Raimvater
@@ -13691,6 +13695,7 @@ Theias
 Thelma
 Theodectes
 Theodora
+Theodore
 Theogonía
 Theola
 Theophilus

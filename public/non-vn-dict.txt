@@ -3996,6 +3996,7 @@ morphin
 morphine
 mortem
 mortis
+mosaic
 most
 mostly
 mot

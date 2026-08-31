@@ -3547,8 +3547,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "constants.ts",
-      "id": "src_constants",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants"
     },
     {
       "label": "FILE_SIZE_LIMIT_MB",
@@ -3558,8 +3558,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "file_size_limit_mb",
-      "id": "src_constants_file_size_limit_mb",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_file_size_limit_mb"
     },
     {
       "label": "DICTIONARY_VERSION",
@@ -3569,8 +3569,8 @@
       "_origin": "ast",
       "community": 9,
       "norm_label": "dictionary_version",
-      "id": "src_constants_dictionary_version",
-      "community_name": "utils/dictionary.ts"
+      "community_name": "utils/dictionary.ts",
+      "id": "src_constants_dictionary_version"
     },
     {
       "label": "FILE_SIZE_LIMIT_BYTES",
@@ -3580,8 +3580,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "file_size_limit_bytes",
-      "id": "src_constants_file_size_limit_bytes",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_file_size_limit_bytes"
     },
     {
       "label": "WHITELIST_WORD_COUNT_LIMIT",
@@ -3591,8 +3591,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "whitelist_word_count_limit",
-      "id": "src_constants_whitelist_word_count_limit",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_whitelist_word_count_limit"
     },
     {
       "label": "WHITELIST_WORD_LENGTH_LIMIT",
@@ -3602,8 +3602,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "whitelist_word_length_limit",
-      "id": "src_constants_whitelist_word_length_limit",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_whitelist_word_length_limit"
     },
     {
       "label": "FONT_SIZE_MAX_REM",
@@ -3613,8 +3613,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "font_size_max_rem",
-      "id": "src_constants_font_size_max_rem",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_font_size_max_rem"
     },
     {
       "label": "FONT_SIZE_MIN_REM",
@@ -3624,8 +3624,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "font_size_min_rem",
-      "id": "src_constants_font_size_min_rem",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_font_size_min_rem"
     },
     {
       "label": "EPUB_FILE_EXTENSION",
@@ -3635,8 +3635,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "epub_file_extension",
-      "id": "src_constants_epub_file_extension",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_epub_file_extension"
     },
     {
       "label": "WHITELIST_FILE_EXTENSIONS",
@@ -3646,8 +3646,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "whitelist_file_extensions",
-      "id": "src_constants_whitelist_file_extensions",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_whitelist_file_extensions"
     },
     {
       "label": "CONTEXT_LENGTH_CHARS",
@@ -3657,8 +3657,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "context_length_chars",
-      "id": "src_constants_context_length_chars",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_context_length_chars"
     },
     {
       "label": "MAX_SUGGESTION_COUNT",
@@ -3668,8 +3668,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "max_suggestion_count",
-      "id": "src_constants_max_suggestion_count",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_max_suggestion_count"
     },
     {
       "label": "MAX_TOASTS_DISPLAYED",
@@ -3679,8 +3679,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "max_toasts_displayed",
-      "id": "src_constants_max_toasts_displayed",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_max_toasts_displayed"
     },
     {
       "label": "TOAST_AUTO_DISMISS_MS",
@@ -3690,8 +3690,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "toast_auto_dismiss_ms",
-      "id": "src_constants_toast_auto_dismiss_ms",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_toast_auto_dismiss_ms"
     },
     {
       "label": "TAG_COLORS",
@@ -3701,8 +3701,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "tag_colors",
-      "id": "src_constants_tag_colors",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_tag_colors"
     },
     {
       "label": "SPECIAL_CHARACTER_REGEX",
@@ -3712,8 +3712,8 @@
       "_origin": "ast",
       "community": 1,
       "norm_label": "special_character_regex",
-      "id": "src_constants_special_character_regex",
-      "community_name": "state.svelte.ts"
+      "community_name": "state.svelte.ts",
+      "id": "src_constants_special_character_regex"
     }
   ],
   "links": [
@@ -10115,5 +10115,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "6832b0863c036d8fd270ea317c0fc25d50007935"
+  "built_at_commit": "3c5f430d2e7cde21b0012ae10be7978a1fdf5432"
 }
