@@ -27,11 +27,29 @@ const STORAGE_KEYS = {
   CHECK_SETTINGS: "spell-check:check-settings-v2"
 }
 
+interface PersistedContainer<T> {
+  version: number
+  data: T
+}
+
+const STORAGE_SCHEMA_VERSION = 1
+
 function loadStorage<T>(key: string, fallback: T): T {
   try {
     const item = localStorage.getItem(key)
     if (!item) return fallback
-    return JSON.parse(item) as T
+    const parsed = JSON.parse(item)
+    // Check if item has version envelope
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      "version" in parsed &&
+      "data" in parsed
+    ) {
+      return (parsed as PersistedContainer<T>).data
+    }
+    // Backward compatibility for un-enveloped legacy storage
+    return parsed as T
   } catch {
     return fallback
   }
@@ -39,7 +57,11 @@ function loadStorage<T>(key: string, fallback: T): T {
 
 function saveStorage<T>(key: string, data: T) {
   try {
-    localStorage.setItem(key, JSON.stringify(data))
+    const payload: PersistedContainer<T> = {
+      version: STORAGE_SCHEMA_VERSION,
+      data
+    }
+    localStorage.setItem(key, JSON.stringify(payload))
   } catch {
     // ignore
   }

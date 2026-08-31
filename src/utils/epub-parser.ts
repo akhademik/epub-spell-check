@@ -1,6 +1,35 @@
 import JSZip from "jszip"
 import type { BookMetadata, EpubContent, TextContentBlock } from "../types/epub"
 import { logger } from "./logger"
+import { resolveZipPath } from "./path"
+
+export const LEAF_BLOCK_SELECTOR =
+  "p, h1, h2, h3, h4, h5, h6, li, blockquote, pre, dd, dt, figcaption"
+
+/**
+ * Extracts leaf text elements from a document without duplicating nested container text.
+ * Divs are only included if they contain text directly and don't contain other child block elements.
+ */
+export function extractLeafTextElements(doc: Document): Element[] {
+  const leafCandidates = Array.from(doc.querySelectorAll(LEAF_BLOCK_SELECTOR))
+
+  // Find divs that do not contain any nested block elements
+  const allDivs = Array.from(doc.querySelectorAll("div"))
+  const leafDivs = allDivs.filter((div) => {
+    return !div.querySelector(LEAF_BLOCK_SELECTOR) && !div.querySelector("div")
+  })
+
+  // Combine and sort by DOM document order
+  const allElements = [...leafCandidates, ...leafDivs]
+  allElements.sort((a, b) => {
+    const pos = a.compareDocumentPosition(b)
+    if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1
+    if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1
+    return 0
+  })
+
+  return allElements
+}
 
 export async function parseEpub(
   file: File,
@@ -25,14 +54,17 @@ export async function parseEpub(
     throw new Error("EPUB không hợp lệ: không tìm thấy OPF rootfile")
   }
 
-  const opfData = await zip.file(rootPath)?.async("string")
+  const normalizedRootPath = resolveZipPath("", rootPath)
+  const opfData = await zip.file(normalizedRootPath)?.async("string")
   if (!opfData) {
     logger.error(`Invalid EPUB: OPF file not found at path: ${rootPath}`)
     throw new Error("EPUB không hợp lệ: không tìm thấy OPF file")
   }
   const opfXml = parser.parseFromString(opfData, "application/xml")
-  const opfDir = rootPath.substring(0, rootPath.lastIndexOf("/"))
-  const resolvePath = (p: string) => (opfDir ? `${opfDir}/${p}` : p)
+  const opfDir = normalizedRootPath.includes("/")
+    ? normalizedRootPath.substring(0, normalizedRootPath.lastIndexOf("/"))
+    : ""
+  const resolvePath = (p: string) => resolveZipPath(opfDir, p)
 
   const metadata: BookMetadata = {
     title:
@@ -95,9 +127,7 @@ export async function parseEpub(
       if (chapterFile) {
         const html = await chapterFile.async("string")
         const doc = parser.parseFromString(html, "text/html")
-        const paras = Array.from(
-          doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, div")
-        )
+        const paras = extractLeafTextElements(doc)
           .map((el, nodeIndex) => ({
             id: `${fullPath}#${nodeIndex}`,
             filePath: fullPath,

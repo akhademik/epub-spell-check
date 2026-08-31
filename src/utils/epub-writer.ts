@@ -1,4 +1,5 @@
 import JSZip from "jszip"
+import { extractLeafTextElements } from "./epub-parser"
 import { logger } from "./logger"
 
 export interface FixInstruction {
@@ -72,10 +73,8 @@ export function applyFixesToDocument(
   filePath: string,
   fixes: FixInstruction[]
 ): void {
-  // Query all candidate container elements with the exact same selector as epub-parser
-  const elements = Array.from(
-    doc.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, div")
-  )
+  // Query all candidate container elements with the exact same selector/extractor as epub-parser
+  const elements = extractLeafTextElements(doc)
 
   // Map blockId -> Element
   const blockMap = new Map<string, Element>()

@@ -4,12 +4,12 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 318 nodes · 534 edges · 19 communities
+- 326 nodes · 551 edges · 19 communities
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e375b24b`
+- Built from commit: `e3aae47e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -21,9 +21,9 @@
 - biome.json
 - devDependencies
 - compilerOptions
+- epub-parser.ts
 - scripts
 - utils/dictionary.ts
-- epub-parser.ts
 - 🧱 2. Kiến trúc Hệ Thống Kiểm Thử 4 Tầng (4-Tier Testing Strategy)
 - knip.json
 - Soát lỗi chính tả EPUB (Tiếng Việt)
@@ -45,12 +45,12 @@
   src/utils/epub-parser.ts → package.json
 - `applyFixesAndRepack()` --references--> `jszip`  [EXTRACTED]
   src/utils/epub-writer.ts → package.json
-- `WorkerMessage` --references--> `TextContentBlock`  [EXTRACTED]
-  src/workers/analysis.worker.ts → src/types/epub.ts
-- `findSuggestions()` --calls--> `getBaseWord()`  [EXTRACTED]
-  src/utils/analyzer.ts → src/utils/analysis-core.ts
-- `findSuggestions()` --calls--> `buildIndexedDictionary()`  [EXTRACTED]
-  src/utils/analyzer.ts → src/utils/dictionary.ts
+- `AppState` --references--> `CheckSettings`  [EXTRACTED]
+  src/types/state.ts → src/types/analysis.ts
+- `AppState` --references--> `Dictionaries`  [EXTRACTED]
+  src/types/state.ts → src/types/dictionary.ts
+- `AppState` --references--> `DictionaryStatus`  [EXTRACTED]
+  src/types/state.ts → src/types/dictionary.ts
 
 ## Import Cycles
 - None detected.
@@ -58,16 +58,16 @@
 ## Communities (19 total, 0 thin omitted)
 
 ### Community 0 - "state.svelte.ts"
-Cohesion: 0.07
-Nodes (23): contextSegments, currentAppliedWord, customFixInput, isCurrentInstanceResolved, suggestions, CONTEXT_LENGTH_CHARS, EPUB_FILE_EXTENSION, FILE_SIZE_LIMIT_BYTES (+15 more)
+Cohesion: 0.06
+Nodes (25): contextSegments, currentAppliedWord, customFixInput, isCurrentInstanceResolved, suggestions, CONTEXT_LENGTH_CHARS, DICTIONARY_VERSION, EPUB_FILE_EXTENSION (+17 more)
 
 ### Community 1 - "EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION"
 Cohesion: 0.05
 Nodes (41): 10. PDF → EPUB USER FLOW, 11. EPUB EDITOR E2E, 12. EPUB CLEANER E2E, 13. EPUB VALIDATOR E2E, 14. IMAGE PROCESSING E2E, 15. WORKER TESTING, 16. REGRESSION TEST, 17. OUTPUT FILE VALIDATION (+33 more)
 
 ### Community 2 - "analysis-core.ts"
-Cohesion: 0.18
-Nodes (23): CheckSettings, Dictionaries, Dictionary, DictionaryStatus, IndexedDictionary, ErrorGroup, ErrorInstance, ErrorType (+15 more)
+Cohesion: 0.17
+Nodes (26): CheckSettings, Dictionaries, Dictionary, DictionaryStatus, IndexedDictionary, TextContentBlock, ErrorGroup, ErrorInstance (+18 more)
 
 ### Community 3 - "AppStateModel"
 Cohesion: 0.13
@@ -85,17 +85,17 @@ Nodes (25): autoprefixer, @biomejs/biome, jsdom, devDependencies, autoprefixer, 
 Cohesion: 0.08
 Nodes (23): DOM, DOM.Iterable, ES2022, src/**/*.d.ts, src/**/*.js, src/**/*.svelte, src/**/*.ts, compilerOptions (+15 more)
 
-### Community 7 - "scripts"
+### Community 7 - "epub-parser.ts"
+Cohesion: 0.17
+Nodes (14): jszip, dependencies, jszip, BookMetadata, EpubContent, extractLeafTextElements(), LEAF_BLOCK_SELECTOR, parseEpub() (+6 more)
+
+### Community 8 - "scripts"
 Cohesion: 0.11
 Nodes (18): name, private, scripts, build, check, dev, format, format:check (+10 more)
 
-### Community 8 - "utils/dictionary.ts"
-Cohesion: 0.20
-Nodes (10): DICTIONARY_VERSION, getBaseWord(), buildIndexedDictionary(), fetchLocalDict(), getDictionary(), loadDictionaries(), getCache(), openDB() (+2 more)
-
-### Community 9 - "epub-parser.ts"
-Cohesion: 0.21
-Nodes (11): jszip, dependencies, jszip, BookMetadata, EpubContent, TextContentBlock, parseEpub(), applyFixesAndRepack() (+3 more)
+### Community 9 - "utils/dictionary.ts"
+Cohesion: 0.24
+Nodes (7): fetchLocalDict(), getDictionary(), loadDictionaries(), getCache(), openDB(), setCache(), Logger
 
 ### Community 10 - "🧱 2. Kiến trúc Hệ Thống Kiểm Thử 4 Tầng (4-Tier Testing Strategy)"
 Cohesion: 0.15
@@ -110,20 +110,20 @@ Cohesion: 0.50
 Nodes (3): Cấu trúc từ điển, Soát lỗi chính tả EPUB (Tiếng Việt), Tính năng chính
 
 ## Knowledge Gaps
-- **136 isolated node(s):** `$schema`, `**/*`, `!dist`, `!graphify-out`, `!src/style.css` (+131 more)
+- **138 isolated node(s):** `$schema`, `**/*`, `!dist`, `!graphify-out`, `!src/style.css` (+133 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `epub-parser.ts` to `scripts`?**
-  _High betweenness centrality (0.152) - this node is a cross-community bridge._
+  _High betweenness centrality (0.151) - this node is a cross-community bridge._
 - **Why does `devDependencies` connect `devDependencies` to `scripts`?**
-  _High betweenness centrality (0.098) - this node is a cross-community bridge._
+  _High betweenness centrality (0.097) - this node is a cross-community bridge._
 - **What connects `$schema`, `**/*`, `!dist` to the rest of the system?**
-  _136 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _138 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `state.svelte.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06866002214839424 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06464646464646465 - nodes in this community are weakly interconnected._
 - **Should `EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION` be split into smaller, more focused modules?**
   _Cohesion score 0.047619047619047616 - nodes in this community are weakly interconnected._
 - **Should `AppStateModel` be split into smaller, more focused modules?**
