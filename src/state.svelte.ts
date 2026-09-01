@@ -471,7 +471,7 @@ export class AppStateModel {
 
     instance.resolved = true
 
-    // If all instances in the group are resolved, mark group as resolved
+    // Check if all instances in the group are resolved
     const allResolved = parentGroup.contexts.every(
       (ctx) => ctx.resolved || this.appliedFixes.has(this.getInstanceKey(ctx))
     )
@@ -486,6 +486,15 @@ export class AppStateModel {
         this.currentInstanceIndex = 0
       } else {
         this.selectedGroupId = null
+      }
+    } else {
+      // Auto-advance to the next unresolved instance in the same group
+      const nextUnresolvedIndex = parentGroup.contexts.findIndex(
+        (ctx) =>
+          !ctx.resolved && !this.appliedFixes.has(this.getInstanceKey(ctx))
+      )
+      if (nextUnresolvedIndex !== -1) {
+        this.currentInstanceIndex = nextUnresolvedIndex
       }
     }
 

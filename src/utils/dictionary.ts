@@ -33,7 +33,7 @@ export function buildIndexedDictionary(
   }
 }
 
-const TWENTY_FOUR_HOURS_IN_MS = 24 * 60 * 60 * 1000
+const ONE_HOUR_IN_MS = 60 * 60 * 1000
 
 async function fetchLocalDict(localFilename: string): Promise<string> {
   const localRes = await fetch(`/${localFilename}`)
@@ -61,7 +61,7 @@ async function getDictionary(
       const cached = await getCache<{ timestamp: number; data: string }>(
         cacheKey
       )
-      if (cached && Date.now() - cached.timestamp < TWENTY_FOUR_HOURS_IN_MS) {
+      if (cached && Date.now() - cached.timestamp < ONE_HOUR_IN_MS) {
         logger.info(`Using cached dictionary for ${dictName}`)
         return cached.data
       }

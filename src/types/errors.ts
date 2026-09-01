@@ -26,6 +26,11 @@ export interface ErrorInstance {
   resolved?: boolean
 }
 
+export interface TieredSuggestions {
+  primary: string[]
+  secondary: string[]
+}
+
 export interface ErrorGroup {
   id: string
   word: string

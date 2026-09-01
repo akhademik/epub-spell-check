@@ -49,9 +49,19 @@ export const WHITELIST_FILE_EXTENSIONS = ["txt", "md"]
 export const CONTEXT_LENGTH_CHARS = 120
 
 /**
- * Maximum number of suggestions to display for a misspelled word.
+ * Maximum number of primary (high confidence) suggestions to display.
  */
-export const MAX_SUGGESTION_COUNT = 4
+export const MAX_PRIMARY_SUGGESTION_COUNT = 6
+
+/**
+ * Maximum number of secondary (broader/extended) suggestions to display.
+ */
+export const MAX_SECONDARY_SUGGESTION_COUNT = 6
+
+/**
+ * Maximum number of suggestions to display for a misspelled word (legacy/fallback).
+ */
+export const MAX_SUGGESTION_COUNT = 8
 
 /**
  * Maximum number of toast notifications displayed at once.
