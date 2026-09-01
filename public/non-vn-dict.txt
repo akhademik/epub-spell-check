@@ -69,6 +69,7 @@ added
 adding
 address
 adds
+adieu
 adios
 adipex
 adiós
@@ -202,6 +203,7 @@ along
 alot
 alpaca
 alpine
+alprazolam
 already
 also
 alt
@@ -300,6 +302,7 @@ angst
 animal
 animals
 anime
+ankyl
 annalee
 annamae
 annelle
@@ -683,6 +686,7 @@ benzodiazepine
 benzodiazepines
 bequest
 beret
+berge
 bermuda
 berna
 beside
@@ -772,6 +776,7 @@ blatnye
 blend
 bless
 blessed
+bleu
 blind
 blindfold
 blink
@@ -805,6 +810,7 @@ bochum
 bock
 bodies
 body
+boisei
 bok
 bola
 bold
@@ -853,6 +859,8 @@ botox
 bottle
 bottles
 bottom
+botulin
+bouche
 bought
 bound
 bouquet
@@ -974,6 +982,7 @@ bungalow
 bunjinga
 bunker
 bunny
+buns
 buonasera
 buongiorno
 burden
@@ -1063,6 +1072,7 @@ calling
 calliope
 calls
 calm
+calorie
 calory
 calvin
 calypso
@@ -1123,6 +1133,7 @@ caprice
 capsule
 capture
 car
+caracara
 caramba
 caramel
 carate
@@ -1236,6 +1247,7 @@ centres
 cents
 centuria
 century
+cephalopod
 cera
 ceramic
 cereal
@@ -1306,6 +1318,7 @@ chili
 chink
 chino
 chinos
+chit
 chloroform
 chocolate
 choice
@@ -1341,6 +1354,7 @@ circles
 circolazione
 circuit
 circumpunct
+circumstance
 circus
 cirque
 cisco
@@ -1348,6 +1362,7 @@ cite
 cited
 cities
 citizen
+citrate
 civic
 civica
 civil
@@ -1507,6 +1522,7 @@ concert
 concord
 concorrenza
 condo
+condor
 condos
 conduct
 conduis
@@ -1528,6 +1544,7 @@ consult
 contac
 contact
 contain
+container
 contemplar
 content
 contest
@@ -1574,6 +1591,7 @@ corresponds
 cortex
 cortisol
 coruna
+cosas
 cosine
 cosplay
 cost
@@ -1637,10 +1655,12 @@ cried
 crime
 crimes
 criminis
+crisps
 critics
 crm
 crois
 croissant
+crombie
 crook
 crop
 cropping
@@ -1659,6 +1679,7 @@ crucifix
 crude
 cruise
 cruises
+crumble
 crux
 cry
 crying
@@ -1708,6 +1729,7 @@ cybgf
 cycle
 cycles
 cycling
+cyclopropane
 cyclotrimethylenetrinitramine
 cyndi
 cynic
@@ -1844,6 +1866,7 @@ desire
 desired
 desk
 desktop
+desmodus
 despite
 destroy
 detail
@@ -1876,6 +1899,7 @@ difficile
 difficilia
 différence
 dinky
+dioxide
 disiecta
 diuec
 divertido
@@ -1944,6 +1968,7 @@ dracoman
 draft
 drag
 dragon
+dragonfly
 drain
 drama
 dramatis
@@ -2099,6 +2124,7 @@ eleutheria
 elevazione
 eleven
 elipse
+elk
 elyse
 ema
 emacs
@@ -2180,6 +2206,7 @@ equity
 er
 erasmo
 erat
+erectus
 erh
 ermine
 ermitaño
@@ -2364,6 +2391,7 @@ faster
 fastest
 fat
 fatal
+fatale
 fate
 father
 fathers
@@ -2415,6 +2443,7 @@ females
 femmes
 femto
 fence
+fencing
 fentanyl
 feo
 feof
@@ -2451,6 +2480,7 @@ figured
 figures
 fijaciono
 fikr
+fila
 filed
 files
 filing
@@ -2516,6 +2546,7 @@ flame
 flamen
 flamenco
 flamingo
+flan
 flana
 flannel
 flapped
@@ -2540,6 +2571,7 @@ fling
 flip
 flu
 fluid
+fluorite
 flush
 flux
 flyer
@@ -2644,6 +2676,7 @@ friday
 fridge
 friend
 friends
+frisson
 frog
 froidevaux
 from
@@ -2705,6 +2738,7 @@ gambia
 games
 gameshow
 gaming
+gangster
 gap
 gaps
 garage
@@ -2778,6 +2812,7 @@ gig
 gigabit
 gigabyte
 gigahertz
+giganotosaurus
 gigawatt
 gijon
 gile
@@ -2952,6 +2987,7 @@ gymnosophistai
 gzip
 habeas
 haben
+habilis
 habitat
 habits
 hack
@@ -2964,6 +3000,7 @@ hair
 hairy
 haiti
 haizi
+hallucigenia
 hamburg
 hamburger
 hammer
@@ -3081,6 +3118,7 @@ heroin
 herrmann
 herself
 herta
+hesperocyon
 het
 hetaira
 heure
@@ -3417,6 +3455,7 @@ jaguar
 jail
 jam
 jama
+jamais
 jambon
 jar
 jardin
@@ -3609,6 +3648,7 @@ ladder
 laden
 ladies
 lag
+lager
 lagsana
 lahoma
 laid
@@ -3771,6 +3811,7 @@ lite
 literature
 lithium
 lithuania
+littérateurs
 livecam
 lived
 liver
@@ -3856,6 +3897,7 @@ lt
 luchadoms
 luchadoras
 ludi
+lunge
 lunkah
 luru
 lustratio
@@ -4415,6 +4457,7 @@ oliu
 olla
 olympic
 olympus
+ombudsman
 omelette
 omer
 omicron
@@ -4469,6 +4512,7 @@ origin
 originaux
 origins
 orleans
+oro
 ortega
 ortiz
 os
@@ -4579,6 +4623,7 @@ parent
 parents
 parietal
 parka
+parkour
 parley
 parma
 parmigiano
@@ -4635,6 +4680,7 @@ peace
 peak
 pearls
 peas
+pecmi
 pedaling
 pedis
 pedorra
@@ -4870,6 +4916,7 @@ polyp
 polypropylen
 polyurethane
 pomerium
+pomp
 pompeii
 pond
 pontiac
@@ -4980,6 +5027,7 @@ printed
 printer
 printerfriendly
 prints
+prion
 prior
 priori
 prison
@@ -5062,7 +5110,9 @@ publico
 publish
 pubmed
 pubs
+puch
 pudding
+puffs
 puja
 pulled
 pulling
@@ -5160,6 +5210,7 @@ radios
 radium
 radius
 raffaele
+rafting
 rage
 ragtime
 raguel
@@ -5519,6 +5570,7 @@ rupiah
 rural
 rurales
 rush
+rusks
 russ
 russo
 rv
@@ -6069,6 +6121,7 @@ sql
 squad
 square
 squash
+squat
 squirt
 sr
 src
@@ -6962,4 +7015,5 @@ zum
 zureichenden
 écarté
 étage
+être
 ờm
