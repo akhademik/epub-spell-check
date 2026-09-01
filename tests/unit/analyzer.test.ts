@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest"
 import type { Dictionaries } from "../../src/types/dictionary"
 import type { ErrorInstance } from "../../src/types/errors"
-import { findSuggestions, groupErrors } from "../../src/utils/analyzer"
+import {
+  findSuggestions,
+  findTieredSuggestions,
+  groupErrors
+} from "../../src/utils/analyzer"
 
 describe("Analyzer Module", () => {
   const mockDictionaries: Dictionaries = {
@@ -76,6 +80,28 @@ describe("Analyzer Module", () => {
     it("should find suggestions for foreign words", () => {
       const suggestions = findSuggestions("sciense", mockDictionaries)
       expect(suggestions).toContain("science")
+    })
+
+    it("should prioritize exact Vietnamese tone swaps in primary suggestions (e.g. chổ -> chỗ)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(["chỗ", "cho", "chó", "chò"]),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set()
+      }
+      const tiered = findTieredSuggestions("chổ", customDicts)
+      expect(tiered.primary[0]).toBe("chỗ")
+    })
+
+    it("should suggest names with edit distance <= 2 in secondary suggestions (e.g. Hymalya -> Himalaya)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set(["Himalaya"])
+      }
+      const tiered = findTieredSuggestions("Hymalya", customDicts)
+      expect(tiered.secondary).toContain("Himalaya")
     })
 
     it("should return cached results on repeated calls", () => {

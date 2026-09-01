@@ -1,16 +1,208 @@
-import { MAX_SUGGESTION_COUNT } from "../constants"
+import {
+  MAX_PRIMARY_SUGGESTION_COUNT,
+  MAX_SECONDARY_SUGGESTION_COUNT,
+  MAX_SUGGESTION_COUNT
+} from "../constants"
 import type { Dictionaries, IndexedDictionary } from "../types/dictionary"
-import type { ErrorGroup, ErrorInstance } from "../types/errors"
+import type {
+  ErrorGroup,
+  ErrorInstance,
+  TieredSuggestions
+} from "../types/errors"
 import { getBaseWord, levenshteinDistance } from "./analysis-core"
 import { buildIndexedDictionary } from "./dictionary"
 
 // In-session suggestion memoization cache
 const suggestionCache = new Map<string, string[]>()
+const tieredSuggestionCache = new Map<string, TieredSuggestions>()
 
 export function clearSuggestionCache(): void {
   suggestionCache.clear()
+  tieredSuggestionCache.clear()
 }
 
+// Common Vietnamese tone mark pairs (hỏi <-> ngã, sắc <-> nặng)
+const VI_TONE_PAIRS: [string, string][] = [
+  ["ả", "ã"],
+  ["ẳ", "ẵ"],
+  ["ẩ", "ẫ"],
+  ["ẻ", "ẽ"],
+  ["ể", "ễ"],
+  ["ỉ", "ĩ"],
+  ["ỏ", "õ"],
+  ["ổ", "ỗ"],
+  ["ở", "ỡ"],
+  ["ủ", "ũ"],
+  ["ử", "ữ"],
+  ["ỷ", "ỹ"],
+  ["á", "ạ"],
+  ["ắ", "ặ"],
+  ["ấ", "ậ"],
+  ["é", "ẹ"],
+  ["ế", "ệ"],
+  ["í", "ị"],
+  ["ó", "ọ"],
+  ["ố", "ộ"],
+  ["ớ", "ợ"],
+  ["ú", "ụ"],
+  ["ứ", "ự"],
+  ["ý", "ỵ"]
+]
+
+/**
+ * Returns tiered suggestions for a word:
+ * - primary: high-confidence suggestions (exact tone swaps, edit distance <= 1 with identical base word)
+ * - secondary: broader suggestions (edit distance <= 2, vowel/foreign spelling phonetic match, names like Hymalya -> Himalaya)
+ */
+export function findTieredSuggestions(
+  word: string,
+  dictionaries: Dictionaries
+): TieredSuggestions {
+  const low = word.toLowerCase().normalize("NFC")
+  if (tieredSuggestionCache.has(low)) {
+    return tieredSuggestionCache.get(low)!
+  }
+
+  const baseLow = getBaseWord(low)
+  const primarySet = new Set<string>()
+  const secondarySet = new Set<string>()
+  const seenLower = new Set<string>()
+
+  // 1. Direct Vietnamese Tone Mark Swap (Highest confidence, e.g. chổ -> chỗ)
+  if (dictionaries.vietnamese.size > 0) {
+    for (const [a, b] of VI_TONE_PAIRS) {
+      if (low.includes(a)) {
+        const swapped = low.replace(a, b)
+        if (dictionaries.vietnamese.has(swapped) && !seenLower.has(swapped)) {
+          seenLower.add(swapped)
+          primarySet.add(swapped)
+        }
+      }
+      if (low.includes(b)) {
+        const swapped = low.replace(b, a)
+        if (dictionaries.vietnamese.has(swapped) && !seenLower.has(swapped)) {
+          seenLower.add(swapped)
+          primarySet.add(swapped)
+        }
+      }
+    }
+  }
+
+  // 2. Candidate collection from all dictionaries with length bucketing
+  const dictSources: {
+    dict: Set<string>
+    indexed?: IndexedDictionary
+    priorityWeight: number
+  }[] = [
+    {
+      dict: dictionaries.vietnamese,
+      indexed: dictionaries.indexed?.vietnamese,
+      priorityWeight: 0
+    },
+    {
+      dict: dictionaries.names,
+      indexed: dictionaries.indexed?.names,
+      priorityWeight: 1
+    },
+    {
+      dict: dictionaries.custom,
+      indexed: dictionaries.indexed?.custom,
+      priorityWeight: 2
+    },
+    {
+      dict: dictionaries.nonVietnamese,
+      indexed: dictionaries.indexed?.nonVietnamese,
+      priorityWeight: 3
+    }
+  ]
+
+  const primaryCandidates: { word: string; score: number }[] = []
+  const secondaryCandidates: { word: string; score: number }[] = []
+
+  const LEVEN_LOOKUP_MAX = word.length < 5 ? 1 : 2
+  const minLen = Math.max(1, low.length - LEVEN_LOOKUP_MAX)
+  const maxLen = low.length + LEVEN_LOOKUP_MAX
+
+  for (const { dict, indexed, priorityWeight } of dictSources) {
+    if (!dict || dict.size === 0) continue
+
+    let candidateWords: string[]
+    let baseWordCache: Map<string, string> | undefined
+
+    if (indexed) {
+      baseWordCache = indexed.baseWordCache
+      const buckets: string[] = []
+      for (let len = minLen; len <= maxLen; len++) {
+        const bucket = indexed.byLength.get(len)
+        if (bucket) buckets.push(...bucket)
+      }
+      candidateWords = buckets
+    } else {
+      const fallbackIndexed = buildIndexedDictionary(dict)
+      baseWordCache = fallbackIndexed.baseWordCache
+      const buckets: string[] = []
+      for (let len = minLen; len <= maxLen; len++) {
+        const bucket = fallbackIndexed.byLength.get(len)
+        if (bucket) buckets.push(...bucket)
+      }
+      candidateWords = buckets
+    }
+
+    for (const dictWord of candidateWords) {
+      const dictLow = dictWord.toLowerCase().normalize("NFC")
+      if (dictLow === low || seenLower.has(dictLow)) continue
+
+      const baseDictWord = baseWordCache?.get(dictWord) ?? getBaseWord(dictLow)
+      const baseDistance = levenshteinDistance(baseLow, baseDictWord)
+      const fullDistance = levenshteinDistance(low, dictLow)
+
+      // Primary criteria: close edit distance (baseDist <= 1 AND fullDist <= 1)
+      if (baseDistance <= 1 && fullDistance <= 1) {
+        const score = priorityWeight * 20 + baseDistance * 10 + fullDistance
+        primaryCandidates.push({ word: dictWord, score })
+      }
+      // Secondary criteria: broader edit distance (fullDist <= 2 OR (baseDist <= 1 AND fullDist <= 2))
+      else if (fullDistance <= 2 || (baseDistance <= 1 && fullDistance <= 2)) {
+        const score = priorityWeight * 20 + baseDistance * 5 + fullDistance
+        secondaryCandidates.push({ word: dictWord, score })
+      }
+    }
+  }
+
+  // Populate primary suggestions
+  primaryCandidates.sort((a, b) => a.score - b.score)
+  for (const c of primaryCandidates) {
+    if (primarySet.size >= MAX_PRIMARY_SUGGESTION_COUNT) break
+    const cLow = c.word.toLowerCase()
+    if (!seenLower.has(cLow)) {
+      seenLower.add(cLow)
+      primarySet.add(c.word)
+    }
+  }
+
+  // Populate secondary suggestions
+  secondaryCandidates.sort((a, b) => a.score - b.score)
+  for (const c of secondaryCandidates) {
+    if (secondarySet.size >= MAX_SECONDARY_SUGGESTION_COUNT) break
+    const cLow = c.word.toLowerCase()
+    if (!seenLower.has(cLow)) {
+      seenLower.add(cLow)
+      secondarySet.add(c.word)
+    }
+  }
+
+  const result: TieredSuggestions = {
+    primary: Array.from(primarySet),
+    secondary: Array.from(secondarySet)
+  }
+
+  tieredSuggestionCache.set(low, result)
+  return result
+}
+
+/**
+ * Returns a flattened array of top suggestions for backward compatibility.
+ */
 export function findSuggestions(
   word: string,
   dictionaries: Dictionaries
@@ -20,149 +212,13 @@ export function findSuggestions(
     return suggestionCache.get(low) || []
   }
 
-  const suggestionSet = new Set<string>()
-  const LEVEN_MAX_DIST = word.length < 5 ? 1 : 2
-  const baseLow = getBaseWord(low)
+  const tiered = findTieredSuggestions(word, dictionaries)
+  const combined = Array.from(
+    new Set([...tiered.primary, ...tiered.secondary])
+  ).slice(0, MAX_SUGGESTION_COUNT)
 
-  const getTopSuggestions = (
-    dictionary: Set<string>,
-    indexedDict: IndexedDictionary | undefined,
-    limit: number
-  ): string[] => {
-    if (limit <= 0) return []
-
-    // 1. Collect candidate words using byLength bucket filtering if available
-    let candidateWords: string[]
-    let baseWordCache: Map<string, string> | undefined
-
-    if (indexedDict) {
-      baseWordCache = indexedDict.baseWordCache
-      const buckets: string[] = []
-      const minLen = Math.max(1, low.length - LEVEN_MAX_DIST)
-      const maxLen = low.length + LEVEN_MAX_DIST
-      for (let len = minLen; len <= maxLen; len++) {
-        const bucket = indexedDict.byLength.get(len)
-        if (bucket) {
-          buckets.push(...bucket)
-        }
-      }
-      candidateWords = buckets
-    } else {
-      // Fallback for non-indexed dictionaries (e.g. ad-hoc or tests)
-      const fallbackIndexed = buildIndexedDictionary(dictionary)
-      baseWordCache = fallbackIndexed.baseWordCache
-      const buckets: string[] = []
-      const minLen = Math.max(1, low.length - LEVEN_MAX_DIST)
-      const maxLen = low.length + LEVEN_MAX_DIST
-      for (let len = minLen; len <= maxLen; len++) {
-        const bucket = fallbackIndexed.byLength.get(len)
-        if (bucket) {
-          buckets.push(...bucket)
-        }
-      }
-      candidateWords = buckets
-    }
-
-    const candidates: { word: string; score: number }[] = []
-
-    for (const dictWord of candidateWords) {
-      const baseDictWord = baseWordCache.get(dictWord) ?? getBaseWord(dictWord)
-      const baseDistance = levenshteinDistance(baseLow, baseDictWord)
-
-      if (baseDistance <= 1) {
-        const fullDistance = levenshteinDistance(low, dictWord)
-        const score = baseDistance * 10 + fullDistance
-
-        if (score > 0) {
-          candidates.push({ word: dictWord, score })
-        }
-      }
-    }
-
-    // Top-k selection: insertion if large or standard sort if small
-    if (candidates.length > 200) {
-      // Bounded top-k list
-      const topK: { word: string; score: number }[] = []
-      for (const item of candidates) {
-        if (topK.length < limit) {
-          topK.push(item)
-          topK.sort((a, b) => a.score - b.score)
-        } else if (item.score < topK[topK.length - 1].score) {
-          topK[topK.length - 1] = item
-          topK.sort((a, b) => a.score - b.score)
-        }
-      }
-      return topK.map((c) => c.word)
-    }
-
-    candidates.sort((a, b) => a.score - b.score)
-    return candidates.slice(0, limit).map((c) => c.word)
-  }
-
-  // 1. Vietnamese suggestions
-  if (dictionaries.vietnamese.size > 0) {
-    const vnSuggestions = getTopSuggestions(
-      dictionaries.vietnamese,
-      dictionaries.indexed?.vietnamese,
-      MAX_SUGGESTION_COUNT
-    )
-    for (const s of vnSuggestions) {
-      suggestionSet.add(s)
-    }
-  }
-
-  // 2. Names suggestions
-  if (
-    suggestionSet.size < MAX_SUGGESTION_COUNT &&
-    dictionaries.names &&
-    dictionaries.names.size > 0
-  ) {
-    const remaining = MAX_SUGGESTION_COUNT - suggestionSet.size
-    const nameSuggestions = getTopSuggestions(
-      dictionaries.names,
-      dictionaries.indexed?.names,
-      remaining
-    )
-    for (const s of nameSuggestions) {
-      suggestionSet.add(s)
-    }
-  }
-
-  // 3. Custom suggestions
-  if (
-    suggestionSet.size < MAX_SUGGESTION_COUNT &&
-    dictionaries.custom.size > 0
-  ) {
-    const remaining = MAX_SUGGESTION_COUNT - suggestionSet.size
-    const customSuggestions = getTopSuggestions(
-      dictionaries.custom,
-      dictionaries.indexed?.custom,
-      remaining
-    )
-    for (const s of customSuggestions) {
-      suggestionSet.add(s)
-    }
-  }
-
-  // 4. Non-Vietnamese suggestions
-  if (
-    suggestionSet.size < MAX_SUGGESTION_COUNT &&
-    dictionaries.nonVietnamese.size > 0
-  ) {
-    const remaining = MAX_SUGGESTION_COUNT - suggestionSet.size
-    const foreignSuggestions = getTopSuggestions(
-      dictionaries.nonVietnamese,
-      dictionaries.indexed?.nonVietnamese,
-      remaining
-    )
-    for (const s of foreignSuggestions) {
-      suggestionSet.add(s)
-    }
-  }
-
-  const result = Array.from(suggestionSet).slice(0, MAX_SUGGESTION_COUNT)
-  suggestionCache.set(low, result)
-  return result
+  suggestionCache.set(low, combined)
+  return combined
 }
 
 export function groupErrors(errors: ErrorInstance[]): ErrorGroup[] {

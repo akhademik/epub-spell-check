@@ -1,7 +1,7 @@
 <script lang="ts">
   import { CONTEXT_LENGTH_CHARS } from "../constants"
   import { appState } from "../state.svelte"
-  import { findSuggestions } from "../utils/analyzer"
+  import { findTieredSuggestions } from "../utils/analyzer"
 
   function getDotColor(type: string): string {
     switch (type) {
@@ -102,18 +102,23 @@
     )
   }
 
-  const suggestions = $derived.by(() => {
-    if (!group) return []
-    const raw = findSuggestions(group.word, appState.dictionaries)
+  const tieredSuggestions = $derived.by(() => {
+    if (!group) return { primary: [], secondary: [] }
+    const raw = findTieredSuggestions(group.word, appState.dictionaries)
 
     const isUpper = isUpperCase(group.word)
     const isTitle = isTitleCase(group.word)
 
-    return raw.map((s) => {
+    const formatWord = (s: string) => {
       if (isUpper) return s.toUpperCase()
       if (isTitle) return s.charAt(0).toUpperCase() + s.slice(1)
       return s
-    })
+    }
+
+    return {
+      primary: raw.primary.map(formatWord),
+      secondary: raw.secondary.map(formatWord)
+    }
   })
   let customFixInput = $state("")
 
@@ -225,31 +230,59 @@
       </div>
     {:else}
       <div class="w-full max-w-4xl animate-fadeIn space-y-5">
-        <!-- 1. Top: Error Reason Badge with matching dot color & Fix status -->
-        <div class="flex items-center justify-center gap-2 flex-wrap">
-          <div class="px-3.5 py-1.5 bg-slate-800 text-slate-200 rounded-xl text-xs border border-slate-700 shadow-md flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
-            <span class="font-medium text-slate-200">{group.reason}</span>
+        <!-- 1. Top Header Row: Left-aligned Error Reason Badge & Resolved Status, Right-aligned Wiktionary & Google Search tools -->
+        <div class="flex items-center justify-between gap-3 flex-wrap border-b border-slate-800/80 pb-3">
+          <!-- Left: Error Reason & Fix Status -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="px-3.5 py-1.5 bg-slate-800 text-slate-200 rounded-xl text-xs border border-slate-700 shadow-md flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
+              <span class="font-medium text-slate-200">{group.reason}</span>
+            </div>
+
+            {#if isCurrentInstanceResolved}
+              <div class="px-3 py-1.5 bg-emerald-950/80 text-emerald-300 rounded-xl text-xs border border-emerald-700/80 shadow-md flex items-center gap-2 font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Đã sửa → "{currentAppliedWord}"</span>
+                {#if currentContext}
+                  <button
+                    type="button"
+                    onclick={() => appState.undoFix(currentContext)}
+                    class="ml-1 text-slate-400 hover:text-white underline text-[11px]"
+                    title="Hoàn tác sửa từ này"
+                  >
+                    Hoàn tác
+                  </button>
+                {/if}
+              </div>
+            {/if}
           </div>
 
-          {#if isCurrentInstanceResolved}
-            <div class="px-3 py-1.5 bg-emerald-950/80 text-emerald-300 rounded-xl text-xs border border-emerald-700/80 shadow-md flex items-center gap-2 font-semibold">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Đã sửa → "{currentAppliedWord}"</span>
-              {#if currentContext}
-                <button
-                  type="button"
-                  onclick={() => appState.undoFix(currentContext)}
-                  class="ml-1 text-slate-400 hover:text-white underline text-[11px]"
-                  title="Hoàn tác sửa từ này"
-                >
-                  Hoàn tác
-                </button>
-              {/if}
-            </div>
-          {/if}
+          <!-- Right: Search Tools (Wiktionary & Google) -->
+          <div class="flex items-center gap-2 ml-auto">
+            <a
+              href="https://vi.wiktionary.org/wiki/{encodeURIComponent(group.word)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Tra cứu trên Wiktionary"
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs text-blue-400 bg-slate-800 hover:bg-blue-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-sm"
+            >
+              <img src="/piece.ico" alt="Wiktionary" class="w-3.5 h-3.5 rounded-sm" />
+              <span>Wiktionary</span>
+            </a>
+
+            <a
+              href="https://www.google.com/search?q={encodeURIComponent(group.word)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Tìm kiếm trên Google"
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs text-emerald-400 bg-slate-800 hover:bg-emerald-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-sm"
+            >
+              <img src="https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico" alt="Google" class="w-3.5 h-3.5" />
+              <span>Google</span>
+            </a>
+          </div>
         </div>
 
         <!-- 2. Middle: Paragraph reader box (Context) -->
@@ -266,80 +299,108 @@
           <span>{contextSegments.suffix}</span>
         </div>
 
-        <!-- 3. Below Context: Search tools (Wiktionary & Google) -->
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          <!-- Wiktionary lookup -->
-          <a
-            href="https://vi.wiktionary.org/wiki/{encodeURIComponent(group.word)}"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Tra cứu trên Wiktionary"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-blue-400 bg-slate-800 hover:bg-blue-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-md"
-          >
-            <img src="/piece.ico" alt="Wiktionary" class="w-4 h-4 rounded-sm" />
-            <span>Wiktionary</span>
-          </a>
-
-          <!-- Google Search lookup -->
-          <a
-            href="https://www.google.com/search?q={encodeURIComponent(group.word)}"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Tìm kiếm trên Google"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-emerald-400 bg-slate-800 hover:bg-emerald-600 hover:text-white rounded-xl border border-slate-700 transition-colors shadow-md"
-          >
-            <img src="https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico" alt="Google" class="w-4 h-4" />
-            <span>Google</span>
-          </a>
-        </div>
-
-        <!-- 4. Bottom: Suggestion replacement & Custom Word Fix actions -->
-        <div class="pt-4 border-t border-slate-800/80 space-y-3">
-          <div class="text-xs text-slate-400 font-medium">Gợi ý sửa từ chính xác:</div>
-
-          {#if suggestions.length > 0}
-            <div class="flex flex-wrap items-center justify-center gap-2">
-              {#each suggestions as sugg}
-                <div class="inline-flex items-stretch rounded-xl border border-emerald-700/60 bg-emerald-950/40 overflow-hidden shadow-md">
-                  <!-- Main Action: Replace single instance -->
-                  <button
-                    type="button"
-                    onclick={() => currentContext && appState.applyFixToInstance(currentContext, sugg)}
-                    class="px-3 py-1.5 text-emerald-300 hover:bg-emerald-900/60 text-sm font-semibold transition-colors flex items-center gap-1.5"
-                    title="Thay từ này thành '{sugg}'"
-                  >
-                    <span>{sugg}</span>
-                  </button>
-
-                  <!-- Secondary Action: Replace all occurrences in book -->
-                  {#if group.contexts.length > 1}
+        <!-- 3. Bottom: Tiered Suggestion Replacement & Custom Word Fix actions -->
+        <div class="pt-2 border-t border-slate-800/80 space-y-3 text-left sm:text-center">
+          <!-- Tier 1: High Confidence Suggestions -->
+          {#if tieredSuggestions.primary.length > 0}
+            <div class="space-y-1.5">
+              <div class="text-[11px] text-emerald-400/90 font-semibold flex items-center justify-center gap-1">
+                <span>Khả năng cao:</span>
+              </div>
+              <div class="flex flex-wrap items-center justify-center gap-2">
+                {#each tieredSuggestions.primary as sugg}
+                  <div class="inline-flex items-stretch rounded-xl border border-emerald-600/70 bg-emerald-950/50 overflow-hidden shadow-md">
+                    <!-- Main Action: Replace single instance -->
                     <button
                       type="button"
-                      onclick={() => appState.applyFixToAllInstances(group, sugg)}
-                      class="px-2 py-1.5 text-[11px] font-medium text-emerald-400/80 hover:text-emerald-200 hover:bg-emerald-800/60 border-l border-emerald-700/50 transition-colors"
-                      title="Thay tất cả {group.contexts.length} lần xuất hiện thành '{sugg}'"
+                      onclick={() => currentContext && appState.applyFixToInstance(currentContext, sugg)}
+                      class="px-3 py-1.5 text-emerald-200 hover:bg-emerald-800/70 text-sm font-semibold transition-colors flex items-center gap-1.5"
+                      title="Thay từ này thành '{sugg}'"
                     >
-                      Tất cả ({group.contexts.length})
+                      <span>{sugg}</span>
                     </button>
-                  {/if}
 
-                  <!-- Copy button -->
-                  <button
-                    type="button"
-                    onclick={() => appState.copyText(sugg)}
-                    class="px-2 py-1.5 text-slate-400 hover:text-white hover:bg-slate-800 border-l border-emerald-700/50 transition-colors"
-                    title="Sao chép '{sugg}' vào clipboard"
-                    aria-label="Sao chép"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                  </button>
-                </div>
-              {/each}
+                    <!-- Secondary Action: Replace all occurrences in book -->
+                    {#if group.contexts.length > 1}
+                      <button
+                        type="button"
+                        onclick={() => appState.applyFixToAllInstances(group, sugg)}
+                        class="px-2 py-1.5 text-[11px] font-medium text-emerald-300 hover:text-white hover:bg-emerald-700/60 border-l border-emerald-600/50 transition-colors"
+                        title="Thay tất cả {group.contexts.length} lần xuất hiện thành '{sugg}'"
+                      >
+                        all
+                      </button>
+                    {/if}
+
+                    <!-- Copy button -->
+                    <button
+                      type="button"
+                      onclick={() => appState.copyText(sugg)}
+                      class="px-2 py-1.5 text-slate-400 hover:text-white hover:bg-slate-800 border-l border-emerald-600/50 transition-colors"
+                      title="Sao chép '{sugg}' vào clipboard"
+                      aria-label="Sao chép"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                  </div>
+                {/each}
+              </div>
             </div>
-          {:else}
-            <div class="text-xs text-slate-500 italic">Không có gợi ý tự động phù hợp trong từ điển.</div>
+          {/if}
+
+          <!-- Tier 2: Broader Suggestions (Names, related terms) -->
+          {#if tieredSuggestions.secondary.length > 0}
+            <div class="space-y-1.5 {tieredSuggestions.primary.length > 0 ? 'pt-1' : ''}">
+              <div class="text-[11px] text-cyan-400/80 font-medium flex items-center justify-center gap-1">
+                <span>Khả năng thấp:</span>
+              </div>
+              <div class="flex flex-wrap items-center justify-center gap-2">
+                {#each tieredSuggestions.secondary as sugg}
+                  <div class="inline-flex items-stretch rounded-xl border border-cyan-800/60 bg-cyan-950/30 overflow-hidden shadow-sm">
+                    <!-- Main Action: Replace single instance -->
+                    <button
+                      type="button"
+                      onclick={() => currentContext && appState.applyFixToInstance(currentContext, sugg)}
+                      class="px-3 py-1.5 text-cyan-300 hover:bg-cyan-900/50 text-sm font-semibold transition-colors flex items-center gap-1.5"
+                      title="Thay từ này thành '{sugg}'"
+                    >
+                      <span>{sugg}</span>
+                    </button>
+
+                    <!-- Secondary Action: Replace all occurrences in book -->
+                    {#if group.contexts.length > 1}
+                      <button
+                        type="button"
+                        onclick={() => appState.applyFixToAllInstances(group, sugg)}
+                        class="px-2 py-1.5 text-[11px] font-medium text-cyan-400/80 hover:text-cyan-200 hover:bg-cyan-800/50 border-l border-cyan-800/50 transition-colors"
+                        title="Thay tất cả {group.contexts.length} lần xuất hiện thành '{sugg}'"
+                      >
+                        all
+                      </button>
+                    {/if}
+
+                    <!-- Copy button -->
+                    <button
+                      type="button"
+                      onclick={() => appState.copyText(sugg)}
+                      class="px-2 py-1.5 text-slate-400 hover:text-white hover:bg-slate-800 border-l border-cyan-800/50 transition-colors"
+                      title="Sao chép '{sugg}' vào clipboard"
+                      aria-label="Sao chép"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                  </div>
+                {/each}
+              </div>
+            </div>
+          {/if}
+
+          {#if tieredSuggestions.primary.length === 0 && tieredSuggestions.secondary.length === 0}
+            <div class="text-xs text-slate-500 italic text-center">Không có gợi ý tự động phù hợp trong từ điển.</div>
           {/if}
 
           <!-- Custom Replace Word Input -->

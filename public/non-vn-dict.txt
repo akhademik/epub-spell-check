@@ -69,6 +69,7 @@ added
 adding
 address
 adds
+adieu
 adios
 adipex
 adiós
@@ -155,6 +156,7 @@ alaine
 alarm
 alauda
 alayna
+albidum
 albumin
 albums
 alcohol
@@ -201,6 +203,7 @@ along
 alot
 alpaca
 alpine
+alprazolam
 already
 also
 alt
@@ -299,6 +302,7 @@ angst
 animal
 animals
 anime
+ankyl
 annalee
 annamae
 annelle
@@ -682,6 +686,7 @@ benzodiazepine
 benzodiazepines
 bequest
 beret
+berge
 bermuda
 berna
 beside
@@ -763,6 +768,7 @@ blanc
 blanco
 blank
 blanket
+blankets
 blast
 blatari
 blatnoi
@@ -770,6 +776,7 @@ blatnye
 blend
 bless
 blessed
+bleu
 blind
 blindfold
 blink
@@ -803,6 +810,7 @@ bochum
 bock
 bodies
 body
+boisei
 bok
 bola
 bold
@@ -813,6 +821,7 @@ bolt
 bomb
 bomp
 bona
+bonbon
 bond
 bondage
 bonds
@@ -850,6 +859,8 @@ botox
 bottle
 bottles
 bottom
+botulin
+bouche
 bought
 bound
 bouquet
@@ -913,6 +924,7 @@ british
 britska
 broad
 broader
+brochure
 broke
 broken
 broker
@@ -934,7 +946,6 @@ brunei
 brush
 brutal
 brûlée
-brừm
 bt
 bubble
 bucks
@@ -970,6 +981,7 @@ bungalow
 bunjinga
 bunker
 bunny
+buns
 buonasera
 buongiorno
 burden
@@ -999,6 +1011,7 @@ buttercup
 button
 buttons
 butts
+butyl
 buya
 buyer
 buyers
@@ -1058,6 +1071,7 @@ calling
 calliope
 calls
 calm
+calorie
 calory
 calvin
 calypso
@@ -1118,6 +1132,7 @@ caprice
 capsule
 capture
 car
+caracara
 caramba
 caramel
 carate
@@ -1231,6 +1246,7 @@ centres
 cents
 centuria
 century
+cephalopod
 cera
 ceramic
 cereal
@@ -1298,8 +1314,10 @@ chicory
 chier
 chiffon
 chili
+chink
 chino
 chinos
+chit
 chloroform
 chocolate
 choice
@@ -1335,6 +1353,7 @@ circles
 circolazione
 circuit
 circumpunct
+circumstance
 circus
 cirque
 cisco
@@ -1342,6 +1361,7 @@ cite
 cited
 cities
 citizen
+citrate
 civic
 civica
 civil
@@ -1501,6 +1521,7 @@ concert
 concord
 concorrenza
 condo
+condor
 condos
 conduct
 conduis
@@ -1522,6 +1543,7 @@ consult
 contac
 contact
 contain
+container
 contemplar
 content
 contest
@@ -1568,6 +1590,7 @@ corresponds
 cortex
 cortisol
 coruna
+cosas
 cosine
 cosplay
 cost
@@ -1631,10 +1654,12 @@ cried
 crime
 crimes
 criminis
+crisps
 critics
 crm
 crois
 croissant
+crombie
 crook
 crop
 cropping
@@ -1653,6 +1678,7 @@ crucifix
 crude
 cruise
 cruises
+crumble
 crux
 cry
 crying
@@ -1702,6 +1728,7 @@ cybgf
 cycle
 cycles
 cycling
+cyclopropane
 cyclotrimethylenetrinitramine
 cyndi
 cynic
@@ -1838,6 +1865,7 @@ desire
 desired
 desk
 desktop
+desmodus
 despite
 destroy
 detail
@@ -1870,6 +1898,7 @@ difficile
 difficilia
 différence
 dinky
+dioxide
 disiecta
 diuec
 divertido
@@ -1938,6 +1967,7 @@ dracoman
 draft
 drag
 dragon
+dragonfly
 drain
 drama
 dramatis
@@ -2093,6 +2123,7 @@ eleutheria
 elevazione
 eleven
 elipse
+elk
 elyse
 ema
 emacs
@@ -2174,6 +2205,7 @@ equity
 er
 erasmo
 erat
+erectus
 erh
 ermine
 ermitaño
@@ -2358,6 +2390,7 @@ faster
 fastest
 fat
 fatal
+fatale
 fate
 father
 fathers
@@ -2379,6 +2412,7 @@ fears
 feary
 feat
 feature
+features
 feb
 februare
 fece
@@ -2408,6 +2442,7 @@ females
 femmes
 femto
 fence
+fencing
 fentanyl
 feo
 feof
@@ -2444,6 +2479,7 @@ figured
 figures
 fijaciono
 fikr
+fila
 filed
 files
 filing
@@ -2509,6 +2545,7 @@ flame
 flamen
 flamenco
 flamingo
+flan
 flana
 flannel
 flapped
@@ -2533,6 +2570,7 @@ fling
 flip
 flu
 fluid
+fluorite
 flush
 flux
 flyer
@@ -2637,6 +2675,7 @@ friday
 fridge
 friend
 friends
+frisson
 frog
 froidevaux
 from
@@ -2698,6 +2737,7 @@ gambia
 games
 gameshow
 gaming
+gangster
 gap
 gaps
 garage
@@ -2771,6 +2811,7 @@ gig
 gigabit
 gigabyte
 gigahertz
+giganotosaurus
 gigawatt
 gijon
 gile
@@ -2831,6 +2872,7 @@ gonfaloniere
 gonna
 gonzalez
 goods
+gook
 gore
 gorilla
 gork
@@ -2944,6 +2986,7 @@ gymnosophistai
 gzip
 habeas
 haben
+habilis
 habitat
 habits
 hack
@@ -2956,6 +2999,7 @@ hair
 hairy
 haiti
 haizi
+hallucigenia
 hamburg
 hamburger
 hammer
@@ -3073,6 +3117,7 @@ heroin
 herrmann
 herself
 herta
+hesperocyon
 het
 hetaira
 heure
@@ -3409,6 +3454,7 @@ jaguar
 jail
 jam
 jama
+jamais
 jambon
 jar
 jardin
@@ -3601,6 +3647,7 @@ ladder
 laden
 ladies
 lag
+lager
 lagsana
 lahoma
 laid
@@ -3613,6 +3660,7 @@ lambda
 lambert
 lamborghini
 lame
+laminate
 lamp
 lamps
 land
@@ -3695,7 +3743,6 @@ leipzig
 leisure
 lemon
 lempira
-leonardovirginoftherocks
 let
 lets
 letter
@@ -3762,6 +3809,7 @@ lite
 literature
 lithium
 lithuania
+littérateurs
 livecam
 lived
 liver
@@ -3847,6 +3895,7 @@ lt
 luchadoms
 luchadoras
 ludi
+lunge
 lunkah
 luru
 lustratio
@@ -3972,6 +4021,7 @@ methanesulfonic
 method
 methods
 methoxy
+methyl
 metical
 metres
 metric
@@ -4393,6 +4443,7 @@ og
 oh
 ohrpanav
 oil
+oilies
 oils
 oivre
 ol
@@ -4404,6 +4455,7 @@ oliu
 olla
 olympic
 olympus
+ombudsman
 omelette
 omer
 omicron
@@ -4458,6 +4510,7 @@ origin
 originaux
 origins
 orleans
+oro
 ortega
 ortiz
 os
@@ -4469,6 +4522,7 @@ ottawa
 ou
 ought
 ouguiya
+ounces
 our
 ouroboros
 ours
@@ -4536,6 +4590,7 @@ palau
 pale
 palm
 palmira
+pamphlet
 pandora
 pane
 panels
@@ -4566,6 +4621,7 @@ parent
 parents
 parietal
 parka
+parkour
 parley
 parma
 parmigiano
@@ -4622,6 +4678,7 @@ peace
 peak
 pearls
 peas
+pecmi
 pedaling
 pedis
 pedorra
@@ -4677,6 +4734,7 @@ peseta
 pest
 pestis
 pet
+petal
 petit
 petite
 petri
@@ -4729,6 +4787,7 @@ pieces
 piedad
 pieu
 pig
+pigs
 pike
 pilar
 pill
@@ -4828,7 +4887,6 @@ poems
 poena
 poet
 poetry
-poetryfoundation
 point
 pointed
 pointer
@@ -4855,6 +4913,7 @@ polyp
 polypropylen
 polyurethane
 pomerium
+pomp
 pompeii
 pond
 pontiac
@@ -4965,6 +5024,7 @@ printed
 printer
 printerfriendly
 prints
+prion
 prior
 priori
 prison
@@ -4989,6 +5049,8 @@ profit
 profits
 program
 project
+prom
+promenade
 promise
 promo
 promote
@@ -5000,6 +5062,7 @@ propane
 proper
 prophet
 propose
+propyl
 pros
 prosciutto
 prosecco
@@ -5044,7 +5107,9 @@ publico
 publish
 pubmed
 pubs
+puch
 pudding
+puffs
 puja
 pulled
 pulling
@@ -5142,6 +5207,7 @@ radios
 radium
 radius
 raffaele
+rafting
 rage
 ragtime
 raguel
@@ -5501,6 +5567,7 @@ rupiah
 rural
 rurales
 rush
+rusks
 russ
 russo
 rv
@@ -5513,13 +5580,13 @@ sabe
 sac
 sacred
 saddam
+saddle
 sadi
 safari
 safe
 safely
 safer
 safety
-sagessepopulaire
 sail
 sailing
 saint
@@ -5978,6 +6045,7 @@ soit
 solas
 soldiers
 solitaire
+solly
 soltara
 solution
 sonate
@@ -6049,6 +6117,7 @@ sql
 squad
 square
 squash
+squat
 squirt
 sr
 src
@@ -6248,6 +6317,7 @@ swastika
 sweden
 swedish
 sweet
+sweetheart
 swift
 swim
 swing
@@ -6668,7 +6738,6 @@ two
 tyn
 typewriters
 tête
-tĩnhở
 uchi
 ugolovniki
 uk
@@ -6809,6 +6878,8 @@ warcraft
 warm
 wars
 was
+washee
+washing
 watch
 water
 waterloo
@@ -6897,6 +6968,7 @@ yadira
 yaeko
 yahoo
 yamete
+yay
 yeah
 year
 yemen
@@ -6938,4 +7010,4 @@ zum
 zureichenden
 écarté
 étage
-ờm
+être
