@@ -305,7 +305,7 @@
           {#if tieredSuggestions.primary.length > 0}
             <div class="space-y-1.5">
               <div class="text-[11px] text-emerald-400/90 font-semibold flex items-center justify-center gap-1">
-                <span>Gợi ý khả năng cao (Chính xác):</span>
+                <span>Khả năng cao:</span>
               </div>
               <div class="flex flex-wrap items-center justify-center gap-2">
                 {#each tieredSuggestions.primary as sugg}
@@ -354,7 +354,7 @@
           {#if tieredSuggestions.secondary.length > 0}
             <div class="space-y-1.5 {tieredSuggestions.primary.length > 0 ? 'pt-1' : ''}">
               <div class="text-[11px] text-cyan-400/80 font-medium flex items-center justify-center gap-1">
-                <span>Gợi ý mở rộng (Tên riêng / Biến thể / Từ gần giống):</span>
+                <span>Khả năng thấp:</span>
               </div>
               <div class="flex flex-wrap items-center justify-center gap-2">
                 {#each tieredSuggestions.secondary as sugg}
