@@ -1,0 +1,3 @@
+- suggestion words: 2 row hiện thời cho maximum là row 1 5 từ row 2 5 từ thôi
+- Gợi ý khả năng cao (Chính xác): -> "Khả năng cao"
+- Gợi ý mở rộng (Tên riêng / Biến thể / Từ gần giống): -> "Khả năng thấp"

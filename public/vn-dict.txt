@@ -1,5 +1,4 @@
 a
-aa
 abc
 accordeon
 aceton
@@ -117,7 +116,6 @@ bau
 bay
 bazan
 bazơ
-bb
 bch
 bchtw
 bct
@@ -622,7 +620,6 @@ cavat
 cave
 cay
 cazắc
-cc
 cd
 cedi
 cello
@@ -1406,7 +1403,6 @@ danh
 dao
 data
 day
-dd
 de
 deal
 deca
@@ -1743,7 +1739,6 @@ dựng
 dựt
 e
 ebonit
-ee
 eke
 el
 elip
@@ -1842,7 +1837,6 @@ ge
 gemani
 gen
 gene
-gg
 ghe
 ghen
 ghi
@@ -2290,7 +2284,6 @@ heo
 herb
 hertz
 hg
-hh
 hi
 hia
 hic
@@ -2717,7 +2710,6 @@ iai
 ic
 idiom
 idol
-ii
 im
 in
 inbox
@@ -2749,7 +2741,6 @@ jeep
 jen
 jiang
 jin
-jj
 job
 ju
 jun
@@ -3103,7 +3094,6 @@ kiệm
 kiện
 kiệt
 kiệu
-kk
 km
 kmun
 knia
@@ -3309,7 +3299,6 @@ liệng
 liệp
 liệt
 liệu
-ll
 lo
 loa
 loai
@@ -3855,7 +3844,6 @@ miệt
 ml
 mluộm
 mlời
-mm
 mn
 mnhuộm
 mnhời
@@ -4950,7 +4938,6 @@ niễng
 niệm
 niệt
 niệu
-nn
 no
 noa
 noel
@@ -5238,7 +5225,6 @@ om
 omega
 on
 ong
-oo
 oong
 open
 opera
@@ -5566,7 +5552,6 @@ pop
 post
 pound
 poọng
-pp
 pr
 preh
 prep
@@ -5636,7 +5621,6 @@ pờ
 pụa
 q
 qh
-qq
 qs
 qua
 quai
@@ -5868,7 +5852,6 @@ roàng
 roòng
 roạt
 roẹt
-rr
 ru
 rua
 rubi
@@ -6273,7 +6256,6 @@ spe
 spi
 spê
 sró
-ss
 st
 sta
 stato
@@ -7308,7 +7290,6 @@ trữ
 trự
 trực
 ts
-tt
 ttl
 tts
 tu
@@ -7676,7 +7657,6 @@ urea
 url
 urê
 usd
-uu
 uy
 uyn
 uyên
@@ -7772,7 +7752,6 @@ vung
 vuông
 vuốt
 vuột
-vv
 vy
 và
 vài
@@ -8113,7 +8092,6 @@ xuồng
 xuổng
 xuộm
 xuỵt
-xx
 xy
 xyanua
 xà
@@ -8358,7 +8336,6 @@ yoga
 yuan
 yuck
 yun
-yy
 yêm
 yên
 yêng
@@ -8407,7 +8384,6 @@ zốt
 âm
 ân
 âu
-ââ
 âớu
 âởu
 ã
@@ -8435,7 +8411,6 @@ zốt
 êta
 êtô
 êu
-êê
 êđê
 ì
 ìn
@@ -8476,7 +8451,6 @@ zốt
 ôxy
 ôxít
 ôzôn
-ôô
 ôông
 õng
 ù
@@ -8500,7 +8474,6 @@ zốt
 ăn
 ăng
 ăngten
-ăă
 đ
 đa
 đai
@@ -8703,7 +8676,6 @@ zốt
 đăm
 đăng
 đăngten
-đđ
 đĩ
 đĩa
 đĩnh
@@ -8895,7 +8867,6 @@ zốt
 ơi
 ơn
 ơristic
-ơơ
 ư
 ưa
 ưhm
@@ -8906,7 +8877,6 @@ zốt
 ươm
 ươn
 ương
-ưư
 ước
 ướm
 ướp

@@ -946,7 +946,6 @@ brunei
 brush
 brutal
 brûlée
-brừm
 bt
 bubble
 bucks
@@ -3744,7 +3743,6 @@ leipzig
 leisure
 lemon
 lempira
-leonardovirginoftherocks
 let
 lets
 letter
@@ -4889,7 +4887,6 @@ poems
 poena
 poet
 poetry
-poetryfoundation
 point
 pointed
 pointer
@@ -5590,7 +5587,6 @@ safe
 safely
 safer
 safety
-sagessepopulaire
 sail
 sailing
 saint
@@ -6742,7 +6738,6 @@ two
 tyn
 typewriters
 tête
-tĩnhở
 uchi
 ugolovniki
 uk
@@ -7016,4 +7011,3 @@ zureichenden
 écarté
 étage
 être
-ờm

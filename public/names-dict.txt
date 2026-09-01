@@ -78,7 +78,6 @@ Acp
 Acquired
 Acro
 Acropolis
-Actdmpiifpwanpns
 Actium
 Acton
 Actualization
@@ -399,7 +398,6 @@ Alona
 Alonso
 Alonzo
 Alors
-AlorsSau
 Aloysius
 Alp
 Alpert
@@ -572,7 +570,6 @@ Anguilla
 Angus
 Anhalonium
 Anhbảo
-Anhđịnh
 Anibal
 Anichkov
 Anichkova
@@ -1496,7 +1493,6 @@ Biddle
 Biddles
 Bieil
 Bienvenue
-BienĐược
 Biff
 Biggers
 Biggin
@@ -1662,7 +1658,6 @@ Boltraffio
 Boléro
 Bombardier
 Bombay
-BonTốt
 Bonanza
 Bonaparte
 Bonard
@@ -1672,7 +1667,6 @@ Bondarin
 Bonfire
 Bongiorno
 Bonita
-BonjourChào
 Bonneville
 Bonney
 Bonnie
@@ -2634,13 +2628,11 @@ Chupenyev
 Church
 Churchill
 Chuzzlewit
-ChàoRick
 Chárles
 Château
 Châtelet
 Chéka
 Chüd
-Chươhg
 Chắccô
 Chệu
 Chụng
@@ -3521,7 +3513,6 @@ Demetrios
 Demetrius
 Demidov
 Deming
-DemiseQua
 Democritus
 Demosielles
 Demosthenes
@@ -3675,7 +3666,6 @@ Dieter
 Diethyltoluamide
 Dietz
 Dieu
-DieuChúa
 Diff
 Differ
 Difference
@@ -4005,7 +3995,6 @@ Drummond
 Drusus
 Drypetis
 Dtrong
-DuChiens
 Duane
 Dubay
 Dubba
@@ -4106,10 +4095,6 @@ Département
 Dérander
 Dürer
 Düsseldorf
-Dưđng
-Dươnggọi
-Dước
-Dữu
 EFree
 Eames
 Earl
@@ -4429,7 +4414,6 @@ Endocannabinoids
 Endorphins
 Enfant
 Enfield
-EnfinXét
 Engelbert
 Engels
 Engineer
@@ -4573,7 +4557,6 @@ Eun
 Euna
 Eunice
 Euphemia
-EuphemiaUyển
 Euphranor
 Euphrate
 Euphrates
@@ -5143,7 +5126,6 @@ Fyander
 Fyodor
 Fyodorov
 Fyodorovich
-Fưck
 Gabbs
 Gabinia
 Gabinius
@@ -5354,7 +5336,6 @@ Georgia
 Georgiana
 Georgie
 Georgiyevich
-GeralcPs
 Gerald
 Geraldine
 Geraldo
@@ -5464,7 +5445,6 @@ Giza
 Giéc
 Giêsu
 Giấng
-Giớ
 Glade
 Gladis
 Gladry
@@ -5819,7 +5799,6 @@ Hagerup
 Hagi
 Hague
 Haguresouna
-Hahaha
 Haiatalnefous
 Haidilao
 Hailey
@@ -6040,7 +6019,6 @@ Hebre
 Hebrews
 Hebron
 Hebros
-Hebrơ
 Hecataeus
 Hecatomnids
 Heck
@@ -6450,20 +6428,12 @@ Hypotheses
 Hyrcania
 Hyrcanus
 Hàhà
-Hàhàhà
-Hàhàhàhà
 Hã
 Häagen
 Hänsel
 Hébreu
-Hêbrơ
 Hôtel
-Hđtd
-Hưỡng
 Hế
-Hừhừhừhừ
-HửI
-Hửm
 Iago
 Ian
 Iasus
@@ -6490,7 +6460,6 @@ Iguvium
 Ihmen
 Ihop
 Ihồi
-Iixứ
 Ike
 Ikebukuro
 Ikey
@@ -7570,9 +7539,7 @@ Khruschhev
 Khrushchev
 Khrustalev
 Khyber
-KhâmGiáo
 Khưu
-Khửa
 Kiana
 Kiara
 Kidd
@@ -7898,7 +7865,6 @@ Kuznetsk
 Kuznetsky
 Kuznetsov
 Kwakkelstein
-KxKt
 KxQ
 Kxb
 Kxc
@@ -9658,7 +9624,6 @@ Messenger
 Messenia
 Messerschmitt
 Messieurs
-MessieursThưa
 Mestrius
 MetLife
 Meta
@@ -10193,7 +10158,6 @@ Ménage
 Ménilmontant
 Môtar
 Müntz
-Mợi
 NCOClub
 NSh
 Nab
@@ -10276,7 +10240,6 @@ Naso
 Nason
 Nassau
 NatWest
-NatZđi
 Natalia
 Natalie
 Natalya
@@ -10408,8 +10371,6 @@ Nghiềm
 Nghoeo
 Nghỉa
 Ngung
-Nguời
-Ngưnày
 Nh
 Nicaea
 Nicanor
@@ -10636,13 +10597,9 @@ Nyx
 Nàm
 Nãi
 Nôcách
-Nôngười
-Nơoe
 Nẽ
-NếuPeter
 Nệnh
 Nệu
-Nớn
 Nụi
 Nữu
 OBrian
@@ -11139,7 +11096,6 @@ Pawnee
 Paws
 Pawtucket
 Pax
-Paưick
 Pbb
 Pbs
 Pcpj
@@ -11633,7 +11589,6 @@ Pred
 Predjama
 Prekile
 Prendergast
-PrepAudration
 Presbury
 Prescott
 Prescriptive
@@ -13132,8 +13087,6 @@ Sherill
 Sherise
 Sherita
 Sherley
-Sherlockholmesclub
-Sherlockholmessittingroom
 Sherlockian
 Sherlockiana
 Sherlocks
@@ -13269,10 +13222,7 @@ Sigmund
 Signature
 Signet
 Signor
-SignorNgài
-SignorThưa
 SignoraQuý
-SignorÔng
 Sigourney
 Sigrid
 Sigsby
@@ -13476,7 +13426,6 @@ Solve
 Solved
 Solving
 Solzhenitsyn
-SolzhenitsynEbook
 Soma
 Somalia
 Sombrero
@@ -13861,7 +13810,6 @@ Styx
 Stéphane
 Suanne
 Subaru
-Subarư
 Subura
 Suburban
 Sucrets
@@ -14008,12 +13956,10 @@ Syros
 Syrphax
 Sysevich
 Syzdal
-SàiGòn
 Sât
 São
 Síp
 Sũ
-Sưck
 Sỏa
 Sộng
 Tabatha
@@ -14238,7 +14184,6 @@ Temlar
 Temnikov
 Tempe
 Tempest
-TempestBão
 Templar
 Temple
 Temporal
@@ -14390,7 +14335,6 @@ Thurston
 Thuỷ
 Thymondas
 Théorie
-Thưaông
 Thứu
 TiVo
 Tiana
@@ -14667,7 +14611,6 @@ Trirfn
 Trish
 Trisha
 Trismegistus
-Trismegistưs
 Trista
 Tristan
 Tristram
@@ -14709,8 +14652,6 @@ Trushin
 Trutnev
 Trziste
 Très
-Trứt
-Trửu
 Tsampa
 Tsangpo
 Tsarapkin
@@ -14805,19 +14746,13 @@ Tyrone
 Tyrrhenian
 Tyson
 Tz
-Tôichưa
 Tôikhông
 Tôilà
 Tôimuốn
 Tôirất
-Tôisực
 Tôithật
-Tôivừa
-Tôiđã
 Týnská
-Tđtgt
 Tẩt
-Tửi
 UTa
 Uaf
 Ubangi
@@ -15237,7 +15172,6 @@ Voici
 Void
 Voikov
 Voilà
-VoilàThế
 Voiture
 Volga
 Volka
@@ -15301,7 +15235,6 @@ Václav
 Vâ
 Vítejte
 Vănhọc
-Vưững
 VịI
 Wabi
 Wac
@@ -15768,9 +15701,6 @@ Xxoo
 Xylitol
 Xylocaine
 Xôviết
-XƯAdẫn
-Xư
-Xời
 Yabuli
 Yabulu
 Yadoga
@@ -16066,35 +15996,11 @@ Zvyaga
 Zwangsvorstellungen
 Zx
 Zöllner
-Ây
-Âyy
 Æthelstan
 Émile
 Épais
 Éthiopie
-Íi
-ÔHoành
-Ônk
-Ôồ
 Újezd
 Úklid
 Úszi
 Ănglê
-Đhải
-Điầu
-ĐiệnCapitol
-Đm
-ĐÈNTập
-Đêtt
-Đúnglúc
-Đúngvậy
-Đầ
-Đầng
-Đết
-Đứngdậy
-Ầmm
-Ọa
-Ộe
-Ởmức
-Ừa
-Ữm
