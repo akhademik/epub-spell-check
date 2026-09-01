@@ -328,7 +328,7 @@
                         class="px-2 py-1.5 text-[11px] font-medium text-emerald-300 hover:text-white hover:bg-emerald-700/60 border-l border-emerald-600/50 transition-colors"
                         title="Thay tất cả {group.contexts.length} lần xuất hiện thành '{sugg}'"
                       >
-                        Tất cả ({group.contexts.length})
+                        all
                       </button>
                     {/if}
 
@@ -377,7 +377,7 @@
                         class="px-2 py-1.5 text-[11px] font-medium text-cyan-400/80 hover:text-cyan-200 hover:bg-cyan-800/50 border-l border-cyan-800/50 transition-colors"
                         title="Thay tất cả {group.contexts.length} lần xuất hiện thành '{sugg}'"
                       >
-                        Tất cả ({group.contexts.length})
+                        all
                       </button>
                     {/if}
 
