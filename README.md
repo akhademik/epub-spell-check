@@ -16,6 +16,15 @@ Một công cụ web hiện đại, nhanh chóng và mạnh mẽ để phát hi�
   - **Quy tắc bắt lỗi viết hoa (≥ 2 chữ in hoa):** Các từ viết hoa bất thường (do gõ nhầm CapsLock `tÔi`, `sÁch`) sẽ được phát hiện chính xác, trừ khi nằm trong từ điển viết tắt (`custom-dict.txt`).
   - **Miễn nhiễm dấu thanh mới & cũ:** Hỗ trợ song song cả 2 phong cách đặt dấu thanh (`hòa`/`hoà`, `hóa`/`hoá`, `thủy`/`thuỷ`, `khỏe`/`khoẻ`,...) mà không báo lỗi giả.
   - **Lỗi Tiếng Việt:** Phân loại rõ ràng từ không có trong từ điển tiếng Việt, lỗi gõ máy typo (`aa`, `ee`, `oo`), lỗi sai quy tắc phụ âm chính tả (`ngh`/`ng`, `gh`/`g`, `k`/`c`).
+- **Thứ tự Ưu tiên Phân loại & Đối chiếu (Dictionary Precedence):**
+  - Quá trình kiểm tra và phân loại từ ngữ tuân theo quy tắc ưu tiên chính thức:
+    $$\text{CUSTOM} \rightarrow \text{NAMES} \rightarrow \text{NON-VN} \rightarrow \text{VN} \rightarrow \text{SPELLING RULES} \rightarrow \text{UNKNOWN}$$
+    1. **CUSTOM (Viết tắt/Ký hiệu):** Ưu tiên tuyệt đối, bao gồm từ viết tắt nhiều chữ hoa và thuật ngữ đặc biệt.
+    2. **NAMES (Tên riêng/Địa danh):** Nhận diện tên riêng không phân biệt hoa thường.
+    3. **NON-VN (Ngoại ngữ):** Nhận diện từ mượn và ngoại ngữ thông dụng.
+    4. **VN (Tiếng Việt):** Đối chiếu từ vựng tiếng Việt chuẩn, hỗ trợ cả 2 phong cách đặt dấu thanh.
+    5. **SPELLING RULES (Quy tắc chính tả & Typo):** Phân tích quy tắc kết hợp phụ âm (`ngh`/`ng`, `gh`/`g`, `k`/`c`) và lỗi gõ máy (`aa`, `ee`,...).
+    6. **UNKNOWN (Lỗi từ điển):** Từ không thuộc bất kỳ nhóm nào trên.
 - **Giao diện trực quan & Trải nghiệm đọc sách tối ưu:**
   - Giao diện Responsive hoàn hảo cho cả thiết bị di động và máy tính để bàn.
   - Khung xem trước ngữ cảnh (Preview Context) mở rộng, hiển thị thoáng mắt với độ giãn dòng `1.8`, làm nổi bật từ lỗi.
@@ -36,7 +45,7 @@ Một công cụ web hiện đại, nhanh chóng và mạnh mẽ để phát hi�
 
 Các file trên vẫn là **fallback tĩnh** (dùng khi API bên dưới không sẵn sàng, ví dụ chạy `vite` dev đơn thuần). Ở môi trường production, ứng dụng ưu tiên đọc/ghi từ điển qua API động — xem phần tiếp theo.
 
-## Quản trị từ điển động (Admin Dashboard & Cloudflare Zero Trust)
+## Quản trị từ điển động (Admin Dashboard)
 
 Ứng dụng cung cấp **Admin Dashboard** trực quan và API động trên Cloudflare Pages + KV:
 
@@ -45,9 +54,9 @@ Các file trên vẫn là **fallback tĩnh** (dùng khi API bên dưới không 
   - Ô tìm kiếm từ tức thì (Live search & filter).
   - Xóa từ nhanh với 1-click hoặc chọn xóa hàng loạt (Bulk remove).
   - Thêm từ mới với **bộ phân tích cảnh báo thông minh**: Tự động phát hiện lỗi gõ máy (typo), dính chữ OCR, hoặc từ sai danh mục trước khi lưu.
-- **Xác thực linh hoạt**:
-  - **Cloudflare Zero Trust (Access)**: Đăng nhập trực tiếp bằng **Gmail** hoặc Email OTP — không cần nhớ mật khẩu hay nhập token trong ứng dụng.
-  - **Fallback Token**: Vẫn hỗ trợ `ADMIN_TOKEN` cho script/cURL khi cần tự động hóa.
+- **Xác thực bảo mật qua Token bí mật (ADMIN_TOKEN)**:
+  - Nhập mã `ADMIN_TOKEN` để mở khóa bảng điều khiển và thực hiện thao tác thêm/xóa từ.
+  - Token được lưu tạm trong bộ nhớ (In-Memory) của phiên làm việc hiện tại, tự động xóa sạch khi tải lại trang hoặc đóng trình duyệt để chống tấn công XSS.
 
 ### Hướng dẫn thiết lập từng bước trên Cloudflare
 

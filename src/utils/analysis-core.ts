@@ -177,35 +177,67 @@ export function getErrorType(
   return null
 }
 
-export function levenshteinDistance(a: string, b: string): number {
+export function levenshteinDistance(
+  a: string,
+  b: string,
+  threshold?: number
+): number {
+  if (a === b) return 0
   if (a.length === 0) return b.length
   if (b.length === 0) return a.length
 
-  const matrix: number[][] = []
-
-  for (let i = 0; i <= b.length; i++) {
-    matrix[i] = [i]
+  // If length difference is greater than threshold, early exit
+  if (threshold !== undefined && Math.abs(a.length - b.length) > threshold) {
+    return threshold + 1
   }
 
-  for (let j = 0; j <= a.length; j++) {
-    matrix[0][j] = j
+  // Ensure 'a' is the shorter string to optimize space
+  let s1 = a
+  let s2 = b
+  if (s1.length > s2.length) {
+    s1 = b
+    s2 = a
   }
 
-  for (let i = 1; i <= b.length; i++) {
-    for (let j = 1; j <= a.length; j++) {
-      if (b.charAt(i - 1) === a.charAt(j - 1)) {
-        matrix[i][j] = matrix[i - 1][j - 1]
-      } else {
-        matrix[i][j] = Math.min(
-          matrix[i - 1][j - 1] + 1,
-          matrix[i][j - 1] + 1,
-          matrix[i - 1][j] + 1
-        )
+  const len1 = s1.length
+  const len2 = s2.length
+
+  let prev = new Array<number>(len1 + 1)
+  let curr = new Array<number>(len1 + 1)
+
+  for (let j = 0; j <= len1; j++) {
+    prev[j] = j
+  }
+
+  for (let i = 1; i <= len2; i++) {
+    curr[0] = i
+    const ch2 = s2.charCodeAt(i - 1)
+    let minInRow = curr[0]
+
+    for (let j = 1; j <= len1; j++) {
+      const cost = s1.charCodeAt(j - 1) === ch2 ? 0 : 1
+      const val = Math.min(
+        prev[j] + 1, // deletion
+        curr[j - 1] + 1, // insertion
+        prev[j - 1] + cost // substitution
+      )
+      curr[j] = val
+      if (val < minInRow) {
+        minInRow = val
       }
     }
+
+    if (threshold !== undefined && minInRow > threshold) {
+      return threshold + 1
+    }
+
+    // Swap arrays
+    const temp = prev
+    prev = curr
+    curr = temp
   }
 
-  return matrix[b.length][a.length]
+  return prev[len1]
 }
 
 export function getBaseWord(word: string): string {

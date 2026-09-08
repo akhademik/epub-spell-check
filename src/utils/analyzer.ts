@@ -59,8 +59,9 @@ export function findTieredSuggestions(
   dictionaries: Dictionaries
 ): TieredSuggestions {
   const low = word.toLowerCase().normalize("NFC")
-  if (tieredSuggestionCache.has(low)) {
-    return tieredSuggestionCache.get(low)!
+  const cached = tieredSuggestionCache.get(low)
+  if (cached) {
+    return cached
   }
 
   const baseLow = getBaseWord(low)
@@ -153,8 +154,16 @@ export function findTieredSuggestions(
       if (dictLow === low || seenLower.has(dictLow)) continue
 
       const baseDictWord = baseWordCache?.get(dictWord) ?? getBaseWord(dictLow)
-      const baseDistance = levenshteinDistance(baseLow, baseDictWord)
-      const fullDistance = levenshteinDistance(low, dictLow)
+
+      // 1. Calculate fullDistance with threshold 2
+      const fullDistance = levenshteinDistance(low, dictLow, 2)
+      if (fullDistance > 2) {
+        // Only consider if base words are very close (e.g. tone differences)
+        const baseDistance = levenshteinDistance(baseLow, baseDictWord, 1)
+        if (baseDistance > 1) continue
+      }
+
+      const baseDistance = levenshteinDistance(baseLow, baseDictWord, 2)
 
       // Primary criteria: close edit distance (baseDist <= 1 AND fullDist <= 1)
       if (baseDistance <= 1 && fullDistance <= 1) {

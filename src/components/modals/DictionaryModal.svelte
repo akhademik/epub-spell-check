@@ -147,7 +147,7 @@
             class="w-full px-3 py-2 text-sm bg-slate-950/60 border border-slate-800 rounded-xl text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           />
           <p class="text-[11px] text-slate-500 mt-1.5 italic">
-            Token được lưu trên trình duyệt này để lần sau không cần nhập lại.
+            Token được lưu tạm trong bộ nhớ của phiên làm việc hiện tại.
           </p>
         </div>
       </div>

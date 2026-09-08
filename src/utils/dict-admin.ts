@@ -3,7 +3,9 @@ export type DictSourceName = "vn" | "non-vn" | "custom" | "names"
 export interface DictUpdateResult {
   name: DictSourceName
   action: "add" | "remove"
-  addedCount: number
+  affectedCount: number
+  addedCount?: number
+  removedCount?: number
   totalCount: number
   updatedAt: string
   user?: string
@@ -18,13 +20,13 @@ export interface DictDetailResponse {
 
 export interface AuthStatusResponse {
   authenticated: boolean
-  authType: "cloudflare-access" | "token" | "none"
+  authType: "token" | "none"
   email: string | null
-  hasTokenConfigured: boolean
+  hasTokenConfigured?: boolean
 }
 
 /**
- * Checks authentication status with the server.
+ * Checks authentication status with the server using the provided token.
  */
 export async function checkAuthStatus(
   token?: string
@@ -32,8 +34,8 @@ export async function checkAuthStatus(
   const isDev = Boolean(import.meta.env?.DEV)
 
   const headers: Record<string, string> = {}
-  if (token) {
-    headers.authorization = `Bearer ${token}`
+  if (token?.trim()) {
+    headers.authorization = `Bearer ${token.trim()}`
   }
 
   try {
@@ -53,8 +55,8 @@ export async function checkAuthStatus(
   if (isDev) {
     return {
       authenticated: true,
-      authType: "cloudflare-access",
-      email: "local-developer@localhost",
+      authType: "token",
+      email: null,
       hasTokenConfigured: false
     }
   }
@@ -129,7 +131,7 @@ export async function updateDictionaryWords(
 
   if (res.status === 401) {
     throw new Error(
-      "Chưa được cấp quyền (401). Vui lòng đăng nhập qua Cloudflare Access hoặc nhập ADMIN_TOKEN hợp lệ."
+      "Chưa được cấp quyền (401). Vui lòng nhập mã ADMIN_TOKEN hợp lệ."
     )
   }
   if (!res.ok) {

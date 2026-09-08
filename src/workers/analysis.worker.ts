@@ -9,19 +9,46 @@ import {
 } from "../utils/analysis-core"
 
 interface WorkerMessage {
-  textBlocks: TextContentBlock[]
-  dictionaries: Dictionaries
-  checkSettings: CheckSettings
+  type?: "init" | "analyze"
+  textBlocks?: TextContentBlock[]
+  dictionaries?: Dictionaries
+  checkSettings?: CheckSettings
   chapterStartIndex?: number
 }
 
+let cachedDictionaries: Dictionaries | null = null
+
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
+  const data = event.data
+
+  if (data.type === "init") {
+    if (data.dictionaries) {
+      cachedDictionaries = data.dictionaries
+    }
+    return
+  }
+
   const {
-    textBlocks,
-    dictionaries,
+    textBlocks = [],
+    dictionaries = cachedDictionaries,
     checkSettings,
     chapterStartIndex = 0
-  } = event.data
+  } = data
+
+  if (dictionaries) {
+    cachedDictionaries = dictionaries
+  }
+
+  if (!cachedDictionaries) {
+    self.postMessage({
+      type: "complete",
+      errors: [],
+      totalWords: 0
+    })
+    return
+  }
+
+  const activeDicts = cachedDictionaries
   const allErrors: ErrorInstance[] = []
   let totalWordCount = 0
 
@@ -44,11 +71,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         const originalWord = match[0]
         totalWordCount++
 
-        const errorInfo = getErrorType(
-          originalWord,
-          dictionaries,
-          checkSettings
-        )
+        const errorInfo = getErrorType(originalWord, activeDicts, checkSettings)
 
         if (errorInfo) {
           const startIndex = match.index

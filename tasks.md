@@ -1,75 +1,52 @@
-# 📋 DANH SÁCH CÁC SUB-TASK: ADMIN DASHBOARD QUẢN TRỊ TỪ ĐIỂN ĐỘNG
+# 📋 Danh Sách Nhiệm Vụ Phát Triển & Tối Ưu Hóa (Development Tasks)
 
-Tài liệu ghi nhận toàn bộ các công việc cần thực hiện để nâng cấp hệ thống quản lý từ điển của **Ebook Spell Check** với Admin Dashboard trực quan, xác thực Cloudflare Zero Trust (Gmail/Email OTP) và tích hợp bộ phân tích kiểm tra từ sai / cảnh báo thông minh.
-
----
-
-## 🏗️ GIAI ĐOẠN 1: BACKEND & API (Cloudflare Pages Functions)
-
-- [x] **Task 1.1: Nâng cấp xác thực Cloudflare Zero Trust (Access) trong API**
-  - Cập nhật [`functions/api/dict/[name].ts`](file:///home/hajtran/dev/epub-spell-check/functions/api/dict/%5Bname%5D.ts).
-  - Hỗ trợ xác thực qua các HTTP Headers của Cloudflare Access:
-    - `Cf-Access-Jwt-Assertion`
-    - `Cf-Access-Authenticated-User-Email`
-  - Vẫn duy trì fallback xác thực qua header `Authorization: Bearer <ADMIN_TOKEN>` để phục vụ script/cURL khi cần.
-  - Thêm endpoint `GET /api/admin/auth-status` để frontend kiểm tra trạng thái đăng nhập/quyền truy cập của người dùng.
-
-- [x] **Task 1.2: Bổ sung API hỗ trợ lấy danh sách từ theo định dạng JSON & Metadata**
-  - Mở rộng API `GET /api/dict/:name` hỗ trợ query `format=json` hoặc content-negotiation để trả về metadata (tổng số từ, ngày cập nhật, danh sách array từ đã sort alphabet).
+> Chuyển đổi từ phân tích mới nhất trong [update.md](file:///home/hajtran/dev/epub-spell-check/update.md), kết hợp kiến trúc từ [graphify-out/GRAPH_REPORT.md](file:///home/hajtran/dev/epub-spell-check/graphify-out/GRAPH_REPORT.md), quy trình [DEVELOPMENT_WORKFLOW.md](file:///home/hajtran/dev/epub-spell-check/DEVELOPMENT_WORKFLOW.md) và tiêu chuẩn kiểm thử [TEST_WORKFLOW.md](file:///home/hajtran/dev/epub-spell-check/TEST_WORKFLOW.md).
 
 ---
 
-## 🧠 GIAI ĐOẠN 2: VALIDATION ENGINE (Kiểm tra từ sai & Cảnh báo)
+## 🔴 P0: Security & Authentication Hardening (Bắt buộc / Ưu tiên cao nhất)
 
-- [x] **Task 2.1: Tạo module kiểm tra lỗi từ vựng chia sẻ (`src/utils/dict-validator.ts`)**
-  - Kế thừa và chuẩn hóa logic từ [`scripts/merge-dicts.ts`](file:///home/hajtran/dev/epub-spell-check/scripts/merge-dicts.ts) và [`src/utils/analysis-core.ts`](file:///home/hajtran/dev/epub-spell-check/src/utils/analysis-core.ts):
-    1. **Lỗi gõ máy / Typo patterns**: Bắt các đuôi phím lỗi `aa`, `ee`, `oo`, `uu`, `ii`, `dd`, `js`, `kx`, `wt` hoặc từ lặp ký tự đôi đơn độc.
-    2. **Lỗi dính chữ OCR / Dịch thuật**: Phát hiện nối chữ `TitleCase` dính từ tiếng Việt (vd `SignorThưa`, `BonjourChào`).
-    3. **Lỗi sai danh mục từ điển**:
-       - Từ chứa ký tự độc quyền tiếng Việt (`đ`, `ư`, `ơ`, dấu hỏi/ngã/nặng...) nhập vào `NON-VN`.
-       - Thán từ/tiếng cười (`Hahaha`, `Hừhừhừhừ`) nhập vào `NAMES`.
-    4. **Cảnh báo từ có dấu thanh bất thường / Từ quá ngắn hoặc quá dài**.
-  - Phân loại kết quả rõ ràng:
-    - 🔴 **Reject (Chặn hoàn toàn)**: Các từ chắc chắn gây hại hoặc làm tê liệt bộ bắt lỗi.
-    - 🟡 **Warning (Cảnh báo tiềm ẩn)**: Yêu cầu admin xác nhận thủ công trước khi thêm.
-
-- [x] **Task 2.2: Viết Unit Tests cho `dict-validator.ts`**
-  - Đảm bảo độ chính xác tuyệt đối, bao phủ 100% các trường hợp biên và kiểm thử tiếng Việt Unicode (`tests/unit/dict-validator.test.ts`).
+- [x] **Task P0.1: Phân định ranh giới & Xác thực Cloudflare Access (Zero Trust Security)**
+  - **Mục tiêu**: Nâng cấp cơ chế xác thực trong [functions/api/dict/[name].ts](file:///home/hajtran/dev/epub-spell-check/functions/api/dict/[name].ts). Xác định rõ ranh giới: Cloudflare Access là lớp xác thực chính (chặn unauthenticated ở edge/ingress); `ADMIN_TOKEN` chỉ dùng làm emergency fallback khi cần thiết qua header `Authorization: Bearer <TOKEN>`.
+  - **Tác động**: Ngăn ngừa rủi ro giả mạo header và củng cố bảo mật cho application layer.
+  - **Files liên quan**: `functions/api/dict/[name].ts`, `functions/api/admin/auth-status.ts`
+  - **Quality Gates & Tests**: `pnpm check`, `pnpm lint`, API Integration Tests.
 
 ---
 
-## 🎨 GIAI ĐOẠN 3: GIAO DIỆN ADMIN DASHBOARD (Frontend UI)
+## 🟡 P1: Token Security, UX & Round-Trip Fixtures Testing (Ưu tiên cao)
 
-- [x] **Task 3.1: Quản lý Route / Chế độ xem Admin**
-  - Thêm state chuyển đổi giao diện giữa `App Main View` (Soát lỗi sách) và `Admin Dashboard View` (Quản trị từ điển) trong [`src/state.svelte.ts`](file:///home/hajtran/dev/epub-spell-check/src/state.svelte.ts).
-  - Cập nhật [`src/components/Header.svelte`](file:///home/hajtran/dev/epub-spell-check/src/components/Header.svelte) với nút chuyển đổi nhanh (Tab/Link "Quản trị từ điển").
+- [x] **Task P1.1: Chuyển ADMIN_TOKEN thành In-Memory State (Bỏ lưu localStorage)**
+  - **Mục tiêu**: Xóa bỏ `STORAGE_KEYS.DICT_ADMIN_TOKEN` và không lưu `ADMIN_TOKEN` vào `localStorage` trong [src/state.svelte.ts](file:///home/hajtran/dev/epub-spell-check/src/state.svelte.ts). Token chỉ được giữ tạm thời trong memory khi người dùng nhập vào phiên làm việc hiện tại và tự động mất khi refresh/đóng trình duyệt.
+  - **Tác động**: Triệt tiêu hoàn toàn rủi ro bị đánh cắp secret token nếu có lỗ hổng XSS.
+  - **Files liên quan**: `src/state.svelte.ts`
+  - **Quality Gates & Tests**: `pnpm check`, `pnpm lint`, `pnpm test:smoke`
 
-- [x] **Task 3.2: Xây dựng Admin Dashboard Component (`src/components/admin/AdminDashboard.svelte`)**
-  - **Tabs chọn 4 từ điển**: `Tiếng Việt (vn)`, `Tên riêng (names)`, `Ngoại ngữ (non-vn)`, `Viết tắt (custom)`.
-  - **Thống kê nhanh**: Số lượng từ, thời gian cập nhật gần nhất.
-  - **Bộ lọc & Tìm kiếm từ (Live Search)**:
-    - Ô tìm kiếm từ nhanh (instant filter).
-    - Danh sách từ hiển thị dạng bảng/thẻ trực quan, luôn tự động sắp xếp theo chuẩn Alphabet tiếng Việt (`Intl.Collator("vi")`).
-    - Nút xóa nhanh từng từ (1-click delete với confirm) và xóa hàng loạt (bulk select).
+- [x] **Task P1.2: Sửa Bug UX Hiển thị Số Từ Xóa/Thêm (affectedCount Fix)**
+  - **Mục tiêu**: Sửa logic hiển thị toast trong `addWordsToDictionary()` tại [src/state.svelte.ts](file:///home/hajtran/dev/epub-spell-check/src/state.svelte.ts). Sử dụng trực tiếp `result.affectedCount` thay vì `result.addedCount` (vốn bằng 0 khi thực hiện action `remove`).
+  - **Tác động**: Thông báo hiển thị đúng số lượng từ đã xóa (`Đã xóa X từ...` thay vì `Đã xóa 0 từ...`).
+  - **Files liên quan**: `src/state.svelte.ts`, `src/utils/dict-admin.ts`
+  - **Quality Gates & Tests**: `pnpm check`, `pnpm test:smoke`
 
-- [x] **Task 3.3: Xây dựng Form Nhập Liệu Thông Minh (`src/components/admin/AddWordsForm.svelte`)**
-  - Khung nhập văn bản đa dòng (hỗ trợ copy-paste hàng nghìn từ).
-  - **Phân tích trước khi lưu (Pre-save Linting/Validation)**:
-    - Tự động hiển thị danh sách từ hợp lệ (Xanh).
-    - Tự động cảnh báo từ nghi vấn (Vàng) kèm lý do.
-    - Tự động bóc tách từ bị từ chối/lỗi (Đỏ).
-  - Nút **"Lưu vào từ điển"**: Tự động sort, merge, cập nhật lên KV và đồng bộ hot-reload lại ứng dụng.
+- [x] **Task P1.3: Mở rộng Bộ Test Fixture EPUB Round-Trip (4 Fixtures Standard)**
+  - **Mục tiêu**: Bổ sung/chuẩn hóa 4 kịch bản fixture kiểm thử toàn diện quy trình: `parse` → `fix` → `repack` → `re-parse` → `verify output`:
+    1. `simple.epub`: Văn bản chuẩn đơn giản.
+    2. `nested-formatting.epub`: Thẻ lồng nhau `<b>`, `<i>`, `<span>`.
+    3. `multiple-text-nodes.epub`: Sửa từ xuyên qua nhiều text nodes và nhiều vị trí trong 1 block.
+    4. `malformed-xhtml.epub`: XHTML dị dạng / không chuẩn (unescaped `&`, lỗi parser XML).
+  - **Files liên quan**: `tests/unit/epub-roundtrip.test.ts`, `tests/unit/epub-writer.test.ts`
+  - **Quality Gates & Tests**: `pnpm test:regression`, `pnpm test`
 
 ---
 
-## 🔄 GIAI ĐOẠN 4: KIỂM THỬ TỔNG THỂ & QUALITY GATES
+## 🟢 P2: Worker Architecture & Concurrency Optimization (Tối ưu hóa)
 
-- [x] **Task 4.1: Chạy toàn bộ Test Suites & Quality Gates**
-  - `pnpm check`: 0 errors, 0 warnings.
-  - `pnpm lint`: Pass Biome checks.
-  - `pnpm test:smoke`: Pass toàn bộ smoke tests.
-  - `pnpm test`: Pass toàn bộ 14 test suites (89 tests).
-  - `pnpm build`: Đảm bảo bundle production tối ưu.
+- [x] **Task P2.1: Tối ưu truyền dữ liệu sang Worker (Zero Clone on Re-analysis)**
+  - **Mục tiêu**: Khi gọi `analyze()` trong `AnalysisWorkerManager`, chỉ truyền `textBlocks` và `checkSettings` nếu từ điển đã được khởi tạo trước đó qua `init(dictionaries)` trên Worker, tránh structured-clone lại toàn bộ 4 Set từ điển qua mỗi lần phân tích.
+  - **Files liên quan**: `src/utils/worker-manager.ts`, `src/workers/analysis.worker.ts`, `src/state.svelte.ts`
+  - **Quality Gates & Tests**: `pnpm test:smoke`, `pnpm test:unit`
 
-- [x] **Task 4.2: Cập nhật tài liệu hướng dẫn**
-  - Cập nhật `README.md` hướng dẫn chi tiết cách cấu hình Cloudflare Zero Trust (Access) Application bảo vệ trang admin và các endpoints.
+- [x] **Task P2.2: Ngăn ngừa xung đột tác vụ song song trong Worker (Concurrency Guard)**
+  - **Mục tiêu**: Bổ sung cờ bảo vệ `activeAnalysis` hoặc `requestId` trong `AnalysisWorkerManager` để đảm bảo handler `onmessage` không bị ghi đè nếu xảy ra nhiều request phân tích cùng lúc.
+  - **Files liên quan**: `src/utils/worker-manager.ts`
+  - **Quality Gates & Tests**: `pnpm test:unit`

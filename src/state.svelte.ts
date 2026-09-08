@@ -21,13 +21,12 @@ import { parseEpub } from "./utils/epub-parser"
 import { applyFixesAndRepack, type FixInstruction } from "./utils/epub-writer"
 import { getFilteredErrors } from "./utils/filter"
 import { logger } from "./utils/logger"
-import AnalysisWorker from "./workers/analysis.worker?worker"
+import { analysisWorkerManager } from "./utils/worker-manager"
 
 const STORAGE_KEYS = {
   READER: "spell-check:reader-settings",
   WHITELIST: "spell-check:whitelist",
-  CHECK_SETTINGS: "spell-check:check-settings-v2",
-  DICT_ADMIN_TOKEN: "spell-check:dict-admin-token"
+  CHECK_SETTINGS: "spell-check:check-settings-v2"
 }
 
 interface PersistedContainer<T> {
@@ -102,10 +101,8 @@ export class AppStateModel {
     namesWordCount: 0
   })
 
-  // Persisted access token for the /api/dict admin endpoint (saved only in user's localStorage when entered)
-  dictAdminToken = $state<string>(
-    loadStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, "")
-  )
+  // Memory-only access token for the /api/dict admin endpoint (never persisted to localStorage for security)
+  dictAdminToken = $state<string>("")
   isUpdatingDictionary = $state<boolean>(false)
 
   // Error Check Settings (Always active: both Vietnamese and Non-Vietnamese check enabled)
@@ -236,15 +233,18 @@ export class AppStateModel {
 
       if (effectiveToken) {
         this.dictAdminToken = effectiveToken
-        saveStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, this.dictAdminToken)
       }
 
       await refreshDictionaryCache(dictName)
       await this.init()
 
       const verb = action === "remove" ? "xóa" : "thêm"
+      const count =
+        result.affectedCount ??
+        (action === "remove" ? result.removedCount : result.addedCount) ??
+        0
       this.showToast(
-        `Đã ${verb} ${result.addedCount} từ. Từ điển "${dictName}" hiện có ${result.totalCount} từ.`,
+        `Đã ${verb} ${count} từ. Từ điển "${dictName}" hiện có ${result.totalCount} từ.`,
         "success"
       )
       return true
@@ -770,38 +770,16 @@ export class AppStateModel {
         ...$state.snapshot(this.checkSettings)
       }
 
-      // Run analysis in Web Worker
-      const worker = new AnalysisWorker()
-      const analysisPromise = new Promise<{
-        errors: ErrorInstance[]
-        totalWords: number
-      }>((resolve, reject) => {
-        worker.onmessage = (event) => {
-          const { type, progress, message, errors, totalWords } = event.data
-          if (type === "progress") {
-            this.progressPercent = 60 + Math.round(progress * 0.4)
-            this.progressStatus = message
-          } else if (type === "complete") {
-            resolve({ errors, totalWords })
-            worker.terminate()
-          }
+      // Run analysis in Web Worker via AnalysisWorkerManager
+      const { errors, totalWords } = await analysisWorkerManager.analyze(
+        epubContent.textBlocks,
+        rawDicts,
+        rawCheckSettings,
+        (progress, message) => {
+          this.progressPercent = 60 + Math.round(progress * 0.4)
+          this.progressStatus = message
         }
-
-        worker.onerror = (error) => {
-          logger.error("Analysis worker error:", error)
-          reject(new Error("Lỗi trong quá trình phân tích văn bản."))
-          worker.terminate()
-        }
-
-        worker.postMessage({
-          textBlocks: epubContent.textBlocks,
-          dictionaries: rawDicts,
-          checkSettings: rawCheckSettings,
-          chapterStartIndex: 0
-        })
-      })
-
-      const { errors, totalWords } = await analysisPromise
+      )
       this.allDetectedErrors = groupErrors(errors)
       this.totalWords = totalWords
       this.isProcessing = false
