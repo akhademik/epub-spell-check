@@ -2,8 +2,63 @@ import type { CheckSettings } from "../types/analysis"
 import type { Dictionaries } from "../types/dictionary"
 import type { ErrorType } from "../types/errors"
 
-export const WORD_REGEX = /[\p{L}\p{M}]+/gu
+export const WORD_REGEX = /[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu
 export const ANALYSIS_CHUNK_SIZE = 50
+
+export const COMMON_CONTRACTIONS = new Set([
+  "isn't",
+  "aren't",
+  "wasn't",
+  "weren't",
+  "haven't",
+  "hasn't",
+  "hadn't",
+  "won't",
+  "wouldn't",
+  "don't",
+  "doesn't",
+  "didn't",
+  "can't",
+  "cannot",
+  "couldn't",
+  "shouldn't",
+  "mightn't",
+  "mustn't",
+  "shan't",
+  "ain't",
+  "it's",
+  "i'm",
+  "you're",
+  "he's",
+  "she's",
+  "we're",
+  "they're",
+  "i've",
+  "you've",
+  "we've",
+  "they've",
+  "i'll",
+  "you'll",
+  "he'll",
+  "she'll",
+  "we'll",
+  "they'll",
+  "i'd",
+  "you'd",
+  "he'd",
+  "she'd",
+  "we'd",
+  "they'd",
+  "that's",
+  "what's",
+  "there's",
+  "here's",
+  "where's",
+  "how's",
+  "who's",
+  "let's",
+  "o'clock"
+])
 
 export const TONE_STYLE_PAIRS: [string, string][] = [
   ["oà", "òa"],
@@ -89,8 +144,12 @@ export function getErrorType(
     return null
   }
 
-  // 4. Non-Vietnamese Dictionary (Case-insensitive foreign words)
-  const isKnownForeign = dictionaries.nonVietnamese.has(lower)
+  // 4. Non-Vietnamese Dictionary (Case-insensitive foreign words & contractions)
+  const lowerStraight = lower.replace(/’/g, "'")
+  const isKnownForeign =
+    dictionaries.nonVietnamese.has(lower) ||
+    dictionaries.nonVietnamese.has(lowerStraight) ||
+    COMMON_CONTRACTIONS.has(lowerStraight)
   if (isKnownForeign) {
     return null
   }
@@ -108,8 +167,8 @@ export function getErrorType(
     return null
   }
 
-  // 6. Foreign letters check (f, j, w, z)
-  if (/[fjwz]/i.test(lower)) {
+  // 6. Foreign letters & apostrophes check (f, j, w, z, contractions)
+  if (/[fjwz'’]/i.test(lower)) {
     if (checkSettings.nonVietnamese) {
       return {
         type: "NonVietnamese",
