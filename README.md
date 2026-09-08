@@ -45,7 +45,7 @@ Một công cụ web hiện đại, nhanh chóng và mạnh mẽ để phát hi�
 
 Các file trên vẫn là **fallback tĩnh** (dùng khi API bên dưới không sẵn sàng, ví dụ chạy `vite` dev đơn thuần). Ở môi trường production, ứng dụng ưu tiên đọc/ghi từ điển qua API động — xem phần tiếp theo.
 
-## Quản trị từ điển động (Admin Dashboard & Cloudflare Zero Trust)
+## Quản trị từ điển động (Admin Dashboard)
 
 Ứng dụng cung cấp **Admin Dashboard** trực quan và API động trên Cloudflare Pages + KV:
 
@@ -54,9 +54,9 @@ Các file trên vẫn là **fallback tĩnh** (dùng khi API bên dưới không 
   - Ô tìm kiếm từ tức thì (Live search & filter).
   - Xóa từ nhanh với 1-click hoặc chọn xóa hàng loạt (Bulk remove).
   - Thêm từ mới với **bộ phân tích cảnh báo thông minh**: Tự động phát hiện lỗi gõ máy (typo), dính chữ OCR, hoặc từ sai danh mục trước khi lưu.
-- **Xác thực linh hoạt**:
-  - **Cloudflare Zero Trust (Access)**: Đăng nhập trực tiếp bằng **Gmail** hoặc Email OTP — không cần nhớ mật khẩu hay nhập token trong ứng dụng.
-  - **Fallback Token**: Vẫn hỗ trợ `ADMIN_TOKEN` cho script/cURL khi cần tự động hóa.
+- **Xác thực bảo mật qua Token bí mật (ADMIN_TOKEN)**:
+  - Nhập mã `ADMIN_TOKEN` để mở khóa bảng điều khiển và thực hiện thao tác thêm/xóa từ.
+  - Token được lưu tạm trong bộ nhớ (In-Memory) của phiên làm việc hiện tại, tự động xóa sạch khi tải lại trang hoặc đóng trình duyệt để chống tấn công XSS.
 
 ### Hướng dẫn thiết lập từng bước trên Cloudflare
 

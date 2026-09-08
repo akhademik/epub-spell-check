@@ -53,27 +53,12 @@ function jsonResponse(body: unknown, status = 200): Response {
 }
 
 /**
- * Checks if the request is authenticated via either:
- * 1. Cloudflare Zero Trust (Access) headers (e.g. `Cf-Access-Authenticated-User-Email` or `Cf-Access-Jwt-Assertion`)
- * 2. `Authorization: Bearer <ADMIN_TOKEN>`
+ * Checks if the request is authenticated via `Authorization: Bearer <ADMIN_TOKEN>`.
  */
 function isAuthenticated(context: RequestContext): {
   authorized: boolean
   user?: string
 } {
-  // 1. Cloudflare Access (Zero Trust) authentication
-  const cfEmail = context.request.headers.get(
-    "cf-access-authenticated-user-email"
-  )
-  const cfJwt = context.request.headers.get("cf-access-jwt-assertion")
-  if (cfEmail || cfJwt) {
-    return {
-      authorized: true,
-      user: cfEmail ?? "cloudflare-access-user"
-    }
-  }
-
-  // 2. Token-based fallback authentication
   const adminToken = context.env.ADMIN_TOKEN
   if (adminToken) {
     const authHeader = context.request.headers.get("authorization") ?? ""
@@ -81,7 +66,7 @@ function isAuthenticated(context: RequestContext): {
     if (providedToken && providedToken === adminToken) {
       return {
         authorized: true,
-        user: "admin-token-user"
+        user: "admin-user"
       }
     }
   }
@@ -147,8 +132,7 @@ export async function onRequestPost(
   if (!auth.authorized) {
     return jsonResponse(
       {
-        error:
-          "Unauthorized: Vui lòng đăng nhập qua Cloudflare Access hoặc cung cấp ADMIN_TOKEN"
+        error: "Unauthorized: Vui lòng cung cấp mã ADMIN_TOKEN hợp lệ"
       },
       401
     )

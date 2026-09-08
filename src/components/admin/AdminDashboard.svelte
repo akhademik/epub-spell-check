@@ -71,13 +71,10 @@
 
   function handleSaveToken() {
     appState.dictAdminToken = tokenInput.trim()
-    localStorage.setItem("spell-check:dict-admin-token", appState.dictAdminToken)
     loadAuth()
-    appState.showToast("Đã lưu token quản trị", "success")
-  }
-
-  function triggerCloudflareLogin() {
-    window.location.href = "/api/admin/login?redirect=" + encodeURIComponent("/?view=admin")
+    if (appState.dictAdminToken) {
+      appState.showToast("Đã cập nhật token quản trị cho phiên hiện tại", "success")
+    }
   }
 
   let filteredWords = $derived.by(() => {
@@ -152,10 +149,10 @@
 
     <!-- Auth Badge & Token Input -->
     <div class="flex items-center gap-2 text-xs">
-      {#if authStatus.authType === "cloudflare-access"}
+      {#if authStatus.authenticated}
         <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-medium">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>{authStatus.email ?? 'Cloudflare Access'}</span>
+          <span>Đã xác thực Token (Session)</span>
         </div>
       {/if}
 
@@ -172,7 +169,7 @@
           onclick={handleSaveToken}
           class="px-2.5 py-1 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors"
         >
-          Lưu Token
+          Áp dụng
         </button>
       </div>
     </div>
@@ -194,44 +191,37 @@
       </div>
 
       <div class="space-y-2">
-        <h3 class="text-xl font-bold text-white">Yêu Cầu Xác Thực Quản Trị</h3>
+        <h3 class="text-xl font-bold text-white">Yêu Cầu Mã Token Quản Trị</h3>
         <p class="text-xs text-slate-400 leading-relaxed">
-          Đăng nhập bằng tài khoản Gmail qua <strong>Cloudflare Zero Trust</strong> hoặc nhập <strong>ADMIN_TOKEN</strong> để quản lý từ điển.
+          Vui lòng nhập mã <strong>ADMIN_TOKEN</strong> bí mật để mở khóa bảng điều khiển quản lý và chỉnh sửa từ điển.
         </p>
       </div>
 
-      <!-- Cloudflare Login Button -->
-      <button
-        type="button"
-        onclick={triggerCloudflareLogin}
-        class="w-full py-3 px-4 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/30 flex items-center justify-center gap-2"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-        </svg>
-        <span>Đăng nhập bằng Gmail (Cloudflare Access)</span>
-      </button>
-
-      <!-- Token Fallback -->
-      <div class="pt-4 border-t border-slate-800 text-left space-y-2">
-        <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-          Hoặc nhập mã ADMIN_TOKEN bí mật:
-        </span>
+      <!-- Token Form -->
+      <div class="space-y-3 text-left">
+        <label for="admin-token-input" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          Mã ADMIN_TOKEN (lưu tạm trong phiên):
+        </label>
         <div class="flex gap-2">
           <input
+            id="admin-token-input"
             type="password"
             bind:value={tokenInput}
-            placeholder="Nhập ADMIN_TOKEN"
-            class="flex-1 px-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-xl text-slate-200 focus:outline-none focus:border-blue-500 font-mono"
+            placeholder="Nhập mã ADMIN_TOKEN..."
+            class="flex-1 px-3.5 py-2.5 text-sm bg-slate-950 border border-slate-700 rounded-xl text-slate-200 focus:outline-none focus:border-blue-500 font-mono"
+            onkeydown={(e) => { if (e.key === "Enter") handleSaveToken() }}
           />
           <button
             type="button"
             onclick={handleSaveToken}
-            class="px-4 py-2 text-xs font-bold text-slate-200 bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors border border-slate-700"
+            class="px-5 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all shadow-lg shadow-blue-900/30"
           >
-            Xác nhận
+            Mở khóa
           </button>
         </div>
+        <p class="text-[11px] text-slate-500 italic">
+          * Token chỉ lưu trong bộ nhớ RAM của phiên làm việc hiện tại và sẽ tự động xóa khi tải lại trang.
+        </p>
       </div>
     </div>
   {:else}

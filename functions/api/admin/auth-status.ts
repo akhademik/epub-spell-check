@@ -27,11 +27,6 @@ function jsonResponse(body: unknown, status = 200): Response {
 }
 
 export async function onRequestGet(context: RequestContext): Promise<Response> {
-  const cfEmail = context.request.headers.get(
-    "cf-access-authenticated-user-email"
-  )
-  const cfJwt = context.request.headers.get("cf-access-jwt-assertion")
-
   const authHeader = context.request.headers.get("authorization") ?? ""
   const providedToken = authHeader.replace(/^Bearer\s+/i, "").trim()
   const tokenValid = Boolean(
@@ -40,13 +35,9 @@ export async function onRequestGet(context: RequestContext): Promise<Response> {
       providedToken === context.env.ADMIN_TOKEN
   )
 
-  const authenticated = Boolean(cfEmail || cfJwt || tokenValid)
-  const authType =
-    cfEmail || cfJwt ? "cloudflare-access" : tokenValid ? "token" : "none"
-
   return jsonResponse({
-    authenticated,
-    authType,
-    email: cfEmail ?? null
+    authenticated: tokenValid,
+    authType: tokenValid ? "token" : "none",
+    email: null
   })
 }
