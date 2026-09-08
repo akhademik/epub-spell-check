@@ -14,7 +14,9 @@ import type { ErrorGroup, ErrorInstance } from "./types/errors"
 import type { ReaderSettings, ToastNotification } from "./types/state"
 import { matchCase } from "./utils/analysis-core"
 import { clearSuggestionCache, groupErrors } from "./utils/analyzer"
-import { loadDictionaries } from "./utils/dictionary"
+import type { DictSourceName } from "./utils/dict-admin"
+import { updateDictionaryWords } from "./utils/dict-admin"
+import { loadDictionaries, refreshDictionaryCache } from "./utils/dictionary"
 import { parseEpub } from "./utils/epub-parser"
 import { applyFixesAndRepack, type FixInstruction } from "./utils/epub-writer"
 import { getFilteredErrors } from "./utils/filter"
@@ -24,7 +26,8 @@ import AnalysisWorker from "./workers/analysis.worker?worker"
 const STORAGE_KEYS = {
   READER: "spell-check:reader-settings",
   WHITELIST: "spell-check:whitelist",
-  CHECK_SETTINGS: "spell-check:check-settings-v2"
+  CHECK_SETTINGS: "spell-check:check-settings-v2",
+  DICT_ADMIN_TOKEN: "spell-check:dict-admin-token"
 }
 
 interface PersistedContainer<T> {
@@ -99,6 +102,12 @@ export class AppStateModel {
     namesWordCount: 0
   })
 
+  // Persisted access token for the /api/dict admin endpoint
+  dictAdminToken = $state<string>(
+    loadStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, "")
+  )
+  isUpdatingDictionary = $state<boolean>(false)
+
   // Error Check Settings (Always active: both Vietnamese and Non-Vietnamese check enabled)
   checkSettings = $state<CheckSettings>({
     vietnamese: true,
@@ -135,6 +144,7 @@ export class AppStateModel {
   currentInstanceIndex = $state<number>(0)
 
   // UI State
+  currentView = $state<"main" | "admin">("main")
   isProcessing = $state<boolean>(false)
   progressPercent = $state<number>(0)
   progressStatus = $state<string>("")
@@ -183,6 +193,64 @@ export class AppStateModel {
     } catch (err) {
       logger.error("Failed to load dictionaries:", err)
       this.showToast("Lỗi tải từ điển. Vui lòng tải lại trang.", "error")
+    }
+  }
+
+  /**
+   * Adds (or removes) words from a dictionary via the KV-backed admin API,
+   * then hot-reloads the in-memory dictionaries so the change applies
+   * immediately without a page refresh or app redeploy.
+   */
+  async addWordsToDictionary(
+    dictName: DictSourceName,
+    rawWords: string,
+    token: string,
+    action: "add" | "remove" = "add"
+  ): Promise<boolean> {
+    const words = rawWords
+      .split(/\r?\n/)
+      .map((w) => w.trim())
+      .filter(Boolean)
+
+    if (words.length === 0) {
+      this.showToast("Chưa nhập từ nào.", "error")
+      return false
+    }
+    if (!token.trim()) {
+      this.showToast("Vui lòng nhập mã truy cập (token).", "error")
+      return false
+    }
+
+    this.isUpdatingDictionary = true
+    try {
+      const result = await updateDictionaryWords(
+        dictName,
+        words,
+        token.trim(),
+        action
+      )
+
+      this.dictAdminToken = token.trim()
+      saveStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, this.dictAdminToken)
+
+      await refreshDictionaryCache(dictName)
+      await this.init()
+
+      const verb = action === "remove" ? "xóa" : "thêm"
+      this.showToast(
+        `Đã ${verb} ${result.addedCount} từ. Từ điển "${dictName}" hiện có ${result.totalCount} từ.`,
+        "success"
+      )
+      return true
+    } catch (err) {
+      logger.error("Failed to update dictionary:", err)
+      this.showToast(
+        err instanceof Error ? err.message : "Lỗi khi cập nhật từ điển.",
+        "error"
+      )
+      return false
+    } finally {
+      this.isUpdatingDictionary = false
     }
   }
 

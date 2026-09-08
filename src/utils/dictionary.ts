@@ -33,7 +33,10 @@ export function buildIndexedDictionary(
   }
 }
 
-const ONE_HOUR_IN_MS = 60 * 60 * 1000
+// Dictionary content can now change at any time via the /api/dict admin
+// endpoint (backed by Cloudflare KV), so we cache much more briefly than
+// before (was 1 hour) to keep newly-added words showing up quickly.
+const DICT_CACHE_TTL_MS = 10 * 60 * 1000
 
 async function fetchLocalDict(localFilename: string): Promise<string> {
   const localRes = await fetch(`/${localFilename}`)
@@ -51,17 +54,52 @@ async function fetchLocalDict(localFilename: string): Promise<string> {
   return await localRes.text()
 }
 
+function dictCacheKey(dictName: string): string {
+  return `dict-${dictName}-${DICTIONARY_VERSION}`
+}
+
+/**
+ * Fetches dictionary content, preferring the live KV-backed API so that
+ * words added through the admin panel show up without a rebuild/redeploy.
+ * Falls back to the bundled `public/*.txt` file if the API is unreachable
+ * (e.g. plain `vite` dev server, or the Cloudflare Function/KV is down).
+ */
+async function fetchDictContent(
+  dictName: "vn" | "non-vn" | "custom" | "names"
+): Promise<string> {
+  try {
+    const apiRes = await fetch(`/api/dict/${dictName}`)
+    if (apiRes.ok) {
+      const contentType = apiRes.headers.get("content-type")
+      if (!contentType?.includes("text/html")) {
+        return await apiRes.text()
+      }
+    } else {
+      logger.warn(
+        `Dict API returned ${apiRes.status} for ${dictName}, falling back to bundled file`
+      )
+    }
+  } catch (_e) {
+    logger.warn(
+      `Dict API unreachable for ${dictName}, falling back to bundled file:`,
+      _e
+    )
+  }
+
+  return await fetchLocalDict(`${dictName}-dict.txt`)
+}
+
 async function getDictionary(
   dictName: "vn" | "non-vn" | "custom" | "names"
 ): Promise<string> {
   const isDev = Boolean(import.meta.env?.DEV)
-  const cacheKey = `dict-${dictName}-${DICTIONARY_VERSION}`
+  const cacheKey = dictCacheKey(dictName)
   if (!isDev) {
     try {
       const cached = await getCache<{ timestamp: number; data: string }>(
         cacheKey
       )
-      if (cached && Date.now() - cached.timestamp < ONE_HOUR_IN_MS) {
+      if (cached && Date.now() - cached.timestamp < DICT_CACHE_TTL_MS) {
         logger.info(`Using cached dictionary for ${dictName}`)
         return cached.data
       }
@@ -75,14 +113,29 @@ async function getDictionary(
   }
 
   logger.info(`Fetching fresh dictionary for ${dictName}`)
-  const filename = `${dictName}-dict.txt`
-  const data = await fetchLocalDict(filename)
+  const data = await fetchDictContent(dictName)
   try {
     await setCache(cacheKey, { timestamp: Date.now(), data })
   } catch (_e) {
     logger.warn(`Failed setting IndexedDB cache for ${dictName}:`, _e)
   }
   return data
+}
+
+/**
+ * Forces a fresh fetch of one dictionary and refreshes its IndexedDB cache,
+ * bypassing the TTL. Used right after the admin panel adds/removes words so
+ * a subsequent `loadDictionaries()` call sees the new content immediately.
+ */
+export async function refreshDictionaryCache(
+  dictName: "vn" | "non-vn" | "custom" | "names"
+): Promise<void> {
+  const data = await fetchDictContent(dictName)
+  try {
+    await setCache(dictCacheKey(dictName), { timestamp: Date.now(), data })
+  } catch (_e) {
+    logger.warn(`Failed setting IndexedDB cache for ${dictName}:`, _e)
+  }
 }
 
 export async function loadDictionaries(): Promise<{

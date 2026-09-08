@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import Header from "./components/Header.svelte"
+  import AdminDashboard from "./components/admin/AdminDashboard.svelte"
   import ClearWhitelistModal from "./components/modals/ClearWhitelistModal.svelte"
+  import DictionaryModal from "./components/modals/DictionaryModal.svelte"
   import HelpModal from "./components/modals/HelpModal.svelte"
   import SettingsModal from "./components/modals/SettingsModal.svelte"
   import ProcessingUI from "./components/ProcessingUI.svelte"
@@ -30,6 +32,8 @@
       }
       return
     }
+
+    if (appState.currentView === "admin") return
 
     if (appState.currentFilteredErrors.length === 0) return
 
@@ -60,7 +64,9 @@
   <Header />
 
   <main class="flex-1 flex flex-col max-w-7xl w-full mx-auto px-4 py-6">
-    {#if appState.isProcessing}
+    {#if appState.currentView === "admin"}
+      <AdminDashboard />
+    {:else if appState.isProcessing}
       <ProcessingUI />
     {:else if appState.loadedTextContent.length > 0}
       <ResultsView />
@@ -77,6 +83,7 @@
   <SettingsModal />
   <HelpModal />
   <ClearWhitelistModal />
+  <DictionaryModal />
 
   <!-- Toast Notification Container -->
   <ToastContainer />

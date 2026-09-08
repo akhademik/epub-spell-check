@@ -34,6 +34,67 @@ Một công cụ web hiện đại, nhanh chóng và mạnh mẽ để phát hi�
 - `public/non-vn-dict.txt`: Từ điển từ ngữ ngoại ngữ và từ mượn quốc tế.
 - `public/custom-dict.txt`: Từ điển từ viết tắt và chữ số La Mã.
 
+Các file trên vẫn là **fallback tĩnh** (dùng khi API bên dưới không sẵn sàng, ví dụ chạy `vite` dev đơn thuần). Ở môi trường production, ứng dụng ưu tiên đọc/ghi từ điển qua API động — xem phần tiếp theo.
+
+## Quản trị từ điển động (Admin Dashboard & Cloudflare Zero Trust)
+
+Ứng dụng cung cấp **Admin Dashboard** trực quan và API động trên Cloudflare Pages + KV:
+
+- **Admin Dashboard**: Bấm nút **"Quản Trị Từ Điển"** trên Header để chuyển sang giao diện quản trị:
+  - Xem danh sách từ của 4 từ điển (`Tiếng Việt`, `Tên riêng`, `Ngoại ngữ`, `Viết tắt`), tự động sắp xếp theo chuẩn Alphabet tiếng Việt (`vi`).
+  - Ô tìm kiếm từ tức thì (Live search & filter).
+  - Xóa từ nhanh với 1-click hoặc chọn xóa hàng loạt (Bulk remove).
+  - Thêm từ mới với **bộ phân tích cảnh báo thông minh**: Tự động phát hiện lỗi gõ máy (typo), dính chữ OCR, hoặc từ sai danh mục trước khi lưu.
+- **Xác thực linh hoạt**:
+  - **Cloudflare Zero Trust (Access)**: Đăng nhập trực tiếp bằng **Gmail** hoặc Email OTP — không cần nhớ mật khẩu hay nhập token trong ứng dụng.
+  - **Fallback Token**: Vẫn hỗ trợ `ADMIN_TOKEN` cho script/cURL khi cần tự động hóa.
+
+### Hướng dẫn thiết lập từng bước trên Cloudflare
+
+#### Bước 1: Tạo Cloudflare KV Namespace
+Chạy lệnh sau tại terminal máy tính của bạn:
+```bash
+npx wrangler kv namespace create DICT_KV
+```
+Copy chuỗi `id` được in ra và dán vào file `wrangler.toml` (mục `id = "..."`).
+
+#### Bước 2: Cấu hình KV Binding trên Cloudflare Pages Dashboard
+1. Truy cập [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → Chọn dự án Pages của bạn (`epub-spell-check`).
+2. Vào tab **Settings** → **Functions** → mục **KV namespace bindings**.
+3. Bấm **Add binding**:
+   - **Variable name**: `DICT_KV`
+   - **KV namespace**: Chọn namespace `DICT_KV` vừa tạo ở Bước 1.
+   - *(Thực hiện cho cả môi trường Production và Preview)*.
+
+#### Bước 3: Cấu hình Secret ADMIN_TOKEN (Dự phòng)
+1. Trong trang dự án Pages → **Settings** → **Environment variables**.
+2. Bấm **Add variable** / **Add secret**:
+   - Tên biến: `ADMIN_TOKEN`
+   - Giá trị: Nhập một chuỗi mật mã bí mật tự chọn (vd: `my-super-secret-key-2026`).
+
+#### Bước 4: Seed dữ liệu ban đầu vào Cloudflare KV
+Chạy script sau một lần duy nhất để nạp sẵn dữ liệu từ các file `.txt` hiện có vào KV:
+```bash
+./scripts/seed-kv.sh <KV_NAMESPACE_ID> --remote
+```
+
+#### Bước 5: Cấu hình Cloudflare Zero Trust (Access) để đăng nhập bằng Gmail
+1. Trên Cloudflare Dashboard, menu bên trái chọn **Zero Trust** (hoặc truy cập `one.dash.cloudflare.com`).
+2. Vào **Access** → **Applications** → Bấm **Add an application** → Chọn **Self-hosted**.
+3. **Application Configuration**:
+   - **Application name**: `Ebook Spell Check Admin`
+   - **Session Duration**: Chọn `24 hours` hoặc `1 month`.
+   - **Application domain**:
+     - Subdomain / Path: Nhập domain Pages của bạn (vd: `your-app.pages.dev`).
+     - Path: Nhập `/api/dict/*` (hoặc bảo vệ toàn bộ `your-app.pages.dev`).
+4. Bấm **Next** để tạo **Policy**:
+   - **Policy name**: `Admin Only`
+   - **Action**: `Allow`
+   - **Configure rules**: Chọn Selector: **Emails** → Nhập địa chỉ **Gmail** của bạn (vd: `your-email@gmail.com`).
+5. Bấm **Save application**.
+
+Từ lúc này, khi bạn mở Web App, Cloudflare sẽ tự nhận diện đăng nhập của bạn và bạn có thể thêm/xóa từ trực tiếp trên Admin Dashboard mà không cần gõ bất kỳ token nào!
+
 ## Phát triển & Kiểm thử
 
 Dự án sử dụng **Svelte 5 (Runes)**, **Vite**, **TypeScript**, **Tailwind CSS**, **Biome** và **Vitest**:
