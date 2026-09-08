@@ -64,6 +64,32 @@ describe("Filter Module", () => {
     expect(filtered.some((g) => g.word === "ATM")).toBe(false)
   })
 
+  it("should not filter out incorrectly cased custom words (e.g. ipad when custom is iPad)", () => {
+    const customDicts: Dictionaries = {
+      vietnamese: new Set(),
+      nonVietnamese: new Set(),
+      custom: new Set(["iPad"]),
+      names: new Set()
+    }
+    const groups: ErrorGroup[] = [
+      {
+        id: "ipad-Dictionary",
+        word: "ipad",
+        type: "Dictionary",
+        reason: "Không có trong VN dict",
+        count: 1,
+        contexts: []
+      }
+    ]
+    const filtered = getFilteredErrors(
+      groups,
+      [],
+      defaultCheckSettings,
+      customDicts
+    )
+    expect(filtered.some((g) => g.word === "ipad")).toBe(true)
+  })
+
   it("should filter out Vietnamese errors when Vietnamese check is toggled OFF", () => {
     const withoutVN = getFilteredErrors(
       testGroups,

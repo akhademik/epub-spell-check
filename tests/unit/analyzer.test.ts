@@ -104,6 +104,40 @@ describe("Analyzer Module", () => {
       expect(tiered.secondary).toContain("Himalaya")
     })
 
+    it("should prioritize canonical casing from custom dictionary (e.g. ipad -> iPad, iphone/IPHONE -> iPhone, wechat -> WeChat)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(),
+        nonVietnamese: new Set(),
+        custom: new Set(["iPad", "iPhone", "WeChat"]),
+        names: new Set()
+      }
+      expect(findTieredSuggestions("ipad", customDicts).primary[0]).toBe("iPad")
+      expect(findTieredSuggestions("iphone", customDicts).primary[0]).toBe(
+        "iPhone"
+      )
+      expect(findTieredSuggestions("IPHONE", customDicts).primary[0]).toBe(
+        "iPhone"
+      )
+      expect(findTieredSuggestions("wechat", customDicts).primary[0]).toBe(
+        "WeChat"
+      )
+      expect(findTieredSuggestions("weChat", customDicts).primary[0]).toBe(
+        "WeChat"
+      )
+    })
+
+    it("should suggest canonical casing for names (e.g. alexander -> Alexander)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set(["Alexander"])
+      }
+      expect(findTieredSuggestions("alexander", customDicts).primary[0]).toBe(
+        "Alexander"
+      )
+    })
+
     it("should return cached results on repeated calls", () => {
       const first = findSuggestions("họp", mockDictionaries)
       const second = findSuggestions("họp", mockDictionaries)

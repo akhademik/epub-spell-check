@@ -58,12 +58,13 @@ export function findTieredSuggestions(
   word: string,
   dictionaries: Dictionaries
 ): TieredSuggestions {
-  const low = word.toLowerCase().normalize("NFC")
-  const cached = tieredSuggestionCache.get(low)
+  const normWord = word.normalize("NFC")
+  const cached = tieredSuggestionCache.get(normWord)
   if (cached) {
     return cached
   }
 
+  const low = normWord.toLowerCase()
   const baseLow = getBaseWord(low)
   const primarySet = new Set<string>()
   const secondarySet = new Set<string>()
@@ -151,7 +152,17 @@ export function findTieredSuggestions(
 
     for (const dictWord of candidateWords) {
       const dictLow = dictWord.toLowerCase().normalize("NFC")
-      if (dictLow === low || seenLower.has(dictLow)) continue
+      if (dictLow === low) {
+        if (dictWord !== word) {
+          // Same letters, different casing.
+          // Custom dictionary and names dictionary are authoritative for canonical casing (e.g. ipad -> iPad, wechat -> WeChat).
+          const score =
+            priorityWeight === 2 ? -10 : priorityWeight === 1 ? -5 : -1
+          primaryCandidates.push({ word: dictWord, score })
+        }
+        continue
+      }
+      if (seenLower.has(dictLow)) continue
 
       const baseDictWord = baseWordCache?.get(dictWord) ?? getBaseWord(dictLow)
 
@@ -205,7 +216,7 @@ export function findTieredSuggestions(
     secondary: Array.from(secondarySet)
   }
 
-  tieredSuggestionCache.set(low, result)
+  tieredSuggestionCache.set(normWord, result)
   return result
 }
 
@@ -216,9 +227,9 @@ export function findSuggestions(
   word: string,
   dictionaries: Dictionaries
 ): string[] {
-  const low = word.toLowerCase().normalize("NFC")
-  if (suggestionCache.has(low)) {
-    return suggestionCache.get(low) || []
+  const normWord = word.normalize("NFC")
+  if (suggestionCache.has(normWord)) {
+    return suggestionCache.get(normWord) || []
   }
 
   const tiered = findTieredSuggestions(word, dictionaries)
@@ -226,7 +237,7 @@ export function findSuggestions(
     new Set([...tiered.primary, ...tiered.secondary])
   ).slice(0, MAX_SUGGESTION_COUNT)
 
-  suggestionCache.set(low, combined)
+  suggestionCache.set(normWord, combined)
   return combined
 }
 

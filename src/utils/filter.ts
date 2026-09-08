@@ -28,7 +28,6 @@ export function getFilteredErrors(
     // 2. Custom dictionary & Names dictionary (always filters out valid custom abbreviations & names)
     if (
       dictionaries.custom.has(group.word) ||
-      dictionaries.custom.has(lowerWord) ||
       (dictionaries.names &&
         (dictionaries.names.has(group.word) ||
           dictionaries.names.has(lowerWord)))

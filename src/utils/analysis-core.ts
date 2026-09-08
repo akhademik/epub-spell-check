@@ -65,7 +65,7 @@ export function getErrorType(
   // 1. Words with 2+ uppercase letters (e.g. VIP, ATM, tÔi, PHARAOH) or camelCase
   // Must exist in custom / abbreviation dictionary to be exempt, otherwise flagged as Uppercase error
   if (upperCount >= 2 || hasInternalUpper) {
-    if (dictionaries.custom.has(word) || dictionaries.custom.has(lower)) {
+    if (dictionaries.custom.has(word)) {
       return null
     }
     if (checkSettings.vietnamese) {
@@ -77,7 +77,7 @@ export function getErrorType(
   }
 
   // 2. Custom / Abbreviation Dictionary (Always active)
-  if (dictionaries.custom.has(word) || dictionaries.custom.has(lower)) {
+  if (dictionaries.custom.has(word)) {
     return null
   }
 

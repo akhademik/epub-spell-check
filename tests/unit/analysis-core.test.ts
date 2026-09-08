@@ -175,13 +175,47 @@ describe("Analysis Core", () => {
       expect(error).toBeNull()
     })
 
-    it("should always accept Custom Abbreviations (ATM, VIP, DNA) without errors", () => {
+    it("should always accept Custom Abbreviations (ATM, VIP, DNA, iPad, iPhone) without errors when correctly cased", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(),
+        nonVietnamese: new Set(),
+        custom: new Set(["ATM", "VIP", "DNA", "iPad", "iPhone", "WeChat"]),
+        names: new Set()
+      }
+      expect(getErrorType("ATM", customDicts, defaultCheckSettings)).toBeNull()
+      expect(getErrorType("DNA", customDicts, defaultCheckSettings)).toBeNull()
+      expect(getErrorType("iPad", customDicts, defaultCheckSettings)).toBeNull()
       expect(
-        getErrorType("ATM", mockDictionaries, defaultCheckSettings)
+        getErrorType("iPhone", customDicts, defaultCheckSettings)
       ).toBeNull()
       expect(
-        getErrorType("DNA", mockDictionaries, defaultCheckSettings)
+        getErrorType("WeChat", customDicts, defaultCheckSettings)
       ).toBeNull()
+    })
+
+    it("should flag casing mistakes of custom dictionary entries as errors", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(),
+        nonVietnamese: new Set(),
+        custom: new Set(["iPad", "iPhone", "WeChat"]),
+        names: new Set()
+      }
+      // ipad is lowercase, not in VN dict
+      expect(
+        getErrorType("ipad", customDicts, defaultCheckSettings)?.type
+      ).toBe("Dictionary")
+      // iphone is lowercase, not in VN dict
+      expect(
+        getErrorType("iphone", customDicts, defaultCheckSettings)?.type
+      ).toBe("Dictionary")
+      // IPHONE has uppercase anomalies
+      expect(
+        getErrorType("IPHONE", customDicts, defaultCheckSettings)?.type
+      ).toBe("Uppercase")
+      // weChat has internal uppercase anomaly
+      expect(
+        getErrorType("weChat", customDicts, defaultCheckSettings)?.type
+      ).toBe("Uppercase")
     })
 
     it("should always accept Names Dictionary entries (Alexander, Parmenion, Persepolis) without errors", () => {
