@@ -420,7 +420,7 @@ if (isDirectExecution) {
   try {
     const { statsList, rejected, warnings } = mergeDictFiles(fileArgs)
     console.log(formatMergeStats(statsList))
-    console.log("\n" + formatValidationReport(rejected, warnings))
+    console.log(`\n${formatValidationReport(rejected, warnings)}`)
 
     if (deleteAfter) {
       for (const file of fileArgs) {
@@ -431,8 +431,11 @@ if (isDirectExecution) {
         }
       }
     }
-  } catch (error: any) {
-    console.error("Error merging dictionaries:", error.message)
+  } catch (error) {
+    console.error(
+      "Error merging dictionaries:",
+      error instanceof Error ? error.message : String(error)
+    )
     process.exit(1)
   }
 }

@@ -3,7 +3,9 @@ export type DictSourceName = "vn" | "non-vn" | "custom" | "names"
 export interface DictUpdateResult {
   name: DictSourceName
   action: "add" | "remove"
-  addedCount: number
+  affectedCount: number
+  addedCount?: number
+  removedCount?: number
   totalCount: number
   updatedAt: string
   user?: string
@@ -20,7 +22,7 @@ export interface AuthStatusResponse {
   authenticated: boolean
   authType: "cloudflare-access" | "token" | "none"
   email: string | null
-  hasTokenConfigured: boolean
+  hasTokenConfigured?: boolean
 }
 
 /**

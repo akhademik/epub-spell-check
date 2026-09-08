@@ -16,6 +16,15 @@ Một công cụ web hiện đại, nhanh chóng và mạnh mẽ để phát hi�
   - **Quy tắc bắt lỗi viết hoa (≥ 2 chữ in hoa):** Các từ viết hoa bất thường (do gõ nhầm CapsLock `tÔi`, `sÁch`) sẽ được phát hiện chính xác, trừ khi nằm trong từ điển viết tắt (`custom-dict.txt`).
   - **Miễn nhiễm dấu thanh mới & cũ:** Hỗ trợ song song cả 2 phong cách đặt dấu thanh (`hòa`/`hoà`, `hóa`/`hoá`, `thủy`/`thuỷ`, `khỏe`/`khoẻ`,...) mà không báo lỗi giả.
   - **Lỗi Tiếng Việt:** Phân loại rõ ràng từ không có trong từ điển tiếng Việt, lỗi gõ máy typo (`aa`, `ee`, `oo`), lỗi sai quy tắc phụ âm chính tả (`ngh`/`ng`, `gh`/`g`, `k`/`c`).
+- **Thứ tự Ưu tiên Phân loại & Đối chiếu (Dictionary Precedence):**
+  - Quá trình kiểm tra và phân loại từ ngữ tuân theo quy tắc ưu tiên chính thức:
+    $$\text{CUSTOM} \rightarrow \text{NAMES} \rightarrow \text{NON-VN} \rightarrow \text{VN} \rightarrow \text{SPELLING RULES} \rightarrow \text{UNKNOWN}$$
+    1. **CUSTOM (Viết tắt/Ký hiệu):** Ưu tiên tuyệt đối, bao gồm từ viết tắt nhiều chữ hoa và thuật ngữ đặc biệt.
+    2. **NAMES (Tên riêng/Địa danh):** Nhận diện tên riêng không phân biệt hoa thường.
+    3. **NON-VN (Ngoại ngữ):** Nhận diện từ mượn và ngoại ngữ thông dụng.
+    4. **VN (Tiếng Việt):** Đối chiếu từ vựng tiếng Việt chuẩn, hỗ trợ cả 2 phong cách đặt dấu thanh.
+    5. **SPELLING RULES (Quy tắc chính tả & Typo):** Phân tích quy tắc kết hợp phụ âm (`ngh`/`ng`, `gh`/`g`, `k`/`c`) và lỗi gõ máy (`aa`, `ee`,...).
+    6. **UNKNOWN (Lỗi từ điển):** Từ không thuộc bất kỳ nhóm nào trên.
 - **Giao diện trực quan & Trải nghiệm đọc sách tối ưu:**
   - Giao diện Responsive hoàn hảo cho cả thiết bị di động và máy tính để bàn.
   - Khung xem trước ngữ cảnh (Preview Context) mở rộng, hiển thị thoáng mắt với độ giãn dòng `1.8`, làm nổi bật từ lỗi.

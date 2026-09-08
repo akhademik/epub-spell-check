@@ -121,7 +121,12 @@ export async function parseEpub(
       const coverFile = zip.file(fullCoverPath)
       if (coverFile) {
         const coverBlob = await coverFile.async("blob")
-        metadata.coverUrl = URL.createObjectURL(coverBlob)
+        if (
+          typeof URL !== "undefined" &&
+          typeof URL.createObjectURL === "function"
+        ) {
+          metadata.coverUrl = URL.createObjectURL(coverBlob)
+        }
       }
     }
   } catch (_e) {

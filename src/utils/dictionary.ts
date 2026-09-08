@@ -159,64 +159,94 @@ export async function loadDictionaries(): Promise<{
     namesWordCount: 0
   }
 
-  const [vnRes, nonVnRes, customRes, namesRes] = await Promise.all([
-    getDictionary("vn"),
-    getDictionary("non-vn"),
-    getDictionary("custom"),
-    getDictionary("names")
-  ])
+  const [vnResult, nonVnResult, customResult, namesResult] =
+    await Promise.allSettled([
+      getDictionary("vn"),
+      getDictionary("non-vn"),
+      getDictionary("custom"),
+      getDictionary("names")
+    ])
+
+  const vnRes = vnResult.status === "fulfilled" ? vnResult.value : ""
+  const nonVnRes = nonVnResult.status === "fulfilled" ? nonVnResult.value : ""
+  const customRes =
+    customResult.status === "fulfilled" ? customResult.value : ""
+  const namesRes = namesResult.status === "fulfilled" ? namesResult.value : ""
+
+  if (vnResult.status === "rejected") {
+    logger.warn("Failed loading VN dictionary:", vnResult.reason)
+  }
+  if (nonVnResult.status === "rejected") {
+    logger.warn("Failed loading Non-VN dictionary:", nonVnResult.reason)
+  }
+  if (customResult.status === "rejected") {
+    logger.warn("Failed loading Custom dictionary:", customResult.reason)
+  }
+  if (namesResult.status === "rejected") {
+    logger.warn("Failed loading Names dictionary:", namesResult.reason)
+  }
 
   // 1. Process Vietnamese Dictionary
-  for (const line of vnRes.split("\n")) {
-    let word = line.trim()
-    if (!word) continue
-    if (word.startsWith("{") && word.endsWith("}")) {
-      try {
-        word = JSON.parse(word).text
-      } catch (_e) {
-        /* intentional no-op */
+  if (vnRes) {
+    for (const line of vnRes.split("\n")) {
+      let word = line.trim()
+      if (!word) continue
+      if (word.startsWith("{") && word.endsWith("}")) {
+        try {
+          word = JSON.parse(word).text
+        } catch (_e) {
+          /* intentional no-op */
+        }
+      }
+      const cleanWord = word.toLowerCase().normalize("NFC")
+      if (cleanWord) {
+        for (const p of cleanWord.split(/\s+/)) {
+          dictionaries.vietnamese.add(p)
+        }
       }
     }
-    const cleanWord = word.toLowerCase().normalize("NFC")
-    if (cleanWord) {
-      for (const p of cleanWord.split(/\s+/)) {
-        dictionaries.vietnamese.add(p)
-      }
-    }
+    status.isVietnameseLoaded = true
+    status.vietnameseWordCount = dictionaries.vietnamese.size
   }
-  status.isVietnameseLoaded = true
-  status.vietnameseWordCount = dictionaries.vietnamese.size
 
   // 2. Process Non-Vietnamese (English, French, Italian, Spanish, German, etc.) Dictionary
-  for (const word of nonVnRes.split(/\r?\n/)) {
-    const cleanWord = word.trim().toLowerCase()
-    if (cleanWord) {
-      dictionaries.nonVietnamese.add(cleanWord)
+  if (nonVnRes) {
+    for (const word of nonVnRes.split(/\r?\n/)) {
+      const cleanWord = word.trim().toLowerCase()
+      if (cleanWord) {
+        dictionaries.nonVietnamese.add(cleanWord)
+      }
     }
+    status.isNonVietnameseLoaded = true
+    status.nonVietnameseWordCount = dictionaries.nonVietnamese.size
   }
-  status.isNonVietnameseLoaded = true
-  status.nonVietnameseWordCount = dictionaries.nonVietnamese.size
 
   // 3. Process Custom Dictionary (Abbreviations, terms)
-  for (const word of customRes.split(/\r?\n/)) {
-    const cleanWord = word.trim()
-    if (cleanWord) {
-      dictionaries.custom.add(cleanWord)
+  if (customRes) {
+    for (const word of customRes.split(/\r?\n/)) {
+      const cleanWord = word.trim()
+      if (cleanWord) {
+        dictionaries.custom.add(cleanWord)
+      }
     }
+    status.isCustomLoaded = true
+    status.customWordCount = dictionaries.custom.size
   }
-  status.isCustomLoaded = true
-  status.customWordCount = dictionaries.custom.size
 
   // 4. Process Names Dictionary (Proper names, historical figures, places)
-  for (const word of namesRes.split(/\r?\n/)) {
-    const cleanWord = word.trim()
-    if (cleanWord) {
-      dictionaries.names.add(cleanWord)
-      dictionaries.names.add(cleanWord.toLowerCase())
+  if (namesRes) {
+    for (const word of namesRes.split(/\r?\n/)) {
+      const cleanWord = word.trim()
+      if (cleanWord) {
+        dictionaries.names.add(cleanWord)
+        dictionaries.names.add(cleanWord.toLowerCase())
+      }
     }
+    status.isNamesLoaded = true
+    status.namesWordCount = namesRes
+      .split(/\r?\n/)
+      .filter((w) => w.trim()).length
   }
-  status.isNamesLoaded = true
-  status.namesWordCount = namesRes.split(/\r?\n/).filter((w) => w.trim()).length
 
   dictionaries.indexed = {
     vietnamese: buildIndexedDictionary(dictionaries.vietnamese),

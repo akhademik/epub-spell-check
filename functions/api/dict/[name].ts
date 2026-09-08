@@ -205,7 +205,9 @@ export async function onRequestPost(
   return jsonResponse({
     name,
     action,
-    addedCount: affectedCount,
+    affectedCount,
+    addedCount: action === "add" ? affectedCount : 0,
+    removedCount: action === "remove" ? affectedCount : 0,
     totalCount: wordSet.size,
     updatedAt,
     user: auth.user

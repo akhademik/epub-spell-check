@@ -47,7 +47,6 @@ export async function onRequestGet(context: RequestContext): Promise<Response> {
   return jsonResponse({
     authenticated,
     authType,
-    email: cfEmail ?? null,
-    hasTokenConfigured: Boolean(context.env.ADMIN_TOKEN)
+    email: cfEmail ?? null
   })
 }

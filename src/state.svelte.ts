@@ -21,7 +21,7 @@ import { parseEpub } from "./utils/epub-parser"
 import { applyFixesAndRepack, type FixInstruction } from "./utils/epub-writer"
 import { getFilteredErrors } from "./utils/filter"
 import { logger } from "./utils/logger"
-import AnalysisWorker from "./workers/analysis.worker?worker"
+import { analysisWorkerManager } from "./utils/worker-manager"
 
 const STORAGE_KEYS = {
   READER: "spell-check:reader-settings",
@@ -770,38 +770,16 @@ export class AppStateModel {
         ...$state.snapshot(this.checkSettings)
       }
 
-      // Run analysis in Web Worker
-      const worker = new AnalysisWorker()
-      const analysisPromise = new Promise<{
-        errors: ErrorInstance[]
-        totalWords: number
-      }>((resolve, reject) => {
-        worker.onmessage = (event) => {
-          const { type, progress, message, errors, totalWords } = event.data
-          if (type === "progress") {
-            this.progressPercent = 60 + Math.round(progress * 0.4)
-            this.progressStatus = message
-          } else if (type === "complete") {
-            resolve({ errors, totalWords })
-            worker.terminate()
-          }
+      // Run analysis in Web Worker via AnalysisWorkerManager
+      const { errors, totalWords } = await analysisWorkerManager.analyze(
+        epubContent.textBlocks,
+        rawDicts,
+        rawCheckSettings,
+        (progress, message) => {
+          this.progressPercent = 60 + Math.round(progress * 0.4)
+          this.progressStatus = message
         }
-
-        worker.onerror = (error) => {
-          logger.error("Analysis worker error:", error)
-          reject(new Error("Lỗi trong quá trình phân tích văn bản."))
-          worker.terminate()
-        }
-
-        worker.postMessage({
-          textBlocks: epubContent.textBlocks,
-          dictionaries: rawDicts,
-          checkSettings: rawCheckSettings,
-          chapterStartIndex: 0
-        })
-      })
-
-      const { errors, totalWords } = await analysisPromise
+      )
       this.allDetectedErrors = groupErrors(errors)
       this.totalWords = totalWords
       this.isProcessing = false
