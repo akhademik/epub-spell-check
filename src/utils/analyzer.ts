@@ -70,27 +70,46 @@ export function findTieredSuggestions(
   const secondarySet = new Set<string>()
   const seenLower = new Set<string>()
 
+  const primaryCandidatesMap = new Map<
+    string,
+    { word: string; score: number }
+  >()
+  const secondaryCandidatesMap = new Map<
+    string,
+    { word: string; score: number }
+  >()
+
+  function addCandidate(
+    map: Map<string, { word: string; score: number }>,
+    candidateWord: string,
+    score: number
+  ) {
+    const lowKey = candidateWord.toLowerCase()
+    const existing = map.get(lowKey)
+    if (!existing || score < existing.score) {
+      map.set(lowKey, { word: candidateWord, score })
+    }
+  }
+
   // 1. Direct Vietnamese Tone Mark Swap (Highest confidence, e.g. chổ -> chỗ)
   if (dictionaries.vietnamese.size > 0) {
     for (const [a, b] of VI_TONE_PAIRS) {
       if (low.includes(a)) {
         const swapped = low.replace(a, b)
-        if (dictionaries.vietnamese.has(swapped) && !seenLower.has(swapped)) {
-          seenLower.add(swapped)
-          primarySet.add(swapped)
+        if (dictionaries.vietnamese.has(swapped)) {
+          addCandidate(primaryCandidatesMap, swapped, -20)
         }
       }
       if (low.includes(b)) {
         const swapped = low.replace(b, a)
-        if (dictionaries.vietnamese.has(swapped) && !seenLower.has(swapped)) {
-          seenLower.add(swapped)
-          primarySet.add(swapped)
+        if (dictionaries.vietnamese.has(swapped)) {
+          addCandidate(primaryCandidatesMap, swapped, -20)
         }
       }
     }
   }
 
-  // 2. Candidate collection from all dictionaries with length bucketing
+  // 2. Candidate collection from all dictionaries with dynamic length bucketing
   const dictSources: {
     dict: Set<string>
     indexed?: IndexedDictionary
@@ -118,12 +137,10 @@ export function findTieredSuggestions(
     }
   ]
 
-  const primaryCandidates: { word: string; score: number }[] = []
-  const secondaryCandidates: { word: string; score: number }[] = []
-
-  const LEVEN_LOOKUP_MAX = word.length < 5 ? 1 : 2
-  const minLen = Math.max(1, low.length - LEVEN_LOOKUP_MAX)
-  const maxLen = low.length + LEVEN_LOOKUP_MAX
+  // Dynamic distance threshold based on word length to avoid garbage suggestions on short words
+  const maxAllowedDistance = low.length <= 3 ? 1 : 2
+  const minLen = Math.max(1, low.length - maxAllowedDistance)
+  const maxLen = low.length + maxAllowedDistance
 
   for (const { dict, indexed, priorityWeight } of dictSources) {
     if (!dict || dict.size === 0) continue
@@ -154,44 +171,64 @@ export function findTieredSuggestions(
       const dictLow = dictWord.toLowerCase().normalize("NFC")
       if (dictLow === low) {
         if (dictWord !== word) {
-          // Same letters, different casing.
-          // Custom dictionary and names dictionary are authoritative for canonical casing (e.g. ipad -> iPad, wechat -> WeChat).
+          // Exact canonical case correction (e.g. ipad -> iPad, wechat -> WeChat, alexander -> Alexander)
           const score =
-            priorityWeight === 2 ? -10 : priorityWeight === 1 ? -5 : -1
-          primaryCandidates.push({ word: dictWord, score })
+            priorityWeight === 2 ? -100 : priorityWeight === 1 ? -50 : -10
+          addCandidate(primaryCandidatesMap, dictWord, score)
         }
         continue
       }
-      if (seenLower.has(dictLow)) continue
 
       const baseDictWord = baseWordCache?.get(dictWord) ?? getBaseWord(dictLow)
 
-      // 1. Calculate fullDistance with threshold 2
-      const fullDistance = levenshteinDistance(low, dictLow, 2)
-      if (fullDistance > 2) {
-        // Only consider if base words are very close (e.g. tone differences)
+      // 1. Calculate full distance with dynamic threshold
+      const fullDistance = levenshteinDistance(low, dictLow, maxAllowedDistance)
+      if (fullDistance > maxAllowedDistance) {
+        // Short words strictly limited to distance 1
+        if (low.length <= 3) continue
+
+        // For longer words, only consider if base words are identical (e.g. multi-tone differences)
         const baseDistance = levenshteinDistance(baseLow, baseDictWord, 1)
         if (baseDistance > 1) continue
       }
 
-      const baseDistance = levenshteinDistance(baseLow, baseDictWord, 2)
+      const baseDistance = levenshteinDistance(
+        baseLow,
+        baseDictWord,
+        maxAllowedDistance
+      )
 
-      // Primary criteria: close edit distance (baseDist <= 1 AND fullDist <= 1)
-      if (baseDistance <= 1 && fullDistance <= 1) {
-        const score = priorityWeight * 20 + baseDistance * 10 + fullDistance
-        primaryCandidates.push({ word: dictWord, score })
+      // Filter out garbage suggestions for 4-5 char words with distance 2 and different base words
+      if (low.length <= 5 && fullDistance >= 2 && baseDistance > 1) {
+        continue
       }
-      // Secondary criteria: broader edit distance (fullDist <= 2 OR (baseDist <= 1 AND fullDist <= 2))
-      else if (fullDistance <= 2 || (baseDistance <= 1 && fullDistance <= 2)) {
-        const score = priorityWeight * 20 + baseDistance * 5 + fullDistance
-        secondaryCandidates.push({ word: dictWord, score })
+
+      // Structured Scoring Hierarchy:
+      // - Same base word, distance 1 (highest confidence typo/tone): score 5..20
+      // - Base distance <= 1 AND full distance <= 1 (1-character edit): score 10..35
+      // - Same base word, distance 2: score 20..40
+      // - Broader distance <= 2: score 35..75
+      if (baseDistance === 0 && fullDistance === 1) {
+        const score = priorityWeight * 5 + 5
+        addCandidate(primaryCandidatesMap, dictWord, score)
+      } else if (baseDistance <= 1 && fullDistance <= 1) {
+        const score = priorityWeight * 8 + baseDistance * 8 + fullDistance * 4
+        addCandidate(primaryCandidatesMap, dictWord, score)
+      } else if (baseDistance === 0 && fullDistance === 2) {
+        const score = priorityWeight * 8 + 20
+        addCandidate(secondaryCandidatesMap, dictWord, score)
+      } else if (fullDistance <= 2) {
+        const score = priorityWeight * 12 + baseDistance * 6 + fullDistance * 5
+        addCandidate(secondaryCandidatesMap, dictWord, score)
       }
     }
   }
 
-  // Populate primary suggestions
-  primaryCandidates.sort((a, b) => a.score - b.score)
-  for (const c of primaryCandidates) {
+  // Populate primary suggestions deterministically sorted by score
+  const sortedPrimary = Array.from(primaryCandidatesMap.values()).sort(
+    (a, b) => a.score - b.score
+  )
+  for (const c of sortedPrimary) {
     if (primarySet.size >= MAX_PRIMARY_SUGGESTION_COUNT) break
     const cLow = c.word.toLowerCase()
     if (!seenLower.has(cLow)) {
@@ -200,9 +237,11 @@ export function findTieredSuggestions(
     }
   }
 
-  // Populate secondary suggestions
-  secondaryCandidates.sort((a, b) => a.score - b.score)
-  for (const c of secondaryCandidates) {
+  // Populate secondary suggestions deterministically sorted by score
+  const sortedSecondary = Array.from(secondaryCandidatesMap.values()).sort(
+    (a, b) => a.score - b.score
+  )
+  for (const c of sortedSecondary) {
     if (secondarySet.size >= MAX_SECONDARY_SUGGESTION_COUNT) break
     const cLow = c.word.toLowerCase()
     if (!seenLower.has(cLow)) {

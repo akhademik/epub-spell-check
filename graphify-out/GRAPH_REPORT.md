@@ -4,25 +4,25 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 420 nodes · 722 edges · 27 communities (18 shown, 3 thin omitted)
+- 421 nodes · 724 edges · 26 communities (18 shown, 2 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bff63a76`
+- Built from commit: `c64e8566`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - state.svelte.ts
 - EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION
-- constants.ts
+- analyzer.ts
 - AppStateModel
 - biome.json
-- App.svelte
 - devDependencies
 - compilerOptions
 - scripts
+- dict-admin.ts
 - utils/dictionary.ts
 - merge-dicts.ts
 - epub-parser.ts
@@ -31,7 +31,6 @@
 - knip.json
 - auth-status.ts
 - MERGE_DICTS_WORKFLOW.md
-- AnalysisWorkerManager
 - Soát lỗi chính tả EPUB (Tiếng Việt)
 - login.ts
 - seed-kv.sh
@@ -51,8 +50,8 @@
 ## Surprising Connections (you probably didn't know these)
 - `applyFixesAndRepack()` --references--> `jszip`  [EXTRACTED]
   src/utils/epub-writer.ts → package.json
-- `tieredSuggestions` --calls--> `findTieredSuggestions()`  [EXTRACTED]
-  src/components/ContextView.svelte → src/utils/analyzer.ts
+- `findTieredSuggestions()` --calls--> `levenshteinDistance()`  [EXTRACTED]
+  src/utils/analyzer.ts → src/utils/analysis-core.ts
 - `AppState` --references--> `CheckSettings`  [EXTRACTED]
   src/types/state.ts → src/types/analysis.ts
 - `AppState` --references--> `Dictionaries`  [EXTRACTED]
@@ -63,43 +62,43 @@
 ## Import Cycles
 - None detected.
 
-## Communities (27 total, 3 thin omitted)
+## Communities (26 total, 2 thin omitted)
 
 ### Community 0 - "state.svelte.ts"
-Cohesion: 0.11
-Nodes (39): appState, PersistedContainer, STORAGE_KEYS, CheckSettings, Dictionaries, Dictionary, DictionaryStatus, BookMetadata (+31 more)
+Cohesion: 0.10
+Nodes (29): appState, PersistedContainer, STORAGE_KEYS, CheckSettings, Dictionaries, Dictionary, DictionaryStatus, BookMetadata (+21 more)
 
 ### Community 1 - "EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION"
 Cohesion: 0.05
 Nodes (41): 10. PDF → EPUB USER FLOW, 11. EPUB EDITOR E2E, 12. EPUB CLEANER E2E, 13. EPUB VALIDATOR E2E, 14. IMAGE PROCESSING E2E, 15. WORKER TESTING, 16. REGRESSION TEST, 17. OUTPUT FILE VALIDATION (+33 more)
 
-### Community 2 - "constants.ts"
+### Community 2 - "analyzer.ts"
 Cohesion: 0.07
-Nodes (24): contextSegments, currentAppliedWord, customFixInput, isCurrentInstanceResolved, isTitleCase(), isUpperCase(), tieredSuggestions, CONTEXT_LENGTH_CHARS (+16 more)
+Nodes (33): contextSegments, currentAppliedWord, customFixInput, isCurrentInstanceResolved, isTitleCase(), isUpperCase(), tieredSuggestions, CONTEXT_LENGTH_CHARS (+25 more)
 
 ### Community 3 - "AppStateModel"
-Cohesion: 0.13
-Nodes (3): AppStateModel, sanitizeFilename(), saveStorage()
+Cohesion: 0.10
+Nodes (5): AppStateModel, sanitizeFilename(), saveStorage(), ErrorInstance, AnalysisWorkerManager
 
 ### Community 4 - "biome.json"
 Cohesion: 0.07
 Nodes (27): noSvgWithoutTitle, source, assist, actions, files, includes, formatter, enabled (+19 more)
 
-### Community 5 - "App.svelte"
-Cohesion: 0.09
-Nodes (12): AuthStatusResponse, DictDetailResponse, DictSourceName, DictUpdateResult, updateDictionaryWords(), isRepeatedUnit(), parseSectionedText(), SectionParsedWords (+4 more)
-
-### Community 6 - "devDependencies"
+### Community 5 - "devDependencies"
 Cohesion: 0.08
 Nodes (25): autoprefixer, @biomejs/biome, jsdom, devDependencies, autoprefixer, @biomejs/biome, jsdom, knip (+17 more)
 
-### Community 7 - "compilerOptions"
+### Community 6 - "compilerOptions"
 Cohesion: 0.08
 Nodes (23): DOM, DOM.Iterable, ES2022, src/**/*.d.ts, src/**/*.js, src/**/*.svelte, src/**/*.ts, compilerOptions (+15 more)
 
-### Community 8 - "scripts"
+### Community 7 - "scripts"
 Cohesion: 0.09
 Nodes (21): jszip, dependencies, jszip, name, private, scripts, build, check (+13 more)
+
+### Community 8 - "dict-admin.ts"
+Cohesion: 0.14
+Nodes (12): AuthStatusResponse, DictDetailResponse, DictSourceName, DictUpdateResult, updateDictionaryWords(), isRepeatedUnit(), parseSectionedText(), SectionParsedWords (+4 more)
 
 ### Community 9 - "utils/dictionary.ts"
 Cohesion: 0.20
@@ -133,29 +132,29 @@ Nodes (5): Env, jsonResponse(), KVNamespace, onRequestGet(), RequestContext
 Cohesion: 0.25
 Nodes (7): 0. Ở bước phân loại trước đó (`*-corrected-dict.md`), 1. Công cụ tiện ích tự động (Automated Script), 2. Quy tắc xử lý chi tiết (Implementation Rules), 3. Báo cáo sau khi xử lý xong, 4. Commit, Các bước thực thi:, Lệnh chạy:
 
-### Community 18 - "Soát lỗi chính tả EPUB (Tiếng Việt)"
+### Community 17 - "Soát lỗi chính tả EPUB (Tiếng Việt)"
 Cohesion: 0.40
 Nodes (4): Cấu trúc từ điển (`public/`), Phát triển & Kiểm thử, Soát lỗi chính tả EPUB (Tiếng Việt), Tính năng chính
 
 ## Knowledge Gaps
 - **166 isolated node(s):** `PersistedContainer`, `Dictionary`, `AnalysisProgressCallback`, `WorkerMessage`, `MergeStats` (+161 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 191 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 192 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `applyFixesAndRepack()` connect `epub-parser.ts` to `state.svelte.ts`, `scripts`, `AppStateModel`?**
+- **Why does `applyFixesAndRepack()` connect `epub-parser.ts` to `state.svelte.ts`, `AppStateModel`, `scripts`?**
   _High betweenness centrality (0.131) - this node is a cross-community bridge._
 - **Why does `jszip` connect `scripts` to `epub-parser.ts`?**
   _High betweenness centrality (0.125) - this node is a cross-community bridge._
 - **What connects `PersistedContainer`, `Dictionary`, `AnalysisProgressCallback` to the rest of the system?**
   _166 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `state.svelte.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.11312764670296431 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09701928696668614 - nodes in this community are weakly interconnected._
 - **Should `EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION` be split into smaller, more focused modules?**
   _Cohesion score 0.047619047619047616 - nodes in this community are weakly interconnected._
-- **Should `constants.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06854838709677419 - nodes in this community are weakly interconnected._
+- **Should `analyzer.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.07017543859649122 - nodes in this community are weakly interconnected._
 - **Should `AppStateModel` be split into smaller, more focused modules?**
-  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10384068278805121 - nodes in this community are weakly interconnected._

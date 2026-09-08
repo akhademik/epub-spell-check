@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it } from "vitest"
 import type { Dictionaries } from "../../src/types/dictionary"
 import type { ErrorInstance } from "../../src/types/errors"
 import {
+  clearSuggestionCache,
   findSuggestions,
   findTieredSuggestions,
   groupErrors
@@ -72,6 +73,9 @@ describe("Analyzer Module", () => {
   })
 
   describe("Suggestions Generation", () => {
+    beforeEach(() => {
+      clearSuggestionCache()
+    })
     it("should suggest close words from Vietnamese dictionary", () => {
       const suggestions = findSuggestions("họp", mockDictionaries)
       expect(suggestions.length).toBeGreaterThan(0)
@@ -136,6 +140,33 @@ describe("Analyzer Module", () => {
       expect(findTieredSuggestions("alexander", customDicts).primary[0]).toBe(
         "Alexander"
       )
+    })
+
+    it("should strictly limit edit distance to 1 for short words (length <= 3) to prevent garbage suggestions", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(["học", "hộp", "hoa", "hạ", "hạc"]),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set()
+      }
+      // "họp" (len 3) -> distance 1: "học" (dist 1), "hộp" (dist 1). Distance 2 words like "hạ", "hạc" should not be suggested
+      const tiered = findTieredSuggestions("họp", customDicts)
+      expect(tiered.primary).toContain("học")
+      expect(tiered.primary).toContain("hộp")
+      expect(tiered.primary).not.toContain("hạ")
+      expect(tiered.secondary).not.toContain("hạ")
+    })
+
+    it("should prioritize same base-word tone matches over random edit-distance words in structured scoring", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(["khoán", "khoang", "khó"]),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set()
+      }
+      // "khoan" -> same base word "khoán" should rank above generic edit distance words
+      const tiered = findTieredSuggestions("khoan", customDicts)
+      expect(tiered.primary[0]).toBe("khoán")
     })
 
     it("should return cached results on repeated calls", () => {
