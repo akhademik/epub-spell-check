@@ -10,6 +10,13 @@ export interface WordValidationResult {
   reason?: string
 }
 
+export interface SectionParsedWords {
+  vn: string[]
+  names: string[]
+  "non-vn": string[]
+  custom: string[]
+}
+
 // Same pattern the app uses to flag "Gõ máy (Typo)" in analysis-core.ts
 const APP_TYPO_ENDING_RE = /(aa|ee|oo|uu|ii|dd|js|kx|wt)$/i
 
@@ -40,6 +47,53 @@ export function isRepeatedUnit(word: string): boolean {
     if (reps >= 3 && i >= lw.length - 1) return true
   }
   return false
+}
+
+/**
+ * Parses file content containing section headers like ---NAMES---, ---VN---, ---NON-VN---, ---CUSTOM---
+ */
+export function parseSectionedText(content: string): SectionParsedWords {
+  const lines = content.split(/\r?\n/)
+  const result: SectionParsedWords = {
+    vn: [],
+    names: [],
+    "non-vn": [],
+    custom: []
+  }
+
+  let currentKey: keyof SectionParsedWords | null = null
+
+  for (let line of lines) {
+    line = line.trim()
+    if (!line) continue
+
+    const headerMatch = line.match(
+      /(?:\\---|---)([A-Za-z]+(?:-[A-Za-z]+)*)(?:\\---|---)?/
+    )
+    if (headerMatch) {
+      const rawHeader = headerMatch[1].toUpperCase()
+      if (rawHeader === "VN" || rawHeader === "VIETNAMESE") {
+        currentKey = "vn"
+      } else if (rawHeader === "NAMES" || rawHeader === "NAME") {
+        currentKey = "names"
+      } else if (
+        rawHeader === "NON-VN" ||
+        rawHeader === "NONVN" ||
+        rawHeader === "FOREIGN"
+      ) {
+        currentKey = "non-vn"
+      } else if (rawHeader === "CUSTOM" || rawHeader === "ABBR") {
+        currentKey = "custom"
+      }
+      continue
+    }
+
+    if (currentKey) {
+      result[currentKey].push(line)
+    }
+  }
+
+  return result
 }
 
 /**

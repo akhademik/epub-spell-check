@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import {
   isRepeatedUnit,
+  parseSectionedText,
   validateBatchWords,
   validateDictionaryWord
 } from "../../src/utils/dict-validator"
@@ -73,6 +74,33 @@ describe("Dictionary Validator (dict-validator.ts)", () => {
       expect(validateDictionaryWord("names", "Trần Hưng Đạo").status).toBe(
         "valid"
       )
+    })
+  })
+
+  describe("parseSectionedText", () => {
+    it("parses multi-section file correctly", () => {
+      const sample = `
+---NAMES---
+Abolduyev
+Abula
+
+---VN---
+ài
+dioxit
+
+---NON-VN---
+hydroprednisone
+interferon
+
+---CUSTOM---
+ABS
+AFH
+`
+      const parsed = parseSectionedText(sample)
+      expect(parsed.names).toEqual(["Abolduyev", "Abula"])
+      expect(parsed.vn).toEqual(["ài", "dioxit"])
+      expect(parsed["non-vn"]).toEqual(["hydroprednisone", "interferon"])
+      expect(parsed.custom).toEqual(["ABS", "AFH"])
     })
   })
 
