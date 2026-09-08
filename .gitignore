@@ -25,6 +25,8 @@ dev-info.md
 # Cloudflare Wrangler local dev state & secrets
 .wrangler/
 .dev.vars
+.env
+.env.*
 
 # Graphify files: ignore all internal cache/backups, keep only the 3 main artifacts
 graphify-out/*

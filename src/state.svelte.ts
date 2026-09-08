@@ -102,12 +102,9 @@ export class AppStateModel {
     namesWordCount: 0
   })
 
-  // Persisted access token for the /api/dict admin endpoint (support .env VITE_ADMIN_TOKEN)
+  // Persisted access token for the /api/dict admin endpoint (saved only in user's localStorage when entered)
   dictAdminToken = $state<string>(
-    loadStorage(
-      STORAGE_KEYS.DICT_ADMIN_TOKEN,
-      (import.meta.env.VITE_ADMIN_TOKEN as string) || ""
-    )
+    loadStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, "")
   )
   isUpdatingDictionary = $state<boolean>(false)
 
