@@ -1,586 +1,305 @@
-6. Suggestion engine là nơi có khả năng trở thành bottleneck
+2. Worker architecture đã được nâng cấp
 
-Đây là phần tôi quan tâm nhất về performance.
+Đây là một thay đổi tốt.
 
-Bạn đang làm Levenshtein:
+Bạn đã chuyển từ:
 
-candidate dictionary
+mỗi lần analyze
 ↓
-length bucket
+new Worker()
 ↓
-Levenshtein
+analyze
 ↓
-sort candidates
+terminate
 
-Đây là improvement tốt hơn rất nhiều so với brute-force toàn dictionary. analyzer.ts đã sử dụng length buckets và base-word cache.
+sang:
 
-Nhưng vẫn có vấn đề:
-
-for (const dictWord of candidateWords) {
-const baseDistance = levenshteinDistance(...)
-const fullDistance = levenshteinDistance(...)
-}
-
-Tức là mỗi candidate có thể chạy 2 lần Levenshtein.
-
-Nếu:
-
-VN dictionary = 50k
-Names = 120k
-Non-VN = 48k
-
-thì suggestion generation cho một unknown word vẫn có thể khá nặng.
-
-Tôi đề xuất phase tiếp theo:
-
-Dùng filter trước Levenshtein:
-
-candidate
+AnalysisWorkerManager
 ↓
-length
+persistent Worker
 ↓
-first character / phonetic bucket
+init(dictionaries)
 ↓
-base character signature
+analyze(...)
+
+Worker giữ cachedDictionaries, và manager có init() + terminate().
+
+Đây đúng hướng mình đề xuất.
+
+Nhưng còn một điểm nhỏ
+
+Bạn vẫn gửi:
+
+worker.postMessage({
+type: "analyze",
+textBlocks,
+dictionaries,
+checkSettings,
+chapterStartIndex
+})
+
+tức là vẫn structured-clone toàn bộ 4 dictionary ở mỗi lần analyze.
+
+Trong khi worker đã có:
+
+cachedDictionaries
+
+nên về mặt kiến trúc có thể đi xa hơn:
+
+init(dictionaries)
 ↓
-Levenshtein
+analyze(textBlocks, checkSettings)
 
-Ví dụ:
+Tuy nhiên đây không còn là bug, chỉ là optimization cuối cùng.
 
-"nghiên"
+## → Mức độ: P2, chưa cần ưu tiên.
 
-không cần so với:
+Nhưng vẫn còn 3 vấn đề đáng xử lý
+🔴 P0 — Authentication vẫn là điểm yếu lớn nhất
 
-computer
-Alexander
-software
-...
+Đây là thứ mình vẫn chưa cho DONE.
 
-Có thể giảm candidate set xuống rất mạnh.
+Trong:
 
----
+functions/api/dict/[name].ts
 
-7.  Một optimization rất đáng làm: không cần matrix đầy đủ
+bạn đang làm:
 
-Hiện tại:
-
-levenshteinDistance()
-
-tạo:
-
-number[][]
-
-cho mỗi calculation.
-
-Đây là allocation khá lớn.
-
-Bạn chỉ cần distance <= 1 hoặc <= 2.
-
-Có thể dùng bounded Levenshtein:
-
-distance > threshold
-→ return threshold + 1
-
-và chỉ giữ 2 rows:
-
-previous[]
-current[]
-
-Thay vì:
-
-matrix[i][j]
-
-Điều này sẽ giảm allocation đáng kể.
-
-## Đây là optimization tôi ưu tiên #1 cho analyzer.
-
----
-
-8. EPUB parser: tốt nhưng có một rủi ro lớn
-
-extractLeafTextElements() hiện cố tránh duplicate text bằng:
-
-p/h1/h2/.../li/blockquote/...
-
-- leaf div
-
-Ý tưởng tốt.
-
-Nhưng EPUB HTML ngoài đời rất bẩn.
-
-Có thể gặp:
-
-<div>
-  <span>Hello</span>
-  <span>world</span>
-</div>
-
-hoặc:
-
-<p>
-  Hello <b>beautiful</b> world
-</p>
-
-hoặc:
-
-<div>
-  <div>
-    <span>...</span>
-  </div>
-</div>
-
-Bạn đang phụ thuộc vào DOM structure để xác định "paragraph".
-
-Điều này sẽ hoạt động tốt với phần lớn EPUB nhưng không thể đảm bảo 100%.
-
----
-
-9. EPUB writer có một điểm tôi muốn test cực mạnh
-
-Đây là phần nguy hiểm nhất của app:
-
-EPUB
-↓
-parse DOM
-↓
-modify DOM
-↓
-XMLSerializer
-↓
-EPUB
-
-Bạn có thể làm mất hoặc thay đổi:
-
-namespace
-doctype
-XML formatting
-attribute representation
-entity representation
-whitespace
-malformed XHTML tolerance
-một số metadata formatting
-
-epub-writer.ts đã cố giữ XML declaration, và cũng đảm bảo mimetype dùng STORE compression. Đây là đúng.
-
-Nhưng tôi muốn test regression theo kiểu:
-
-input.epub
-↓
-fix 1 word
-↓
-output.epub
-↓
-compare structural integrity
-
-chứ không chỉ test:
-
-"hello" → "world"
-
----
-
-10. Đặc biệt: XMLSerializer có thể làm EPUB diff rất lớn
-
-Ví dụ source:
-
-<p>Hello <b>world</b></p>
-
-sau serialize có thể không còn byte-for-byte giống source.
-
-Không nhất thiết là bug.
-
-Nhưng với EPUB, mục tiêu tốt hơn là:
-
-thay đổi tối thiểu nội dung cần thay đổi.
-
-Nếu muốn writer đạt mức production cao hơn, tôi sẽ cân nhắc:
-
-DOM parsing
-
-chỉ dùng để xác định location,
-
-nhưng khi apply fix:
-
-modify original text
-
-thay vì serialize toàn bộ document.
-
-Đây là một improvement kiến trúc lớn nhưng không cần làm ngay.
-
----
-
-11. Security: đây là phần tôi muốn sửa trước
-
-Có một điểm khá rõ:
-
-dictAdminToken = $state<string>(
-loadStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, "")
+const cfEmail = request.headers.get(
+"cf-access-authenticated-user-email"
 )
 
-và sau đó:
+const cfJwt = request.headers.get(
+"cf-access-jwt-assertion"
+)
+
+if (cfEmail || cfJwt) {
+authorized: true
+}
+
+Tức là:
+
+Chỉ cần request có một trong hai header đó là được coi authenticated.
+
+Đây không phải cách xác thực Cloudflare Access chắc chắn ở application layer.
+
+Tuy nhiên có nuance quan trọng
+
+Nếu Cloudflare Access đang thực sự đứng trước /api/\* và chặn request unauthenticated, thì trong deployment thực tế header này được Cloudflare thêm vào sau khi user đã qua Access.
+
+Khi đó architecture của bạn có thể vẫn an toàn.
+
+Nhưng code Function hiện tại không tự chứng minh được điều đó.
+
+Mình muốn architecture thành:
+
+Internet
+│
+▼
+Cloudflare Access
+│
+├── unauthenticated → 403
+│
+▼
+Pages Function
+│
+└── validate Access identity
+
+hoặc nếu muốn giữ token fallback:
+
+Cloudflare Access
+OR
+ADMIN_TOKEN
+↓
+Function
+
+Nhưng phải xác định rõ boundary.
+
+Khuyến nghị
+
+Nếu đây là app cá nhân/admin tool của bạn, mình sẽ chọn:
+
+Cloudflare Access làm auth chính.
+
+## ADMIN_TOKEN chỉ giữ làm emergency fallback nếu thật sự cần.
+
+---
+
+P1 — ADMIN_TOKEN vẫn lưu trong localStorage
+
+Đây là vấn đề security mình vẫn thấy trong state.svelte.ts.
+
+Bạn hiện vẫn có:
+
+DICT_ADMIN_TOKEN: "spell-check:dict-admin-token"
+
+và:
+
+loadStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, "")
+
+sau đó:
 
 saveStorage(
 STORAGE_KEYS.DICT_ADMIN_TOKEN,
 this.dictAdminToken
 )
 
-Tức là ADMIN_TOKEN được lưu trong localStorage.
+Nghĩa là token admin được lưu persistent trong browser.
 
-Điều này có nghĩa:
+Nếu xảy ra XSS:
 
-XSS
+localStorage.getItem("spell-check:dict-admin-token")
+
+là đủ lấy token.
+
+Mình khuyên sửa thành
+
+Không lưu token:
+
+user nhập token
 ↓
-localStorage
+memory only
 ↓
-ADMIN_TOKEN
+request
 ↓
-attacker có quyền sửa dictionary
-
-Nếu đây chỉ là tool cá nhân thì mức độ nghiêm trọng thấp hơn.
-
-Nhưng nếu deploy public thì tôi không thích architecture này.
-
-Tốt hơn:
-
-Nếu đã dùng Cloudflare Access:
-
-Browser
+reload browser
 ↓
-Cloudflare Access
-↓
-/api/dict/\*
-↓
-KV
+token biến mất
 
-thì không cần expose ADMIN_TOKEN cho browser bình thường.
+Nếu đã dùng Cloudflare Access thì thậm chí UI không cần token trong normal flow.
 
-ADMIN_TOKEN nên là fallback dành cho:
-
-CLI
-automation
-emergency admin
-
-chứ không nên là credential được persistent vào localStorage.
+## Đây là việc mình sẽ làm tiếp theo.
 
 ---
 
-12. Và có một vấn đề security còn quan trọng hơn
+P1 — Có một bug UX/API nhỏ
 
-isAuthenticated() hiện coi request có:
+Trong state.svelte.ts:
 
-cf-access-authenticated-user-email
+const verb = action === "remove" ? "xóa" : "thêm"
 
-hoặc:
+`Đã ${verb} ${result.addedCount} từ...`
 
-cf-access-jwt-assertion
+Với remove thì bạn đang hiển thị:
 
-là authenticated.
+Đã xóa 0 từ
 
-Điều này chỉ an toàn nếu endpoint thực sự luôn nằm sau Cloudflare Access.
+vì API mới trả:
 
-Nếu có đường truy cập trực tiếp bypass Access tới Pages Function thì header-based trust cần được xem xét lại.
+addedCount: 0
+removedCount: affectedCount
 
-Tôi khuyên production setup nên có:
+Nên đổi thành:
 
-Cloudflare Access
-↓
-admin path
-↓
-Function
-
-và function nên validate JWT nếu bạn muốn defense-in-depth.
-
----
-
-13. Một bug nhỏ trong API response naming
-
-POST:
-
+const affectedCount =
 action === "remove"
+? result.removedCount
+: result.addedCount
 
-nhưng response vẫn trả:
+hoặc tốt nhất:
 
-addedCount: affectedCount
+result.affectedCount
 
-Cho remove thì nó thực chất là:
+rồi:
 
-removedCount
+`Đã ${verb} ${result.affectedCount} từ...`
 
-Đây là API design smell.
-
-Tốt hơn:
-
-{
-action: "add",
-affectedCount: 10
-}
-
-hoặc:
-
-{
-action: "remove",
-affectedCount: 10
-}
-
-Thay vì:
-
-addedCount
-
-cho cả hai operation.
-
------14. auth-status hiện có thể đơn giản hóa
-
-Bạn có:
-
-/auth-status
-/dict/:name
-
-Trong đó auth-status trả:
-
-authenticated
-authType
-email
-hasTokenConfigured
-
-Đây là UX-friendly.
-
-Tuy nhiên hasTokenConfigured có thể leak thông tin:
-
-ADMIN_TOKEN có tồn tại hay không
-
-Không phải vulnerability nghiêm trọng, nhưng tôi không thấy frontend cần phải biết secret infrastructure có configured hay không.
-
-Có thể trả:
-
-{
-authenticated: true,
-authType: "cloudflare-access",
-email: "..."
-}
-
-là đủ.
+Rất nhỏ nhưng nên fix.
 
 ---
 
-15. State model đang hơi phình
+Một điểm nữa mình muốn bạn bổ sung: EPUB round-trip tests
 
-AppStateModel hiện đang quản:
+Đây vẫn là khoảng trống lớn nhất về test.
 
-dictionary
-auth
-reader
-whitelist
+Hiện regression test chủ yếu test:
+
+getErrorType()
+
+Ví dụ tone:
+
+hòa / hoà
+hóa / hoá
+thủy / thuỷ
+khỏe / khoẻ
+
+và typo / acronym / foreign words.
+
+Nhưng production flow thực sự là:
+
 EPUB
+↓
+parse
+↓
+TextContentBlock
+↓
 analysis
-selection
-UI
-toast
-fixes
+↓
+FixInstruction
+↓
+DOM modification
+↓
+XMLSerializer
+↓
+JSZip
+↓
+EPUB
 
-và file đã khá lớn.
+Trong khi epub-writer.ts đang dùng XMLSerializer để serialize lại XHTML.
 
-Hiện tại vẫn đọc được.
+Đây là chỗ có khả năng xuất hiện regression mà unit test hiện tại không bắt được.
 
-Nhưng nếu tiếp tục thêm feature, tôi sẽ tách:
+Mình muốn có ít nhất 4 fixture:
+fixtures/
+├── simple.epub
+├── nested-formatting.epub
+├── multiple-text-nodes.epub
+└── malformed-xhtml.epub
 
-AppStateModel
-├── DictionaryState
-├── ReaderState
-├── AnalysisState
-├── BookState
-└── UIState
+Test:
 
-Không cần Svelte store phức tạp.
+parse
+→ fix
+→ repack
+→ parse again
+→ verify text
 
-Chỉ cần module hóa logic. 6. Nhưng tôi không khuyên bạn rewrite state management
-
-Không cần:
-
-Redux
-Zustand
-XState
-...
-
-Svelte 5 $state hiện tại phù hợp với app này.
-
-Tôi sẽ giữ:
-
-class AppStateModel
-
-và chỉ chia nhỏ implementation.
+## Đây sẽ nâng reliability của project lên rất nhiều.
 
 ---
 
-20. Performance architecture hiện tại
+Một vấn đề rất nhỏ trong Worker Manager
 
-Tôi đánh giá:
+AnalysisWorkerManager dùng:
 
-EPUB unzip good
-DOM parsing acceptable
-dictionary loading good
-dictionary cache very good
-analysis worker very good
-suggestions needs optimization
-repack acceptable
+worker.onmessage = ...
 
-Điểm yếu chính:
+mỗi lần analyze().
 
-A. Worker nhận toàn bộ dictionaries
+Điều này OK nếu application đảm bảo chỉ có một analysis chạy tại một thời điểm.
 
-Worker message chứa:
+Nhưng nếu vô tình:
 
-dictionaries: Dictionaries
+analyze(bookA)
+analyze(bookB)
 
-Nếu dictionaries rất lớn, browser phải structured-clone toàn bộ Set/Map sang Worker.
+cùng lúc thì handler của A sẽ bị B overwrite.
 
-Bạn đang phải trả cost:
+Không cần sửa nếu UI đã serialize analysis.
 
-main thread
-↓ structured clone
-worker
+Nếu muốn harden:
 
-Mỗi lần analysis.
+private activeAnalysis = false
 
-Nếu chỉ analyze một EPUB mỗi lần thì chấp nhận được.
+hoặc request ID:
 
-Nhưng nếu user liên tục analyze nhiều book, đây sẽ là bottleneck.
+requestId
 
----
-
-21. Có thể nâng architecture Worker lên
-
-Thay vì:
-
-main
-↓
-send dictionaries
-↓
-worker
-
-có thể:
-
-worker starts
-↓
-load dictionaries once
-↓
-analyze book #1
-↓
-analyze book #2
-↓
-analyze book #3
-
-Worker persistent.
-
-Ví dụ:
-
-AnalysisWorkerManager
-│
-├── init(dictionaries)
-├── analyze(textBlocks)
-└── terminate()
-
-Đây sẽ tránh clone dictionary liên tục.
-
-Tôi đánh giá đây là optimization đáng làm nếu EPUB lớn.
-
-22. Một vấn đề UX nhỏ nhưng đáng sửa
-
-init() load cả 4 dictionary bằng:
-
-Promise.all(...)
-
-đây là đúng về performance.
-
-Nhưng UX hiện tại nếu một dictionary fail thì cả:
-
-Promise.all()
-
-fail.
-
-Ví dụ:
-
-VN OK
-Non-VN OK
-Custom OK
-Names 500
-
-thì toàn bộ dictionary load coi như failure.
-
-Tôi thích:
-
-Promise.allSettled()
-
-hơn ở đây.
-
-Bạn có thể cho:
-
-VN ✓
-Non-VN ✓
-Custom ✓
-Names ✗
-
-## và app vẫn hoạt động.
-
-23. Một vấn đề nữa: cache invalidation
-
-TTL:
-
-10 minutes
-
-là reasonable.
-
-Nhưng dictionary version:
-
-dict-${dictName}-${DICTIONARY_VERSION}
-
-có nghĩa khi bạn bump version thì cache bị invalidate.
-
-Tôi khuyên thay vì phải nhớ bump version thủ công, API đã có:
-
-updatedAt
-
-Bạn có thể dùng:
-
-ETag
-Last-Modified
-
-hoặc API metadata:
+rồi worker trả:
 
 {
-"version": "...",
-"updatedAt": "..."
+requestId,
+type: "complete"
 }
 
-để cache invalidation chính xác hơn.
-
-Không cần làm ngay, nhưng đây là hướng tốt.
-
-24. Có một architectural distinction tôi khuyên bạn giữ rất rõ
-
-Bạn thực tế đang có 3 loại dictionary khác nhau về bản chất:
-
-VN
-ngữ liệu spell-check
-Non-VN
-foreign vocabulary
-Names
-proper nouns
-Custom
-explicit whitelist / technical / brand / acronym
-
-Trong đó Custom đang có priority rất cao.
-
-Tôi nghĩ nên document rõ precedence:
-
-CUSTOM
-↓
-NAMES
-↓
-NON-VN
-↓
-VN
-↓
-SPELLING RULE
-↓
-UNKNOWN
-
-Hiện code đã phản ánh phần lớn precedence này, nhưng README/documentation nên mô tả chính thức.
+Nhưng mình không khuyên thêm complexity lúc này.

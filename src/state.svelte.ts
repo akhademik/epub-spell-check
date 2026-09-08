@@ -26,8 +26,7 @@ import { analysisWorkerManager } from "./utils/worker-manager"
 const STORAGE_KEYS = {
   READER: "spell-check:reader-settings",
   WHITELIST: "spell-check:whitelist",
-  CHECK_SETTINGS: "spell-check:check-settings-v2",
-  DICT_ADMIN_TOKEN: "spell-check:dict-admin-token"
+  CHECK_SETTINGS: "spell-check:check-settings-v2"
 }
 
 interface PersistedContainer<T> {
@@ -102,10 +101,8 @@ export class AppStateModel {
     namesWordCount: 0
   })
 
-  // Persisted access token for the /api/dict admin endpoint (saved only in user's localStorage when entered)
-  dictAdminToken = $state<string>(
-    loadStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, "")
-  )
+  // Memory-only access token for the /api/dict admin endpoint (never persisted to localStorage for security)
+  dictAdminToken = $state<string>("")
   isUpdatingDictionary = $state<boolean>(false)
 
   // Error Check Settings (Always active: both Vietnamese and Non-Vietnamese check enabled)
@@ -236,15 +233,18 @@ export class AppStateModel {
 
       if (effectiveToken) {
         this.dictAdminToken = effectiveToken
-        saveStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, this.dictAdminToken)
       }
 
       await refreshDictionaryCache(dictName)
       await this.init()
 
       const verb = action === "remove" ? "xóa" : "thêm"
+      const count =
+        result.affectedCount ??
+        (action === "remove" ? result.removedCount : result.addedCount) ??
+        0
       this.showToast(
-        `Đã ${verb} ${result.addedCount} từ. Từ điển "${dictName}" hiện có ${result.totalCount} từ.`,
+        `Đã ${verb} ${count} từ. Từ điển "${dictName}" hiện có ${result.totalCount} từ.`,
         "success"
       )
       return true

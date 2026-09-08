@@ -265,4 +265,50 @@ describe("EPUB Integration & Round-trip Test Matrix", () => {
     expect(c1Content).toContain("http://www.w3.org/1999/xhtml")
     expect(c1Content).toContain("Văn bản hoàn hảo.")
   })
+
+  it("Matrix 16: Malformed XHTML fixture (unescaped &, invalid tag structures) gracefully fixed and repacked", async () => {
+    const zip = new JSZip()
+    zip.file("mimetype", "application/epub+zip", { compression: "STORE" })
+    zip.file(
+      "META-INF/container.xml",
+      `<container><rootfiles><rootfile full-path="OEBPS/content.opf"/></rootfiles></container>`
+    )
+    zip.file(
+      "OEBPS/content.opf",
+      `<package><manifest><item id="c1" href="c1.xhtml"/></manifest><spine><itemref idref="c1"/></spine></package>`
+    )
+    // Non-standard XHTML containing unescaped & and broken self-closing tag
+    zip.file(
+      "OEBPS/c1.xhtml",
+      `<?xml version="1.0" encoding="utf-8"?>\n<html xmlns="http://www.w3.org/1999/xhtml"><body><p>AT&T và Black & White.</p><p>Một từ lõi cần sửa.</p></body></html>`
+    )
+
+    const origBlob = new Blob(
+      [await zip.generateAsync({ type: "arraybuffer" })],
+      { type: "application/epub+zip" }
+    )
+    const origFile = new File([origBlob], "malformed.epub")
+
+    const parsed = await parseEpub(origFile)
+    expect(parsed.textBlocks.length).toBe(2)
+    expect(parsed.textBlocks[0].text).toBe("AT&T và Black & White.")
+    expect(parsed.textBlocks[1].text).toBe("Một từ lõi cần sửa.")
+
+    // Fix "lõi" (offset 7..10 in block 1) -> "lỗi"
+    const fixes: FixInstruction[] = [
+      {
+        filePath: parsed.textBlocks[1].filePath,
+        blockId: parsed.textBlocks[1].id,
+        startIndex: 7,
+        endIndex: 10,
+        newWord: "lỗi"
+      }
+    ]
+
+    const fixedBlob = await applyFixesAndRepack(origBlob, fixes)
+    const fixedFile = new File([fixedBlob], "malformed-fixed.epub")
+    const reParsed = await parseEpub(fixedFile)
+
+    expect(reParsed.textBlocks[1].text).toBe("Một từ lỗi cần sửa.")
+  })
 })
