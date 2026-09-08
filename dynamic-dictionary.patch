@@ -1,0 +1,771 @@
+diff --git a/.gitignore b/.gitignore
+index a5bbbcd..5ce115f 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -22,6 +22,10 @@ GEMINI.md
+ dev-info.md
+ .gemini/
+ 
++# Cloudflare Wrangler local dev state & secrets
++.wrangler/
++.dev.vars
++
+ # Graphify files: ignore all internal cache/backups, keep only the 3 main artifacts
+ graphify-out/*
+ !graphify-out/GRAPH_REPORT.md
+diff --git a/README.md b/README.md
+index 20b1e45..87fe214 100644
+--- a/README.md
++++ b/README.md
+@@ -34,6 +34,46 @@ Một công cụ web hiện đại, nhanh chóng và mạnh mẽ để phát hi
+ - `public/non-vn-dict.txt`: Từ điển từ ngữ ngoại ngữ và từ mượn quốc tế.
+ - `public/custom-dict.txt`: Từ điển từ viết tắt và chữ số La Mã.
+ 
++Các file trên vẫn là **fallback tĩnh** (dùng khi API bên dưới không sẵn sàng, ví dụ chạy `vite` dev đơn thuần). Ở môi trường production, ứng dụng ưu tiên đọc/ghi từ điển qua API động — xem phần tiếp theo.
++
++## Cập nhật từ điển động (không cần build/deploy lại)
++
++Ứng dụng được deploy trên **Cloudflare Pages**, nên thay vì hardcode từ trong `public/*.txt`, dự án dùng **Cloudflare Pages Functions + KV** làm "dịch vụ" chứa từ điển:
++
++- `functions/api/dict/[name].ts`: Function xử lý `GET /api/dict/:name` (trả nội dung từ điển) và `POST /api/dict/:name` (thêm/xóa từ, yêu cầu token).
++- Giao diện có nút **"Cập nhật từ điển"** (icon 📄 trên Header) để nhập từ mới trực tiếp, không cần sửa code.
++
++### Thiết lập lần đầu
++
++1. Tạo KV namespace:
++   ```bash
++   npx wrangler kv namespace create DICT_KV
++   ```
++   Copy `id` được in ra, dán vào `wrangler.toml` (mục `[[kv_namespaces]]`).
++
++2. Trên **Cloudflare dashboard** → Pages project → **Settings → Functions → KV namespace bindings**: thêm binding tên `DICT_KV` trỏ tới namespace vừa tạo (làm cho cả Production và Preview).
++
++3. Trên **Settings → Environment variables**: thêm **secret** `ADMIN_TOKEN` (một chuỗi bí mật tự chọn, dùng để xác thực khi thêm/xóa từ).
++
++4. Seed dữ liệu ban đầu từ các file `.txt` hiện có vào KV:
++   ```bash
++   ./scripts/seed-kv.sh <KV_NAMESPACE_ID> --remote
++   ```
++
++5. Deploy lại app một lần (để Function được publish). Từ những lần sau, **không cần deploy nữa** khi thêm từ — chỉ cần dùng nút "Cập nhật từ điển" trong app, nhập token đã cấu hình ở bước 3.
++
++### Cách hoạt động
++
++- App fetch từ điển từ `/api/dict/:name` (10 phút cache trong IndexedDB để tránh gọi lại liên tục); nếu API lỗi sẽ tự fallback về file tĩnh trong `public/`.
++- Khi bạn thêm/xóa từ qua form, request `POST /api/dict/:name` sẽ cập nhật KV, sau đó app tự làm mới cache và nạp lại từ điển ngay lập tức — không cần tải lại trang.
++- Có thể gọi API trực tiếp (vd để tự động hóa) bằng `curl`:
++  ```bash
++  curl -X POST https://<your-app>.pages.dev/api/dict/vn \
++    -H "Authorization: Bearer <ADMIN_TOKEN>" \
++    -H "Content-Type: application/json" \
++    -d '{"words": ["chằng chịt", "ngoằn ngoèo"]}'
++  ```
++
+ ## Phát triển & Kiểm thử
+ 
+ Dự án sử dụng **Svelte 5 (Runes)**, **Vite**, **TypeScript**, **Tailwind CSS**, **Biome** và **Vitest**:
+diff --git a/functions/api/dict/[name].ts b/functions/api/dict/[name].ts
+new file mode 100644
+index 0000000..5df01b2
+--- /dev/null
++++ b/functions/api/dict/[name].ts
+@@ -0,0 +1,153 @@
++// Cloudflare Pages Function — serves and updates dictionary word lists from KV.
++//
++// GET  /api/dict/:name        -> returns the dictionary content as plain text
++//                                 (same newline-separated format as public/*.txt)
++// POST /api/dict/:name        -> adds/removes words, requires Authorization: Bearer <ADMIN_TOKEN>
++//                                 body: { "words": string[], "action"?: "add" | "remove" }
++//
++// KV bindings expected (set in Cloudflare Pages dashboard -> Settings -> Functions):
++//   DICT_KV      KV namespace, seeded via scripts/seed-kv.sh
++//   ADMIN_TOKEN  secret string, required to write
++
++interface KVNamespace {
++  get(key: string): Promise<string | null>
++  put(key: string, value: string): Promise<void>
++}
++
++interface Env {
++  DICT_KV: KVNamespace
++  ADMIN_TOKEN?: string
++}
++
++interface RequestContext {
++  request: Request
++  env: Env
++  params: { name?: string | string[] }
++}
++
++const ALLOWED_NAMES = new Set(["vn", "non-vn", "custom", "names"])
++
++function contentKey(name: string) {
++  return `dict:${name}:content`
++}
++
++function updatedKey(name: string) {
++  return `dict:${name}:updated`
++}
++
++function resolveName(params: RequestContext["params"]): string | null {
++  const raw = Array.isArray(params.name) ? params.name[0] : params.name
++  if (!raw || !ALLOWED_NAMES.has(raw)) return null
++  return raw
++}
++
++function jsonResponse(body: unknown, status = 200): Response {
++  return new Response(JSON.stringify(body), {
++    status,
++    headers: { "content-type": "application/json; charset=utf-8" }
++  })
++}
++
++export async function onRequestGet(context: RequestContext): Promise<Response> {
++  const name = resolveName(context.params)
++  if (!name) {
++    return jsonResponse({ error: "Unknown dictionary name" }, 404)
++  }
++
++  const content = await context.env.DICT_KV.get(contentKey(name))
++  if (content === null) {
++    return jsonResponse(
++      { error: `Dictionary "${name}" is not seeded in KV yet` },
++      404
++    )
++  }
++
++  return new Response(content, {
++    status: 200,
++    headers: {
++      "content-type": "text/plain; charset=utf-8",
++      // Always let the client hit the edge fresh; the app itself caches in
++      // IndexedDB with a short TTL, so there is no need for HTTP caching here.
++      "cache-control": "no-store"
++    }
++  })
++}
++
++export async function onRequestPost(
++  context: RequestContext
++): Promise<Response> {
++  const name = resolveName(context.params)
++  if (!name) {
++    return jsonResponse({ error: "Unknown dictionary name" }, 404)
++  }
++
++  const adminToken = context.env.ADMIN_TOKEN
++  if (!adminToken) {
++    return jsonResponse(
++      { error: "ADMIN_TOKEN is not configured on the server" },
++      500
++    )
++  }
++
++  const authHeader = context.request.headers.get("authorization") ?? ""
++  const providedToken = authHeader.replace(/^Bearer\s+/i, "").trim()
++  if (!providedToken || providedToken !== adminToken) {
++    return jsonResponse({ error: "Unauthorized" }, 401)
++  }
++
++  let payload: { words?: unknown; action?: unknown }
++  try {
++    payload = await context.request.json()
++  } catch {
++    return jsonResponse({ error: "Invalid JSON body" }, 400)
++  }
++
++  const action = payload.action === "remove" ? "remove" : "add"
++  const incoming = Array.isArray(payload.words) ? payload.words : []
++  const newWords = incoming
++    .filter((w): w is string => typeof w === "string")
++    .map((w) => w.trim())
++    .filter(Boolean)
++
++  if (newWords.length === 0) {
++    return jsonResponse({ error: "No valid words provided" }, 400)
++  }
++
++  const existing = (await context.env.DICT_KV.get(contentKey(name))) ?? ""
++  const existingLines = existing
++    .split(/\r?\n/)
++    .map((w) => w.trim())
++    .filter(Boolean)
++
++  const wordSet = new Set(existingLines)
++  let addedCount = 0
++
++  if (action === "remove") {
++    for (const w of newWords) {
++      if (wordSet.delete(w)) addedCount++
++    }
++  } else {
++    for (const w of newWords) {
++      if (!wordSet.has(w)) {
++        wordSet.add(w)
++        addedCount++
++      }
++    }
++  }
++
++  const updatedContent = Array.from(wordSet)
++    .sort((a, b) => a.localeCompare(b, "vi"))
++    .join("\n")
++  const updatedAt = new Date().toISOString()
++
++  await context.env.DICT_KV.put(contentKey(name), updatedContent)
++  await context.env.DICT_KV.put(updatedKey(name), updatedAt)
++
++  return jsonResponse({
++    name,
++    action,
++    addedCount,
++    totalCount: wordSet.size,
++    updatedAt
++  })
++}
+diff --git a/scripts/seed-kv.sh b/scripts/seed-kv.sh
+new file mode 100755
+index 0000000..8ccf3e1
+--- /dev/null
++++ b/scripts/seed-kv.sh
+@@ -0,0 +1,34 @@
++#!/usr/bin/env bash
++# Seeds Cloudflare KV with the current public/*.txt dictionary files.
++# Run this ONCE after creating the KV namespace, to migrate off the
++# hardcoded/bundled files. After this, add new words via the app's
++# "Từ điển" panel (or a POST to /api/dict/:name) instead of editing
++# these files and redeploying.
++#
++# Usage:
++#   npx wrangler kv namespace create DICT_KV        # copy the printed id
++#   ./scripts/seed-kv.sh <KV_NAMESPACE_ID>           # local/preview KV
++#   ./scripts/seed-kv.sh <KV_NAMESPACE_ID> --remote  # production KV bound to Pages
++
++set -euo pipefail
++
++NAMESPACE_ID="${1:?Usage: scripts/seed-kv.sh <KV_NAMESPACE_ID> [--remote]}"
++REMOTE_FLAG="${2:-}"
++
++DICT_NAMES=(vn non-vn custom names)
++
++for name in "${DICT_NAMES[@]}"; do
++  file="public/${name}-dict.txt"
++  if [[ ! -f "$file" ]]; then
++    echo "Skipping ${name}: ${file} not found"
++    continue
++  fi
++  echo "Seeding dict:${name}:content from ${file} ..."
++  npx wrangler kv key put "dict:${name}:content" \
++    --path "$file" \
++    --namespace-id "$NAMESPACE_ID" \
++    $REMOTE_FLAG
++done
++
++echo "Done. Verify with:"
++echo "  npx wrangler kv key get \"dict:vn:content\" --namespace-id $NAMESPACE_ID $REMOTE_FLAG | head"
+diff --git a/src/App.svelte b/src/App.svelte
+index b91b4b6..9693546 100644
+--- a/src/App.svelte
++++ b/src/App.svelte
+@@ -2,6 +2,7 @@
+   import { onMount } from "svelte"
+   import Header from "./components/Header.svelte"
+   import ClearWhitelistModal from "./components/modals/ClearWhitelistModal.svelte"
++  import DictionaryModal from "./components/modals/DictionaryModal.svelte"
+   import HelpModal from "./components/modals/HelpModal.svelte"
+   import SettingsModal from "./components/modals/SettingsModal.svelte"
+   import ProcessingUI from "./components/ProcessingUI.svelte"
+@@ -77,6 +78,7 @@
+   <SettingsModal />
+   <HelpModal />
+   <ClearWhitelistModal />
++  <DictionaryModal />
+ 
+   <!-- Toast Notification Container -->
+   <ToastContainer />
+diff --git a/src/components/Header.svelte b/src/components/Header.svelte
+index 35dc3e8..eb64716 100644
+--- a/src/components/Header.svelte
++++ b/src/components/Header.svelte
+@@ -71,6 +71,19 @@
+         </svg>
+       </button>
+ 
++      <!-- Dictionary Admin Button -->
++      <button
++        type="button"
++        onclick={() => appState.openModal("dict")}
++        class="p-2 transition-colors rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
++        title="Thêm/xóa từ trong từ điển"
++        aria-label="Cập nhật từ điển"
++      >
++        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m8-6.5V19a2 2 0 01-2 2H8a2 2 0 01-2-2V5a2 2 0 012-2h5.5L18 7.5z" />
++        </svg>
++      </button>
++
+       <!-- Settings Button -->
+       <button
+         type="button"
+diff --git a/src/components/modals/DictionaryModal.svelte b/src/components/modals/DictionaryModal.svelte
+new file mode 100644
+index 0000000..0dcde92
+--- /dev/null
++++ b/src/components/modals/DictionaryModal.svelte
+@@ -0,0 +1,174 @@
++<script lang="ts">
++  import type { DictSourceName } from "../../utils/dict-admin"
++  import { appState } from "../../state.svelte"
++
++  const DICT_OPTIONS: { value: DictSourceName; label: string; color: string }[] = [
++    { value: "vn", label: "1. Tiếng Việt", color: "text-emerald-400" },
++    { value: "names", label: "2. Tên riêng & Địa danh", color: "text-amber-400" },
++    { value: "non-vn", label: "3. Ngoại ngữ & Từ mượn", color: "text-blue-400" },
++    { value: "custom", label: "4. Viết tắt & Tuỳ chỉnh", color: "text-purple-400" }
++  ]
++
++  let selectedDict = $state<DictSourceName>("vn")
++  let action = $state<"add" | "remove">("add")
++  let wordsInput = $state("")
++  let token = $state(appState.dictAdminToken)
++
++  async function handleSubmit() {
++    const success = await appState.addWordsToDictionary(
++      selectedDict,
++      wordsInput,
++      token,
++      action
++    )
++    if (success) {
++      wordsInput = ""
++    }
++  }
++</script>
++
++{#if appState.activeModal === "dict"}
++  <div
++    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn"
++    role="dialog"
++    aria-modal="true"
++    aria-labelledby="dict-admin-title"
++  >
++    <button
++      type="button"
++      class="fixed inset-0 w-full h-full cursor-default bg-transparent border-0 p-0 m-0"
++      onclick={() => appState.closeModal()}
++      aria-label="Đóng"
++      tabindex="-1"
++    ></button>
++
++    <div
++      class="relative z-10 w-full max-w-lg overflow-hidden border shadow-2xl bg-slate-900 border-slate-700 rounded-2xl max-h-[90vh] flex flex-col"
++    >
++      <div
++        class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-800/50 shrink-0"
++      >
++        <div class="flex items-center gap-2">
++          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
++          </svg>
++          <h3 id="dict-admin-title" class="text-lg font-bold text-white">Cập nhật từ điển</h3>
++        </div>
++        <button
++          type="button"
++          onclick={() => appState.closeModal()}
++          class="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
++          aria-label="Đóng"
++        >
++          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
++          </svg>
++        </button>
++      </div>
++
++      <div class="p-6 space-y-5 overflow-y-auto">
++        <p class="text-xs text-slate-400">
++          Thêm hoặc xóa từ trực tiếp trên máy chủ (Cloudflare KV) — từ điển cập nhật ngay,
++          không cần commit hay build lại app. Cần <span class="font-mono text-slate-300">Mã truy cập</span>
++          đã cấu hình ở biến môi trường <span class="font-mono text-slate-300">ADMIN_TOKEN</span>.
++        </p>
++
++        <!-- Dictionary picker -->
++        <div>
++          <span class="block text-xs font-semibold tracking-wider text-slate-400 uppercase mb-2">
++            Chọn từ điển
++          </span>
++          <div class="grid grid-cols-1 gap-2">
++            {#each DICT_OPTIONS as opt (opt.value)}
++              <button
++                type="button"
++                onclick={() => (selectedDict = opt.value)}
++                class="flex items-center justify-between px-3 py-2 rounded-xl border text-sm transition-colors {selectedDict === opt.value
++                  ? 'border-blue-500 bg-blue-500/10'
++                  : 'border-slate-800 bg-slate-950/40 hover:border-slate-700'}"
++              >
++                <span class="{opt.color} font-medium">{opt.label}</span>
++                {#if selectedDict === opt.value}
++                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
++                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
++                  </svg>
++                {/if}
++              </button>
++            {/each}
++          </div>
++        </div>
++
++        <!-- Add / remove toggle -->
++        <div class="flex items-center gap-2 text-sm">
++          <button
++            type="button"
++            onclick={() => (action = "add")}
++            class="flex-1 px-3 py-2 rounded-xl border transition-colors {action === 'add'
++              ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300'
++              : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:border-slate-700'}"
++          >
++            + Thêm từ
++          </button>
++          <button
++            type="button"
++            onclick={() => (action = "remove")}
++            class="flex-1 px-3 py-2 rounded-xl border transition-colors {action === 'remove'
++              ? 'border-rose-500 bg-rose-500/10 text-rose-300'
++              : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:border-slate-700'}"
++          >
++            − Xóa từ
++          </button>
++        </div>
++
++        <!-- Words textarea -->
++        <div>
++          <label for="dict-words" class="block text-xs font-semibold tracking-wider text-slate-400 uppercase mb-2">
++            Danh sách từ (mỗi từ 1 dòng)
++          </label>
++          <textarea
++            id="dict-words"
++            bind:value={wordsInput}
++            rows="6"
++            placeholder={"ví dụ:\nchằng chịt\nngoằn ngoèo"}
++            class="w-full px-3 py-2 text-sm bg-slate-950/60 border border-slate-800 rounded-xl text-slate-200 font-mono resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
++          ></textarea>
++        </div>
++
++        <!-- Token -->
++        <div>
++          <label for="dict-token" class="block text-xs font-semibold tracking-wider text-slate-400 uppercase mb-2">
++            Mã truy cập (ADMIN_TOKEN)
++          </label>
++          <input
++            id="dict-token"
++            type="password"
++            bind:value={token}
++            placeholder="Nhập token quản trị"
++            class="w-full px-3 py-2 text-sm bg-slate-950/60 border border-slate-800 rounded-xl text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
++          />
++          <p class="text-[11px] text-slate-500 mt-1.5 italic">
++            Token được lưu trên trình duyệt này để lần sau không cần nhập lại.
++          </p>
++        </div>
++      </div>
++
++      <div class="p-4 border-t border-slate-800 bg-slate-800/50 flex justify-end gap-2 shrink-0">
++        <button
++          type="button"
++          onclick={() => appState.closeModal()}
++          class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-xl transition-colors"
++        >
++          Đóng
++        </button>
++        <button
++          type="button"
++          disabled={appState.isUpdatingDictionary}
++          onclick={handleSubmit}
++          class="px-5 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-colors shadow-lg shadow-blue-900/20"
++        >
++          {appState.isUpdatingDictionary ? "Đang lưu..." : action === "add" ? "Thêm vào từ điển" : "Xóa khỏi từ điển"}
++        </button>
++      </div>
++    </div>
++  </div>
++{/if}
+diff --git a/src/state.svelte.ts b/src/state.svelte.ts
+index 4c2a657..9f6e57b 100644
+--- a/src/state.svelte.ts
++++ b/src/state.svelte.ts
+@@ -14,7 +14,9 @@ import type { ErrorGroup, ErrorInstance } from "./types/errors"
+ import type { ReaderSettings, ToastNotification } from "./types/state"
+ import { matchCase } from "./utils/analysis-core"
+ import { clearSuggestionCache, groupErrors } from "./utils/analyzer"
+-import { loadDictionaries } from "./utils/dictionary"
++import type { DictSourceName } from "./utils/dict-admin"
++import { updateDictionaryWords } from "./utils/dict-admin"
++import { loadDictionaries, refreshDictionaryCache } from "./utils/dictionary"
+ import { parseEpub } from "./utils/epub-parser"
+ import { applyFixesAndRepack, type FixInstruction } from "./utils/epub-writer"
+ import { getFilteredErrors } from "./utils/filter"
+@@ -24,7 +26,8 @@ import AnalysisWorker from "./workers/analysis.worker?worker"
+ const STORAGE_KEYS = {
+   READER: "spell-check:reader-settings",
+   WHITELIST: "spell-check:whitelist",
+-  CHECK_SETTINGS: "spell-check:check-settings-v2"
++  CHECK_SETTINGS: "spell-check:check-settings-v2",
++  DICT_ADMIN_TOKEN: "spell-check:dict-admin-token"
+ }
+ 
+ interface PersistedContainer<T> {
+@@ -99,6 +102,12 @@ export class AppStateModel {
+     namesWordCount: 0
+   })
+ 
++  // Persisted access token for the /api/dict admin endpoint
++  dictAdminToken = $state<string>(
++    loadStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, "")
++  )
++  isUpdatingDictionary = $state<boolean>(false)
++
+   // Error Check Settings (Always active: both Vietnamese and Non-Vietnamese check enabled)
+   checkSettings = $state<CheckSettings>({
+     vietnamese: true,
+@@ -186,6 +195,64 @@ export class AppStateModel {
+     }
+   }
+ 
++  /**
++   * Adds (or removes) words from a dictionary via the KV-backed admin API,
++   * then hot-reloads the in-memory dictionaries so the change applies
++   * immediately without a page refresh or app redeploy.
++   */
++  async addWordsToDictionary(
++    dictName: DictSourceName,
++    rawWords: string,
++    token: string,
++    action: "add" | "remove" = "add"
++  ): Promise<boolean> {
++    const words = rawWords
++      .split(/\r?\n/)
++      .map((w) => w.trim())
++      .filter(Boolean)
++
++    if (words.length === 0) {
++      this.showToast("Chưa nhập từ nào.", "error")
++      return false
++    }
++    if (!token.trim()) {
++      this.showToast("Vui lòng nhập mã truy cập (token).", "error")
++      return false
++    }
++
++    this.isUpdatingDictionary = true
++    try {
++      const result = await updateDictionaryWords(
++        dictName,
++        words,
++        token.trim(),
++        action
++      )
++
++      this.dictAdminToken = token.trim()
++      saveStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, this.dictAdminToken)
++
++      await refreshDictionaryCache(dictName)
++      await this.init()
++
++      const verb = action === "remove" ? "xóa" : "thêm"
++      this.showToast(
++        `Đã ${verb} ${result.addedCount} từ. Từ điển "${dictName}" hiện có ${result.totalCount} từ.`,
++        "success"
++      )
++      return true
++    } catch (err) {
++      logger.error("Failed to update dictionary:", err)
++      this.showToast(
++        err instanceof Error ? err.message : "Lỗi khi cập nhật từ điển.",
++        "error"
++      )
++      return false
++    } finally {
++      this.isUpdatingDictionary = false
++    }
++  }
++
+   showToast(message: string, type: "info" | "error" | "success" = "info") {
+     const id = `toast-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+     const newToast: ToastNotification = { id, message, type }
+diff --git a/src/utils/dict-admin.ts b/src/utils/dict-admin.ts
+new file mode 100644
+index 0000000..4db184b
+--- /dev/null
++++ b/src/utils/dict-admin.ts
+@@ -0,0 +1,48 @@
++export type DictSourceName = "vn" | "non-vn" | "custom" | "names"
++
++export interface DictUpdateResult {
++  name: DictSourceName
++  action: "add" | "remove"
++  addedCount: number
++  totalCount: number
++  updatedAt: string
++}
++
++/**
++ * Adds or removes words from a dictionary via the /api/dict/:name endpoint
++ * (Cloudflare Function backed by KV). Requires the admin token configured
++ * as the ADMIN_TOKEN secret on the Cloudflare Pages project.
++ */
++export async function updateDictionaryWords(
++  dictName: DictSourceName,
++  words: string[],
++  token: string,
++  action: "add" | "remove" = "add"
++): Promise<DictUpdateResult> {
++  const res = await fetch(`/api/dict/${dictName}`, {
++    method: "POST",
++    headers: {
++      "content-type": "application/json",
++      authorization: `Bearer ${token}`
++    },
++    body: JSON.stringify({ words, action })
++  })
++
++  if (res.status === 401) {
++    throw new Error("Mã truy cập (token) không đúng.")
++  }
++  if (!res.ok) {
++    let detail = ""
++    try {
++      const body = (await res.json()) as { error?: string }
++      detail = body.error ?? ""
++    } catch {
++      /* intentional no-op */
++    }
++    throw new Error(
++      `Không thể cập nhật từ điển (mã lỗi ${res.status}). ${detail}`.trim()
++    )
++  }
++
++  return (await res.json()) as DictUpdateResult
++}
+diff --git a/src/utils/dictionary.ts b/src/utils/dictionary.ts
+index d3fa00e..87e98c3 100644
+--- a/src/utils/dictionary.ts
++++ b/src/utils/dictionary.ts
+@@ -33,7 +33,10 @@ export function buildIndexedDictionary(
+   }
+ }
+ 
+-const ONE_HOUR_IN_MS = 60 * 60 * 1000
++// Dictionary content can now change at any time via the /api/dict admin
++// endpoint (backed by Cloudflare KV), so we cache much more briefly than
++// before (was 1 hour) to keep newly-added words showing up quickly.
++const DICT_CACHE_TTL_MS = 10 * 60 * 1000
+ 
+ async function fetchLocalDict(localFilename: string): Promise<string> {
+   const localRes = await fetch(`/${localFilename}`)
+@@ -51,17 +54,52 @@ async function fetchLocalDict(localFilename: string): Promise<string> {
+   return await localRes.text()
+ }
+ 
++function dictCacheKey(dictName: string): string {
++  return `dict-${dictName}-${DICTIONARY_VERSION}`
++}
++
++/**
++ * Fetches dictionary content, preferring the live KV-backed API so that
++ * words added through the admin panel show up without a rebuild/redeploy.
++ * Falls back to the bundled `public/*.txt` file if the API is unreachable
++ * (e.g. plain `vite` dev server, or the Cloudflare Function/KV is down).
++ */
++async function fetchDictContent(
++  dictName: "vn" | "non-vn" | "custom" | "names"
++): Promise<string> {
++  try {
++    const apiRes = await fetch(`/api/dict/${dictName}`)
++    if (apiRes.ok) {
++      const contentType = apiRes.headers.get("content-type")
++      if (!contentType?.includes("text/html")) {
++        return await apiRes.text()
++      }
++    } else {
++      logger.warn(
++        `Dict API returned ${apiRes.status} for ${dictName}, falling back to bundled file`
++      )
++    }
++  } catch (_e) {
++    logger.warn(
++      `Dict API unreachable for ${dictName}, falling back to bundled file:`,
++      _e
++    )
++  }
++
++  return await fetchLocalDict(`${dictName}-dict.txt`)
++}
++
+ async function getDictionary(
+   dictName: "vn" | "non-vn" | "custom" | "names"
+ ): Promise<string> {
+   const isDev = Boolean(import.meta.env?.DEV)
+-  const cacheKey = `dict-${dictName}-${DICTIONARY_VERSION}`
++  const cacheKey = dictCacheKey(dictName)
+   if (!isDev) {
+     try {
+       const cached = await getCache<{ timestamp: number; data: string }>(
+         cacheKey
+       )
+-      if (cached && Date.now() - cached.timestamp < ONE_HOUR_IN_MS) {
++      if (cached && Date.now() - cached.timestamp < DICT_CACHE_TTL_MS) {
+         logger.info(`Using cached dictionary for ${dictName}`)
+         return cached.data
+       }
+@@ -75,8 +113,7 @@ async function getDictionary(
+   }
+ 
+   logger.info(`Fetching fresh dictionary for ${dictName}`)
+-  const filename = `${dictName}-dict.txt`
+-  const data = await fetchLocalDict(filename)
++  const data = await fetchDictContent(dictName)
+   try {
+     await setCache(cacheKey, { timestamp: Date.now(), data })
+   } catch (_e) {
+@@ -85,6 +122,22 @@ async function getDictionary(
+   return data
+ }
+ 
++/**
++ * Forces a fresh fetch of one dictionary and refreshes its IndexedDB cache,
++ * bypassing the TTL. Used right after the admin panel adds/removes words so
++ * a subsequent `loadDictionaries()` call sees the new content immediately.
++ */
++export async function refreshDictionaryCache(
++  dictName: "vn" | "non-vn" | "custom" | "names"
++): Promise<void> {
++  const data = await fetchDictContent(dictName)
++  try {
++    await setCache(dictCacheKey(dictName), { timestamp: Date.now(), data })
++  } catch (_e) {
++    logger.warn(`Failed setting IndexedDB cache for ${dictName}:`, _e)
++  }
++}
++
+ export async function loadDictionaries(): Promise<{
+   dictionaries: Dictionaries
+   status: DictionaryStatus
+diff --git a/wrangler.toml b/wrangler.toml
+new file mode 100644
+index 0000000..12d100b
+--- /dev/null
++++ b/wrangler.toml
+@@ -0,0 +1,15 @@
++name = "epub-spell-check"
++compatibility_date = "2024-09-23"
++pages_build_output_dir = "dist"
++
++# Used by `wrangler pages dev` for local testing of /functions.
++# Replace the id below with the id printed by:
++#   npx wrangler kv namespace create DICT_KV
++[[kv_namespaces]]
++binding = "DICT_KV"
++id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
++
++# ADMIN_TOKEN is a secret, not stored here. For local dev, run:
++#   npx wrangler pages dev dist --kv DICT_KV --binding ADMIN_TOKEN=your-local-token
++# For production, set it in the Cloudflare dashboard:
++#   Pages project -> Settings -> Environment variables -> Add secret -> ADMIN_TOKEN
