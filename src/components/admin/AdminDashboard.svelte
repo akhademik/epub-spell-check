@@ -77,8 +77,7 @@
   }
 
   function triggerCloudflareLogin() {
-    // Navigating directly to /api/dict/vn triggers the Cloudflare Access Google login wall
-    window.location.href = "/api/dict/vn"
+    window.location.href = "/api/admin/login?redirect=" + encodeURIComponent("/?view=admin")
   }
 
   let filteredWords = $derived.by(() => {
@@ -151,19 +150,31 @@
       </h2>
     </div>
 
-    <!-- Auth Badge -->
+    <!-- Auth Badge & Token Input -->
     <div class="flex items-center gap-2 text-xs">
       {#if authStatus.authType === "cloudflare-access"}
         <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-medium">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Gmail: <strong>{authStatus.email ?? 'Cloudflare Access'}</strong></span>
-        </div>
-      {:else if authStatus.authType === "token"}
-        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 font-medium">
-          <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-          <span>Admin Token (Hợp lệ)</span>
+          <span>{authStatus.email ?? 'Cloudflare Access'}</span>
         </div>
       {/if}
+
+      <!-- Token config input on top right for easy edit -->
+      <div class="flex items-center gap-1.5 bg-slate-950/60 p-1 rounded-xl border border-slate-800">
+        <input
+          type="password"
+          bind:value={tokenInput}
+          placeholder="Mã Token (ADMIN_TOKEN)"
+          class="px-2.5 py-1 text-xs bg-transparent border-0 text-slate-200 focus:outline-none font-mono w-36 sm:w-44"
+        />
+        <button
+          type="button"
+          onclick={handleSaveToken}
+          class="px-2.5 py-1 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors"
+        >
+          Lưu Token
+        </button>
+      </div>
     </div>
   </div>
 
@@ -171,7 +182,7 @@
     <!-- Loading Auth State -->
     <div class="flex flex-col items-center justify-center py-28 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
       <div class="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      <span class="text-sm text-slate-400">Đang kiểm tra xác thực quyền quản trị...</span>
+      <span class="text-sm text-slate-400">Đang kiểm tra xác thực...</span>
     </div>
   {:else if !authStatus.authenticated}
     <!-- Auth Gate / Login Screen -->
@@ -185,7 +196,7 @@
       <div class="space-y-2">
         <h3 class="text-xl font-bold text-white">Yêu Cầu Xác Thực Quản Trị</h3>
         <p class="text-xs text-slate-400 leading-relaxed">
-          Khu vực này được bảo vệ bởi <strong>Cloudflare Zero Trust</strong>. Bạn cần đăng nhập bằng tài khoản Gmail được cấp quyền để xem và chỉnh sửa từ điển.
+          Đăng nhập bằng tài khoản Gmail qua <strong>Cloudflare Zero Trust</strong> hoặc nhập <strong>ADMIN_TOKEN</strong> để quản lý từ điển.
         </p>
       </div>
 
@@ -201,10 +212,10 @@
         <span>Đăng nhập bằng Gmail (Cloudflare Access)</span>
       </button>
 
-      <!-- Token Fallback (Accordion / Subdued) -->
+      <!-- Token Fallback -->
       <div class="pt-4 border-t border-slate-800 text-left space-y-2">
         <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-          Hoặc sử dụng ADMIN_TOKEN bí mật:
+          Hoặc nhập mã ADMIN_TOKEN bí mật:
         </span>
         <div class="flex gap-2">
           <input
@@ -224,7 +235,7 @@
       </div>
     </div>
   {:else}
-    <!-- Main 2-Column Layout (Only shown after successful login) -->
+    <!-- Main 2-Column Layout (Streamlined List Layout) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <!-- Left Column: Word Explorer & Dict Tabs (7 Cols) -->
       <div class="lg:col-span-7 flex flex-col space-y-4">
@@ -251,7 +262,7 @@
           {/each}
         </div>
 
-        <!-- Word Explorer Card -->
+        <!-- Word Explorer Card (Clean List) -->
         <div class="flex-1 flex flex-col rounded-2xl bg-slate-900 border border-slate-800 shadow-xl overflow-hidden min-h-[500px]">
           <!-- Search & Action Bar -->
           <div class="p-4 border-b border-slate-800 bg-slate-800/40 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -298,8 +309,8 @@
             </div>
           </div>
 
-          <!-- Words List (Scrollable) -->
-          <div class="flex-1 p-4 overflow-y-auto max-h-[600px] space-y-1 font-mono text-sm">
+          <!-- Words List (Single-Column Streamlined List) -->
+          <div class="flex-1 p-3 overflow-y-auto max-h-[600px] space-y-1 font-mono text-sm divide-y divide-slate-800/40">
             {#if isLoading}
               <div class="flex flex-col items-center justify-center py-20 text-slate-500 space-y-2">
                 <div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -310,57 +321,55 @@
                 {searchQuery ? `Không tìm thấy từ nào khớp với "${searchQuery}"` : "Từ điển hiện chưa có từ nào."}
               </div>
             {:else}
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                {#each filteredWords.slice(0, 500) as word (word)}
-                  <div
-                    class="flex items-center justify-between px-3 py-1.5 rounded-lg border transition-colors {selectedWords.has(word)
-                      ? 'border-blue-500/50 bg-blue-500/10 text-blue-200'
-                      : 'border-slate-800/80 bg-slate-950/40 text-slate-300 hover:border-slate-700 hover:bg-slate-800/40'}"
-                  >
-                    <label class="flex items-center gap-2.5 cursor-pointer flex-1 min-w-0 pr-2">
-                      <input
-                        type="checkbox"
-                        checked={selectedWords.has(word)}
-                        onchange={() => toggleSelectWord(word)}
-                        class="rounded border-slate-700 text-blue-600 focus:ring-0 focus:ring-offset-0 bg-slate-900"
-                      />
-                      <span class="truncate">{word}</span>
-                    </label>
+              {#each filteredWords.slice(0, 500) as word (word)}
+                <div
+                  class="flex items-center justify-between px-3 py-1.5 rounded-lg transition-colors {selectedWords.has(word)
+                    ? 'bg-blue-500/10 text-blue-200 font-semibold'
+                    : 'text-slate-300 hover:bg-slate-800/50'}"
+                >
+                  <label class="flex items-center gap-3 cursor-pointer flex-1 min-w-0 pr-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedWords.has(word)}
+                      onchange={() => toggleSelectWord(word)}
+                      class="rounded border-slate-700 text-blue-600 focus:ring-0 focus:ring-offset-0 bg-slate-900"
+                    />
+                    <span class="truncate">{word}</span>
+                  </label>
 
-                    {#if deleteConfirmWord === word}
-                      <div class="flex items-center gap-1 shrink-0">
-                        <button
-                          type="button"
-                          disabled={isDeleting}
-                          onclick={() => handleDeleteWords([word])}
-                          class="px-2 py-0.5 text-[11px] font-bold text-white bg-rose-600 hover:bg-rose-500 rounded transition-colors"
-                        >
-                          Xóa
-                        </button>
-                        <button
-                          type="button"
-                          onclick={() => (deleteConfirmWord = null)}
-                          class="px-1.5 py-0.5 text-[11px] text-slate-400 hover:text-slate-200"
-                        >
-                          Hủy
-                        </button>
-                      </div>
-                    {:else}
+                  {#if deleteConfirmWord === word}
+                    <div class="flex items-center gap-1 shrink-0">
                       <button
                         type="button"
-                        onclick={() => (deleteConfirmWord = word)}
-                        class="p-1 text-slate-500 hover:text-rose-400 rounded transition-colors shrink-0"
-                        title="Xóa từ này khỏi từ điển"
-                        aria-label="Xóa từ"
+                        disabled={isDeleting}
+                        onclick={() => handleDeleteWords([word])}
+                        class="px-2 py-0.5 text-[11px] font-bold text-white bg-rose-600 hover:bg-rose-500 rounded transition-colors"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
+                        Xóa
                       </button>
-                    {/if}
-                  </div>
-                {/each}
-              </div>
+                      <button
+                        type="button"
+                        onclick={() => (deleteConfirmWord = null)}
+                        class="px-1.5 py-0.5 text-[11px] text-slate-400 hover:text-slate-200"
+                      >
+                        Hủy
+                      </button>
+                    </div>
+                  {:else}
+                    <button
+                      type="button"
+                      onclick={() => (deleteConfirmWord = word)}
+                      class="p-1 text-slate-500 hover:text-rose-400 rounded transition-colors shrink-0"
+                      title="Xóa từ này khỏi từ điển"
+                      aria-label="Xóa từ"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  {/if}
+                </div>
+              {/each}
 
               {#if filteredWords.length > 500}
                 <div class="p-3 text-center text-xs text-slate-500 border-t border-slate-800/80 mt-2">

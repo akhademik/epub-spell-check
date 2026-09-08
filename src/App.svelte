@@ -13,6 +13,11 @@
   import { appState } from "./state.svelte"
 
   onMount(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get("view") === "admin") {
+      appState.currentView = "admin"
+      window.history.replaceState({}, "", window.location.pathname)
+    }
     appState.init()
   })
 

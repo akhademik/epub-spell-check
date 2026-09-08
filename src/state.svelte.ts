@@ -102,9 +102,12 @@ export class AppStateModel {
     namesWordCount: 0
   })
 
-  // Persisted access token for the /api/dict admin endpoint
+  // Persisted access token for the /api/dict admin endpoint (support .env VITE_ADMIN_TOKEN)
   dictAdminToken = $state<string>(
-    loadStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, "")
+    loadStorage(
+      STORAGE_KEYS.DICT_ADMIN_TOKEN,
+      (import.meta.env.VITE_ADMIN_TOKEN as string) || ""
+    )
   )
   isUpdatingDictionary = $state<boolean>(false)
 
@@ -216,7 +219,11 @@ export class AppStateModel {
       this.showToast("Chưa nhập từ nào.", "error")
       return false
     }
-    if (!token.trim()) {
+
+    const effectiveToken = token.trim() || this.dictAdminToken.trim()
+    const isDev = Boolean(import.meta.env?.DEV)
+
+    if (!effectiveToken && !isDev) {
       this.showToast("Vui lòng nhập mã truy cập (token).", "error")
       return false
     }
@@ -226,12 +233,14 @@ export class AppStateModel {
       const result = await updateDictionaryWords(
         dictName,
         words,
-        token.trim(),
+        effectiveToken,
         action
       )
 
-      this.dictAdminToken = token.trim()
-      saveStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, this.dictAdminToken)
+      if (effectiveToken) {
+        this.dictAdminToken = effectiveToken
+        saveStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, this.dictAdminToken)
+      }
 
       await refreshDictionaryCache(dictName)
       await this.init()

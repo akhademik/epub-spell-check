@@ -29,6 +29,8 @@ export interface AuthStatusResponse {
 export async function checkAuthStatus(
   token?: string
 ): Promise<AuthStatusResponse> {
+  const isDev = Boolean(import.meta.env?.DEV)
+
   const headers: Record<string, string> = {}
   if (token) {
     headers.authorization = `Bearer ${token}`
@@ -37,10 +39,24 @@ export async function checkAuthStatus(
   try {
     const res = await fetch("/api/admin/auth-status", { headers })
     if (res.ok) {
-      return (await res.json()) as AuthStatusResponse
+      const contentType = res.headers.get("content-type")
+      if (contentType?.includes("application/json")) {
+        return (await res.json()) as AuthStatusResponse
+      }
     }
   } catch {
-    /* fallback to none if API is unreachable in local dev */
+    /* fallback */
+  }
+
+  // In local Vite dev (`pnpm run dev`), Cloudflare Functions are not running.
+  // We automatically authenticate local developer so you can inspect UI and test.
+  if (isDev) {
+    return {
+      authenticated: true,
+      authType: "cloudflare-access",
+      email: "local-developer@localhost",
+      hasTokenConfigured: false
+    }
   }
 
   return {
