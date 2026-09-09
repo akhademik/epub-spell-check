@@ -91,6 +91,16 @@ function sanitizeFilename(name: string): string {
   return sanitized.replace(/[\u0000-\u001f]/g, "")
 }
 
+export function getInitialEnabledErrorTypes(): Set<ErrorType> {
+  const saved = loadStorage<ErrorType[]>(
+    STORAGE_KEYS.ENABLED_ERROR_TYPES,
+    ALL_ERROR_TYPES
+  )
+  if (!Array.isArray(saved)) return new Set(ALL_ERROR_TYPES)
+  const valid = saved.filter((type) => ALL_ERROR_TYPES.includes(type))
+  return new Set(valid.length > 0 ? valid : ALL_ERROR_TYPES)
+}
+
 export class AppStateModel {
   // Dictionaries & Status (All 4 always loaded and active simultaneously)
   dictionaries = $state<Dictionaries>({
@@ -132,14 +142,7 @@ export class AppStateModel {
     loadStorage<string[]>(STORAGE_KEYS.WHITELIST, [])
   )
 
-  enabledErrorTypes = $state<Set<ErrorType>>(
-    new Set(
-      loadStorage<ErrorType[]>(
-        STORAGE_KEYS.ENABLED_ERROR_TYPES,
-        ALL_ERROR_TYPES
-      ).filter((type) => ALL_ERROR_TYPES.includes(type))
-    )
-  )
+  enabledErrorTypes = $state<Set<ErrorType>>(getInitialEnabledErrorTypes())
 
   // Loaded Book Data
   originalFile = $state<File | null>(null)

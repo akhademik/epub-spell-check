@@ -293,8 +293,8 @@ describe("Filter Module", () => {
     expect(reconstructedSet.has("NonVietnamese")).toBe(false)
   })
 
-  it("should sanitize and filter out invalid/corrupted error types from storage", () => {
-    const ALL_ERROR_TYPES = [
+  it("should sanitize and filter out invalid/corrupted error types from storage with fallback", () => {
+    const ALL_ERROR_TYPES: string[] = [
       "Dictionary",
       "NonVietnamese",
       "Uppercase",
@@ -302,7 +302,7 @@ describe("Filter Module", () => {
       "Spelling",
       "SpecialCharacter"
     ]
-    const corruptedSavedTypes = [
+    const corruptedSavedTypes: unknown[] = [
       "Dictionary",
       "Typo",
       "FakeType",
@@ -312,14 +312,23 @@ describe("Filter Module", () => {
     ]
 
     const sanitized = corruptedSavedTypes.filter(
-      (type): type is (typeof ALL_ERROR_TYPES)[number] =>
-        typeof type === "string" && ALL_ERROR_TYPES.includes(type as any)
+      (type): type is string =>
+        typeof type === "string" && ALL_ERROR_TYPES.includes(type)
     )
 
     const sanitizedSet = new Set(sanitized)
     expect(sanitizedSet.size).toBe(2)
     expect(sanitizedSet.has("Dictionary")).toBe(true)
     expect(sanitizedSet.has("Typo")).toBe(true)
-    expect(sanitizedSet.has("FakeType" as any)).toBe(false)
+    expect(sanitizedSet.has("FakeType")).toBe(false)
+
+    // Test all-invalid fallback to ALL_ERROR_TYPES
+    const allInvalid: unknown[] = ["FakeType1", "FakeType2", 999]
+    const valid = allInvalid.filter(
+      (type): type is string =>
+        typeof type === "string" && ALL_ERROR_TYPES.includes(type)
+    )
+    const initial = valid.length > 0 ? valid : ALL_ERROR_TYPES
+    expect(initial).toEqual(ALL_ERROR_TYPES)
   })
 })

@@ -50,7 +50,7 @@ async function main() {
     }
 
     try {
-      // Use pnpm exec wrangler if available, otherwise fallback to pnpm dlx wrangler
+      // Execute wrangler kv key get via pnpm dlx (works without adding wrangler to package dependencies)
       const cmd = `pnpm dlx wrangler kv key get "dict:${dict}:content" --namespace-id "${namespaceId}" --remote`
       const remoteContent = execSync(cmd, {
         encoding: "utf8",
@@ -82,7 +82,7 @@ async function main() {
         )
         updatedCount++
       }
-    } catch (err) {
+    } catch {
       // Non-blocking but observable: warn developer that KV sync was skipped
       console.warn(
         `⚠️  [dict-sync] Không thể đồng bộ từ điển "${dict}" từ Cloudflare KV (Commit vẫn tiếp tục).`
@@ -99,7 +99,7 @@ async function main() {
   process.exit(0)
 }
 
-main().catch((err) => {
+main().catch(() => {
   console.warn(
     "⚠️  [dict-sync] Quá trình kiểm tra KV gặp sự cố. Bỏ qua sync để không gián đoạn commit."
   )
