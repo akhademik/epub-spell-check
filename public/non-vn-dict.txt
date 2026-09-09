@@ -121,7 +121,6 @@ ahead
 ahh
 aid
 aide
-aii
 aiko
 ailene
 aim
@@ -139,9 +138,6 @@ airline
 airport
 aizz
 aj
-aja
-aka
-akh
 akiko
 akilah
 ala
@@ -221,7 +217,6 @@ amberly
 ambien
 ambient
 ambrose
-amd
 amee
 amelia
 amend
@@ -250,7 +245,6 @@ amos
 amount
 amounts
 amoxicillin
-amp
 ampere
 amphetamin
 ampicillin
@@ -319,7 +313,6 @@ antione
 antique
 antraxit
 anxiety
-any
 anybody
 anymore
 anyone
@@ -331,7 +324,6 @@ apart
 apatite
 api
 apnic
-apo
 apospasma
 apotheosis
 appareil
@@ -369,7 +361,6 @@ ardelia
 area
 areas
 arena
-arg
 argelia
 argue
 argued
@@ -380,7 +371,6 @@ arithmomanie
 arizona
 arlinda
 arm
-armády
 armed
 armes
 armor
@@ -418,7 +408,6 @@ ask
 asked
 asking
 asks
-asn
 asp
 aspect
 aspects
@@ -449,7 +438,6 @@ ata
 atbash
 ate
 athens
-ati
 atom
 atomic
 atonement
@@ -469,7 +457,6 @@ aud
 audi
 audit
 auditor
-auf
 aufgestanden
 aufzuleiden
 aug
@@ -532,7 +519,6 @@ bag
 baghdad
 bags
 baguette
-bahrain
 baike
 bakelite
 baking
@@ -1044,7 +1030,6 @@ caesaries
 caesus
 café
 caffein
-caffeine
 cage
 cairo
 caitlin
@@ -1220,8 +1205,6 @@ cayenne
 cayman
 ccd
 cdna
-cds
-cdt
 ce
 cedar
 ceiling
@@ -1255,7 +1238,6 @@ cetera
 ceux
 cf
 cfna
-cfr
 cg
 chac
 chacho
@@ -2017,9 +1999,6 @@ drunk
 dry
 dryer
 ds
-dsc
-dsl
-dts
 dual
 dubai
 dublin
@@ -2043,7 +2022,6 @@ dusti
 dutch
 duties
 duty
-duv
 duval
 dv
 dvds
@@ -2054,12 +2032,10 @@ dying
 dynamic
 dynamo
 ea
-eaa
 each
 eagle
 eagles
 eamigas
-eao
 ear
 earn
 earned
@@ -2124,7 +2100,6 @@ eleutheria
 elevazione
 eleven
 elipse
-elk
 elyse
 ema
 emacs
@@ -2142,7 +2117,6 @@ empire
 employ
 employé
 empty
-enb
 enchilada
 enchiladas
 enco
@@ -2191,7 +2165,6 @@ entries
 entropy
 entry
 enzyme
-eos
 ep
 epa
 epic
@@ -2209,13 +2182,11 @@ er
 erasmo
 erat
 erectus
-erh
 ermine
 ermitaño
 erna
 erotic
 erotica
-erp
 errors
 es
 escape
@@ -3386,7 +3357,6 @@ ink
 inkjet
 inland
 inline
-inn
 inner
 inns
 inputs
@@ -3404,7 +3374,6 @@ instead
 instruments
 insulin
 insured
-int
 intake
 integer
 intel
@@ -3460,7 +3429,6 @@ items
 its
 itself
 itunes
-iva
 já
 jacelyn
 jacet
@@ -3496,7 +3464,6 @@ jews
 ji
 jian
 jiao
-jig
 jm
 jo
 jockey
@@ -3787,7 +3754,6 @@ licence
 license
 licking
 lictor
-lid
 lida
 lieber
 liechtenstein
@@ -3802,7 +3768,6 @@ ligia
 liked
 likely
 likes
-lil
 lille
 limb
 limberger
@@ -3817,7 +3782,6 @@ linen
 lingua
 lion
 lions
-lip
 lips
 liquid
 listed
@@ -3840,7 +3804,6 @@ livorno
 livre
 llama
 llamo
-llc
 lloraban
 llp
 lm
@@ -3973,7 +3936,6 @@ maul
 mauvais
 mauvaise
 mayonnaise
-mazon
 mba
 md
 mea
@@ -5177,9 +5139,7 @@ qiana
 qiang
 qingzixy
 qiviut
-qld
 qt
-qty
 quad
 quaerendo
 qualify
@@ -5211,7 +5171,6 @@ quit
 quite
 quiz
 quizzes
-quo
 quoi
 quote
 quoted
@@ -6182,7 +6141,6 @@ stay
 stayed
 staying
 stays
-std
 steady
 steak
 steal
@@ -6428,7 +6386,6 @@ taste
 tatami
 tattoo
 taught
-tav
 tawana
 tax
 taxes
@@ -6493,8 +6450,6 @@ tetracyline
 tetrahydrocannabinol
 tête
 tf
-tft
-tgp
 thailand
 thanatology
 thank
@@ -6520,7 +6475,6 @@ these
 thesis
 theu
 they
-thh
 thick
 thing
 things
@@ -6571,7 +6525,6 @@ tiger
 tigers
 tight
 tiiu
-til
 tile
 tiles
 till
@@ -6595,10 +6548,7 @@ titten
 tj
 tlacenka
 tm
-tmp
 tn
-tna
-tng
 tobacco
 tobago
 toga
@@ -6697,7 +6647,6 @@ travelled
 travelling
 travels
 tray
-trd
 treat
 treated
 treaty
@@ -6750,7 +6699,6 @@ tughrik
 tuiles
 tulle
 tunisia
-tuo
 turbulence
 turkmenistan
 turn
@@ -6765,19 +6713,16 @@ twenty
 twins
 twitter
 two
-tyn
 type
 typewriters
 uchi
 ugolovniki
 uk
 ukulele
-ula
 ulrich
 ulrike
 ultima
 uncle
-und
 under
 undergoing
 understand
@@ -6800,10 +6745,7 @@ use
 usha
 usually
 ut
-ute
-uwe
 uzi
-uzu
 vanilla
 vanita
 vannesa
@@ -6917,7 +6859,6 @@ we
 weather
 weber
 wedelia
-wee
 week
 weekend
 weir
@@ -6983,7 +6924,6 @@ wurdigen
 www
 wynell
 wynona
-xac
 ximg
 xochitl
 xylophone
@@ -7006,7 +6946,6 @@ youtu
 yu
 yucca
 yvette
-zak
 zambia
 zana
 zang

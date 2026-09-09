@@ -19,22 +19,30 @@
   let auditData = $state<DictAuditResponse | null>(null)
   let isAuditing = $state(false)
   let selectedTierAWords = $state<Set<string>>(new Set())
-  let isDeletingTierA = $state(false)
+  let stagedDeletions = $state<Set<string>>(new Set())
+  let isSyncing = $state(false)
   let ignoredClusterIds = $state<Set<string>>(new Set())
 
   const tierAFindings = $derived(
-    auditData?.garbage.filter((g) => g.tier === "A") ?? []
+    auditData?.garbage.filter((g) => g.tier === "A" && !stagedDeletions.has(g.word)) ?? []
   )
   const tierBFindings = $derived(
-    auditData?.garbage.filter((g) => g.tier === "B") ?? []
+    auditData?.garbage.filter((g) => g.tier === "B" && !stagedDeletions.has(g.word)) ?? []
   )
   const activeClusters = $derived(
-    auditData?.duplicateClusters.filter((c) => !ignoredClusterIds.has(c.id)) ?? []
+    auditData?.duplicateClusters
+      .filter((c) => !ignoredClusterIds.has(c.id))
+      .map((c) => ({
+        ...c,
+        words: c.words.filter((w) => !stagedDeletions.has(w.word))
+      }))
+      .filter((c) => c.words.length >= 2) ?? []
   )
 
   async function runAudit() {
     isAuditing = true
     ignoredClusterIds = new Set()
+    stagedDeletions = new Set()
     try {
       auditData = await fetchDictionaryAudit(
         activeDict,
@@ -74,11 +82,41 @@
     }
   }
 
-  async function handleDeleteTierA() {
+  function stageTierADeletions() {
     if (selectedTierAWords.size === 0) return
-    isDeletingTierA = true
+    const next = new Set(stagedDeletions)
+    for (const w of selectedTierAWords) {
+      next.add(w)
+    }
+    stagedDeletions = next
+    selectedTierAWords = new Set()
+    appState.showToast(`Đã đưa ${next.size} từ vào hàng đợi xóa cục bộ.`, "info")
+  }
+
+  function stageSingleDeletion(word: string) {
+    const next = new Set(stagedDeletions)
+    next.add(word)
+    stagedDeletions = next
+    const nextSelected = new Set(selectedTierAWords)
+    nextSelected.delete(word)
+    selectedTierAWords = nextSelected
+    appState.showToast(`Đã xếp "${word}" vào hàng đợi xóa (chưa lưu lên Cloudflare).`, "info")
+  }
+
+  function discardStagedDeletions() {
+    stagedDeletions = new Set()
+    const tierAWords = (auditData?.garbage.filter((g) => g.tier === "A") || []).map(
+      (g) => g.word
+    )
+    selectedTierAWords = new Set(tierAWords)
+    appState.showToast("Đã hủy bỏ toàn bộ thay đổi chưa lưu.", "info")
+  }
+
+  async function handleSyncToCloudflare() {
+    if (stagedDeletions.size === 0) return
+    isSyncing = true
     try {
-      const words = Array.from(selectedTierAWords)
+      const words = Array.from(stagedDeletions)
       const success = await appState.addWordsToDictionary(
         activeDict,
         words.join("\n"),
@@ -86,25 +124,13 @@
         "remove"
       )
       if (success) {
+        stagedDeletions = new Set()
         selectedTierAWords = new Set()
         await runAudit()
         onAuditApplied?.()
       }
     } finally {
-      isDeletingTierA = false
-    }
-  }
-
-  async function handleDeleteSingleWord(word: string) {
-    const success = await appState.addWordsToDictionary(
-      activeDict,
-      word,
-      appState.dictAdminToken,
-      "remove"
-    )
-    if (success) {
-      await runAudit()
-      onAuditApplied?.()
+      isSyncing = false
     }
   }
 
@@ -170,6 +196,50 @@
     </div>
   </div>
 
+  {#if stagedDeletions.size > 0}
+    <!-- Staging Action Bar: Hiển thị các từ chuẩn bị xóa trong bộ nhớ đệm -->
+    <div class="p-4 rounded-2xl bg-gradient-to-r from-rose-950/80 to-amber-950/80 border border-rose-500/50 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
+          <h4 class="text-sm font-bold text-white">
+            Đang có {stagedDeletions.size} từ trong hàng đợi xóa (Local Staging)
+          </h4>
+        </div>
+        <p class="text-xs text-rose-200/80">
+          Các từ đã được xóa tạm thời trên giao diện. Bấm nút bên phải để ghi 1 lần duy nhất lên Cloudflare KV.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+        <button
+          type="button"
+          disabled={isSyncing}
+          onclick={discardStagedDeletions}
+          class="px-3.5 py-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 rounded-xl transition-all border border-slate-700"
+        >
+          Hủy bỏ thay đổi
+        </button>
+        <button
+          type="button"
+          disabled={isSyncing}
+          onclick={handleSyncToCloudflare}
+          class="px-5 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 disabled:opacity-50 rounded-xl transition-all shadow-lg shadow-rose-900/50 flex items-center gap-2"
+        >
+          {#if isSyncing}
+            <div class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <span>Đang đồng bộ...</span>
+          {:else}
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            <span>Lưu & Đồng bộ lên Cloudflare ({stagedDeletions.size} từ)</span>
+          {/if}
+        </button>
+      </div>
+    </div>
+  {/if}
+
   {#if !auditData && !isAuditing}
     <div class="text-center py-20 rounded-2xl bg-slate-900/60 border border-slate-800 text-slate-400 space-y-2">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto text-slate-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -201,11 +271,11 @@
               </button>
               <button
                 type="button"
-                disabled={isDeletingTierA || selectedTierAWords.size === 0}
-                onclick={handleDeleteTierA}
+                disabled={selectedTierAWords.size === 0}
+                onclick={stageTierADeletions}
                 class="px-3 py-1 text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 disabled:opacity-50 rounded-lg transition-colors shadow"
               >
-                Xóa {selectedTierAWords.size} từ đã chọn
+                Xếp {selectedTierAWords.size} từ vào hàng đợi xóa
               </button>
             </div>
           {/if}
@@ -233,7 +303,7 @@
                 </label>
                 <button
                   type="button"
-                  onclick={() => handleDeleteSingleWord(finding.word)}
+                  onclick={() => stageSingleDeletion(finding.word)}
                   class="px-2.5 py-1 text-xs text-rose-400 hover:text-rose-200 border border-rose-900/60 rounded-lg hover:bg-rose-950/40 transition-colors"
                 >
                   Xóa
@@ -272,7 +342,7 @@
                 </div>
                 <button
                   type="button"
-                  onclick={() => handleDeleteSingleWord(finding.word)}
+                  onclick={() => stageSingleDeletion(finding.word)}
                   class="px-2.5 py-1 text-xs text-rose-400 hover:text-rose-200 border border-rose-900/60 rounded-lg hover:bg-rose-950/40 transition-colors shrink-0"
                 >
                   Xóa từ này
@@ -307,8 +377,8 @@
                   {#each cluster.words as cw (cw.word)}
                     <button
                       type="button"
-                      onclick={() => handleDeleteSingleWord(cw.word)}
-                      title={`Bấm để xóa từ "${cw.word}"`}
+                      onclick={() => stageSingleDeletion(cw.word)}
+                      title={`Bấm để xếp từ "${cw.word}" vào hàng đợi xóa`}
                       class="px-3.5 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2 {cw.suggestion === 'keep'
                         ? 'border border-emerald-500/60 text-emerald-300 bg-emerald-950/30'
                         : cw.suggestion === 'delete'

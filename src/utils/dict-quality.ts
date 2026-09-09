@@ -199,11 +199,10 @@ export function detectFuzzyDuplicates(
     }
   })
 
-  // 1. Build Inverted Signature Index for Fast Sub-quadratic Candidate Retrieval
-  // For Levenshtein distance <= 2, any two words must share at least one common signature:
-  // - Deletion-1 signature (removing 1 character)
-  // - Length + 2-char prefix / 3-char prefix
-  // - Length + 3-char n-gram
+  // 1. Build Inverted Index for Fast Candidate Retrieval (Edit distance <= 2)
+  // For Levenshtein distance <= 2:
+  // - Short words (len <= 4): use exact / length prefix signatures or 1-del
+  // - Medium & Long words (len >= 3): 1-del signatures + sliding 3-grams within same length window (lenDiff <= 2)
   const signatureIndex = new Map<string, number[]>()
 
   function addSignature(sig: string, idx: number) {
@@ -220,22 +219,25 @@ export function detectFuzzyDuplicates(
     const w = entry.lower
     const len = entry.len
 
-    // Exact length + prefixes
-    if (len >= 2) {
-      addSignature(`p2:${w.slice(0, 2)}`, i)
-    }
-    if (len >= 3) {
-      addSignature(`p3:${w.slice(0, 3)}`, i)
+    if (len < 3) {
+      addSignature(`short:${w}`, i)
+      continue
     }
 
-    // 1-character deletion signatures (for length >= 3)
-    if (len >= 3 && len <= 20) {
+    // 1-character deletion signatures (guarantees finding single insertion / deletion / substitution)
+    if (len <= 25) {
       for (let pos = 0; pos < len; pos++) {
         const delSig = `del:${w.slice(0, pos)}${w.slice(pos + 1)}`
         addSignature(delSig, i)
       }
-    } else if (len < 3) {
-      addSignature(`short:${w}`, i)
+    }
+
+    // 3-gram signatures for catching 2-substitution cases where deletion signatures differ
+    if (len >= 4) {
+      for (let pos = 0; pos <= len - 3; pos++) {
+        const gram = w.slice(pos, pos + 3)
+        addSignature(`g3:${gram}`, i)
+      }
     }
   }
 
@@ -284,56 +286,59 @@ export function detectFuzzyDuplicates(
   }
 
   // 2. Query Candidate Pairs from Inverted Index
-  const checkedPairs = new Set<string>()
-
   for (let i = 0; i < wordEntries.length; i++) {
     const entryA = wordEntries[i]
     const wA = entryA.lower
     const lenA = entryA.len
 
-    // Collect candidate indices from matching signatures
+    // Collect candidate indices (only j > i so every pair is examined at most once)
     const candidateIndices = new Set<number>()
 
-    if (lenA >= 2) {
-      const p2List = signatureIndex.get(`p2:${wA.slice(0, 2)}`)
-      if (p2List) {
-        for (const idx of p2List) if (idx > i) candidateIndices.add(idx)
-      }
-    }
-
-    if (lenA >= 3 && lenA <= 20) {
-      for (let pos = 0; pos < lenA; pos++) {
-        const delSig = `del:${wA.slice(0, pos)}${wA.slice(pos + 1)}`
-        const delList = signatureIndex.get(delSig)
-        if (delList) {
-          for (const idx of delList) if (idx > i) candidateIndices.add(idx)
-        }
-      }
-    } else if (lenA < 3) {
+    if (lenA < 3) {
       const shortList = signatureIndex.get(`short:${wA}`)
       if (shortList) {
         for (const idx of shortList) if (idx > i) candidateIndices.add(idx)
       }
+    } else {
+      // Query 1-del signatures
+      if (lenA <= 25) {
+        for (let pos = 0; pos < lenA; pos++) {
+          const delSig = `del:${wA.slice(0, pos)}${wA.slice(pos + 1)}`
+          const delList = signatureIndex.get(delSig)
+          if (delList) {
+            for (const idx of delList) if (idx > i) candidateIndices.add(idx)
+          }
+        }
+      }
+
+      // Query 3-grams
+      if (lenA >= 4) {
+        for (let pos = 0; pos <= lenA - 3; pos++) {
+          const gram = wA.slice(pos, pos + 3)
+          const gList = signatureIndex.get(`g3:${gram}`)
+          if (gList) {
+            for (const idx of gList) if (idx > i) candidateIndices.add(idx)
+          }
+        }
+      }
     }
+
+    candidateCount += candidateIndices.size
 
     // 3. Verify candidates with Levenshtein Distance <= 2
     for (const j of candidateIndices) {
       const entryB = wordEntries[j]
       const lenB = entryB.len
 
-      // Length difference must be <= 2
+      // Fast length-filter: length difference must be <= 2
       const lenDiff = Math.abs(lenA - lenB)
       if (lenDiff > 2) continue
 
       if (entryA.lower === entryB.lower) continue
 
       const pairKey = createPairKey(entryA.raw, entryB.raw)
-      if (checkedPairs.has(pairKey)) continue
-      checkedPairs.add(pairKey)
-
       if (ignoredPairs.has(pairKey)) continue
 
-      candidateCount++
       levenshteinChecks++
 
       const dist = levenshteinDistance(entryA.lower, entryB.lower, 2)
