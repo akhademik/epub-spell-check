@@ -34,3 +34,7 @@ graphify-out/*
 !graphify-out/graph.html
 !graphify-out/graph.json
 
+# Local reports & backup folders
+reports/
+public/.backup/
+

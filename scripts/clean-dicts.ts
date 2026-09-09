@@ -29,6 +29,7 @@ interface CliOptions {
   dicts: DictName[]
   dryRun: boolean
   tier: "A" | "all"
+  benchmark: boolean
 }
 
 function parseArgs(): CliOptions {
@@ -38,6 +39,7 @@ function parseArgs(): CliOptions {
   let dicts: DictName[] = [...ALL_DICTS]
   let dryRun = true
   let tier: "A" | "all" = "A"
+  let benchmark = false
 
   for (const arg of args) {
     if (arg.startsWith("--source=")) {
@@ -55,13 +57,15 @@ function parseArgs(): CliOptions {
       dryRun = false
     } else if (arg === "--dry-run") {
       dryRun = true
+    } else if (arg === "--benchmark") {
+      benchmark = true
     } else if (arg.startsWith("--tier=")) {
       const t = arg.split("=")[1]?.toUpperCase()
       if (t === "A" || t === "ALL") tier = t === "A" ? "A" : "all"
     }
   }
 
-  return { source, namespaceId, dicts, dryRun, tier }
+  return { source, namespaceId, dicts, dryRun, tier, benchmark }
 }
 
 function getNamespaceIdFromWrangler(): string | undefined {
@@ -247,7 +251,7 @@ async function main() {
       continue
     }
 
-    const { garbage, duplicateClusters } = auditDictionary(
+    const { garbage, duplicateClusters, timing } = auditDictionary(
       dictName,
       words,
       ignoredPairs
@@ -261,12 +265,24 @@ async function main() {
     console.log(`  - Rác Tier A (Độ tin cậy cao) : ${tierAFindings.length}`)
     console.log(`  - Nghi vấn Tier B (Cần review): ${tierBFindings.length}`)
     console.log(`  - Cụm trùng lặp mờ (Clusters) : ${duplicateClusters.length}`)
+    if (timing) {
+      console.log(
+        `  - Hiệu năng (Telemetry)       : Tổng ${timing.totalMs}ms (Rác: ${timing.garbageScanMs}ms, Index: ${timing.indexBuildMs}ms, Fuzzy: ${timing.fuzzyScanMs}ms)`
+      )
+      console.log(
+        `  - Phép tính (Computations)    : ${timing.candidateCount.toLocaleString()} candidates -> ${timing.levenshteinCheckCount.toLocaleString()} Levenshtein -> ${timing.matchedPairCount} matches (${timing.clusterCount} cụm)`
+      )
+    }
 
     markdownReport += `## Từ điển: \`${dictName}\`\n\n`
     markdownReport += `- **Tổng số từ**: ${words.length.toLocaleString()}\n`
     markdownReport += `- **Tier A**: ${tierAFindings.length}\n`
     markdownReport += `- **Tier B**: ${tierBFindings.length}\n`
-    markdownReport += `- **Cụm trùng lặp mờ**: ${duplicateClusters.length}\n\n`
+    markdownReport += `- **Cụm trùng lặp mờ**: ${duplicateClusters.length}\n`
+    if (timing) {
+      markdownReport += `- **Thời gian chạy**: ${timing.totalMs}ms (${timing.candidateCount.toLocaleString()} candidates, ${timing.levenshteinCheckCount.toLocaleString()} Levenshtein, ${timing.matchedPairCount} matches)\n`
+    }
+    markdownReport += "\n"
 
     if (tierAFindings.length > 0) {
       markdownReport += `### ❌ Danh sách Tier A (${tierAFindings.length} từ):\n`

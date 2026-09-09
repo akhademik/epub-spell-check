@@ -75,7 +75,6 @@ apphe
 apphich
 arbit
 are
-artel
 as
 asean
 asen
@@ -265,8 +264,6 @@ bẩy
 bẫy
 bấy
 bậy
-bch
-bct
 be
 bè
 bẻ
@@ -379,7 +376,6 @@ bíp
 bịp
 biptêt
 birr
-bis
 bismut
 bisulphat
 bit
@@ -421,7 +417,6 @@ bom
 bòm
 bỏm
 bõm
-bombê
 bon
 bòn
 bỏn
@@ -474,7 +469,6 @@ bổng
 bỗng
 bống
 bộng
-bônsêvich
 bốp
 bộp
 bốt
@@ -563,7 +557,6 @@ buột
 búp
 bụp
 bupbê
-bupphê
 burst
 bút
 bụt
@@ -758,7 +751,6 @@ cello
 cellulos
 cen
 centi
-centimet
 centimét
 ceo
 ch
@@ -1178,7 +1170,6 @@ clinke
 clip
 clo
 clohidric
-clohiđric
 clorat
 clorua
 club
@@ -1195,7 +1186,6 @@ cọ
 cóc
 cọc
 coca
-coctison
 code
 coder
 coi
@@ -1214,10 +1204,8 @@ cõm
 cóm
 cọm
 combo
-comlê
 commăng
 commốt
-compa
 con
 còn
 cỏn
@@ -1315,10 +1303,8 @@ crếp
 crin
 crom
 cron
-crô
 crôm
 crông
-cru
 cs
 csdl
 ct
@@ -1553,7 +1539,6 @@ dện
 dênh
 dềnh
 dệnh
-dêrô
 dết
 dệt
 dệu
@@ -1774,7 +1759,6 @@ dzách
 đạc
 đách
 đạch
-đađa
 đai
 đài
 đãi
@@ -1833,7 +1817,6 @@ dzách
 đẵng
 đắng
 đặng
-đăngten
 đắp
 đắt
 đặt
@@ -1944,7 +1927,6 @@ dzách
 điệu
 đin
 đìn
-đinamit
 đinamo
 đinh
 đình
@@ -2154,7 +2136,6 @@ e
 ebonit
 éc
 ẹc
-eke
 el
 elip
 em
@@ -2196,9 +2177,7 @@ event
 ếch
 ệch
 êcle
-êcu
 êđê
-êga
 êke
 êkip
 êm
@@ -2230,15 +2209,11 @@ fix
 flo
 fluor
 fly
-fo
 food
 foot
 franc
 free
 fruit
-fu
-fut
-fuy
 g
 ga
 gà
@@ -2246,7 +2221,6 @@ gả
 gã
 gá
 gạ
-gabađin
 gabardin
 gác
 gạc
@@ -2541,7 +2515,6 @@ giời
 giới
 giờn
 giỡn
-gip
 gíp
 gịt
 giu
@@ -2568,13 +2541,8 @@ giướng
 giượng
 giựt
 glai
-glaucom
 glăng
 glây
-gli
-glô
-glôcôm
-glu
 gluco
 gmt
 gnp
@@ -2683,7 +2651,6 @@ gương
 gường
 gưỡng
 gượng
-gỵa
 gym
 h
 ha
@@ -2883,7 +2850,6 @@ hỉnh
 hĩnh
 hip
 híp
-hipebol
 hippy
 hit
 hít
@@ -2937,10 +2903,8 @@ hoằng
 hoẵng
 hoắng
 hoắt
-hoc
 hóc
 học
-hocmon
 hoe
 hòe
 họe
@@ -2967,7 +2931,6 @@ hỏng
 hóng
 họng
 hoóc
-hop
 hóp
 họp
 hormon
@@ -3030,7 +2993,6 @@ hợp
 hớt
 hợt
 hreng
-hrê
 hroi
 ht
 htx
@@ -3040,7 +3002,6 @@ hủ
 hũ
 hú
 hụ
-hua
 hùa
 huân
 huấn
@@ -3155,7 +3116,6 @@ inbox
 inch
 inh
 ình
-ĩnh
 inox
 inôc
 input
@@ -3184,22 +3144,17 @@ jeep
 jen
 jiang
 jin
-jíp
 job
 ju
 jun
-jút
 k
 ka
-kađai
 kaki
 kali
 kạn
 káp
 kappa
 kb
-kcs
-kde
 kđrao
 ke
 kè
@@ -3573,10 +3528,8 @@ kiểu
 kiếu
 kiệu
 kilo
-kilogam
 kilomet
 kilô
-kilôgam
 kilôgram
 kilômet
 kilômét
@@ -3625,7 +3578,6 @@ kruna
 krung
 ksmt
 kt
-ktlê
 ktt
 ktul
 kty
@@ -4225,8 +4177,6 @@ mảnh
 mãnh
 mánh
 mạnh
-manhetit
-manheto
 manip
 maníp
 maniven
@@ -4307,7 +4257,6 @@ mb
 mbit
 mc
 mdhur
-mđhur
 me
 mè
 mẻ
@@ -4341,7 +4290,6 @@ mét
 mẹt
 metan
 mev
-mezon
 mê
 mề
 mể
@@ -4371,7 +4319,6 @@ mica
 mích
 mịch
 micro
-microfich
 micrô
 mịe
 miẻo
@@ -4475,7 +4422,6 @@ mổ
 mỗ
 mố
 mộ
-môbilet
 mốc
 mộc
 môđéc
@@ -5737,7 +5683,6 @@ ozone
 ốt
 ôtô
 ôtôbuýt
-ôtôca
 ôtômat
 ôvăng
 ơ
@@ -6033,31 +5978,22 @@ phường
 phướng
 phượng
 phượt
-phượu
 phứt
 phựt
 pi
 piano
 píc
-pích
-piêu
 pijama
 pin
 pín
 ping
-pinh
 pint
 píp
-pirit
 pít
 pittông
 pixel
 pizza
 pla
-plas
-plát
-platin
-plăng
 pleiku
 plê
 pli
@@ -6067,37 +6003,27 @@ poa
 polime
 pom
 pong
-poọng
 pop
 post
 pound
 pô
-pông
-pôông
 pốt
 pơ
 pờ
 pơmu
-pơng
 pr
-prâng
-preh
-prep
 pro
-prong
 prô
 psi
 pt
 ptcs
 pts
-ptsc
 ptth
 pu
 pua
 pụa
 pub
 pui
-pula
 puli
 pull
 pun
@@ -6135,7 +6061,6 @@ quanh
 quành
 quánh
 quạnh
-quao
 quào
 quáo
 quạo
@@ -6364,7 +6289,6 @@ rây
 rầy
 rẩy
 rẫy
-rcăm
 re
 rè
 rẻ
@@ -6426,7 +6350,6 @@ ric
 rích
 rịch
 riđô
-riel
 riềm
 riên
 riêng
@@ -6455,8 +6378,6 @@ rịt
 riu
 rìu
 ríu
-rivê
-rlâm
 ro
 rò
 rỏ
@@ -6490,13 +6411,11 @@ rỏn
 rón
 rọn
 rondo
-roneo
 rong
 ròng
 rỏng
 róng
 rọng
-roòng
 rót
 rọt
 roto
@@ -6515,13 +6434,11 @@ rối
 rôm
 rồm
 rộm
-rôma
 rôn
 rồn
 rổn
 rốn
 rộn
-rônêô
 rông
 rồng
 rổng
@@ -6708,7 +6625,6 @@ săng
 sằng
 sẵng
 sắng
-săngta
 sẵp
 sắp
 sắt
@@ -6723,7 +6639,6 @@ sân
 sần
 sẩn
 sấn
-sâng
 sấp
 sập
 sất
@@ -6771,7 +6686,6 @@ sể
 sễ
 sệ
 sệch
-sêếu
 sên
 sền
 sến
@@ -6809,14 +6723,12 @@ sida
 siếc
 siểm
 siễn
-siêng
 siểng
 siết
 siêu
 sigma
 sìi
 silic
-silicat
 sim
 sin
 sìn
@@ -6878,7 +6790,6 @@ sõng
 sóng
 soóc
 sóoc
-soong
 sos
 sót
 sọt
@@ -6907,7 +6818,6 @@ sốp
 sộp
 sốt
 sột
-sôvanh
 sơ
 sờ
 sở
@@ -6920,7 +6830,6 @@ sợi
 sơm
 sờm
 sớm
-sơmi
 sơn
 sờn
 sởn
@@ -6934,7 +6843,6 @@ spi
 sró
 st
 sta
-stác
 stato
 ste
 stê
@@ -6969,7 +6877,6 @@ sun
 sún
 sụn
 sunfamit
-sunfua
 sunfuric
 sung
 sùng
@@ -6984,7 +6891,6 @@ suốt
 súp
 sụp
 supde
-suplơ
 sút
 sụt
 suy
@@ -7045,8 +6951,6 @@ tải
 tãi
 tái
 tại
-taiga
-taj
 taka
 tala
 tam
@@ -7057,7 +6961,6 @@ tan
 tàn
 tản
 tán
-tananh
 tand
 tang
 tàng
@@ -7131,7 +7034,6 @@ tẩy
 tấy
 tb
 tbt
-tbuăn
 tcn
 tdtt
 tđd
@@ -7156,7 +7058,6 @@ tẽn
 tén
 teng
 tèng
-tenge
 teo
 tèo
 tẻo
@@ -7625,7 +7526,6 @@ toe
 tòe
 tỏe
 tóe
-toefl
 toen
 toèn
 toét
@@ -7689,7 +7589,6 @@ tốp
 tộp
 tốt
 tột
-tôtem
 tơ
 tờ
 tở
@@ -8109,7 +8008,6 @@ tườu
 tửu
 tựu
 tv
-tw
 ty
 tỳ
 tỷ
@@ -8645,7 +8543,6 @@ xiết
 xiêu
 xiều
 xiếu
-xifông
 xilanh
 xilip
 xim

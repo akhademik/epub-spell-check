@@ -180,6 +180,14 @@ describe("Dictionary Quality & Garbage Detection Module", () => {
       expect(clusters.length).toBe(0)
     })
 
+    it("detects 2-substitution pairs without common 2-char prefix (e.g. tran vs tron or trung vs trong)", () => {
+      const words = ["trang", "trong"]
+      const clusters = detectFuzzyDuplicates("vn", words)
+      expect(clusters.length).toBe(1)
+      expect(clusters[0].words.map((w) => w.word)).toContain("trang")
+      expect(clusters[0].words.map((w) => w.word)).toContain("trong")
+    })
+
     it("marks confidence as low for two long valid words (>=8 chars)", () => {
       const words = ["Johnston", "Johnsonx"] // Length 8, Levenshtein distance 2
       const clusters = detectFuzzyDuplicates("names", words)
