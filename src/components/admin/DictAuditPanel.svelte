@@ -135,22 +135,39 @@
       </p>
     </div>
 
-    <button
-      type="button"
-      disabled={isAuditing}
-      onclick={runAudit}
-      class="px-5 py-2.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-500 disabled:opacity-50 rounded-xl transition-all shadow-lg shadow-amber-900/30 flex items-center gap-2 shrink-0"
-    >
-      {#if isAuditing}
-        <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-        <span>Đang quét...</span>
-      {:else}
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <span>{auditData ? "Quét lại" : "Bắt đầu quét kiểm tra"}</span>
+    <div class="flex items-center gap-3">
+      {#if auditData?.timing}
+        <div class="hidden sm:flex flex-col text-right font-mono text-[11px] text-slate-400 bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800">
+          <div class="flex items-center gap-2 justify-end">
+            <span class="text-slate-300 font-bold">Tổng: {auditData.timing.totalMs} ms</span>
+            <span class="text-slate-600">|</span>
+            <span>Rác: {auditData.timing.garbageScanMs} ms</span>
+            <span class="text-slate-600">|</span>
+            <span>Fuzzy: {auditData.timing.fuzzyScanMs} ms</span>
+          </div>
+          <div class="text-[10px] text-slate-500">
+            {auditData.timing.candidateCount.toLocaleString()} cặp ứng viên &bull; {auditData.timing.levenshteinCheckCount.toLocaleString()} phép Levenshtein
+          </div>
+        </div>
       {/if}
-    </button>
+
+      <button
+        type="button"
+        disabled={isAuditing}
+        onclick={runAudit}
+        class="px-5 py-2.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-500 disabled:opacity-50 rounded-xl transition-all shadow-lg shadow-amber-900/30 flex items-center gap-2 shrink-0"
+      >
+        {#if isAuditing}
+          <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          <span>Đang quét...</span>
+        {:else}
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <span>{auditData ? "Quét lại" : "Bắt đầu quét kiểm tra"}</span>
+        {/if}
+      </button>
+    </div>
   </div>
 
   {#if !auditData && !isAuditing}

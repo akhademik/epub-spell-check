@@ -189,11 +189,15 @@ describe("Dictionary Quality & Garbage Detection Module", () => {
   })
 
   describe("auditDictionary", () => {
-    it("runs both garbage and fuzzy duplicate scans together", () => {
+    it("runs both garbage and fuzzy duplicate scans together with timing metrics", () => {
       const words = ["HresponseMKpdf", "MacArthur", "Macathur", "người"]
       const result = auditDictionary("names", words)
       expect(result.garbage.length).toBeGreaterThan(0)
       expect(result.duplicateClusters.length).toBeGreaterThan(0)
+      expect(result.timing).toBeDefined()
+      expect(result.timing?.totalMs).toBeGreaterThanOrEqual(0)
+      expect(result.timing?.garbageScanMs).toBeGreaterThanOrEqual(0)
+      expect(result.timing?.candidateCount).toBeGreaterThanOrEqual(0)
     })
   })
 })

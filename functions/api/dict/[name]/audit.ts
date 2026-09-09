@@ -30,6 +30,18 @@ function ignoredPairsKey(name: string) {
   return `dict:${name}:ignored-pairs`
 }
 
+function auditCacheKey(name: string) {
+  return `dict:${name}:audit:cache`
+}
+
+function auditVersionKey(name: string) {
+  return `dict:${name}:audit:version`
+}
+
+function updatedKey(name: string) {
+  return `dict:${name}:updated`
+}
+
 function resolveName(params: RequestContext["params"]): DictName | null {
   const raw = Array.isArray(params.name) ? params.name[0] : params.name
   if (!raw || !ALLOWED_NAMES.has(raw)) return null
@@ -73,6 +85,23 @@ export async function onRequestGet(context: RequestContext): Promise<Response> {
     )
   }
 
+  const currentUpdated =
+    (await context.env.DICT_KV.get(updatedKey(name))) ?? "initial"
+  const cachedVersion = await context.env.DICT_KV.get(auditVersionKey(name))
+
+  // Fast path: if dictionary hasn't changed, return cached audit result
+  if (cachedVersion && cachedVersion === currentUpdated) {
+    const cachedData = await context.env.DICT_KV.get(auditCacheKey(name))
+    if (cachedData) {
+      try {
+        const parsed = JSON.parse(cachedData)
+        return jsonResponse(parsed)
+      } catch {
+        /* proceed to full audit if cache corrupted */
+      }
+    }
+  }
+
   const content = (await context.env.DICT_KV.get(contentKey(name))) ?? ""
   const words = content
     .split(/\r?\n/)
@@ -93,6 +122,17 @@ export async function onRequestGet(context: RequestContext): Promise<Response> {
   }
 
   const auditResult = auditDictionary(name, words, ignoredPairs)
+
+  // Save to cache asynchronously (fire-and-forget / non-blocking)
+  try {
+    await context.env.DICT_KV.put(
+      auditCacheKey(name),
+      JSON.stringify(auditResult)
+    )
+    await context.env.DICT_KV.put(auditVersionKey(name), currentUpdated)
+  } catch {
+    /* ignore cache save error */
+  }
 
   return jsonResponse(auditResult)
 }

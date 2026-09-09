@@ -1,4 +1,4 @@
-import { getBaseWord, levenshteinDistance } from "./analysis-core"
+import { levenshteinDistance } from "./analysis-core"
 import { isRepeatedUnit, validateDictionaryWord } from "./dict-validator"
 
 export type DictName = "vn" | "names" | "non-vn" | "custom"
@@ -23,9 +23,19 @@ export interface DuplicateCluster {
   confidence: "high" | "low"
 }
 
+export interface AuditTiming {
+  garbageScanMs: number
+  indexBuildMs: number
+  candidateCount: number
+  levenshteinCheckCount: number
+  fuzzyScanMs: number
+  totalMs: number
+}
+
 export interface AuditResult {
   garbage: GarbageFinding[]
   duplicateClusters: DuplicateCluster[]
+  timing?: AuditTiming
 }
 
 // Regex for garbage detection
@@ -156,14 +166,20 @@ export function createPairKey(w1: string, w2: string): string {
 
 /**
  * Detects fuzzy near-duplicate words within the same dictionary.
+ * Accepts precomputed garbageFindings to avoid redundant scanning.
  */
 export function detectFuzzyDuplicates(
   dictName: DictName,
   words: string[],
-  ignoredPairs: Set<string> = new Set()
+  ignoredPairs: Set<string> = new Set(),
+  precomputedGarbage?: GarbageFinding[],
+  timingCollector?: Partial<AuditTiming>
 ): DuplicateCluster[] {
-  // Pre-calculate garbage findings for scoring
-  const garbageList = scanDictionaryForGarbage(dictName, words)
+  const indexStart = performance.now()
+
+  // Pre-calculate garbage findings for scoring (use precomputed if passed)
+  const garbageList =
+    precomputedGarbage ?? scanDictionaryForGarbage(dictName, words)
   const garbageMap = new Map<string, GarbageFinding>()
   for (const g of garbageList) {
     garbageMap.set(g.word, g)
@@ -175,12 +191,10 @@ export function detectFuzzyDuplicates(
   )
   const wordEntries = uniqueWords.map((w) => {
     const lower = w.toLowerCase().normalize("NFC")
-    const base = dictName === "vn" ? getBaseWord(lower) : lower
     return {
       raw: w,
       lower,
-      base,
-      len: w.length,
+      len: lower.length,
       garbage: garbageMap.get(w)
     }
   })
@@ -196,6 +210,28 @@ export function detectFuzzyDuplicates(
       bucket.push(entry)
     }
   }
+
+  // Index by prefix (first 1 and first 2 characters) within each length bucket
+  const prefixMap = new Map<string, typeof wordEntries>()
+  for (const entry of wordEntries) {
+    const p1 = `${entry.len}:${entry.lower[0] || ""}`
+    const p2 = `${entry.len}:${entry.lower.slice(0, 2)}`
+    const b1 = prefixMap.get(p1)
+    if (!b1) prefixMap.set(p1, [entry])
+    else b1.push(entry)
+
+    const b2 = prefixMap.get(p2)
+    if (!b2) prefixMap.set(p2, [entry])
+    else b2.push(entry)
+  }
+
+  if (timingCollector) {
+    timingCollector.indexBuildMs = Math.round(performance.now() - indexStart)
+  }
+
+  const fuzzyStart = performance.now()
+  let candidateCount = 0
+  let levenshteinChecks = 0
 
   // Union-Find data structure for clustering
   const parent = new Map<string, string>()
@@ -223,14 +259,12 @@ export function detectFuzzyDuplicates(
   const pairMeta = new Map<string, { confidence: "high" | "low" }>()
 
   // Fast clustering: Compare candidates in same/adjacent length buckets
-  // To avoid O(N^2) pairwise comparison on 50,000+ words, we partition words by first 1-2 characters
   const sortedLengths = Array.from(bucketMap.keys()).sort((a, b) => a - b)
 
   for (const lenA of sortedLengths) {
     const listA = bucketMap.get(lenA) || []
     const candidateLengths = [lenA, lenA + 1, lenA + 2]
 
-    // Create prefix map for listA to speed up lookups
     for (const lenB of candidateLengths) {
       const listB = bucketMap.get(lenB) || []
       const isSameList = lenA === lenB
@@ -238,29 +272,45 @@ export function detectFuzzyDuplicates(
       for (let i = 0; i < listA.length; i++) {
         const entryA = listA[i]
         const charA0 = entryA.lower[0]
+        const charA1 = entryA.lower[1]
         const startJ = isSameList ? i + 1 : 0
 
         for (let j = startJ; j < listB.length; j++) {
           const entryB = listB[j]
           const charB0 = entryB.lower[0]
+          const charB1 = entryB.lower[1]
 
-          // Fast pruning: If lengths are equal and first 2 characters differ completely,
-          // Levenshtein distance >= 2 unless it's a 1-char edit at the very start
-          // For Levenshtein <= 2, first chars must either match or be within 1 position
-          if (
-            entryA.len === entryB.len &&
-            charA0 !== charB0 &&
-            entryA.lower[1] !== entryB.lower[1] &&
-            entryA.lower[1] !== charB0 &&
-            entryB.lower[1] !== charA0
-          ) {
-            continue
+          // Candidate pruning:
+          // 1. Same length: first chars must either match or differ by <= 1
+          if (entryA.len === entryB.len) {
+            if (
+              charA0 !== charB0 &&
+              charA1 !== charB1 &&
+              charA1 !== charB0 &&
+              charB1 !== charA0
+            ) {
+              continue
+            }
+          } else {
+            // Length difference 1 or 2 (insertion/deletion):
+            // The first 2 characters must share at least one character in the first 2-3 positions
+            if (
+              charA0 !== charB0 &&
+              charA0 !== charB1 &&
+              charA1 !== charB0 &&
+              charA1 !== charB1
+            ) {
+              continue
+            }
           }
 
           if (entryA.lower === entryB.lower) continue
 
           const pairKey = createPairKey(entryA.raw, entryB.raw)
           if (ignoredPairs.has(pairKey)) continue
+
+          candidateCount++
+          levenshteinChecks++
 
           const dist = levenshteinDistance(entryA.lower, entryB.lower, 2)
           if (dist >= 1 && dist <= 2) {
@@ -279,6 +329,12 @@ export function detectFuzzyDuplicates(
         }
       }
     }
+  }
+
+  if (timingCollector) {
+    timingCollector.candidateCount = candidateCount
+    timingCollector.levenshteinCheckCount = levenshteinChecks
+    timingCollector.fuzzyScanMs = Math.round(performance.now() - fuzzyStart)
   }
 
   // Group connected components
@@ -357,15 +413,42 @@ export function detectFuzzyDuplicates(
 }
 
 /**
- * Runs a complete audit on a dictionary.
+ * Runs a complete audit on a dictionary with single-pass garbage scan and performance metrics.
  */
 export function auditDictionary(
   dictName: DictName,
   words: string[],
   ignoredPairs: Set<string> = new Set()
 ): AuditResult {
+  const startTime = performance.now()
+  const timingCollector: Partial<AuditTiming> = {}
+
+  // 1. Single-pass Garbage Scan
+  const garbageStart = performance.now()
+  const garbage = scanDictionaryForGarbage(dictName, words)
+  timingCollector.garbageScanMs = Math.round(performance.now() - garbageStart)
+
+  // 2. Fuzzy Near-duplicate Detection (reusing garbage findings)
+  const duplicateClusters = detectFuzzyDuplicates(
+    dictName,
+    words,
+    ignoredPairs,
+    garbage,
+    timingCollector
+  )
+
+  timingCollector.totalMs = Math.round(performance.now() - startTime)
+
   return {
-    garbage: scanDictionaryForGarbage(dictName, words),
-    duplicateClusters: detectFuzzyDuplicates(dictName, words, ignoredPairs)
+    garbage,
+    duplicateClusters,
+    timing: {
+      garbageScanMs: timingCollector.garbageScanMs ?? 0,
+      indexBuildMs: timingCollector.indexBuildMs ?? 0,
+      candidateCount: timingCollector.candidateCount ?? 0,
+      levenshteinCheckCount: timingCollector.levenshteinCheckCount ?? 0,
+      fuzzyScanMs: timingCollector.fuzzyScanMs ?? 0,
+      totalMs: timingCollector.totalMs ?? 0
+    }
   }
 }

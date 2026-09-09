@@ -267,7 +267,6 @@ bẫy
 bấy
 bậy
 bch
-bchtw
 bct
 be
 bè
@@ -2816,7 +2815,6 @@ hdi
 hđks
 hđnd
 hđqt
-hđrung
 he
 hè
 hẻ

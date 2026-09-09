@@ -167,6 +167,14 @@ export interface DictAuditResponse {
     }[]
     confidence: "high" | "low"
   }[]
+  timing?: {
+    garbageScanMs: number
+    indexBuildMs: number
+    candidateCount: number
+    levenshteinCheckCount: number
+    fuzzyScanMs: number
+    totalMs: number
+  }
 }
 
 /**

@@ -1,335 +1,296 @@
-vì typo và spelling ko xe dịch nhìu, để tiện thì gom vào luôn có được không? với lại tôi muốn là trong error list mặc định là sort by alphabet luôn vì hiện giờ nó ko phải theo alphabet, và trong trang admin sort alphabet va khi type to search co the debounce cho do ton traffic nhung cung nen strip dấu câu đi hiện giờ trong trang admin hình như search từ là theo chính xác và case senstive đúng ko ?
+Có. Tôi vừa audit trực tiếp nhánh develop, và đúng là Audit Words hiện tại có một bottleneck khá lớn khi dictionary lên vài chục nghìn từ.
 
-Có. Mình đồng ý gom Typo và Spelling thành một loại Spelling trong trường hợp project của bạn chủ yếu phục vụ việc rà soát EPUB. Hai loại này về mặt UX không đem lại nhiều giá trị để người dùng phải lọc riêng.
+1. Bottleneck lớn nhất: fuzzy duplicate
 
-Mình sẽ đề xuất classification cuối cùng:
+Trong auditDictionary() hiện tại:
 
-UnknownWord
-NonVietnamese
-CaseError
-Spelling
-SpecialCharacter
+scanDictionaryForGarbage(name, words)
+detectFuzzyDuplicates(name, words, ignoredPairs)
 
-Trong đó Spelling bao gồm cả:
+Nhưng detectFuzzyDuplicates() lại gọi scanDictionaryForGarbage() lần nữa. Tức là toàn bộ dictionary bị scan garbage 2 lần trong mỗi lần Audit.
 
-ngừoi → người // typo / đảo ký tự
-quyyển → quyển // typo / dư ký tự
-sữ dụng → sử dụng // spelling
-sach → sách // thiếu dấu
+Đây là tối ưu rất dễ làm và nên sửa ngay:
 
-Nếu cần phân biệt sâu bên trong thì vẫn dùng reason:
+auditDictionary()
+│
+├── scanDictionaryForGarbage() ← 1 lần
+│
+└── detectFuzzyDuplicates(..., garbageFindings)
 
-Spelling
-├─ Transposition
-├─ MissingCharacter
-├─ ExtraCharacter
-├─ WrongDiacritic
-└─ ...
+Thay vì:
 
-Không cần expose Typo riêng trong Error List.
+auditDictionary()
+├── scanDictionaryForGarbage()
+└── detectFuzzyDuplicates()
+└── scanDictionaryForGarbage() ← dư 2. Fuzzy matching vẫn có thể rất nặng
 
-Còn 2 yêu cầu về sort/search: mình hoàn toàn đồng ý
+Code hiện tại đã có length bucket, đây là hướng đúng:
 
-1. Error List → mặc định alphabet
+candidateLengths = [lenA, lenA + 1, lenA + 2]
 
-Mình nghĩ đây nên là default behavior, không cần người dùng chọn.
+nhưng sau đó vẫn có thể tạo rất nhiều cặp ứng viên, rồi gọi:
 
-Ví dụ hiện tại phát hiện:
+levenshteinDistance(entryA.lower, entryB.lower, 2)
 
-người
-Amazon
-sách
-Apple
-bạn
+Với 30k–50k từ, đây vẫn là phần tôi nghi ngờ chiếm phần lớn thời gian. Code hiện tại mới prune bằng:
 
-thì Error List nên luôn hiển thị:
+độ dài
+1–2 ký tự đầu
 
-Amazon
-Apple
-bạn
-người
-sách
+nhưng chưa có index theo prefix/ngram đủ mạnh.
 
-Và nên sort theo localeCompare, không phải sort ASCII đơn giản, để tiếng Việt hoạt động đúng:
+Tôi đề xuất đổi Audit thành 3 tầng
+Tier 1 — cực rẻ
 
-a.word.localeCompare(b.word, "vi", {
-sensitivity: "base"
-})
+Chạy toàn bộ dictionary:
 
-Như vậy:
-
-a
-á
-à
-ả
-ã
-ạ
-
-được xử lý theo collation tiếng Việt thay vì Unicode code point.
-
-Mình còn khuyên thêm một điểm
-
-Sort sau khi filter, tức pipeline:
-
-all errors
+30,000–100,000 words
 ↓
-resolved filter
-↓
-type filter
-↓
-dictionary / whitelist filter
-↓
-search filter
-↓
-alphabetical sort
-↓
-display
+digit
+URL
+length
+consonant
+repeated unit
+vowel ratio
+TitleCase
+VN-specific chars
+validator
 
-Như vậy kết quả luôn ổn định.
+Các check này đều O(N), rất nhanh.
 
-2. Admin dictionary search: đúng, nên cải thiện
+Tier 2 — tạo candidate index
 
-Theo mô tả của bạn, nếu hiện tại search đang kiểu:
-
-word.includes(searchTerm)
-
-thì về bản chất nó vẫn có thể case-sensitive nếu hai bên không normalize trước.
+Không chạy Levenshtein trên mọi cặp có cùng độ dài.
 
 Ví dụ:
 
-Dictionary:
-OpenAI
+"thanh"
+"thành"
+"thạnh"
+"thanhh"
 
-Search:
-openai
+được đưa vào bucket dựa trên:
 
-có thể không tìm thấy.
-
-Mình sẽ làm search theo kiểu normalized search.
-
-Normalize search input
-
-Trước tiên:
-
-" Nguyễn! "
-↓
-"nguyen"
-
-Tức là:
-
-trim()
-lowercase
-strip dấu câu
-strip dấu tiếng Việt nếu muốn search không dấu
+length
+prefix
+trigram
 
 Ví dụ:
 
-Nguyễn!
-nguyen
-NGUYỄN
-Nguyễn,
+tha
+han
+anh
 
-→ đều match Nguyễn.
+Chỉ những từ chia sẻ đủ n-gram mới được đưa vào fuzzy comparison.
 
-Mình đặc biệt khuyên bỏ dấu tiếng Việt
+Tier 3 — Levenshtein
 
-Đây sẽ hữu ích hơn debounce rất nhiều.
+Chỉ:
 
-Ví dụ admin dictionary có:
+candidate → levenshteinDistance(..., 2)
 
-Nguyễn
-Trần
-Đặng
-Huyễn
+Như vậy thay vì:
 
-User gõ:
+30,000 × rất nhiều candidates
 
-nguyen
-tran
-dang
-huyen
+có thể giảm xuống vài trăm / vài nghìn phép so sánh thực tế.
 
-vẫn tìm thấy.
+3. Tôi còn thấy một điểm có thể tối ưu rất đáng kể
 
-Có thể normalize:
+Đoạn này:
 
-Nguyễn
-↓
-nguyen
+const base = dictName === "vn" ? getBaseWord(lower) : lower
 
-và search trên normalized value.
+được tính cho mọi word, nhưng trong đoạn code hiện tại base không được sử dụng để prune candidate trước khi fuzzy matching.
 
-3. Strip dấu câu: nên làm
+Nếu getBaseWord() tương đối đắt thì đây là CPU bị bỏ phí.
 
-Ví dụ dictionary:
+Tôi sẽ hoặc:
 
-OpenAI
-iPhone
-"hello"
+A. Bỏ hoàn toàn base
 
-Search:
+nếu thực sự không dùng.
 
-"openai"
+Hoặc tốt hơn:
 
-nên match OpenAI.
-
-Nhưng mình không khuyên strip mọi non-letter character một cách mù quáng nếu dictionary của bạn có những token hợp lệ như:
-
-C++
-.NET
-Node.js
-C#
-
-Do đó tốt nhất là có một hàm normalization dùng chung, ví dụ:
-
-normalizeSearchTerm()
-
-và định nghĩa rõ nó loại bỏ punctuation nào.
-
-Nếu dictionary của project chủ yếu là single words như workflow trước của bạn, thì có thể mạnh tay hơn.
-
-4. Debounce search: nên có
-
-Đặc biệt admin dictionary search có thể query server/KV/API.
-
-Không nên:
-
-n
-ng
-ngu
-nguy
-nguye
-nguyen
-
-→ 6 requests.
-
-Nên:
-
-n
-ng
-ngu
-nguy
-nguye
-nguyen
-↓
-300ms
-↓
-1 request
-
-Mình chọn khoảng:
-
-250–300 ms
-
-là hợp lý.
-
-Nếu search hoàn toàn client-side thì debounce không giảm traffic, nhưng vẫn có thể giảm việc filter/render liên tục. Nếu search server-side thì debounce trực tiếp giảm request.
-
-5. Và mình sẽ làm search "contains", không exact
-
-Ví dụ database có:
-
-Nguyễn Văn A
-Nguyễn Văn B
-Nguyễn Văn C
-
-gõ:
-
-nguyen
-
-→ cả 3 match.
-
-Gõ:
-
-van
-
-→ cả 3 match.
-
-Gõ:
-
-NGUYỄN!
-
-→ vẫn match.
-
-Đây là UX tốt hơn nhiều cho admin.
-
-Kiến trúc search mình đề xuất
-User input
-│
-▼
-trim
-│
-▼
-lowercase
-│
-▼
-strip punctuation
-│
-▼
-remove Vietnamese diacritics
-│
-▼
-debounce 250–300ms
-│
-▼
-contains search
-│
-▼
-alphabetical sort
+B. Dùng base làm một tầng grouping
 
 Ví dụ:
 
-Input:
-" NGUYỄN! "
+word
+↓
+normalize
+↓
+base word
+↓
+candidate bucket
+↓
+Levenshtein
 
-Normalize:
-"nguyen"
+Nhưng phải benchmark trước vì tiếng Việt có tone/biến thể khiến grouping quá mạnh có thể bỏ sót lỗi.
 
-Dictionary:
-"Nguyễn"
+4. Có một vấn đề kiến trúc quan trọng hơn: server đang làm toàn bộ audit trong một request
 
-Normalize dictionary:
-"nguyen"
+DictAuditPanel gọi:
 
-Result:
-MATCH ✓
-Có một điểm mình muốn tách rõ
+fetchDictionaryAudit(activeDict, ...)
 
-Error List và Admin dictionary là hai loại search khác nhau.
+và endpoint:
 
-Error List
+GET /api/dict/:name/audit
 
-Nên:
+sau đó server:
 
-alphabet mặc định
-search local
-không cần debounce nếu dữ liệu đã ở client
-case-insensitive
-có thể accent-insensitive
-Admin
+const words = ...
+const auditResult = auditDictionary(name, words, ignoredPairs)
 
-Nên:
+tức là Cloudflare Worker/Pages Function thực hiện toàn bộ fuzzy audit synchronously trong một HTTP request.
 
-debounce 250–300ms
-case-insensitive
-punctuation-insensitive
-accent-insensitive
-contains, không exact
-alphabetically sorted
-Nếu làm theo hướng này, classification + UX cuối cùng sẽ rất gọn:
-ERROR TYPES
-├── UnknownWord
-├── NonVietnamese
-├── CaseError
-├── Spelling
-└── SpecialCharacter
+Với vài chục nghìn từ thì UX sẽ là:
 
-ERROR LIST
-└── Alphabetical by default
+Click Audit
+↓
+request
+↓
+KV GET
+↓
+parse 30k–50k words
+↓
+garbage scan
+↓
+fuzzy scan
+↓
+Levenshtein rất nhiều lần
+↓
+JSON stringify
+↓
+response
 
-ADMIN SEARCH
-├── Debounced
-├── Case-insensitive
-├── Accent-insensitive
-├── Punctuation-insensitive
-├── Contains search
-└── Alphabetical results
+Đây là lý do cảm giác "treo" sẽ rõ khi dictionary lớn.
+
+5. Có một tối ưu rất hay: cache Audit
+
+Dictionary của bạn không thay đổi liên tục.
+
+Ví dụ:
+
+VN dictionary
+50,000 words
+
+Audit xong:
+
+content hash = ABC123
+audit result = ...
+
+Nếu user bấm:
+
+Quét lại
+
+mà dictionary chưa thay đổi thì không cần audit lại.
+
+Có thể lưu:
+
+dict:vn:audit:{contentHash}
+
+hoặc đơn giản hơn:
+
+dict:vn:audit
+dict:vn:audit:version
+
+Khi POST add/remove dictionary:
+
+dictionary changed
+↓
+invalidate audit cache
+
+Lần sau:
+
+Audit
+↓
+dictionary unchanged?
+↓ YES
+return cached result
+
+Đây sẽ làm lần Audit thứ 2 gần như tức thì.
+
+6. Tôi cũng muốn sửa ignoredPairs
+
+Hiện tại mỗi Audit:
+
+KV.get("dict:${name}:ignored-pairs")
+JSON.parse(...)
+new Set(...)
+
+Không phải bottleneck lớn, nhưng nếu ignored pair ngày càng nhiều thì cũng có thể trở thành overhead.
+
+Quan trọng hơn là POST ignore hiện đang:
+
+GET ignored list
+↓
+modify array
+↓
+PUT entire JSON
+
+Nên sau này nếu có nhiều admin cùng thao tác có thể gặp lost update. Đây là vấn đề concurrency hơn là performance.
+
+7. Tôi sẽ ưu tiên sửa theo thứ tự này
+   Ưu tiên Thay đổi Hiệu quả
+   🔴 P0 Không scan garbage 2 lần Dễ + chắc chắn
+   🔴 P0 Candidate index cho fuzzy Hiệu quả lớn nhất
+   🟠 P1 Bỏ getBaseWord() nếu không dùng CPU giảm
+   🟠 P1 Cache audit theo dictionary version/hash Audit lần 2 cực nhanh
+   🟡 P2 Tối ưu ignored-pairs nhỏ
+   🟡 P2 Instrument timing Biết chính xác bottleneck
+8. Và tôi đặc biệt khuyên thêm benchmark
+
+Đừng tối ưu "mù". Audit nên trả/log:
+
+Dictionary: vn
+Words: 48,392
+
+Garbage scan: 18 ms
+Index building: 31 ms
+Fuzzy candidates: 8,421
+Levenshtein checks: 8,421
+Fuzzy matching: 143 ms
+Total: 196 ms
+
+Nếu sau này lên:
+
+100,000 words
+
+ta sẽ biết ngay cái gì bắt đầu trở thành bottleneck.
+
+Kết luận
+
+Logic hiện tại đã tốt về mặt correctness, nhưng chưa tối ưu cho quy mô vài chục nghìn từ.
+
+Điểm đáng sửa nhất là:
+
+đừng dùng Levenshtein như bước tìm candidate; hãy dùng index/bucket để thu hẹp candidate trước, rồi mới Levenshtein.
+
+Và có một bug hiệu năng rất rõ:
+
+scanDictionaryForGarbage() đang chạy 2 lần trong một Audit.
+
+Nếu bạn muốn tối ưu thật sự, tôi sẽ chọn kiến trúc:
+
+Dictionary
+↓
+Normalize + metadata (1 lần)
+↓
+Garbage scan (1 lần)
+↓
+Length + prefix/ngram index
+↓
+Candidate generation
+↓
+Levenshtein threshold=2
+↓
+Union-Find
+↓
+Audit result
+↓
+Cache theo dictionary version
+
+Cách này vẫn giữ nguyên logic phát hiện hiện tại nhưng sẽ scale tốt hơn rất nhiều so với việc chỉ "tối ưu vài vòng for".
