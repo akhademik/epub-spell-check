@@ -172,6 +172,8 @@ export interface DictAuditResponse {
     indexBuildMs: number
     candidateCount: number
     levenshteinCheckCount: number
+    matchedPairCount?: number
+    clusterCount?: number
     fuzzyScanMs: number
     totalMs: number
   }

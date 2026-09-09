@@ -28,6 +28,8 @@ export interface AuditTiming {
   indexBuildMs: number
   candidateCount: number
   levenshteinCheckCount: number
+  matchedPairCount: number
+  clusterCount: number
   fuzzyScanMs: number
   totalMs: number
 }
@@ -232,11 +234,12 @@ export function detectFuzzyDuplicates(
       }
     }
 
-    // 3-gram signatures for catching 2-substitution cases where deletion signatures differ
-    if (len >= 4) {
+    // 3-gram signatures partitioned by length window (len-2, len-1, len, len+1, len+2)
+    // for catching 2-substitution cases without blowing up candidates across drastically different word lengths
+    if (len >= 4 && len <= 25) {
       for (let pos = 0; pos <= len - 3; pos++) {
         const gram = w.slice(pos, pos + 3)
-        addSignature(`g3:${gram}`, i)
+        addSignature(`g3:${len}:${gram}`, i)
       }
     }
   }
@@ -248,6 +251,7 @@ export function detectFuzzyDuplicates(
   const fuzzyStart = performance.now()
   let candidateCount = 0
   let levenshteinChecks = 0
+  let matchedPairs = 0
 
   // Union-Find data structure with cluster-level confidence tracking
   const parent = new Map<string, string>()
@@ -311,13 +315,19 @@ export function detectFuzzyDuplicates(
         }
       }
 
-      // Query 3-grams
-      if (lenA >= 4) {
+      // Query length-partitioned 3-grams within window [lenA - 2, lenA + 2]
+      if (lenA >= 4 && lenA <= 25) {
         for (let pos = 0; pos <= lenA - 3; pos++) {
           const gram = wA.slice(pos, pos + 3)
-          const gList = signatureIndex.get(`g3:${gram}`)
-          if (gList) {
-            for (const idx of gList) if (idx > i) candidateIndices.add(idx)
+          for (
+            let targetLen = Math.max(4, lenA - 2);
+            targetLen <= Math.min(25, lenA + 2);
+            targetLen++
+          ) {
+            const gList = signatureIndex.get(`g3:${targetLen}:${gram}`)
+            if (gList) {
+              for (const idx of gList) if (idx > i) candidateIndices.add(idx)
+            }
           }
         }
       }
@@ -343,6 +353,7 @@ export function detectFuzzyDuplicates(
 
       const dist = levenshteinDistance(entryA.lower, entryB.lower, 2)
       if (dist >= 1 && dist <= 2) {
+        matchedPairs++
         const isAValid = !entryA.garbage
         const isBValid = !entryB.garbage
         const isBothLongAndValid =
@@ -360,6 +371,7 @@ export function detectFuzzyDuplicates(
   if (timingCollector) {
     timingCollector.candidateCount = candidateCount
     timingCollector.levenshteinCheckCount = levenshteinChecks
+    timingCollector.matchedPairCount = matchedPairs
     timingCollector.fuzzyScanMs = Math.round(performance.now() - fuzzyStart)
   }
 
@@ -426,6 +438,10 @@ export function detectFuzzyDuplicates(
     })
   }
 
+  if (timingCollector) {
+    timingCollector.clusterCount = resultClusters.length
+  }
+
   return resultClusters
 }
 
@@ -464,6 +480,8 @@ export function auditDictionary(
       indexBuildMs: timingCollector.indexBuildMs ?? 0,
       candidateCount: timingCollector.candidateCount ?? 0,
       levenshteinCheckCount: timingCollector.levenshteinCheckCount ?? 0,
+      matchedPairCount: timingCollector.matchedPairCount ?? 0,
+      clusterCount: timingCollector.clusterCount ?? 0,
       fuzzyScanMs: timingCollector.fuzzyScanMs ?? 0,
       totalMs: timingCollector.totalMs ?? 0
     }

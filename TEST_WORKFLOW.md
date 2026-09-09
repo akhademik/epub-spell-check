@@ -77,7 +77,8 @@ Tạo một TEST INVENTORY:
 | **4-Tier Spelling Analysis**           | `src/utils/analysis-core.ts`, `analyzer.ts`          | Raw Tokens   | Error List / Categories | ✓    | ✓           | ✓          |
 | **Multi-select Error Filter**          | `src/utils/filter.ts`, `src/state.svelte.ts`         | Filter State | Filtered Errors         | ✓    | ✓           | ✓          |
 | **EPUB Writer & Round-trip**           | `src/utils/epub-writer.ts`                           | Book + Fixes | Valid EPUB              | ✓    | ✓           | ✓          |
-| **Dict Quality Audit (Tier A/B/Fuzzy)**| `src/utils/dict-quality.ts`, `scripts/clean-dicts.ts`| Dict Words   | Audit Report / Cleaned  | ✓    | ✓           | ✓          |
+| **Dict Quality Audit (Tier A/B/Fuzzy)**| `src/utils/dict-quality.ts`, `scripts/clean-dicts.ts`| Dict Words   | Audit Report / Telemetry| ✓    | ✓           | ✓          |
+| **Dict Admin & Local Staging**        | `src/components/admin/DictAuditPanel.svelte`         | Staged Words | Batch KV Update         | ✓    | ✓           | —          |
 | **Dict Validator (Admin Add Word)**    | `src/utils/dict-validator.ts`                        | Word Input   | Validation Warnings     | ✓    | ✓           | —          |
 | **Merge Dicts CLI & Validation**       | `scripts/merge-dicts.ts`                             | Markdown Doc | Cleaned txt files       | ✓    | ✓           | —          |
 

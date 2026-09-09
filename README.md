@@ -63,10 +63,12 @@ Một công cụ web hiện đại, nhanh chóng và mạnh mẽ để phát hi�
   - Ô tìm kiếm từ tức thì (Live search & filter).
   - Xóa từ nhanh với 1-click hoặc chọn xóa hàng loạt (Bulk remove).
   - Thêm từ mới với **bộ phân tích cảnh báo thông minh**: Tự động phát hiện lỗi gõ máy (typo), dính chữ OCR, hoặc từ sai danh mục trước khi lưu.
-- **Tab Kiểm toán chất lượng từ điển (Quality Audit Panel):**
+- **Tab Kiểm toán chất lượng từ điển (Quality Audit Panel) & Local Staging Cache:**
+  - **Local Staging Workflow:** Toàn bộ thao tác xóa (Tier A / Tier B / Fuzzy Cluster) được ghi nhận và ẩn tức thì trên bộ đệm cục bộ (0ms latency, không nghẽn mạng). Có nút **"Lưu & Đồng bộ lên Cloudflare"** để đẩy 1 lần duy nhất toàn bộ thay đổi qua Batch API.
   - **Tier A (Rác độ tin cậy cao):** Phát hiện tức thì các từ dính OCR, lỗi lặp ký tự gõ máy, hoặc ký tự lạ để dọn dẹp sạch chỉ với 1 click ("Dọn dẹp rác Tier A").
   - **Tier B (Cần duyệt thủ công):** Cảnh báo các từ nghi ngờ để người quản trị chủ động kiểm tra.
-  - **Near-duplicate Clustering:** Tự động gom nhóm các cặp từ gần giống nhau (Levenshtein distance $\le 1$ hoặc $\le 2$) kèm điểm rác heuristic, gợi ý giữ từ chuẩn và xóa từ lỗi, hoặc chọn "Bỏ qua cặp này" (lưu vào danh sách `ignoredPairs`).
+  - **Fuzzy Duplicate Detection (Edit Distance $\le 2$):** Sử dụng cấu trúc Inverted Index tối ưu (1-character deletion signatures + length-partitioned 3-grams + Union-Find Disjoint Set). Tự động gom cụm các biến thể gần trùng lặp, tính điểm rác heuristic và phân loại `keep` / `delete`.
+  - **Telemetry đo lường hiệu năng:** Hiển thị chi tiết thời gian quét rác, thời gian dựng index, số lượng candidate, số phép tính Levenshtein, số cặp khớp và số cụm tìm được.
 - **Xác thực bảo mật qua Token bí mật (ADMIN_TOKEN)**:
   - Nhập mã `ADMIN_TOKEN` để mở khóa bảng điều khiển và thực hiện thao tác thêm/xóa/dọn dẹp từ điển.
   - Token được lưu tạm trong bộ nhớ (In-Memory) của phiên làm việc hiện tại, tự động xóa sạch khi tải lại trang hoặc đóng trình duyệt để chống tấn công XSS.
@@ -74,7 +76,7 @@ Một công cụ web hiện đại, nhanh chóng và mạnh mẽ để phát hi�
 ## Công cụ dòng lệnh (CLI Tools) & Git Hook
 
 - **Kiểm toán & Dọn dẹp từ điển qua CLI (`pnpm dicts:clean`):**
-  - Chạy audit hoặc dọn dẹp trực tiếp trên local files hoặc Cloudflare KV:
+  - Chạy audit hoặc dọn dẹp trực tiếp trên local files hoặc Cloudflare KV kèm bảng số liệu telemetry đầy đủ:
     ```bash
     # Chạy kiểm tra không thay đổi dữ liệu (Dry Run)
     pnpm dicts:clean --source=local --dry-run

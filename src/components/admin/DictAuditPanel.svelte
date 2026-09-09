@@ -172,7 +172,7 @@
             <span>Fuzzy: {auditData.timing.fuzzyScanMs} ms</span>
           </div>
           <div class="text-[10px] text-slate-500">
-            {auditData.timing.candidateCount.toLocaleString()} cặp ứng viên &bull; {auditData.timing.levenshteinCheckCount.toLocaleString()} phép Levenshtein
+            {auditData.timing.candidateCount.toLocaleString()} candidates &bull; {auditData.timing.levenshteinCheckCount.toLocaleString()} checks &bull; {auditData.timing.matchedPairCount ?? 0} matches ({auditData.timing.clusterCount ?? 0} cụm)
           </div>
         </div>
       {/if}
