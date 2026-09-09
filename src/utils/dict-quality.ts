@@ -199,30 +199,44 @@ export function detectFuzzyDuplicates(
     }
   })
 
-  // Bucketing by length
-  const bucketMap = new Map<number, typeof wordEntries>()
-  for (const entry of wordEntries) {
-    const len = entry.len
-    const bucket = bucketMap.get(len)
-    if (!bucket) {
-      bucketMap.set(len, [entry])
-    } else {
-      bucket.push(entry)
+  // 1. Build Inverted Signature Index for Fast Sub-quadratic Candidate Retrieval
+  // For Levenshtein distance <= 2, any two words must share at least one common signature:
+  // - Deletion-1 signature (removing 1 character)
+  // - Length + 2-char prefix / 3-char prefix
+  // - Length + 3-char n-gram
+  const signatureIndex = new Map<string, number[]>()
+
+  function addSignature(sig: string, idx: number) {
+    let list = signatureIndex.get(sig)
+    if (!list) {
+      list = []
+      signatureIndex.set(sig, list)
     }
+    list.push(idx)
   }
 
-  // Index by prefix (first 1 and first 2 characters) within each length bucket
-  const prefixMap = new Map<string, typeof wordEntries>()
-  for (const entry of wordEntries) {
-    const p1 = `${entry.len}:${entry.lower[0] || ""}`
-    const p2 = `${entry.len}:${entry.lower.slice(0, 2)}`
-    const b1 = prefixMap.get(p1)
-    if (!b1) prefixMap.set(p1, [entry])
-    else b1.push(entry)
+  for (let i = 0; i < wordEntries.length; i++) {
+    const entry = wordEntries[i]
+    const w = entry.lower
+    const len = entry.len
 
-    const b2 = prefixMap.get(p2)
-    if (!b2) prefixMap.set(p2, [entry])
-    else b2.push(entry)
+    // Exact length + prefixes
+    if (len >= 2) {
+      addSignature(`p2:${w.slice(0, 2)}`, i)
+    }
+    if (len >= 3) {
+      addSignature(`p3:${w.slice(0, 3)}`, i)
+    }
+
+    // 1-character deletion signatures (for length >= 3)
+    if (len >= 3 && len <= 20) {
+      for (let pos = 0; pos < len; pos++) {
+        const delSig = `del:${w.slice(0, pos)}${w.slice(pos + 1)}`
+        addSignature(delSig, i)
+      }
+    } else if (len < 3) {
+      addSignature(`short:${w}`, i)
+    }
   }
 
   if (timingCollector) {
@@ -233,12 +247,15 @@ export function detectFuzzyDuplicates(
   let candidateCount = 0
   let levenshteinChecks = 0
 
-  // Union-Find data structure for clustering
+  // Union-Find data structure with cluster-level confidence tracking
   const parent = new Map<string, string>()
+  const clusterConfidence = new Map<string, "high" | "low">()
+
   function find(i: string): string {
     const p = parent.get(i)
     if (!p) {
       parent.set(i, i)
+      clusterConfidence.set(i, "high")
       return i
     }
     if (p !== i) {
@@ -248,85 +265,89 @@ export function detectFuzzyDuplicates(
     }
     return p
   }
-  function union(i: string, j: string) {
+
+  function union(i: string, j: string, pairConfidence: "high" | "low") {
     const rootI = find(i)
     const rootJ = find(j)
     if (rootI !== rootJ) {
       parent.set(rootI, rootJ)
+      const confI = clusterConfidence.get(rootI) ?? "high"
+      const confJ = clusterConfidence.get(rootJ) ?? "high"
+      const mergedConf: "high" | "low" =
+        pairConfidence === "low" || confI === "low" || confJ === "low"
+          ? "low"
+          : "high"
+      clusterConfidence.set(rootJ, mergedConf)
+    } else if (pairConfidence === "low") {
+      clusterConfidence.set(rootI, "low")
     }
   }
 
-  const pairMeta = new Map<string, { confidence: "high" | "low" }>()
+  // 2. Query Candidate Pairs from Inverted Index
+  const checkedPairs = new Set<string>()
 
-  // Fast clustering: Compare candidates in same/adjacent length buckets
-  const sortedLengths = Array.from(bucketMap.keys()).sort((a, b) => a - b)
+  for (let i = 0; i < wordEntries.length; i++) {
+    const entryA = wordEntries[i]
+    const wA = entryA.lower
+    const lenA = entryA.len
 
-  for (const lenA of sortedLengths) {
-    const listA = bucketMap.get(lenA) || []
-    const candidateLengths = [lenA, lenA + 1, lenA + 2]
+    // Collect candidate indices from matching signatures
+    const candidateIndices = new Set<number>()
 
-    for (const lenB of candidateLengths) {
-      const listB = bucketMap.get(lenB) || []
-      const isSameList = lenA === lenB
+    if (lenA >= 2) {
+      const p2List = signatureIndex.get(`p2:${wA.slice(0, 2)}`)
+      if (p2List) {
+        for (const idx of p2List) if (idx > i) candidateIndices.add(idx)
+      }
+    }
 
-      for (let i = 0; i < listA.length; i++) {
-        const entryA = listA[i]
-        const charA0 = entryA.lower[0]
-        const charA1 = entryA.lower[1]
-        const startJ = isSameList ? i + 1 : 0
-
-        for (let j = startJ; j < listB.length; j++) {
-          const entryB = listB[j]
-          const charB0 = entryB.lower[0]
-          const charB1 = entryB.lower[1]
-
-          // Candidate pruning:
-          // 1. Same length: first chars must either match or differ by <= 1
-          if (entryA.len === entryB.len) {
-            if (
-              charA0 !== charB0 &&
-              charA1 !== charB1 &&
-              charA1 !== charB0 &&
-              charB1 !== charA0
-            ) {
-              continue
-            }
-          } else {
-            // Length difference 1 or 2 (insertion/deletion):
-            // The first 2 characters must share at least one character in the first 2-3 positions
-            if (
-              charA0 !== charB0 &&
-              charA0 !== charB1 &&
-              charA1 !== charB0 &&
-              charA1 !== charB1
-            ) {
-              continue
-            }
-          }
-
-          if (entryA.lower === entryB.lower) continue
-
-          const pairKey = createPairKey(entryA.raw, entryB.raw)
-          if (ignoredPairs.has(pairKey)) continue
-
-          candidateCount++
-          levenshteinChecks++
-
-          const dist = levenshteinDistance(entryA.lower, entryB.lower, 2)
-          if (dist >= 1 && dist <= 2) {
-            union(entryA.raw, entryB.raw)
-
-            const isAValid = !entryA.garbage
-            const isBValid = !entryB.garbage
-            const isBothLongAndValid =
-              isAValid && isBValid && entryA.len >= 8 && entryB.len >= 8
-
-            const confidence: "high" | "low" = isBothLongAndValid
-              ? "low"
-              : "high"
-            pairMeta.set(pairKey, { confidence })
-          }
+    if (lenA >= 3 && lenA <= 20) {
+      for (let pos = 0; pos < lenA; pos++) {
+        const delSig = `del:${wA.slice(0, pos)}${wA.slice(pos + 1)}`
+        const delList = signatureIndex.get(delSig)
+        if (delList) {
+          for (const idx of delList) if (idx > i) candidateIndices.add(idx)
         }
+      }
+    } else if (lenA < 3) {
+      const shortList = signatureIndex.get(`short:${wA}`)
+      if (shortList) {
+        for (const idx of shortList) if (idx > i) candidateIndices.add(idx)
+      }
+    }
+
+    // 3. Verify candidates with Levenshtein Distance <= 2
+    for (const j of candidateIndices) {
+      const entryB = wordEntries[j]
+      const lenB = entryB.len
+
+      // Length difference must be <= 2
+      const lenDiff = Math.abs(lenA - lenB)
+      if (lenDiff > 2) continue
+
+      if (entryA.lower === entryB.lower) continue
+
+      const pairKey = createPairKey(entryA.raw, entryB.raw)
+      if (checkedPairs.has(pairKey)) continue
+      checkedPairs.add(pairKey)
+
+      if (ignoredPairs.has(pairKey)) continue
+
+      candidateCount++
+      levenshteinChecks++
+
+      const dist = levenshteinDistance(entryA.lower, entryB.lower, 2)
+      if (dist >= 1 && dist <= 2) {
+        const isAValid = !entryA.garbage
+        const isBValid = !entryB.garbage
+        const isBothLongAndValid =
+          isAValid && isBValid && entryA.len >= 8 && entryB.len >= 8
+
+        const pairConfidence: "high" | "low" = isBothLongAndValid
+          ? "low"
+          : "high"
+
+        union(entryA.raw, entryB.raw, pairConfidence)
       }
     }
   }
@@ -337,7 +358,7 @@ export function detectFuzzyDuplicates(
     timingCollector.fuzzyScanMs = Math.round(performance.now() - fuzzyStart)
   }
 
-  // Group connected components
+  // 4. Group connected components
   const clusterGroups = new Map<string, typeof wordEntries>()
   for (const entry of wordEntries) {
     if (parent.has(entry.raw)) {
@@ -354,19 +375,10 @@ export function detectFuzzyDuplicates(
   const resultClusters: DuplicateCluster[] = []
   let clusterIdCounter = 1
 
-  for (const [, entries] of clusterGroups) {
+  for (const [root, entries] of clusterGroups) {
     if (entries.length < 2) continue
 
-    // Determine confidence: if any pair is low, or all long valid
-    let overallConfidence: "high" | "low" = "high"
-    for (let i = 0; i < entries.length; i++) {
-      for (let j = i + 1; j < entries.length; j++) {
-        const pk = createPairKey(entries[i].raw, entries[j].raw)
-        if (pairMeta.get(pk)?.confidence === "low") {
-          overallConfidence = "low"
-        }
-      }
-    }
+    const overallConfidence = clusterConfidence.get(root) ?? "high"
 
     // Score entries
     const clusterWords: DuplicateClusterWord[] = entries.map((e) => {

@@ -4,12 +4,12 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 497 nodes · 861 edges · 34 communities (24 shown, 3 thin omitted)
+- 498 nodes · 862 edges · 34 communities (24 shown, 3 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7a713862`
+- Built from commit: `3d026384`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -61,10 +61,10 @@
   scripts/clean-dicts.ts → src/utils/dict-quality.ts
 - `main()` --calls--> `auditDictionary()`  [EXTRACTED]
   scripts/clean-dicts.ts → src/utils/dict-quality.ts
-- `tieredSuggestions` --calls--> `findTieredSuggestions()`  [EXTRACTED]
-  src/components/ContextView.svelte → src/utils/analyzer.ts
 - `detectFuzzyDuplicates()` --calls--> `levenshteinDistance()`  [EXTRACTED]
   src/utils/dict-quality.ts → src/utils/analysis-core.ts
+- `tieredSuggestions` --calls--> `findTieredSuggestions()`  [EXTRACTED]
+  src/components/ContextView.svelte → src/utils/analyzer.ts
 
 ## Import Cycles
 - None detected.
@@ -80,8 +80,8 @@ Cohesion: 0.05
 Nodes (41): 10. PDF → EPUB USER FLOW, 11. EPUB EDITOR E2E, 12. EPUB CLEANER E2E, 13. EPUB VALIDATOR E2E, 14. IMAGE PROCESSING E2E, 15. WORKER TESTING, 16. REGRESSION TEST, 17. OUTPUT FILE VALIDATION (+33 more)
 
 ### Community 2 - "dict-quality.ts"
-Cohesion: 0.11
-Nodes (30): ALL_DICTS, backupAndWrite(), CliOptions, DICT_TO_FILE, getNamespaceIdFromWrangler(), main(), parseArgs(), readDictContent() (+22 more)
+Cohesion: 0.10
+Nodes (32): ALL_DICTS, backupAndWrite(), CliOptions, DICT_TO_FILE, getNamespaceIdFromWrangler(), main(), parseArgs(), readDictContent() (+24 more)
 
 ### Community 3 - "AppStateModel"
 Cohesion: 0.12
@@ -113,7 +113,7 @@ Nodes (11): IndexedDictionary, dictCacheKey(), fetchDictContent(), fetchLocalDic
 
 ### Community 10 - "state.svelte.ts"
 Cohesion: 0.16
-Nodes (9): WHITELIST_WORD_LENGTH_LIMIT, ALL_ERROR_TYPES, appState, getInitialEnabledErrorTypes(), loadStorage(), PersistedContainer, STORAGE_KEYS, ReaderSettings (+1 more)
+Nodes (9): WHITELIST_FILE_EXTENSIONS, ALL_ERROR_TYPES, appState, getInitialEnabledErrorTypes(), loadStorage(), PersistedContainer, STORAGE_KEYS, ReaderSettings (+1 more)
 
 ### Community 11 - "audit.ts"
 Cohesion: 0.24
@@ -144,8 +144,8 @@ Cohesion: 0.20
 Nodes (10): entry, ignore, ignoreExportsUsedInFile, tests/**/*.ts, project, $schema, src/constants.ts, src/**/*.{ts,svelte} (+2 more)
 
 ### Community 18 - "DictAuditPanel.svelte"
-Cohesion: 0.22
-Nodes (8): activeClusters, handleDeleteSingleWord(), handleDeleteTierA(), handleIgnoreCluster(), runAudit(), tierAFindings, tierBFindings, ignoreDuplicatePair()
+Cohesion: 0.28
+Nodes (6): activeClusters, handleDeleteSingleWord(), handleDeleteTierA(), runAudit(), tierAFindings, tierBFindings
 
 ### Community 19 - "ContextView.svelte"
 Cohesion: 0.28
@@ -169,7 +169,7 @@ Nodes (4): Cấu trúc từ điển (`public/`), Phát triển & Kiểm thử, S
 
 ## Knowledge Gaps
 - **191 isolated node(s):** `Dictionary`, `AnalysisProgressCallback`, `WorkerMessage`, `PersistedContainer`, `Env` (+186 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 218 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 219 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
@@ -186,6 +186,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION` be split into smaller, more focused modules?**
   _Cohesion score 0.047619047619047616 - nodes in this community are weakly interconnected._
 - **Should `dict-quality.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.11092436974789915 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09815078236130868 - nodes in this community are weakly interconnected._
 - **Should `AppStateModel` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._

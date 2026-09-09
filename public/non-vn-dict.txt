@@ -1030,7 +1030,6 @@ cabaret
 cabinet
 cable
 cables
-cạcbin
 cache
 caché
 cached
@@ -1901,7 +1900,6 @@ dg
 dh
 diaboli
 dialis
-días
 diesen
 diethylamid
 diethylhexyl
@@ -4175,7 +4173,6 @@ mrna
 mrs
 msg
 msgid
-msgstr
 msie
 msn
 much
@@ -4272,7 +4269,6 @@ nein
 neither
 nekkudot
 nena
-není
 nenita
 neoma
 neomi
@@ -4795,7 +4791,6 @@ photos
 photoshop
 photosphere
 php
-phpbb
 phrase
 phrases
 phuong
@@ -5236,7 +5231,6 @@ radical
 radios
 radium
 radius
-rađiô
 raffaele
 rafting
 rage
@@ -5272,7 +5266,6 @@ rank
 ranked
 ranking
 ranks
-ráno
 rape
 rapid
 rapidement
@@ -6821,9 +6814,7 @@ vatican
 vato
 vazquez
 vctvegroup
-vécni
 vector
-velím
 vella
 velvet
 venereal
@@ -6894,9 +6885,6 @@ vrai
 vs
 vulgate
 vuna
-východ
-výhled
-výstavu
 waffle
 wagashi
 wagonette
@@ -6998,7 +6986,6 @@ wynona
 xac
 ximg
 xochitl
-xủn
 xylophone
 ya
 yadira

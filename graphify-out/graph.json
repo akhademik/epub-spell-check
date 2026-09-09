@@ -1278,18 +1278,6 @@
       "source_location": "L77"
     },
     {
-      "id": "src_components_admin_dictauditpanel_handleignorecluster",
-      "label": "handleIgnoreCluster()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "DictAuditPanel.svelte",
-      "file_type": "code",
-      "norm_label": "handleignorecluster()",
-      "source_file": "src/components/admin/DictAuditPanel.svelte",
-      "source_location": "L111"
-    },
-    {
       "id": "src_components_admin_dictauditpanel_runaudit",
       "label": "runAudit()",
       "_callable": true,
@@ -1324,18 +1312,6 @@
       "norm_label": "toggletieraword()",
       "source_file": "src/components/admin/DictAuditPanel.svelte",
       "source_location": "L59"
-    },
-    {
-      "id": "src_utils_dict_admin_ignoreduplicatepair",
-      "label": "ignoreDuplicatePair()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "DictAuditPanel.svelte",
-      "file_type": "code",
-      "norm_label": "ignoreduplicatepair()",
-      "source_file": "src/utils/dict-admin.ts",
-      "source_location": "L212"
     },
     {
       "id": "src_components_contextview_handlecustomfix",
@@ -1446,6 +1422,30 @@
       "source_location": "L117"
     },
     {
+      "id": "src_components_admin_dictauditpanel_handleignorecluster",
+      "label": "handleIgnoreCluster()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "dict-quality.ts",
+      "file_type": "code",
+      "norm_label": "handleignorecluster()",
+      "source_file": "src/components/admin/DictAuditPanel.svelte",
+      "source_location": "L111"
+    },
+    {
+      "id": "src_utils_dict_admin_ignoreduplicatepair",
+      "label": "ignoreDuplicatePair()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "dict-quality.ts",
+      "file_type": "code",
+      "norm_label": "ignoreduplicatepair()",
+      "source_file": "src/utils/dict-admin.ts",
+      "source_location": "L212"
+    },
+    {
       "id": "src_utils_dict_quality_auditdictionary",
       "label": "auditDictionary()",
       "_callable": true,
@@ -1455,7 +1455,7 @@
       "file_type": "code",
       "norm_label": "auditdictionary()",
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L418"
+      "source_location": "L430"
     },
     {
       "id": "src_utils_dict_quality_createpairkey",
@@ -1482,6 +1482,18 @@
       "source_location": "L171"
     },
     {
+      "id": "src_utils_dict_quality_detectfuzzyduplicates_addsignature",
+      "label": "addSignature()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "dict-quality.ts",
+      "file_type": "code",
+      "norm_label": "addsignature()",
+      "source_file": "src/utils/dict-quality.ts",
+      "source_location": "L209"
+    },
+    {
       "id": "src_utils_dict_quality_detectfuzzyduplicates_find",
       "label": "find()",
       "_callable": true,
@@ -1491,7 +1503,7 @@
       "file_type": "code",
       "norm_label": "find()",
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L238"
+      "source_location": "L254"
     },
     {
       "id": "src_utils_dict_quality_detectfuzzyduplicates_union",
@@ -1503,7 +1515,7 @@
       "file_type": "code",
       "norm_label": "union()",
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L251"
+      "source_location": "L269"
     },
     {
       "id": "src_utils_dict_quality_getvowelratio",
@@ -3197,15 +3209,15 @@
       "source_location": "L1"
     },
     {
-      "id": "src_constants_whitelist_word_length_limit",
-      "label": "WHITELIST_WORD_LENGTH_LIMIT",
+      "id": "src_constants_whitelist_file_extensions",
+      "label": "WHITELIST_FILE_EXTENSIONS",
       "_origin": "ast",
       "community": 10,
       "community_name": "state.svelte.ts",
       "file_type": "code",
-      "norm_label": "whitelist_word_length_limit",
+      "norm_label": "whitelist_file_extensions",
       "source_file": "src/constants.ts",
-      "source_location": "L24"
+      "source_location": "L44"
     },
     {
       "id": "src_state_svelte",
@@ -3494,17 +3506,6 @@
       "source_location": "L74"
     },
     {
-      "id": "src_constants_whitelist_file_extensions",
-      "label": "WHITELIST_FILE_EXTENSIONS",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "constants.ts",
-      "file_type": "code",
-      "norm_label": "whitelist_file_extensions",
-      "source_file": "src/constants.ts",
-      "source_location": "L44"
-    },
-    {
       "id": "src_constants_whitelist_word_count_limit",
       "label": "WHITELIST_WORD_COUNT_LIMIT",
       "_origin": "ast",
@@ -3514,6 +3515,17 @@
       "norm_label": "whitelist_word_count_limit",
       "source_file": "src/constants.ts",
       "source_location": "L19"
+    },
+    {
+      "id": "src_constants_whitelist_word_length_limit",
+      "label": "WHITELIST_WORD_LENGTH_LIMIT",
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "constants.ts",
+      "file_type": "code",
+      "norm_label": "whitelist_word_length_limit",
+      "source_file": "src/constants.ts",
+      "source_location": "L24"
     },
     {
       "id": "functions_api_dict_name",
@@ -7030,7 +7042,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L428",
+      "source_location": "L440",
       "weight": 1.0
     },
     {
@@ -7042,7 +7054,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L432",
+      "source_location": "L444",
       "weight": 1.0
     },
     {
@@ -7066,7 +7078,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L309",
+      "source_location": "L330",
       "weight": 1.0
     },
     {
@@ -7078,7 +7090,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L315",
+      "source_location": "L339",
       "weight": 1.0
     },
     {
@@ -7090,7 +7102,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L252",
+      "source_location": "L270",
       "weight": 1.0
     },
     {
@@ -7443,6 +7455,18 @@
     },
     {
       "source": "src_utils_dict_quality_detectfuzzyduplicates",
+      "target": "src_utils_dict_quality_detectfuzzyduplicates_addsignature",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/utils/dict-quality.ts",
+      "source_location": "L209",
+      "weight": 1.0
+    },
+    {
+      "source": "src_utils_dict_quality_detectfuzzyduplicates",
       "target": "src_utils_dict_quality_detectfuzzyduplicates_find",
       "relation": "contains",
       "_origin": "ast",
@@ -7450,7 +7474,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L238",
+      "source_location": "L254",
       "weight": 1.0
     },
     {
@@ -7462,7 +7486,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L251",
+      "source_location": "L269",
       "weight": 1.0
     },
     {
@@ -13652,7 +13676,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/dict-quality.ts",
-      "source_location": "L418",
+      "source_location": "L430",
       "weight": 1.0
     },
     {
@@ -15588,5 +15612,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "7a713862e47e32cf77fbbc76783ffcad3fdc66c1"
+  "built_at_commit": "3d026384f6402a1dcb3e2bb8323f46ce7fe6d614"
 }

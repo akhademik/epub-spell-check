@@ -1,296 +1,223 @@
-Có. Tôi vừa audit trực tiếp nhánh develop, và đúng là Audit Words hiện tại có một bottleneck khá lớn khi dictionary lên vài chục nghìn từ.
+🔴 Nguyên nhân chính: prefixMap được tạo nhưng không hề được sử dụng
 
-1. Bottleneck lớn nhất: fuzzy duplicate
+Trong detectFuzzyDuplicates() hiện tại bạn đã thêm:
 
-Trong auditDictionary() hiện tại:
+const prefixMap = new Map<string, typeof wordEntries>()
 
-scanDictionaryForGarbage(name, words)
-detectFuzzyDuplicates(name, words, ignoredPairs)
+sau đó tạo index theo:
 
-Nhưng detectFuzzyDuplicates() lại gọi scanDictionaryForGarbage() lần nữa. Tức là toàn bộ dictionary bị scan garbage 2 lần trong mỗi lần Audit.
+length + first character
+length + first 2 characters
 
-Đây là tối ưu rất dễ làm và nên sửa ngay:
+Đây là ý tưởng đúng. Nhưng phía dưới thuật toán không đọc prefixMap lần nào.
 
-auditDictionary()
-│
-├── scanDictionaryForGarbage() ← 1 lần
-│
-└── detectFuzzyDuplicates(..., garbageFindings)
+Thay vào đó vẫn chạy:
 
-Thay vì:
+for lenA
+for lenB
+for entryA
+for entryB
+levenshteinDistance(...)
 
-auditDictionary()
-├── scanDictionaryForGarbage()
-└── detectFuzzyDuplicates()
-└── scanDictionaryForGarbage() ← dư 2. Fuzzy matching vẫn có thể rất nặng
+Tức là thực tế vẫn gần như thuật toán cũ.
 
-Code hiện tại đã có length bucket, đây là hướng đúng:
+Nói cách khác:
 
-candidateLengths = [lenA, lenA + 1, lenA + 2]
+Bạn đã xây "đường cao tốc", nhưng xe vẫn chạy trên đường cũ. 😄
 
-nhưng sau đó vẫn có thể tạo rất nhiều cặp ứng viên, rồi gọi:
+🔴 Đây mới là lý do vài chục nghìn từ vẫn cực chậm
 
-levenshteinDistance(entryA.lower, entryB.lower, 2)
+Giả sử dictionary có:
 
-Với 30k–50k từ, đây vẫn là phần tôi nghi ngờ chiếm phần lớn thời gian. Code hiện tại mới prune bằng:
+50.000 từ
 
-độ dài
-1–2 ký tự đầu
+và rất nhiều từ có cùng độ dài.
 
-nhưng chưa có index theo prefix/ngram đủ mạnh.
+Đoạn:
 
-Tôi đề xuất đổi Audit thành 3 tầng
-Tier 1 — cực rẻ
+for (const lenA of sortedLengths) {
+const listA = bucketMap.get(lenA)
 
-Chạy toàn bộ dictionary:
+    for (const lenB of candidateLengths) {
+        const listB = bucketMap.get(lenB)
 
-30,000–100,000 words
+        for (...) {
+            for (...) {
+                ...
+                levenshteinDistance(...)
+            }
+        }
+    }
+
+}
+
+vẫn tạo ra một lượng pair cực lớn.
+
+Các điều kiện:
+
+charA0 !== charB0
+charA1 !== charB1
+...
+
+chỉ giúp skip một phần, chứ chưa biến bài toán thành gần O(N).
+
+---
+
+🔴 Một vấn đề nữa: prefixMap hiện tại hoàn toàn vô ích
+
+Bạn đang tốn thêm thời gian và RAM để build:
+
+p1
+p2
+prefixMap.set(...)
+
+nhưng không dùng nó trong candidate generation.
+
+Vì vậy hiện tại:
+
+indexBuildMs
+
+có thể tăng,
+
+nhưng:
+
+fuzzyScanMs
+
+hầu như không giảm bao nhiêu.
+
+---
+
+Tôi sẽ sửa thuật toán theo hướng khác
+
+Không nên:
+
+length bucket
 ↓
-digit
-URL
-length
-consonant
-repeated unit
-vowel ratio
-TitleCase
-VN-specific chars
-validator
-
-Các check này đều O(N), rất nhanh.
-
-Tier 2 — tạo candidate index
-
-Không chạy Levenshtein trên mọi cặp có cùng độ dài.
-
-Ví dụ:
-
-"thanh"
-"thành"
-"thạnh"
-"thanhh"
-
-được đưa vào bucket dựa trên:
-
-length
-prefix
-trigram
-
-Ví dụ:
-
-tha
-han
-anh
-
-Chỉ những từ chia sẻ đủ n-gram mới được đưa vào fuzzy comparison.
-
-Tier 3 — Levenshtein
-
-Chỉ:
-
-candidate → levenshteinDistance(..., 2)
-
-Như vậy thay vì:
-
-30,000 × rất nhiều candidates
-
-có thể giảm xuống vài trăm / vài nghìn phép so sánh thực tế.
-
-3. Tôi còn thấy một điểm có thể tối ưu rất đáng kể
-
-Đoạn này:
-
-const base = dictName === "vn" ? getBaseWord(lower) : lower
-
-được tính cho mọi word, nhưng trong đoạn code hiện tại base không được sử dụng để prune candidate trước khi fuzzy matching.
-
-Nếu getBaseWord() tương đối đắt thì đây là CPU bị bỏ phí.
-
-Tôi sẽ hoặc:
-
-A. Bỏ hoàn toàn base
-
-nếu thực sự không dùng.
-
-Hoặc tốt hơn:
-
-B. Dùng base làm một tầng grouping
-
-Ví dụ:
-
-word
+mọi cặp trong bucket
 ↓
-normalize
-↓
-base word
-↓
-candidate bucket
+prune bằng first 2 chars
 ↓
 Levenshtein
 
-Nhưng phải benchmark trước vì tiếng Việt có tone/biến thể khiến grouping quá mạnh có thể bỏ sót lỗi.
+Mà nên:
 
-4. Có một vấn đề kiến trúc quan trọng hơn: server đang làm toàn bộ audit trong một request
-
-DictAuditPanel gọi:
-
-fetchDictionaryAudit(activeDict, ...)
-
-và endpoint:
-
-GET /api/dict/:name/audit
-
-sau đó server:
-
-const words = ...
-const auditResult = auditDictionary(name, words, ignoredPairs)
-
-tức là Cloudflare Worker/Pages Function thực hiện toàn bộ fuzzy audit synchronously trong một HTTP request.
-
-Với vài chục nghìn từ thì UX sẽ là:
-
-Click Audit
+word
 ↓
-request
+length bucket
 ↓
-KV GET
+prefix/ngram index
 ↓
-parse 30k–50k words
+chỉ lấy candidate thực sự có khả năng distance <= 2
 ↓
-garbage scan
-↓
-fuzzy scan
-↓
-Levenshtein rất nhiều lần
-↓
-JSON stringify
-↓
-response
-
-Đây là lý do cảm giác "treo" sẽ rõ khi dictionary lớn.
-
-5. Có một tối ưu rất hay: cache Audit
-
-Dictionary của bạn không thay đổi liên tục.
+Levenshtein
 
 Ví dụ:
 
-VN dictionary
 50,000 words
+│
+▼
+length index
+│
+▼
+prefix/ngram
+│
+├── 49,000 loại ngay
+│
+▼
+~5,000 candidates
+│
+▼
+Levenshtein
 
-Audit xong:
+thay vì hàng chục/hàng trăm triệu pair comparison.
 
-content hash = ABC123
-audit result = ...
+Nhưng tôi muốn thay đổi thêm một điểm quan trọng
 
-Nếu user bấm:
+Hiện tại threshold là:
 
-Quét lại
+levenshteinDistance(a, b, 2)
 
-mà dictionary chưa thay đổi thì không cần audit lại.
+và bạn muốn detect fuzzy duplicate.
 
-Có thể lưu:
+Tôi nghĩ nên dùng q-gram / deletion signature để sinh candidate.
 
-dict:vn:audit:{contentHash}
+Ví dụ với distance ≤ 2:
 
-hoặc đơn giản hơn:
+"thành"
 
-dict:vn:audit
-dict:vn:audit:version
+sinh ra các signature gần nó.
 
-Khi POST add/remove dictionary:
+Sau đó:
 
-dictionary changed
+index[signature]
+
+chỉ trả về các từ có khả năng cách nhau ≤2.
+
+Đây mới là cách phù hợp với dictionary 30k–100k từ.
+
+⚠️ Còn một bottleneck thứ hai ít rõ hơn
+
+Sau khi tìm được cluster, bạn lại làm:
+
+for (let i = 0; i < entries.length; i++) {
+for (let j = i + 1; j < entries.length; j++) {
+...
+pairMeta.get(...)
+}
+}
+
+để xác định overallConfidence.
+
+Nếu cluster lớn thì lại O(K²).
+
+Không phải bottleneck chính hiện tại, nhưng có thể sửa luôn bằng cách lưu:
+
+cluster confidence
+
+ngay trong quá trình union.
+
+Và tôi sẽ không bỏ Levenshtein
+
+Điểm này quan trọng.
+
+Không nên thay toàn bộ bằng prefix matching vì sẽ làm giảm accuracy.
+
+Nên:
+
+Cheap candidate generation
 ↓
-invalidate audit cache
-
-Lần sau:
-
-Audit
+Levenshtein
 ↓
-dictionary unchanged?
-↓ YES
-return cached result
+exact verification
 
-Đây sẽ làm lần Audit thứ 2 gần như tức thì.
+Levenshtein chỉ được dùng ở final verification.
 
-6. Tôi cũng muốn sửa ignoredPairs
+Timing bạn đã thêm rất hữu ích
 
-Hiện tại mỗi Audit:
+Bạn đã thêm:
 
-KV.get("dict:${name}:ignored-pairs")
-JSON.parse(...)
-new Set(...)
+interface AuditTiming {
+garbageScanMs
+indexBuildMs
+candidateCount
+levenshteinCheckCount
+fuzzyScanMs
+totalMs
+}
 
-Không phải bottleneck lớn, nhưng nếu ignored pair ngày càng nhiều thì cũng có thể trở thành overhead.
+đây là một update rất tốt.
 
-Quan trọng hơn là POST ignore hiện đang:
+Nhưng hiện tại:
 
-GET ignored list
-↓
-modify array
-↓
-PUT entire JSON
+candidateCount ≈ levenshteinCheckCount
 
-Nên sau này nếu có nhiều admin cùng thao tác có thể gặp lost update. Đây là vấn đề concurrency hơn là performance.
+vì candidate được đếm ngay trước khi gọi Levenshtein.
 
-7. Tôi sẽ ưu tiên sửa theo thứ tự này
-   Ưu tiên Thay đổi Hiệu quả
-   🔴 P0 Không scan garbage 2 lần Dễ + chắc chắn
-   🔴 P0 Candidate index cho fuzzy Hiệu quả lớn nhất
-   🟠 P1 Bỏ getBaseWord() nếu không dùng CPU giảm
-   🟠 P1 Cache audit theo dictionary version/hash Audit lần 2 cực nhanh
-   🟡 P2 Tối ưu ignored-pairs nhỏ
-   🟡 P2 Instrument timing Biết chính xác bottleneck
-8. Và tôi đặc biệt khuyên thêm benchmark
+Nên khi test một dictionary lớn, tôi muốn bạn nhìn 3 con số:
 
-Đừng tối ưu "mù". Audit nên trả/log:
+Words: 50,000
+Candidates: ???
+Levenshtein checks: ???
+Total: ??? ms
 
-Dictionary: vn
-Words: 48,392
-
-Garbage scan: 18 ms
-Index building: 31 ms
-Fuzzy candidates: 8,421
-Levenshtein checks: 8,421
-Fuzzy matching: 143 ms
-Total: 196 ms
-
-Nếu sau này lên:
-
-100,000 words
-
-ta sẽ biết ngay cái gì bắt đầu trở thành bottleneck.
-
-Kết luận
-
-Logic hiện tại đã tốt về mặt correctness, nhưng chưa tối ưu cho quy mô vài chục nghìn từ.
-
-Điểm đáng sửa nhất là:
-
-đừng dùng Levenshtein như bước tìm candidate; hãy dùng index/bucket để thu hẹp candidate trước, rồi mới Levenshtein.
-
-Và có một bug hiệu năng rất rõ:
-
-scanDictionaryForGarbage() đang chạy 2 lần trong một Audit.
-
-Nếu bạn muốn tối ưu thật sự, tôi sẽ chọn kiến trúc:
-
-Dictionary
-↓
-Normalize + metadata (1 lần)
-↓
-Garbage scan (1 lần)
-↓
-Length + prefix/ngram index
-↓
-Candidate generation
-↓
-Levenshtein threshold=2
-↓
-Union-Find
-↓
-Audit result
-↓
-Cache theo dictionary version
-
-Cách này vẫn giữ nguyên logic phát hiện hiện tại nhưng sẽ scale tốt hơn rất nhiều so với việc chỉ "tối ưu vài vòng for".
+Nếu Levenshtein checks lên hàng triệu thì chúng ta đã xác định chính xác thủ phạm.
