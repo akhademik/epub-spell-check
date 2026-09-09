@@ -50,11 +50,12 @@ async function main() {
     }
 
     try {
-      const cmd = `npx wrangler kv key get "dict:${dict}:content" --namespace-id "${namespaceId}" --remote`
+      // Use pnpm exec wrangler if available, otherwise fallback to pnpm dlx wrangler
+      const cmd = `pnpm dlx wrangler kv key get "dict:${dict}:content" --namespace-id "${namespaceId}" --remote`
       const remoteContent = execSync(cmd, {
         encoding: "utf8",
-        stdio: ["pipe", "pipe", "ignore"],
-        timeout: 10000
+        stdio: ["pipe", "pipe", "pipe"],
+        timeout: 15000
       })
 
       // Normalize line endings
@@ -77,8 +78,11 @@ async function main() {
         )
         updatedCount++
       }
-    } catch {
-      // Non-blocking: network timeout, offline, not logged in to wrangler
+    } catch (err) {
+      // Non-blocking but observable: warn developer that KV sync was skipped
+      console.warn(
+        `⚠️  [dict-sync] Không thể đồng bộ từ điển "${dict}" từ Cloudflare KV (Commit vẫn tiếp tục).`
+      )
     }
   }
 
@@ -91,7 +95,9 @@ async function main() {
   process.exit(0)
 }
 
-main().catch(() => {
-  // Always exit 0 to never block developer commits
+main().catch((err) => {
+  console.warn(
+    "⚠️  [dict-sync] Quá trình kiểm tra KV gặp sự cố. Bỏ qua sync để không gián đoạn commit."
+  )
   process.exit(0)
 })

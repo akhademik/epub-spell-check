@@ -181,12 +181,22 @@ export class AppStateModel {
   )
 
   currentGroup = $derived.by(() => {
-    if (this.currentFilteredErrors.length === 0) return null
+    if (this.currentFilteredErrors.length === 0) {
+      if (this.selectedGroupId !== null) {
+        this.selectedGroupId = null
+        this.currentInstanceIndex = 0
+      }
+      return null
+    }
     if (this.selectedGroupId) {
       const match = this.currentFilteredErrors.find(
         (g) => g.id === this.selectedGroupId
       )
       if (match) return match
+      // If previously selected group is no longer in filtered list, reset selection to first available
+      this.selectedGroupId = this.currentFilteredErrors[0].id
+      this.currentInstanceIndex = 0
+      return this.currentFilteredErrors[0]
     }
     return this.currentFilteredErrors[0]
   })

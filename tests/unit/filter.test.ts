@@ -134,4 +134,162 @@ describe("Filter Module", () => {
     )
     expect(noneEnabled).toEqual([])
   })
+
+  it("should filter for SpecialCharacter and all standard error types correctly", () => {
+    const allTypeGroups: ErrorGroup[] = [
+      {
+        id: "1",
+        word: "từ",
+        type: "Dictionary",
+        reason: "dict",
+        count: 1,
+        contexts: []
+      },
+      {
+        id: "2",
+        word: "foreign",
+        type: "NonVietnamese",
+        reason: "non-vn",
+        count: 1,
+        contexts: []
+      },
+      {
+        id: "3",
+        word: "sÁch",
+        type: "Uppercase",
+        reason: "upper",
+        count: 1,
+        contexts: []
+      },
+      {
+        id: "4",
+        word: "ngươii",
+        type: "Typo",
+        reason: "typo",
+        count: 1,
+        contexts: []
+      },
+      {
+        id: "5",
+        word: "nghiêng",
+        type: "Spelling",
+        reason: "spelling",
+        count: 1,
+        contexts: []
+      },
+      {
+        id: "6",
+        word: "test@#$",
+        type: "SpecialCharacter",
+        reason: "spec",
+        count: 1,
+        contexts: []
+      }
+    ]
+
+    const onlySpecial = getFilteredErrors(
+      allTypeGroups,
+      [],
+      defaultCheckSettings,
+      mockDictionaries,
+      new Set(["SpecialCharacter"])
+    )
+    expect(onlySpecial).toHaveLength(1)
+    expect(onlySpecial[0].type).toBe("SpecialCharacter")
+    expect(onlySpecial[0].word).toBe("test@#$")
+  })
+
+  it("should apply enabledTypes interaction together with checkSettings correctly", () => {
+    const mixedGroups: ErrorGroup[] = [
+      {
+        id: "1",
+        word: "từ1",
+        type: "Dictionary",
+        reason: "dict",
+        count: 1,
+        contexts: []
+      },
+      {
+        id: "2",
+        word: "typo1",
+        type: "Typo",
+        reason: "typo",
+        count: 1,
+        contexts: []
+      },
+      {
+        id: "3",
+        word: "foreign1",
+        type: "NonVietnamese",
+        reason: "foreign",
+        count: 1,
+        contexts: []
+      }
+    ]
+
+    // Case 1: enabledTypes has Dictionary + Typo, but vietnamese check is OFF
+    // Expected: [] because Dictionary & Typo are Vietnamese categories
+    const withoutVN = getFilteredErrors(
+      mixedGroups,
+      [],
+      { vietnamese: false, nonVietnamese: true },
+      mockDictionaries,
+      new Set(["Dictionary", "Typo"])
+    )
+    expect(withoutVN).toEqual([])
+
+    // Case 2: enabledTypes has NonVietnamese, but nonVietnamese check is OFF
+    const withoutNonVN = getFilteredErrors(
+      mixedGroups,
+      [],
+      { vietnamese: true, nonVietnamese: false },
+      mockDictionaries,
+      new Set(["NonVietnamese"])
+    )
+    expect(withoutNonVN).toEqual([])
+
+    // Case 3: enabledTypes has NonVietnamese + Typo, with nonVietnamese check OFF
+    // Expected: only Typo remains
+    const typoOnly = getFilteredErrors(
+      mixedGroups,
+      [],
+      { vietnamese: true, nonVietnamese: false },
+      mockDictionaries,
+      new Set(["NonVietnamese", "Typo"])
+    )
+    expect(typoOnly).toHaveLength(1)
+    expect(typoOnly[0].type).toBe("Typo")
+  })
+
+  it("should handle storage serialization/deserialization for enabledErrorTypes with schema envelope", () => {
+    const STORAGE_KEY = "spell-check:enabled-error-types"
+    const mockStorage: Record<string, string> = {}
+
+    // Mock localStorage
+    const setItem = (k: string, v: string) => {
+      mockStorage[k] = v
+    }
+    const getItem = (k: string) => mockStorage[k] || null
+
+    const initialTypes = ["Dictionary", "Typo", "Uppercase"]
+    const envelope = {
+      version: 1,
+      data: initialTypes
+    }
+    setItem(STORAGE_KEY, JSON.stringify(envelope))
+
+    // Read back
+    const raw = getItem(STORAGE_KEY)
+    expect(raw).not.toBeNull()
+    const parsed = JSON.parse(raw as string)
+    expect(parsed.version).toBe(1)
+    expect(parsed.data).toEqual(["Dictionary", "Typo", "Uppercase"])
+
+    // Verify Set reconstitution
+    const reconstructedSet = new Set(parsed.data)
+    expect(reconstructedSet.has("Dictionary")).toBe(true)
+    expect(reconstructedSet.has("Typo")).toBe(true)
+    expect(reconstructedSet.has("Uppercase")).toBe(true)
+    expect(reconstructedSet.has("NonVietnamese")).toBe(false)
+  })
 })

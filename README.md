@@ -37,14 +37,16 @@ Một công cụ web hiện đại, nhanh chóng và mạnh mẽ để phát hi�
   - Hỗ trợ nhập và xuất danh sách từ tệp `.txt`, `.md`.
   - Phím tắt bàn phím tiện lợi: di chuyển giữa các lỗi (`⬆️`, `⬇️`), chọn vị trí (`⬅️`, `➡️`) và bỏ qua từ (`Delete` / `I`).
 
-## Cấu trúc từ điển (`public/`)
+## Cấu trúc từ điển & Nguồn dữ liệu Chuẩn (Canonical Source of Truth)
 
-- `public/vn-dict.txt`: Từ điển từ vựng tiếng Việt chuẩn (~9.1k từ).
-- `public/names-dict.txt`: Từ điển tên riêng, nhân danh, địa danh lịch sử (~16.8k từ).
-- `public/non-vn-dict.txt`: Từ điển từ ngữ ngoại ngữ và từ mượn quốc tế (~7.0k từ).
-- `public/custom-dict.txt`: Từ điển từ viết tắt và chữ số La Mã (~600 từ).
+- **Cloudflare KV (`DICT_KV`)**: Là **Canonical Source of Truth** chính thức của toàn bộ hệ thống từ điển. Mọi thao tác thêm/xóa/kiểm toán từ vựng đều được đồng bộ và lưu trữ trực tiếp trên KV.
+- **Tệp từ điển cục bộ (`public/*-dict.txt`)**: Là **Local Mirror / Snapshot** dùng làm fallback tĩnh (khi chạy offline hoặc chạy `vite` dev không có mạng). Các tệp này được tự động đồng bộ từ KV về repo thông qua pre-commit git hook (`pnpm dicts:pull-from-kv`).
+  - `public/vn-dict.txt`: Từ điển từ vựng tiếng Việt chuẩn (~8.9k từ).
+  - `public/names-dict.txt`: Từ điển tên riêng, nhân danh, địa danh lịch sử (~16.8k từ).
+  - `public/non-vn-dict.txt`: Từ điển từ ngữ ngoại ngữ và từ mượn quốc tế (~7.0k từ).
+  - `public/custom-dict.txt`: Từ điển từ viết tắt và chữ số La Mã (~600 từ).
 
-Các file trên là **nguồn dữ liệu tĩnh và fallback** (dùng khi chạy dev độc lập không có KV). Ở môi trường production, ứng dụng ưu tiên đọc/ghi từ điển qua Cloudflare KV API.
+> **Lưu ý kiến trúc**: Không chỉnh sửa thủ công các tệp `public/*-dict.txt` một cách tùy tiện; hãy sử dụng Admin Dashboard hoặc các script chuẩn hóa (`scripts/clean-dicts.ts`, `scripts/merge-dicts.ts`) để bảo toàn tính toàn vẹn với Cloudflare KV.
 
 ## Quản trị từ điển động (Admin Dashboard & Quality Audit)
 

@@ -1862,7 +1862,7 @@
       "file_type": "code",
       "norm_label": ".addwhitelistword()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L395"
+      "source_location": "L405"
     },
     {
       "id": "src_state_svelte_appstatemodel_addwordstodictionary",
@@ -1874,7 +1874,7 @@
       "file_type": "code",
       "norm_label": ".addwordstodictionary()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L243"
+      "source_location": "L253"
     },
     {
       "id": "src_state_svelte_appstatemodel_applyfixtoallinstances",
@@ -1886,7 +1886,7 @@
       "file_type": "code",
       "norm_label": ".applyfixtoallinstances()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L620"
+      "source_location": "L630"
     },
     {
       "id": "src_state_svelte_appstatemodel_applyfixtoinstance",
@@ -1898,7 +1898,7 @@
       "file_type": "code",
       "norm_label": ".applyfixtoinstance()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L560"
+      "source_location": "L570"
     },
     {
       "id": "src_state_svelte_appstatemodel_clearwhitelist",
@@ -1910,7 +1910,7 @@
       "file_type": "code",
       "norm_label": ".clearwhitelist()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L416"
+      "source_location": "L426"
     },
     {
       "id": "src_state_svelte_appstatemodel_closemodal",
@@ -1922,7 +1922,7 @@
       "file_type": "code",
       "norm_label": ".closemodal()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L328"
+      "source_location": "L338"
     },
     {
       "id": "src_state_svelte_appstatemodel_copytext",
@@ -1934,7 +1934,7 @@
       "file_type": "code",
       "norm_label": ".copytext()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L534"
+      "source_location": "L544"
     },
     {
       "id": "src_state_svelte_appstatemodel_exporterrors",
@@ -1946,7 +1946,7 @@
       "file_type": "code",
       "norm_label": ".exporterrors()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L512"
+      "source_location": "L522"
     },
     {
       "id": "src_state_svelte_appstatemodel_exportfixedepub",
@@ -1958,7 +1958,7 @@
       "file_type": "code",
       "norm_label": ".exportfixedepub()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L690"
+      "source_location": "L700"
     },
     {
       "id": "src_state_svelte_appstatemodel_exportwhitelist",
@@ -1970,7 +1970,7 @@
       "file_type": "code",
       "norm_label": ".exportwhitelist()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L474"
+      "source_location": "L484"
     },
     {
       "id": "src_state_svelte_appstatemodel_getinstancekey",
@@ -1982,7 +1982,7 @@
       "file_type": "code",
       "norm_label": ".getinstancekey()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L553"
+      "source_location": "L563"
     },
     {
       "id": "src_state_svelte_appstatemodel_handlefile",
@@ -1994,7 +1994,7 @@
       "file_type": "code",
       "norm_label": ".handlefile()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L773"
+      "source_location": "L783"
     },
     {
       "id": "src_state_svelte_appstatemodel_ignoreandadvance",
@@ -2006,7 +2006,7 @@
       "file_type": "code",
       "norm_label": ".ignoreandadvance()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L490"
+      "source_location": "L500"
     },
     {
       "id": "src_state_svelte_appstatemodel_importwhitelist",
@@ -2018,7 +2018,7 @@
       "file_type": "code",
       "norm_label": ".importwhitelist()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L423"
+      "source_location": "L433"
     },
     {
       "id": "src_state_svelte_appstatemodel_init",
@@ -2030,7 +2030,7 @@
       "file_type": "code",
       "norm_label": ".init()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L226"
+      "source_location": "L236"
     },
     {
       "id": "src_state_svelte_appstatemodel_navigategroup",
@@ -2042,7 +2042,7 @@
       "file_type": "code",
       "norm_label": ".navigategroup()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L357"
+      "source_location": "L367"
     },
     {
       "id": "src_state_svelte_appstatemodel_navigateinstance",
@@ -2054,7 +2054,7 @@
       "file_type": "code",
       "norm_label": ".navigateinstance()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L382"
+      "source_location": "L392"
     },
     {
       "id": "src_state_svelte_appstatemodel_openmodal",
@@ -2066,7 +2066,7 @@
       "file_type": "code",
       "norm_label": ".openmodal()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L324"
+      "source_location": "L334"
     },
     {
       "id": "src_state_svelte_appstatemodel_quickignore",
@@ -2078,7 +2078,7 @@
       "file_type": "code",
       "norm_label": ".quickignore()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L506"
+      "source_location": "L516"
     },
     {
       "id": "src_state_svelte_appstatemodel_removetoast",
@@ -2090,7 +2090,7 @@
       "file_type": "code",
       "norm_label": ".removetoast()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L320"
+      "source_location": "L330"
     },
     {
       "id": "src_state_svelte_appstatemodel_removewhitelistword",
@@ -2102,7 +2102,7 @@
       "file_type": "code",
       "norm_label": ".removewhitelistword()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L409"
+      "source_location": "L419"
     },
     {
       "id": "src_state_svelte_appstatemodel_resetapp",
@@ -2114,7 +2114,7 @@
       "file_type": "code",
       "norm_label": ".resetapp()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L752"
+      "source_location": "L762"
     },
     {
       "id": "src_state_svelte_appstatemodel_selectgroup",
@@ -2126,7 +2126,7 @@
       "file_type": "code",
       "norm_label": ".selectgroup()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L352"
+      "source_location": "L362"
     },
     {
       "id": "src_state_svelte_appstatemodel_setfontsize",
@@ -2138,7 +2138,7 @@
       "file_type": "code",
       "norm_label": ".setfontsize()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L337"
+      "source_location": "L347"
     },
     {
       "id": "src_state_svelte_appstatemodel_showtoast",
@@ -2150,7 +2150,7 @@
       "file_type": "code",
       "norm_label": ".showtoast()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L305"
+      "source_location": "L315"
     },
     {
       "id": "src_state_svelte_appstatemodel_toggleallerrortypes",
@@ -2162,7 +2162,7 @@
       "file_type": "code",
       "norm_label": ".toggleallerrortypes()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L214"
+      "source_location": "L224"
     },
     {
       "id": "src_state_svelte_appstatemodel_togglechecksetting",
@@ -2174,7 +2174,7 @@
       "file_type": "code",
       "norm_label": ".togglechecksetting()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L332"
+      "source_location": "L342"
     },
     {
       "id": "src_state_svelte_appstatemodel_toggleerrortype",
@@ -2186,7 +2186,7 @@
       "file_type": "code",
       "norm_label": ".toggleerrortype()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L203"
+      "source_location": "L213"
     },
     {
       "id": "src_state_svelte_appstatemodel_togglefontfamily",
@@ -2198,7 +2198,7 @@
       "file_type": "code",
       "norm_label": ".togglefontfamily()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L346"
+      "source_location": "L356"
     },
     {
       "id": "src_state_svelte_appstatemodel_undofix",
@@ -2210,7 +2210,7 @@
       "file_type": "code",
       "norm_label": ".undofix()",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L670"
+      "source_location": "L680"
     },
     {
       "id": "src_state_svelte_sanitizefilename",
@@ -3265,7 +3265,7 @@
       "file_type": "code",
       "norm_label": "appstate",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L850"
+      "source_location": "L860"
     },
     {
       "id": "src_state_svelte_storage_keys",
@@ -6285,7 +6285,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L405",
+      "source_location": "L415",
       "weight": 1.0
     },
     {
@@ -6297,7 +6297,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L255",
+      "source_location": "L265",
       "weight": 1.0
     },
     {
@@ -6309,7 +6309,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L269",
+      "source_location": "L279",
       "weight": 1.0
     },
     {
@@ -6321,7 +6321,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L280",
+      "source_location": "L290",
       "weight": 1.0
     },
     {
@@ -6333,7 +6333,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L281",
+      "source_location": "L291",
       "weight": 1.0
     },
     {
@@ -6345,7 +6345,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L623",
+      "source_location": "L633",
       "weight": 1.0
     },
     {
@@ -6357,7 +6357,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L642",
+      "source_location": "L652",
       "weight": 1.0
     },
     {
@@ -6369,7 +6369,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L643",
+      "source_location": "L653",
       "weight": 1.0
     },
     {
@@ -6381,7 +6381,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L563",
+      "source_location": "L573",
       "weight": 1.0
     },
     {
@@ -6393,7 +6393,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L570",
+      "source_location": "L580",
       "weight": 1.0
     },
     {
@@ -6405,7 +6405,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L418",
+      "source_location": "L428",
       "weight": 1.0
     },
     {
@@ -6417,7 +6417,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L419",
+      "source_location": "L429",
       "weight": 1.0
     },
     {
@@ -6429,7 +6429,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L420",
+      "source_location": "L430",
       "weight": 1.0
     },
     {
@@ -6441,7 +6441,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L547",
+      "source_location": "L557",
       "weight": 1.0
     },
     {
@@ -6453,7 +6453,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L515",
+      "source_location": "L525",
       "weight": 1.0
     },
     {
@@ -6465,7 +6465,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L523",
+      "source_location": "L533",
       "weight": 1.0
     },
     {
@@ -6477,7 +6477,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L692",
+      "source_location": "L702",
       "weight": 1.0
     },
     {
@@ -6489,7 +6489,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L711",
+      "source_location": "L721",
       "weight": 1.0
     },
     {
@@ -6501,7 +6501,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L728",
+      "source_location": "L738",
       "weight": 1.0
     },
     {
@@ -6513,7 +6513,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L734",
+      "source_location": "L744",
       "weight": 1.0
     },
     {
@@ -6525,7 +6525,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L476",
+      "source_location": "L486",
       "weight": 1.0
     },
     {
@@ -6537,7 +6537,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L775",
+      "source_location": "L785",
       "weight": 1.0
     },
     {
@@ -6549,7 +6549,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L779",
+      "source_location": "L789",
       "weight": 1.0
     },
     {
@@ -6561,7 +6561,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L786",
+      "source_location": "L796",
       "weight": 1.0
     },
     {
@@ -6573,7 +6573,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L825",
+      "source_location": "L835",
       "weight": 1.0
     },
     {
@@ -6585,7 +6585,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L494",
+      "source_location": "L504",
       "weight": 1.0
     },
     {
@@ -6597,7 +6597,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L502",
+      "source_location": "L512",
       "weight": 1.0
     },
     {
@@ -6609,7 +6609,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L426",
+      "source_location": "L436",
       "weight": 1.0
     },
     {
@@ -6621,7 +6621,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L467",
+      "source_location": "L477",
       "weight": 1.0
     },
     {
@@ -6633,7 +6633,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L228",
+      "source_location": "L238",
       "weight": 1.0
     },
     {
@@ -6645,7 +6645,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L234",
+      "source_location": "L244",
       "weight": 1.0
     },
     {
@@ -6657,7 +6657,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L378",
+      "source_location": "L388",
       "weight": 1.0
     },
     {
@@ -6669,7 +6669,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L509",
+      "source_location": "L519",
       "weight": 1.0
     },
     {
@@ -6681,7 +6681,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L413",
+      "source_location": "L423",
       "weight": 1.0
     },
     {
@@ -6693,7 +6693,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L753",
+      "source_location": "L763",
       "weight": 1.0
     },
     {
@@ -6705,7 +6705,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L770",
+      "source_location": "L780",
       "weight": 1.0
     },
     {
@@ -6717,7 +6717,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L342",
+      "source_location": "L352",
       "weight": 1.0
     },
     {
@@ -6729,7 +6729,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L316",
+      "source_location": "L326",
       "weight": 1.0
     },
     {
@@ -6741,7 +6741,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L219",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
@@ -6753,7 +6753,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L334",
+      "source_location": "L344",
       "weight": 1.0
     },
     {
@@ -6765,7 +6765,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L211",
+      "source_location": "L221",
       "weight": 1.0
     },
     {
@@ -6777,7 +6777,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L349",
+      "source_location": "L359",
       "weight": 1.0
     },
     {
@@ -6789,7 +6789,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L671",
+      "source_location": "L681",
       "weight": 1.0
     },
     {
@@ -6801,7 +6801,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/state.svelte.ts",
-      "source_location": "L687",
+      "source_location": "L697",
       "weight": 1.0
     },
     {
@@ -10773,18 +10773,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_state_svelte_appstatemodel_addwordstodictionary",
-      "target": "src_utils_dict_admin_dictsourcename",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "src/state.svelte.ts",
-      "source_location": "L243",
-      "weight": 1.0
-    },
-    {
       "source": "biome",
       "target": "biome_assist",
       "relation": "contains",
@@ -12871,7 +12859,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L850",
+      "source_location": "L860",
       "weight": 1.0
     },
     {
@@ -14899,7 +14887,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L203",
+      "source_location": "L213",
       "weight": 1.0
     },
     {
@@ -14910,7 +14898,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L214",
+      "source_location": "L224",
       "weight": 1.0
     },
     {
@@ -14921,7 +14909,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L226",
+      "source_location": "L236",
       "weight": 1.0
     },
     {
@@ -14932,7 +14920,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L243",
+      "source_location": "L253",
       "weight": 1.0
     },
     {
@@ -14943,7 +14931,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L305",
+      "source_location": "L315",
       "weight": 1.0
     },
     {
@@ -14954,7 +14942,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L320",
+      "source_location": "L330",
       "weight": 1.0
     },
     {
@@ -14965,7 +14953,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L324",
+      "source_location": "L334",
       "weight": 1.0
     },
     {
@@ -14976,7 +14964,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L328",
+      "source_location": "L338",
       "weight": 1.0
     },
     {
@@ -14987,7 +14975,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L332",
+      "source_location": "L342",
       "weight": 1.0
     },
     {
@@ -14998,7 +14986,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L337",
+      "source_location": "L347",
       "weight": 1.0
     },
     {
@@ -15009,7 +14997,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L346",
+      "source_location": "L356",
       "weight": 1.0
     },
     {
@@ -15020,7 +15008,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L352",
+      "source_location": "L362",
       "weight": 1.0
     },
     {
@@ -15031,7 +15019,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L357",
+      "source_location": "L367",
       "weight": 1.0
     },
     {
@@ -15042,7 +15030,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L382",
+      "source_location": "L392",
       "weight": 1.0
     },
     {
@@ -15053,7 +15041,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L395",
+      "source_location": "L405",
       "weight": 1.0
     },
     {
@@ -15064,7 +15052,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L409",
+      "source_location": "L419",
       "weight": 1.0
     },
     {
@@ -15075,7 +15063,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L416",
+      "source_location": "L426",
       "weight": 1.0
     },
     {
@@ -15086,7 +15074,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L423",
+      "source_location": "L433",
       "weight": 1.0
     },
     {
@@ -15097,7 +15085,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L474",
+      "source_location": "L484",
       "weight": 1.0
     },
     {
@@ -15108,7 +15096,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L490",
+      "source_location": "L500",
       "weight": 1.0
     },
     {
@@ -15119,7 +15107,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L506",
+      "source_location": "L516",
       "weight": 1.0
     },
     {
@@ -15130,7 +15118,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L512",
+      "source_location": "L522",
       "weight": 1.0
     },
     {
@@ -15141,7 +15129,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L534",
+      "source_location": "L544",
       "weight": 1.0
     },
     {
@@ -15152,7 +15140,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L553",
+      "source_location": "L563",
       "weight": 1.0
     },
     {
@@ -15163,7 +15151,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L560",
+      "source_location": "L570",
       "weight": 1.0
     },
     {
@@ -15174,7 +15162,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L620",
+      "source_location": "L630",
       "weight": 1.0
     },
     {
@@ -15185,7 +15173,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L670",
+      "source_location": "L680",
       "weight": 1.0
     },
     {
@@ -15196,7 +15184,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L690",
+      "source_location": "L700",
       "weight": 1.0
     },
     {
@@ -15207,7 +15195,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L752",
+      "source_location": "L762",
       "weight": 1.0
     },
     {
@@ -15218,7 +15206,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/state.svelte.ts",
-      "source_location": "L773",
+      "source_location": "L783",
       "weight": 1.0
     },
     {
@@ -15368,5 +15356,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4fd461c45bd1d3d138ca1e7f06c83f24b04531bf"
+  "built_at_commit": "fde6937be71313f98dbfc000110f782624a7b82e"
 }
