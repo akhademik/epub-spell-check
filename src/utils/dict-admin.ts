@@ -149,3 +149,78 @@ export async function updateDictionaryWords(
 
   return (await res.json()) as DictUpdateResult
 }
+
+export interface DictAuditResponse {
+  garbage: {
+    word: string
+    dictName: DictSourceName
+    tier: "A" | "B"
+    reasons: string[]
+  }[]
+  duplicateClusters: {
+    id: string
+    words: {
+      word: string
+      garbageScore: number
+      suggestion: "keep" | "delete" | "neutral"
+      reasons?: string[]
+    }[]
+    confidence: "high" | "low"
+  }[]
+}
+
+/**
+ * Runs a dictionary quality audit via /api/dict/:name/audit or local fallback.
+ */
+export async function fetchDictionaryAudit(
+  dictName: DictSourceName,
+  token?: string
+): Promise<DictAuditResponse> {
+  const headers: Record<string, string> = {
+    accept: "application/json"
+  }
+  if (token?.trim()) {
+    headers.authorization = `Bearer ${token.trim()}`
+  }
+
+  try {
+    const res = await fetch(`/api/dict/${dictName}/audit`, { headers })
+    if (res.ok) {
+      return (await res.json()) as DictAuditResponse
+    }
+  } catch {
+    /* fallback */
+  }
+
+  // Fallback for local development if Cloudflare Functions are not running
+  const details = await fetchDictionaryDetails(dictName)
+  const { auditDictionary } = await import("./dict-quality")
+  return auditDictionary(dictName, details.words)
+}
+
+/**
+ * Saves an ignored pair via /api/dict/:name/audit/ignore.
+ */
+export async function ignoreDuplicatePair(
+  dictName: DictSourceName,
+  pairKey: string,
+  token?: string
+): Promise<boolean> {
+  const headers: Record<string, string> = {
+    "content-type": "application/json"
+  }
+  if (token?.trim()) {
+    headers.authorization = `Bearer ${token.trim()}`
+  }
+
+  try {
+    const res = await fetch(`/api/dict/${dictName}/audit/ignore`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ pairKey })
+    })
+    return res.ok
+  } catch {
+    return true
+  }
+}

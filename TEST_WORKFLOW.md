@@ -1,24 +1,22 @@
-# EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION
+# EPUB SPELL CHECK (TIẾNG VIỆT) — FULL REGRESSION TESTING INSTRUCTION
 
-Bạn là QA Engineer + Senior TypeScript/SvelteKit Engineer.
+Bạn là QA Engineer + Senior TypeScript/Svelte 5 Engineer.
 
-Nhiệm vụ của bạn là xây dựng và duy trì một hệ thống test toàn diện cho repository này.
+Nhiệm vụ của bạn là xây dựng và duy trì một hệ thống test toàn diện cho repository `epub-spell-check`.
 
 Mục tiêu quan trọng nhất:
 
-> Sau mỗi lần refactor hoặc thay đổi code, phải phát hiện được những regression làm một chức năng đang hoạt động trước đó bị hỏng.
+> Sau mỗi lần refactor hoặc thay đổi code, phải phát hiện được những regression làm một chức năng đang hoạt động trước đó bị hỏng (đặc biệt là logic bóc tách văn bản EPUB, 4 tầng đối chiếu từ điển, quy tắc chính tả tiếng Việt, kiểm toán chất lượng từ điển, bộ lọc lỗi đa chọn và khôi phục đóng gói file EPUB sạch).
 
 KHÔNG được chỉ test các function riêng lẻ.
 
 Phải test theo nhiều tầng:
 
-1. Unit tests — test function/module
-2. Integration tests — test nhiều module kết hợp
-3. E2E tests — test hành vi người dùng thực tế trên browser
-4. Regression tests — đảm bảo các chức năng cũ không bị hỏng
-5. Error/edge-case tests
-6. Worker/cancellation tests
-7. File conversion round-trip tests
+1. Smoke tests — kiểm tra nhanh các luồng chức năng xương sống
+2. Unit tests — test chi tiết từng module/thuật toán (analysis-core, analyzer, filter, dict-quality, dict-validator, leaf-extractor, merge-dicts)
+3. Integration / Round-trip tests — kiểm tra luồng nạp EPUB → sửa lỗi → xuất EPUB bảo toàn cấu trúc HTML/CSS/OPF
+4. Regression tests — đảm bảo tính chính xác của bộ quy tắc chính tả và không gây false positive
+5. Error/edge-case tests — kiểm tra file lỗi, dính OCR, ký tự lạ, lỗi gõ máy typo
 
 ==================================================
 
@@ -36,19 +34,19 @@ nếu có thể kiểm tra kết quả thực tế.
 
 Ưu tiên:
 
-    input file
+    input EPUB file / Text
         ↓
-    user action
+    user action / analysis
         ↓
-    application processing
+    spelling & dict processing
         ↓
-    output file
+    output corrected EPUB / stats
         ↓
-    verify output
+    verify output & integrity
 
 Mỗi test phải trả lời được:
 
-> "Một người dùng thực tế làm thao tác này thì app có hoạt động đúng không?"
+> "Một người dùng thực tế làm thao tác này thì app có soát đúng lỗi và xuất file EPUB hoàn hảo không?"
 
 Không được giả định rằng vì unit test pass thì feature hoạt động.
 
@@ -62,34 +60,26 @@ Không được giả định rằng vì unit test pass thì feature hoạt đ�
 
 Hãy đọc:
 
-- package.json
-- README
-- routes/
-- src/lib/
-- components
-- stores/state
-- workers
-- utils
-- tests/
-- tests-e2e/
-- CI workflows
-- existing test configuration
+- `package.json`
+- `README.md`
+- `src/` (state, components, utils)
+- `functions/api/` (Cloudflare Pages Functions API)
+- `scripts/` (clean-dicts, merge-dicts, pull-dicts-from-kv)
+- `tests/` và `tests/unit/`
 
 Liệt kê TOÀN BỘ user-facing functionality.
 
-Tạo một TEST INVENTORY.
+Tạo một TEST INVENTORY:
 
-Ví dụ:
-
-| Feature         | Route        | Input | Output | Unit | Integration | E2E |
-| --------------- | ------------ | ----- | ------ | ---- | ----------- | --- |
-| TXT → EPUB      | /txt-to-epub | .txt  | .epub  | ✓    | ✓           | ✓   |
-| Markdown → EPUB | /md-to-epub  | .md   | .epub  | ✓    | ✓           | ✓   |
-| EPUB → TXT      | /epub-to-txt | .epub | .txt   | ✓    | ✓           | ✓   |
-| PDF → EPUB      | /pdf-to-epub | .pdf  | .epub  | ✓    | ✓           | ✓   |
-| EPUB Editor     | /epub-editor | .epub | .epub  | ✓    | ✓           | ✓   |
-| EPUB Cleaner    | ...          | .epub | .epub  | ✓    | ✓           | ✓   |
-| EPUB Validator  | ...          | .epub | report | ✓    | ✓           | ✓   |
+| Feature                                | Module / Component                                   | Input        | Output                  | Unit | Integration | Regression |
+| -------------------------------------- | ---------------------------------------------------- | ------------ | ----------------------- | ---- | ----------- | ---------- |
+| **EPUB DOM Extraction**                | `src/utils/leaf-extractor.ts`                        | XHTML/DOM    | Text Leaf Nodes         | ✓    | ✓           | ✓          |
+| **4-Tier Spelling Analysis**           | `src/utils/analysis-core.ts`, `analyzer.ts`          | Raw Tokens   | Error List / Categories | ✓    | ✓           | ✓          |
+| **Multi-select Error Filter**          | `src/utils/filter.ts`, `src/state.svelte.ts`         | Filter State | Filtered Errors         | ✓    | ✓           | ✓          |
+| **EPUB Writer & Round-trip**           | `src/utils/epub-writer.ts`                           | Book + Fixes | Valid EPUB              | ✓    | ✓           | ✓          |
+| **Dict Quality Audit (Tier A/B/Fuzzy)**| `src/utils/dict-quality.ts`, `scripts/clean-dicts.ts`| Dict Words   | Audit Report / Cleaned  | ✓    | ✓           | ✓          |
+| **Dict Validator (Admin Add Word)**    | `src/utils/dict-validator.ts`                        | Word Input   | Validation Warnings     | ✓    | ✓           | —          |
+| **Merge Dicts CLI & Validation**       | `scripts/merge-dicts.ts`                             | Markdown Doc | Cleaned txt files       | ✓    | ✓           | —          |
 
 Không được bỏ sót feature chỉ vì feature đó ít được sử dụng.
 
@@ -849,18 +839,16 @@ Use realistic ebook content:
 
 Maintain a test matrix.
 
-Example:
-
-| Feature          | Unit | Integration | E2E | Error | Cancel | Large | Round-trip |
-| ---------------- | ---- | ----------- | --- | ----- | ------ | ----- | ---------- |
-| TXT → EPUB       | ✓    | ✓           | ✓   | ✓     | ✓      | ✓     | ✓          |
-| MD → EPUB        | ✓    | ✓           | ✓   | ✓     | ✓      | ✓     | ✓          |
-| EPUB → TXT       | ✓    | ✓           | ✓   | ✓     | ✓      | ✓     | ✓          |
-| PDF → EPUB       | ✓    | ✓           | ✓   | ✓     | ✓      | ✓     | —          |
-| EPUB Editor      | ✓    | ✓           | ✓   | ✓     | ✓      | ✓     | ✓          |
-| EPUB Cleaner     | ✓    | ✓           | ✓   | ✓     | ✓      | ✓     | ✓          |
-| Validator        | ✓    | ✓           | ✓   | ✓     | —      | ✓     | —          |
-| Image processing | ✓    | ✓           | ✓   | ✓     | ✓      | ✓     | —          |
+| Feature                                | Unit | Integration | Round-trip | Error | Smoke | Regression |
+| -------------------------------------- | ---- | ----------- | ---------- | ----- | ----- | ---------- |
+| **DOM Extraction (`leaf-extractor`)**  | ✓    | ✓           | ✓          | ✓     | ✓     | ✓          |
+| **4-Tier Spelling Core (`analyzer`)**  | ✓    | ✓           | —          | ✓     | ✓     | ✓          |
+| **Multi-select Filter (`filter`)**     | ✓    | ✓           | —          | ✓     | —     | —          |
+| **EPUB Writer & Round-trip**           | ✓    | ✓           | ✓          | ✓     | ✓     | ✓          |
+| **Dict Quality Audit (`dict-quality`)**| ✓    | ✓           | —          | ✓     | —     | ✓          |
+| **Admin Validator (`dict-validator`)** | ✓    | ✓           | —          | ✓     | —     | —          |
+| **Merge Dicts CLI (`merge-dicts`)**    | ✓    | ✓           | —          | ✓     | —     | —          |
+| **Path & State Cloning Utils**         | ✓    | —           | —          | ✓     | —     | —          |
 
 Update this matrix whenever a new feature is added.
 

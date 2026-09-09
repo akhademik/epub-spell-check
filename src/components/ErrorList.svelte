@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { appState } from "../state.svelte"
+  import { ALL_ERROR_TYPES, appState } from "../state.svelte"
   import type { ErrorGroup, ErrorType } from "../types/errors"
 
   let searchQuery = $state("")
-  let typeFilter = $state<"all" | ErrorType>("all")
   let visibleCount = $state(30)
 
   function getDotColor(type: string): string {
@@ -45,11 +44,6 @@
   const filteredList = $derived.by(() => {
     let list = [...appState.currentFilteredErrors]
 
-    // Type filter
-    if (typeFilter !== "all") {
-      list = list.filter((g) => g.type === typeFilter)
-    }
-
     // Search filter
     if (searchQuery.trim()) {
       const q = searchQuery.trim().toLowerCase()
@@ -67,6 +61,26 @@
 
   // Lazy loaded slice capped at visibleCount
   const displayedErrors = $derived(filteredList.slice(0, visibleCount))
+
+  // Available types that appear in current allDetectedErrors (or standard 5 types)
+  const displayableTypes = $derived.by(() => {
+    const presentTypes = new Set(appState.allDetectedErrors.map((g) => g.type))
+    const standardTypes: ErrorType[] = [
+      "Dictionary",
+      "NonVietnamese",
+      "Uppercase",
+      "Typo",
+      "Spelling"
+    ]
+    if (presentTypes.has("SpecialCharacter")) {
+      standardTypes.push("SpecialCharacter")
+    }
+    return standardTypes
+  })
+
+  const isAllSelected = $derived(
+    ALL_ERROR_TYPES.every((t) => appState.enabledErrorTypes.has(t))
+  )
 
   function handleScroll(e: Event) {
     const target = e.target as HTMLElement
@@ -120,67 +134,41 @@
 
     <!-- Category filter tags & Sort controls -->
     <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80 flex-wrap gap-2">
-      <!-- Category Filter Pills -->
+      <!-- Category Filter Pills (Multi-Toggle) -->
       <div class="flex items-center gap-1 flex-wrap overflow-x-auto py-0.5">
         <button
           type="button"
-          onclick={() => { typeFilter = "all"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'all'
+          onclick={() => { appState.toggleAllErrorTypes(); visibleCount = 30; }}
+          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {isAllSelected
             ? 'bg-slate-700 text-white font-bold'
-            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
+            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-slate-700/60'}"
         >
-          Tất cả
+          {isAllSelected ? "Bỏ chọn tất cả" : "Tất cả"}
         </button>
-        <button
-          type="button"
-          onclick={() => { typeFilter = "Dictionary"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'Dictionary'
-            ? 'bg-rose-900/60 text-rose-300 border border-rose-700/60 font-bold'
-            : 'text-slate-400 hover:text-rose-300'}"
-          title="Lỗi không có trong từ điển tiếng Việt"
-        >
-          Từ điển VN
-        </button>
-        <button
-          type="button"
-          onclick={() => { typeFilter = "NonVietnamese"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'NonVietnamese'
-            ? 'bg-blue-900/60 text-blue-300 border border-blue-700/60 font-bold'
-            : 'text-slate-400 hover:text-blue-300'}"
-          title="Lỗi ngoại ngữ / từ lạ"
-        >
-          Ngoại ngữ
-        </button>
-        <button
-          type="button"
-          onclick={() => { typeFilter = "Uppercase"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'Uppercase'
-            ? 'bg-amber-900/60 text-amber-300 border border-amber-700/60 font-bold'
-            : 'text-slate-400 hover:text-amber-300'}"
-          title="Lỗi viết hoa"
-        >
-          Viết hoa
-        </button>
-        <button
-          type="button"
-          onclick={() => { typeFilter = "Typo"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'Typo'
-            ? 'bg-orange-900/60 text-orange-300 border border-orange-700/60 font-bold'
-            : 'text-slate-400 hover:text-orange-300'}"
-          title="Lỗi gõ máy typo"
-        >
-          Typo
-        </button>
-        <button
-          type="button"
-          onclick={() => { typeFilter = "Spelling"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'Spelling'
-            ? 'bg-purple-900/60 text-purple-300 border border-purple-700/60 font-bold'
-            : 'text-slate-400 hover:text-purple-300'}"
-          title="Sai quy tắc ngữ âm chính tả"
-        >
-          Chính tả
-        </button>
+
+        {#each displayableTypes as type (type)}
+          {@const isEnabled = appState.enabledErrorTypes.has(type)}
+          <button
+            type="button"
+            onclick={() => { appState.toggleErrorType(type); visibleCount = 30; }}
+            class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-all duration-150 border {isEnabled
+              ? type === 'Dictionary'
+                ? 'bg-rose-900/60 text-rose-300 border-rose-700/60 font-bold'
+                : type === 'NonVietnamese'
+                ? 'bg-blue-900/60 text-blue-300 border-blue-700/60 font-bold'
+                : type === 'Uppercase'
+                ? 'bg-amber-900/60 text-amber-300 border-amber-700/60 font-bold'
+                : type === 'Typo'
+                ? 'bg-orange-900/60 text-orange-300 border-orange-700/60 font-bold'
+                : type === 'Spelling'
+                ? 'bg-purple-900/60 text-purple-300 border-purple-700/60 font-bold'
+                : 'bg-pink-900/60 text-pink-300 border-pink-700/60 font-bold'
+              : 'bg-slate-900 text-slate-500 border-slate-800 hover:text-slate-300 hover:border-slate-700 opacity-60'}"
+            title={getBadgeLabel(type)}
+          >
+            {getBadgeLabel(type)}
+          </button>
+        {/each}
       </div>
     </div>
   </div>
@@ -194,11 +182,19 @@
     >
       {#if displayedErrors.length === 0}
         <div class="p-8 text-center text-slate-500 flex flex-col items-center justify-center h-full">
-          <svg class="w-12 h-12 mb-3 opacity-30 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <p class="text-base font-semibold text-slate-300">Tuyệt vời!</p>
-          <p class="text-xs mt-1 text-slate-500">Không tìm thấy lỗi chính tả nào.</p>
+          {#if appState.enabledErrorTypes.size === 0}
+            <svg class="w-12 h-12 mb-3 opacity-40 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <p class="text-base font-semibold text-slate-300">Đã tắt tất cả loại lỗi</p>
+            <p class="text-xs mt-1 text-slate-400">Bạn đã tắt hết các loại lỗi — bật lại ít nhất 1 loại để xem danh sách.</p>
+          {:else}
+            <svg class="w-12 h-12 mb-3 opacity-30 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-base font-semibold text-slate-300">Tuyệt vời!</p>
+            <p class="text-xs mt-1 text-slate-500">Không tìm thấy lỗi chính tả nào.</p>
+          {/if}
         </div>
       {:else}
         {#each displayedErrors as group (group.id)}

@@ -10,7 +10,7 @@ import {
 import type { CheckSettings } from "./types/analysis"
 import type { Dictionaries, DictionaryStatus } from "./types/dictionary"
 import type { EpubContent } from "./types/epub"
-import type { ErrorGroup, ErrorInstance } from "./types/errors"
+import type { ErrorGroup, ErrorInstance, ErrorType } from "./types/errors"
 import type { ReaderSettings, ToastNotification } from "./types/state"
 import { matchCase } from "./utils/analysis-core"
 import { clearSuggestionCache, groupErrors } from "./utils/analyzer"
@@ -23,10 +23,20 @@ import { getFilteredErrors } from "./utils/filter"
 import { logger } from "./utils/logger"
 import { analysisWorkerManager } from "./utils/worker-manager"
 
+export const ALL_ERROR_TYPES: ErrorType[] = [
+  "Dictionary",
+  "NonVietnamese",
+  "Uppercase",
+  "Typo",
+  "Spelling",
+  "SpecialCharacter"
+]
+
 const STORAGE_KEYS = {
   READER: "spell-check:reader-settings",
   WHITELIST: "spell-check:whitelist",
-  CHECK_SETTINGS: "spell-check:check-settings-v2"
+  CHECK_SETTINGS: "spell-check:check-settings-v2",
+  ENABLED_ERROR_TYPES: "spell-check:enabled-error-types"
 }
 
 interface PersistedContainer<T> {
@@ -122,6 +132,15 @@ export class AppStateModel {
     loadStorage<string[]>(STORAGE_KEYS.WHITELIST, [])
   )
 
+  enabledErrorTypes = $state<Set<ErrorType>>(
+    new Set(
+      loadStorage<ErrorType[]>(
+        STORAGE_KEYS.ENABLED_ERROR_TYPES,
+        ALL_ERROR_TYPES
+      )
+    )
+  )
+
   // Loaded Book Data
   originalFile = $state<File | null>(null)
   currentBookTitle = $state<string>("")
@@ -156,7 +175,8 @@ export class AppStateModel {
       this.allDetectedErrors,
       this.whitelist,
       this.checkSettings,
-      this.dictionaries
+      this.dictionaries,
+      this.enabledErrorTypes
     )
   )
 
@@ -179,6 +199,28 @@ export class AppStateModel {
   )
 
   totalErrorGroups = $derived(this.currentFilteredErrors.length)
+
+  toggleErrorType(type: ErrorType) {
+    const next = new Set(this.enabledErrorTypes)
+    if (next.has(type)) {
+      next.delete(type)
+    } else {
+      next.add(type)
+    }
+    this.enabledErrorTypes = next
+    saveStorage(STORAGE_KEYS.ENABLED_ERROR_TYPES, Array.from(next))
+  }
+
+  toggleAllErrorTypes() {
+    this.enabledErrorTypes =
+      this.enabledErrorTypes.size >= ALL_ERROR_TYPES.length
+        ? new Set()
+        : new Set(ALL_ERROR_TYPES)
+    saveStorage(
+      STORAGE_KEYS.ENABLED_ERROR_TYPES,
+      Array.from(this.enabledErrorTypes)
+    )
+  }
 
   // Methods
   async init() {

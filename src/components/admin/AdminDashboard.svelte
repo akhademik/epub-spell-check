@@ -9,6 +9,7 @@
   } from "../../utils/dict-admin"
   import { appState } from "../../state.svelte"
   import AddWordsForm from "./AddWordsForm.svelte"
+  import DictAuditPanel from "./DictAuditPanel.svelte"
 
   const DICT_TABS: { id: DictSourceName; label: string; badge: string; color: string; bg: string }[] = [
     { id: "vn", label: "1. Tiếng Việt", badge: "VN", color: "text-emerald-400 border-emerald-500", bg: "bg-emerald-500/10 text-emerald-300" },
@@ -17,6 +18,7 @@
     { id: "custom", label: "4. Viết tắt & Tuỳ chỉnh", badge: "CUSTOM", color: "text-purple-400 border-purple-500", bg: "bg-purple-500/10 text-purple-300" }
   ]
 
+  let mainSection = $state<"manage" | "audit">("manage")
   let activeTab = $state<DictSourceName>("vn")
   let authStatus = $state<AuthStatusResponse>({
     authenticated: false,
@@ -225,8 +227,54 @@
       </div>
     </div>
   {:else}
-    <!-- Main 2-Column Layout (Streamlined List Layout) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Sub Navigation Tabs: Quản lý từ & Kiểm tra chất lượng -->
+    <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
+      <button
+        type="button"
+        onclick={() => (mainSection = "manage")}
+        class="px-4 py-2 text-xs font-bold rounded-xl transition-all {mainSection === 'manage'
+          ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/40'
+          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
+      >
+        1. Quản Lý Từ Vựng & Thêm Mới
+      </button>
+      <button
+        type="button"
+        onclick={() => (mainSection = "audit")}
+        class="px-4 py-2 text-xs font-bold rounded-xl transition-all {mainSection === 'audit'
+          ? 'bg-amber-600 text-white shadow-lg shadow-amber-900/40'
+          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
+      >
+        2. Kiểm Tra Chất Lượng & Dọn Rác (Audit)
+      </button>
+    </div>
+
+    {#if mainSection === "audit"}
+      <div class="space-y-4">
+        <!-- Dict Tabs for Audit -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {#each DICT_TABS as tab (tab.id)}
+            <button
+              type="button"
+              onclick={() => handleTabChange(tab.id)}
+              class="flex flex-col items-start p-3 rounded-2xl border text-left transition-all {activeTab === tab.id
+                ? `${tab.color} bg-slate-900 shadow-lg`
+                : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'}"
+            >
+              <span class="text-xs font-bold tracking-wider uppercase mb-1">{tab.badge}</span>
+              <span class="text-sm font-semibold text-slate-100">{tab.label.split(". ")[1]}</span>
+            </button>
+          {/each}
+        </div>
+
+        <DictAuditPanel
+          activeDict={activeTab}
+          onAuditApplied={() => loadDictionaryWords(activeTab)}
+        />
+      </div>
+    {:else}
+      <!-- Main 2-Column Layout (Streamlined List Layout) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <!-- Left Column: Word Explorer & Dict Tabs (7 Cols) -->
       <div class="lg:col-span-7 flex flex-col space-y-4">
         <!-- Dict Tabs -->
@@ -379,5 +427,6 @@
         />
       </div>
     </div>
+    {/if}
   {/if}
 </div>

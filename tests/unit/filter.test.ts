@@ -110,4 +110,28 @@ describe("Filter Module", () => {
     )
     expect(withoutForeign.some((g) => g.type === "NonVietnamese")).toBe(false)
   })
+
+  it("should filter out errors whose type is not in enabledTypes", () => {
+    const onlyTypoAndDict = getFilteredErrors(
+      testGroups,
+      [],
+      defaultCheckSettings,
+      mockDictionaries,
+      new Set(["Dictionary"])
+    )
+    expect(onlyTypoAndDict.some((g) => g.type === "Dictionary")).toBe(true)
+    expect(onlyTypoAndDict.some((g) => g.type === "NonVietnamese")).toBe(false)
+    expect(onlyTypoAndDict.some((g) => g.type === "Uppercase")).toBe(false)
+  })
+
+  it("should return empty array when enabledTypes is empty", () => {
+    const noneEnabled = getFilteredErrors(
+      testGroups,
+      [],
+      defaultCheckSettings,
+      mockDictionaries,
+      new Set()
+    )
+    expect(noneEnabled).toEqual([])
+  })
 })
