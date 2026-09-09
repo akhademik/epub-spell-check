@@ -10,7 +10,7 @@ import {
 import type { CheckSettings } from "./types/analysis"
 import type { Dictionaries, DictionaryStatus } from "./types/dictionary"
 import type { EpubContent } from "./types/epub"
-import type { ErrorGroup, ErrorInstance } from "./types/errors"
+import type { ErrorGroup, ErrorInstance, ErrorType } from "./types/errors"
 import type { ReaderSettings, ToastNotification } from "./types/state"
 import { matchCase } from "./utils/analysis-core"
 import { clearSuggestionCache, groupErrors } from "./utils/analyzer"
@@ -23,10 +23,19 @@ import { getFilteredErrors } from "./utils/filter"
 import { logger } from "./utils/logger"
 import { analysisWorkerManager } from "./utils/worker-manager"
 
+export const ALL_ERROR_TYPES: ErrorType[] = [
+  "UnknownWord",
+  "NonVietnamese",
+  "CaseError",
+  "Spelling",
+  "SpecialCharacter"
+]
+
 const STORAGE_KEYS = {
   READER: "spell-check:reader-settings",
   WHITELIST: "spell-check:whitelist",
-  CHECK_SETTINGS: "spell-check:check-settings-v2"
+  CHECK_SETTINGS: "spell-check:check-settings-v2",
+  ENABLED_ERROR_TYPES: "spell-check:enabled-error-types"
 }
 
 interface PersistedContainer<T> {
@@ -81,6 +90,16 @@ function sanitizeFilename(name: string): string {
   return sanitized.replace(/[\u0000-\u001f]/g, "")
 }
 
+export function getInitialEnabledErrorTypes(): Set<ErrorType> {
+  const saved = loadStorage<ErrorType[]>(
+    STORAGE_KEYS.ENABLED_ERROR_TYPES,
+    ALL_ERROR_TYPES
+  )
+  if (!Array.isArray(saved)) return new Set(ALL_ERROR_TYPES)
+  const valid = saved.filter((type) => ALL_ERROR_TYPES.includes(type))
+  return new Set(valid.length > 0 ? valid : ALL_ERROR_TYPES)
+}
+
 export class AppStateModel {
   // Dictionaries & Status (All 4 always loaded and active simultaneously)
   dictionaries = $state<Dictionaries>({
@@ -122,6 +141,8 @@ export class AppStateModel {
     loadStorage<string[]>(STORAGE_KEYS.WHITELIST, [])
   )
 
+  enabledErrorTypes = $state<Set<ErrorType>>(getInitialEnabledErrorTypes())
+
   // Loaded Book Data
   originalFile = $state<File | null>(null)
   currentBookTitle = $state<string>("")
@@ -156,17 +177,28 @@ export class AppStateModel {
       this.allDetectedErrors,
       this.whitelist,
       this.checkSettings,
-      this.dictionaries
+      this.dictionaries,
+      this.enabledErrorTypes
     )
   )
 
   currentGroup = $derived.by(() => {
-    if (this.currentFilteredErrors.length === 0) return null
+    if (this.currentFilteredErrors.length === 0) {
+      if (this.selectedGroupId !== null) {
+        this.selectedGroupId = null
+        this.currentInstanceIndex = 0
+      }
+      return null
+    }
     if (this.selectedGroupId) {
       const match = this.currentFilteredErrors.find(
         (g) => g.id === this.selectedGroupId
       )
       if (match) return match
+      // If previously selected group is no longer in filtered list, reset selection to first available
+      this.selectedGroupId = this.currentFilteredErrors[0].id
+      this.currentInstanceIndex = 0
+      return this.currentFilteredErrors[0]
     }
     return this.currentFilteredErrors[0]
   })
@@ -179,6 +211,28 @@ export class AppStateModel {
   )
 
   totalErrorGroups = $derived(this.currentFilteredErrors.length)
+
+  toggleErrorType(type: ErrorType) {
+    const next = new Set(this.enabledErrorTypes)
+    if (next.has(type)) {
+      next.delete(type)
+    } else {
+      next.add(type)
+    }
+    this.enabledErrorTypes = next
+    saveStorage(STORAGE_KEYS.ENABLED_ERROR_TYPES, Array.from(next))
+  }
+
+  toggleAllErrorTypes() {
+    this.enabledErrorTypes =
+      this.enabledErrorTypes.size >= ALL_ERROR_TYPES.length
+        ? new Set()
+        : new Set(ALL_ERROR_TYPES)
+    saveStorage(
+      STORAGE_KEYS.ENABLED_ERROR_TYPES,
+      Array.from(this.enabledErrorTypes)
+    )
+  }
 
   // Methods
   async init() {

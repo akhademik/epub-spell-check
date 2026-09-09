@@ -1,305 +1,223 @@
-2. Worker architecture đã được nâng cấp
+🔴 Nguyên nhân chính: prefixMap được tạo nhưng không hề được sử dụng
 
-Đây là một thay đổi tốt.
+Trong detectFuzzyDuplicates() hiện tại bạn đã thêm:
 
-Bạn đã chuyển từ:
+const prefixMap = new Map<string, typeof wordEntries>()
 
-mỗi lần analyze
-↓
-new Worker()
-↓
-analyze
-↓
-terminate
+sau đó tạo index theo:
 
-sang:
+length + first character
+length + first 2 characters
 
-AnalysisWorkerManager
-↓
-persistent Worker
-↓
-init(dictionaries)
-↓
-analyze(...)
+Đây là ý tưởng đúng. Nhưng phía dưới thuật toán không đọc prefixMap lần nào.
 
-Worker giữ cachedDictionaries, và manager có init() + terminate().
+Thay vào đó vẫn chạy:
 
-Đây đúng hướng mình đề xuất.
+for lenA
+for lenB
+for entryA
+for entryB
+levenshteinDistance(...)
 
-Nhưng còn một điểm nhỏ
+Tức là thực tế vẫn gần như thuật toán cũ.
 
-Bạn vẫn gửi:
+Nói cách khác:
 
-worker.postMessage({
-type: "analyze",
-textBlocks,
-dictionaries,
-checkSettings,
-chapterStartIndex
-})
+Bạn đã xây "đường cao tốc", nhưng xe vẫn chạy trên đường cũ. 😄
 
-tức là vẫn structured-clone toàn bộ 4 dictionary ở mỗi lần analyze.
+🔴 Đây mới là lý do vài chục nghìn từ vẫn cực chậm
 
-Trong khi worker đã có:
+Giả sử dictionary có:
 
-cachedDictionaries
+50.000 từ
 
-nên về mặt kiến trúc có thể đi xa hơn:
+và rất nhiều từ có cùng độ dài.
 
-init(dictionaries)
-↓
-analyze(textBlocks, checkSettings)
+Đoạn:
 
-Tuy nhiên đây không còn là bug, chỉ là optimization cuối cùng.
+for (const lenA of sortedLengths) {
+const listA = bucketMap.get(lenA)
 
-## → Mức độ: P2, chưa cần ưu tiên.
+    for (const lenB of candidateLengths) {
+        const listB = bucketMap.get(lenB)
 
-Nhưng vẫn còn 3 vấn đề đáng xử lý
-🔴 P0 — Authentication vẫn là điểm yếu lớn nhất
+        for (...) {
+            for (...) {
+                ...
+                levenshteinDistance(...)
+            }
+        }
+    }
 
-Đây là thứ mình vẫn chưa cho DONE.
-
-Trong:
-
-functions/api/dict/[name].ts
-
-bạn đang làm:
-
-const cfEmail = request.headers.get(
-"cf-access-authenticated-user-email"
-)
-
-const cfJwt = request.headers.get(
-"cf-access-jwt-assertion"
-)
-
-if (cfEmail || cfJwt) {
-authorized: true
 }
 
-Tức là:
+vẫn tạo ra một lượng pair cực lớn.
 
-Chỉ cần request có một trong hai header đó là được coi authenticated.
+Các điều kiện:
 
-Đây không phải cách xác thực Cloudflare Access chắc chắn ở application layer.
+charA0 !== charB0
+charA1 !== charB1
+...
 
-Tuy nhiên có nuance quan trọng
+chỉ giúp skip một phần, chứ chưa biến bài toán thành gần O(N).
 
-Nếu Cloudflare Access đang thực sự đứng trước /api/\* và chặn request unauthenticated, thì trong deployment thực tế header này được Cloudflare thêm vào sau khi user đã qua Access.
+---
 
-Khi đó architecture của bạn có thể vẫn an toàn.
+🔴 Một vấn đề nữa: prefixMap hiện tại hoàn toàn vô ích
 
-Nhưng code Function hiện tại không tự chứng minh được điều đó.
+Bạn đang tốn thêm thời gian và RAM để build:
 
-Mình muốn architecture thành:
+p1
+p2
+prefixMap.set(...)
 
-Internet
+nhưng không dùng nó trong candidate generation.
+
+Vì vậy hiện tại:
+
+indexBuildMs
+
+có thể tăng,
+
+nhưng:
+
+fuzzyScanMs
+
+hầu như không giảm bao nhiêu.
+
+---
+
+Tôi sẽ sửa thuật toán theo hướng khác
+
+Không nên:
+
+length bucket
+↓
+mọi cặp trong bucket
+↓
+prune bằng first 2 chars
+↓
+Levenshtein
+
+Mà nên:
+
+word
+↓
+length bucket
+↓
+prefix/ngram index
+↓
+chỉ lấy candidate thực sự có khả năng distance <= 2
+↓
+Levenshtein
+
+Ví dụ:
+
+50,000 words
 │
 ▼
-Cloudflare Access
-│
-├── unauthenticated → 403
+length index
 │
 ▼
-Pages Function
+prefix/ngram
 │
-└── validate Access identity
+├── 49,000 loại ngay
+│
+▼
+~5,000 candidates
+│
+▼
+Levenshtein
 
-hoặc nếu muốn giữ token fallback:
+thay vì hàng chục/hàng trăm triệu pair comparison.
 
-Cloudflare Access
-OR
-ADMIN_TOKEN
-↓
-Function
+Nhưng tôi muốn thay đổi thêm một điểm quan trọng
 
-Nhưng phải xác định rõ boundary.
+Hiện tại threshold là:
 
-Khuyến nghị
+levenshteinDistance(a, b, 2)
 
-Nếu đây là app cá nhân/admin tool của bạn, mình sẽ chọn:
+và bạn muốn detect fuzzy duplicate.
 
-Cloudflare Access làm auth chính.
+Tôi nghĩ nên dùng q-gram / deletion signature để sinh candidate.
 
-## ADMIN_TOKEN chỉ giữ làm emergency fallback nếu thật sự cần.
+Ví dụ với distance ≤ 2:
 
----
+"thành"
 
-P1 — ADMIN_TOKEN vẫn lưu trong localStorage
+sinh ra các signature gần nó.
 
-Đây là vấn đề security mình vẫn thấy trong state.svelte.ts.
+Sau đó:
 
-Bạn hiện vẫn có:
+index[signature]
 
-DICT_ADMIN_TOKEN: "spell-check:dict-admin-token"
+chỉ trả về các từ có khả năng cách nhau ≤2.
 
-và:
+Đây mới là cách phù hợp với dictionary 30k–100k từ.
 
-loadStorage(STORAGE_KEYS.DICT_ADMIN_TOKEN, "")
+⚠️ Còn một bottleneck thứ hai ít rõ hơn
 
-sau đó:
+Sau khi tìm được cluster, bạn lại làm:
 
-saveStorage(
-STORAGE_KEYS.DICT_ADMIN_TOKEN,
-this.dictAdminToken
-)
-
-Nghĩa là token admin được lưu persistent trong browser.
-
-Nếu xảy ra XSS:
-
-localStorage.getItem("spell-check:dict-admin-token")
-
-là đủ lấy token.
-
-Mình khuyên sửa thành
-
-Không lưu token:
-
-user nhập token
-↓
-memory only
-↓
-request
-↓
-reload browser
-↓
-token biến mất
-
-Nếu đã dùng Cloudflare Access thì thậm chí UI không cần token trong normal flow.
-
-## Đây là việc mình sẽ làm tiếp theo.
-
----
-
-P1 — Có một bug UX/API nhỏ
-
-Trong state.svelte.ts:
-
-const verb = action === "remove" ? "xóa" : "thêm"
-
-`Đã ${verb} ${result.addedCount} từ...`
-
-Với remove thì bạn đang hiển thị:
-
-Đã xóa 0 từ
-
-vì API mới trả:
-
-addedCount: 0
-removedCount: affectedCount
-
-Nên đổi thành:
-
-const affectedCount =
-action === "remove"
-? result.removedCount
-: result.addedCount
-
-hoặc tốt nhất:
-
-result.affectedCount
-
-rồi:
-
-`Đã ${verb} ${result.affectedCount} từ...`
-
-Rất nhỏ nhưng nên fix.
-
----
-
-Một điểm nữa mình muốn bạn bổ sung: EPUB round-trip tests
-
-Đây vẫn là khoảng trống lớn nhất về test.
-
-Hiện regression test chủ yếu test:
-
-getErrorType()
-
-Ví dụ tone:
-
-hòa / hoà
-hóa / hoá
-thủy / thuỷ
-khỏe / khoẻ
-
-và typo / acronym / foreign words.
-
-Nhưng production flow thực sự là:
-
-EPUB
-↓
-parse
-↓
-TextContentBlock
-↓
-analysis
-↓
-FixInstruction
-↓
-DOM modification
-↓
-XMLSerializer
-↓
-JSZip
-↓
-EPUB
-
-Trong khi epub-writer.ts đang dùng XMLSerializer để serialize lại XHTML.
-
-Đây là chỗ có khả năng xuất hiện regression mà unit test hiện tại không bắt được.
-
-Mình muốn có ít nhất 4 fixture:
-fixtures/
-├── simple.epub
-├── nested-formatting.epub
-├── multiple-text-nodes.epub
-└── malformed-xhtml.epub
-
-Test:
-
-parse
-→ fix
-→ repack
-→ parse again
-→ verify text
-
-## Đây sẽ nâng reliability của project lên rất nhiều.
-
----
-
-Một vấn đề rất nhỏ trong Worker Manager
-
-AnalysisWorkerManager dùng:
-
-worker.onmessage = ...
-
-mỗi lần analyze().
-
-Điều này OK nếu application đảm bảo chỉ có một analysis chạy tại một thời điểm.
-
-Nhưng nếu vô tình:
-
-analyze(bookA)
-analyze(bookB)
-
-cùng lúc thì handler của A sẽ bị B overwrite.
-
-Không cần sửa nếu UI đã serialize analysis.
-
-Nếu muốn harden:
-
-private activeAnalysis = false
-
-hoặc request ID:
-
-requestId
-
-rồi worker trả:
-
-{
-requestId,
-type: "complete"
+for (let i = 0; i < entries.length; i++) {
+for (let j = i + 1; j < entries.length; j++) {
+...
+pairMeta.get(...)
+}
 }
 
-Nhưng mình không khuyên thêm complexity lúc này.
+để xác định overallConfidence.
+
+Nếu cluster lớn thì lại O(K²).
+
+Không phải bottleneck chính hiện tại, nhưng có thể sửa luôn bằng cách lưu:
+
+cluster confidence
+
+ngay trong quá trình union.
+
+Và tôi sẽ không bỏ Levenshtein
+
+Điểm này quan trọng.
+
+Không nên thay toàn bộ bằng prefix matching vì sẽ làm giảm accuracy.
+
+Nên:
+
+Cheap candidate generation
+↓
+Levenshtein
+↓
+exact verification
+
+Levenshtein chỉ được dùng ở final verification.
+
+Timing bạn đã thêm rất hữu ích
+
+Bạn đã thêm:
+
+interface AuditTiming {
+garbageScanMs
+indexBuildMs
+candidateCount
+levenshteinCheckCount
+fuzzyScanMs
+totalMs
+}
+
+đây là một update rất tốt.
+
+Nhưng hiện tại:
+
+candidateCount ≈ levenshteinCheckCount
+
+vì candidate được đếm ngay trước khi gọi Levenshtein.
+
+Nên khi test một dictionary lớn, tôi muốn bạn nhìn 3 con số:
+
+Words: 50,000
+Candidates: ???
+Levenshtein checks: ???
+Total: ??? ms
+
+Nếu Levenshtein checks lên hàng triệu thì chúng ta đã xác định chính xác thủ phạm.

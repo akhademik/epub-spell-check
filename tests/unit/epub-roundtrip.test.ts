@@ -311,4 +311,48 @@ describe("EPUB Integration & Round-trip Test Matrix", () => {
 
     expect(reParsed.textBlocks[1].text).toBe("Một từ lỗi cần sửa.")
   })
+
+  it("Matrix 17: Contraction across text node boundary (<b>isn</b>'t) correctly parsed as single word and fixable", async () => {
+    const zip = new JSZip()
+    zip.file("mimetype", "application/epub+zip", { compression: "STORE" })
+    zip.file(
+      "META-INF/container.xml",
+      `<container><rootfiles><rootfile full-path="OEBPS/content.opf"/></rootfiles></container>`
+    )
+    zip.file(
+      "OEBPS/content.opf",
+      `<package><manifest><item id="c1" href="c1.xhtml"/></manifest><spine><itemref idref="c1"/></spine></package>`
+    )
+    zip.file(
+      "OEBPS/c1.xhtml",
+      `<?xml version="1.0" encoding="utf-8"?>\n<html xmlns="http://www.w3.org/1999/xhtml"><body><p>He <b>isn</b>'t here.</p></body></html>`
+    )
+
+    const origBlob = new Blob(
+      [await zip.generateAsync({ type: "arraybuffer" })],
+      { type: "application/epub+zip" }
+    )
+    const origFile = new File([origBlob], "contraction.epub")
+
+    const parsed = await parseEpub(origFile)
+    expect(parsed.textBlocks.length).toBe(1)
+    expect(parsed.textBlocks[0].text).toBe("He isn't here.")
+
+    // Replace "isn't" (offset 3..8) with "is not"
+    const fixes: FixInstruction[] = [
+      {
+        filePath: parsed.textBlocks[0].filePath,
+        blockId: parsed.textBlocks[0].id,
+        startIndex: 3,
+        endIndex: 8,
+        newWord: "is not"
+      }
+    ]
+
+    const fixedBlob = await applyFixesAndRepack(origBlob, fixes)
+    const fixedFile = new File([fixedBlob], "contraction-fixed.epub")
+    const reParsed = await parseEpub(fixedFile)
+
+    expect(reParsed.textBlocks[0].text).toBe("He is not here.")
+  })
 })

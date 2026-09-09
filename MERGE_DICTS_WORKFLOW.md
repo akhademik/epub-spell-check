@@ -12,11 +12,11 @@ Trước khi đưa từ vào file markdown này, đừng gộp 2 từ/2 cụm kh
 
 ## 1. Công cụ tiện ích tự động (Automated Script)
 
-Dự án đã có script tiện ích chuẩn hóa tại `scripts/merge-dicts.ts` (và unit tests đi kèm tại `tests/unit/merge-dicts.test.ts`, `tests/unit/merge-dicts-validation.test.ts`).
+Dự án có 2 công cụ chính để bảo trì và chuẩn hóa từ điển:
+1. **`scripts/merge-dicts.ts` (`tests/unit/merge-dicts.test.ts`, `tests/unit/merge-dicts-validation.test.ts`)**: Dùng khi gộp các file `*-corrected-dict.md` từ đợt phân loại vào 4 file dict chính. Tự động validate nội dung, loại bỏ rác/lặp ký tự gõ máy, dedup và sort.
+2. **`scripts/clean-dicts.ts` (`tests/unit/dict-quality.test.ts`)**: Dùng để kiểm toán (audit) toàn diện chất lượng từ điển hiện hữu trên local hoặc Cloudflare KV. Phân loại rác Tier A/B và phát hiện near-duplicate clustering.
 
-Script **tự động validate nội dung** trước khi ghi đè file thật (xem mục 2b) — không còn merge mù mọi thứ trong file `.md` đầu vào.
-
-### Lệnh chạy:
+### Lệnh chạy gộp từ điển:
 
 Chạy trực tiếp bằng Node.js:
 

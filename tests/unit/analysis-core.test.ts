@@ -7,7 +7,8 @@ import {
   isFrontVowel,
   isY,
   levenshteinDistance,
-  matchCase
+  matchCase,
+  WORD_REGEX
 } from "../../src/utils/analysis-core"
 
 describe("Analysis Core", () => {
@@ -114,23 +115,23 @@ describe("Analysis Core", () => {
       expect(error?.reason).toBe("Sai quy tắc ng")
     })
 
-    it("should flag typo patterns as Typo error", () => {
+    it("should flag typo patterns as Spelling error with Typo reason", () => {
       const error = getErrorType(
         "nghiênaa",
         mockDictionaries,
         defaultCheckSettings
       )
-      expect(error?.type).toBe("Typo")
+      expect(error?.type).toBe("Spelling")
       expect(error?.reason).toBe("Gõ máy (Typo)")
     })
 
-    it("should flag tòong as Dictionary error", () => {
+    it("should flag tòong as UnknownWord error", () => {
       const error = getErrorType(
         "tòong",
         mockDictionaries,
         defaultCheckSettings
       )
-      expect(error?.type).toBe("Dictionary")
+      expect(error?.type).toBe("UnknownWord")
       expect(error?.reason).toBe("Không có trong VN dict")
     })
   })
@@ -175,13 +176,47 @@ describe("Analysis Core", () => {
       expect(error).toBeNull()
     })
 
-    it("should always accept Custom Abbreviations (ATM, VIP, DNA) without errors", () => {
+    it("should always accept Custom Abbreviations (ATM, VIP, DNA, iPad, iPhone) without errors when correctly cased", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(),
+        nonVietnamese: new Set(),
+        custom: new Set(["ATM", "VIP", "DNA", "iPad", "iPhone", "WeChat"]),
+        names: new Set()
+      }
+      expect(getErrorType("ATM", customDicts, defaultCheckSettings)).toBeNull()
+      expect(getErrorType("DNA", customDicts, defaultCheckSettings)).toBeNull()
+      expect(getErrorType("iPad", customDicts, defaultCheckSettings)).toBeNull()
       expect(
-        getErrorType("ATM", mockDictionaries, defaultCheckSettings)
+        getErrorType("iPhone", customDicts, defaultCheckSettings)
       ).toBeNull()
       expect(
-        getErrorType("DNA", mockDictionaries, defaultCheckSettings)
+        getErrorType("WeChat", customDicts, defaultCheckSettings)
       ).toBeNull()
+    })
+
+    it("should flag casing mistakes of custom dictionary entries as errors", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(),
+        nonVietnamese: new Set(),
+        custom: new Set(["iPad", "iPhone", "WeChat"]),
+        names: new Set()
+      }
+      // ipad is lowercase, not in VN dict
+      expect(
+        getErrorType("ipad", customDicts, defaultCheckSettings)?.type
+      ).toBe("UnknownWord")
+      // iphone is lowercase, not in VN dict
+      expect(
+        getErrorType("iphone", customDicts, defaultCheckSettings)?.type
+      ).toBe("UnknownWord")
+      // IPHONE has uppercase anomalies
+      expect(
+        getErrorType("IPHONE", customDicts, defaultCheckSettings)?.type
+      ).toBe("CaseError")
+      // weChat has internal uppercase anomaly
+      expect(
+        getErrorType("weChat", customDicts, defaultCheckSettings)?.type
+      ).toBe("CaseError")
     })
 
     it("should always accept Names Dictionary entries (Alexander, Parmenion, Persepolis) without errors", () => {
@@ -207,6 +242,67 @@ describe("Analysis Core", () => {
     it("should extract base unaccented word", () => {
       expect(getBaseWord("Tiếng")).toBe("Tieng")
       expect(getBaseWord("Việt")).toBe("Viet")
+    })
+  })
+
+  describe("Contraction-aware Tokenization & Handling", () => {
+    it("should tokenize contractions with straight or curly apostrophes as single words", () => {
+      const text =
+        "He isn't here, it’s fine, don't worry, I'm ready, you're welcome."
+      const words = Array.from(text.matchAll(WORD_REGEX), (m) => m[0])
+      expect(words).toContain("isn't")
+      expect(words).toContain("it’s")
+      expect(words).toContain("don't")
+      expect(words).toContain("I'm")
+      expect(words).toContain("you're")
+    })
+
+    it("should not include trailing or leading apostrophes in words (e.g. James', 'hello')", () => {
+      const text = "James' book was 'awesome'."
+      const words = Array.from(text.matchAll(WORD_REGEX), (m) => m[0])
+      expect(words).toContain("James")
+      expect(words).not.toContain("James'")
+      expect(words).toContain("awesome")
+      expect(words).not.toContain("'awesome'")
+    })
+
+    it("should recognize common English contractions without false positive errors", () => {
+      expect(
+        getErrorType("isn't", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("it's", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("it’s", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("don't", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("can't", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("I'm", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("you're", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("wasn't", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("weren't", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("I've", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("I'll", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType("I'd", mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
     })
   })
 

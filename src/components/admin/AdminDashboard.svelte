@@ -9,6 +9,7 @@
   } from "../../utils/dict-admin"
   import { appState } from "../../state.svelte"
   import AddWordsForm from "./AddWordsForm.svelte"
+  import DictAuditPanel from "./DictAuditPanel.svelte"
 
   const DICT_TABS: { id: DictSourceName; label: string; badge: string; color: string; bg: string }[] = [
     { id: "vn", label: "1. Tiếng Việt", badge: "VN", color: "text-emerald-400 border-emerald-500", bg: "bg-emerald-500/10 text-emerald-300" },
@@ -17,6 +18,7 @@
     { id: "custom", label: "4. Viết tắt & Tuỳ chỉnh", badge: "CUSTOM", color: "text-purple-400 border-purple-500", bg: "bg-purple-500/10 text-purple-300" }
   ]
 
+  let mainSection = $state<"manage" | "audit">("manage")
   let activeTab = $state<DictSourceName>("vn")
   let authStatus = $state<AuthStatusResponse>({
     authenticated: false,
@@ -27,12 +29,33 @@
 
   let isCheckingAuth = $state(true)
   let isLoading = $state(true)
+  let rawSearchInput = $state("")
   let searchQuery = $state("")
   let currentDictData = $state<DictDetailResponse | null>(null)
   let selectedWords = $state<Set<string>>(new Set())
   let isDeleting = $state(false)
   let deleteConfirmWord = $state<string | null>(null)
   let tokenInput = $state(appState.dictAdminToken)
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null
+
+  function normalizeSearchTerm(str: string): string {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Strip diacritics
+      .replace(/[đĐ]/g, (m) => (m === "đ" ? "d" : "D")) // Normalize đ/Đ
+      .replace(/[.,/#!$%^&*;:{}=\-_`~()?"'<>@+[\]\\]/g, "") // Strip punctuation
+      .toLowerCase()
+      .trim()
+  }
+
+  function handleSearchInput(e: Event) {
+    const target = e.target as HTMLInputElement
+    rawSearchInput = target.value
+    if (debounceTimer) clearTimeout(debounceTimer)
+    debounceTimer = setTimeout(() => {
+      searchQuery = rawSearchInput
+    }, 250)
+  }
 
   async function loadAuth() {
     isCheckingAuth = true
@@ -65,6 +88,7 @@
 
   function handleTabChange(tab: DictSourceName) {
     activeTab = tab
+    rawSearchInput = ""
     searchQuery = ""
     loadDictionaryWords(tab)
   }
@@ -79,9 +103,23 @@
 
   let filteredWords = $derived.by(() => {
     if (!currentDictData) return []
-    const q = searchQuery.trim().toLowerCase()
-    if (!q) return currentDictData.words
-    return currentDictData.words.filter((w) => w.toLowerCase().includes(q))
+    const rawQuery = searchQuery.trim()
+    let words = currentDictData.words
+
+    if (rawQuery) {
+      const normalizedQuery = normalizeSearchTerm(rawQuery)
+      if (normalizedQuery) {
+        words = words.filter((w) => {
+          const normW = normalizeSearchTerm(w)
+          return normW.includes(normalizedQuery) || w.toLowerCase().includes(rawQuery.toLowerCase())
+        })
+      }
+    }
+
+    // Sort by Vietnamese collation
+    return [...words].sort((a, b) =>
+      a.localeCompare(b, "vi", { sensitivity: "base" })
+    )
   })
 
   function toggleSelectWord(word: string) {
@@ -225,8 +263,54 @@
       </div>
     </div>
   {:else}
-    <!-- Main 2-Column Layout (Streamlined List Layout) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Sub Navigation Tabs: Quản lý từ & Kiểm tra chất lượng -->
+    <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
+      <button
+        type="button"
+        onclick={() => (mainSection = "manage")}
+        class="px-4 py-2 text-xs font-bold rounded-xl transition-all {mainSection === 'manage'
+          ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/40'
+          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
+      >
+        1. Quản Lý Từ Vựng & Thêm Mới
+      </button>
+      <button
+        type="button"
+        onclick={() => (mainSection = "audit")}
+        class="px-4 py-2 text-xs font-bold rounded-xl transition-all {mainSection === 'audit'
+          ? 'bg-amber-600 text-white shadow-lg shadow-amber-900/40'
+          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
+      >
+        2. Kiểm Tra Chất Lượng & Dọn Rác (Audit)
+      </button>
+    </div>
+
+    {#if mainSection === "audit"}
+      <div class="space-y-4">
+        <!-- Dict Tabs for Audit -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {#each DICT_TABS as tab (tab.id)}
+            <button
+              type="button"
+              onclick={() => handleTabChange(tab.id)}
+              class="flex flex-col items-start p-3 rounded-2xl border text-left transition-all {activeTab === tab.id
+                ? `${tab.color} bg-slate-900 shadow-lg`
+                : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'}"
+            >
+              <span class="text-xs font-bold tracking-wider uppercase mb-1">{tab.badge}</span>
+              <span class="text-sm font-semibold text-slate-100">{tab.label.split(". ")[1]}</span>
+            </button>
+          {/each}
+        </div>
+
+        <DictAuditPanel
+          activeDict={activeTab}
+          onAuditApplied={() => loadDictionaryWords(activeTab)}
+        />
+      </div>
+    {:else}
+      <!-- Main 2-Column Layout (Streamlined List Layout) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <!-- Left Column: Word Explorer & Dict Tabs (7 Cols) -->
       <div class="lg:col-span-7 flex flex-col space-y-4">
         <!-- Dict Tabs -->
@@ -259,7 +343,8 @@
             <div class="relative w-full sm:w-72">
               <input
                 type="text"
-                bind:value={searchQuery}
+                value={rawSearchInput}
+                oninput={handleSearchInput}
                 placeholder={`Tìm trong ${currentDictData ? currentDictData.totalCount.toLocaleString() : '...'} từ...`}
                 class="w-full pl-9 pr-4 py-2 text-sm bg-slate-950/80 border border-slate-700 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500"
               />
@@ -300,47 +385,47 @@
           </div>
 
           <!-- Words List (Single-Column Streamlined List) -->
-          <div class="flex-1 p-3 overflow-y-auto max-h-[600px] space-y-1 font-mono text-sm divide-y divide-slate-800/40">
+          <div class="flex-1 p-3.5 overflow-y-auto max-h-[600px] space-y-1.5 font-mono text-base divide-y divide-slate-800/40">
             {#if isLoading}
               <div class="flex flex-col items-center justify-center py-20 text-slate-500 space-y-2">
                 <div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                <span>Đang tải danh sách từ...</span>
+                <span class="text-sm">Đang tải danh sách từ...</span>
               </div>
             {:else if filteredWords.length === 0}
-              <div class="text-center py-16 text-slate-500">
+              <div class="text-center py-16 text-slate-500 text-sm">
                 {searchQuery ? `Không tìm thấy từ nào khớp với "${searchQuery}"` : "Từ điển hiện chưa có từ nào."}
               </div>
             {:else}
               {#each filteredWords.slice(0, 500) as word (word)}
                 <div
-                  class="flex items-center justify-between px-3 py-1.5 rounded-lg transition-colors {selectedWords.has(word)
+                  class="flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-colors {selectedWords.has(word)
                     ? 'bg-blue-500/10 text-blue-200 font-semibold'
-                    : 'text-slate-300 hover:bg-slate-800/50'}"
+                    : 'text-slate-200 hover:bg-slate-800/50'}"
                 >
-                  <label class="flex items-center gap-3 cursor-pointer flex-1 min-w-0 pr-2">
+                  <label class="flex items-center gap-3.5 cursor-pointer flex-1 min-w-0 pr-2">
                     <input
                       type="checkbox"
                       checked={selectedWords.has(word)}
                       onchange={() => toggleSelectWord(word)}
-                      class="rounded border-slate-700 text-blue-600 focus:ring-0 focus:ring-offset-0 bg-slate-900"
+                      class="w-4 h-4 rounded border-slate-700 text-blue-600 focus:ring-0 focus:ring-offset-0 bg-slate-900"
                     />
-                    <span class="truncate">{word}</span>
+                    <span class="truncate font-sans text-[20px] font-semibold text-slate-100 leading-tight">{word}</span>
                   </label>
 
                   {#if deleteConfirmWord === word}
-                    <div class="flex items-center gap-1 shrink-0">
+                    <div class="flex items-center gap-1.5 shrink-0">
                       <button
                         type="button"
                         disabled={isDeleting}
                         onclick={() => handleDeleteWords([word])}
-                        class="px-2 py-0.5 text-[11px] font-bold text-white bg-rose-600 hover:bg-rose-500 rounded transition-colors"
+                        class="px-2.5 py-1 text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 rounded-lg transition-colors shadow"
                       >
                         Xóa
                       </button>
                       <button
                         type="button"
                         onclick={() => (deleteConfirmWord = null)}
-                        class="px-1.5 py-0.5 text-[11px] text-slate-400 hover:text-slate-200"
+                        class="px-2 py-1 text-xs text-slate-400 hover:text-slate-200"
                       >
                         Hủy
                       </button>
@@ -349,11 +434,11 @@
                     <button
                       type="button"
                       onclick={() => (deleteConfirmWord = word)}
-                      class="p-1 text-slate-500 hover:text-rose-400 rounded transition-colors shrink-0"
+                      class="p-1.5 text-slate-500 hover:text-rose-400 rounded-lg transition-colors shrink-0"
                       title="Xóa từ này khỏi từ điển"
                       aria-label="Xóa từ"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
                     </button>
@@ -379,5 +464,6 @@
         />
       </div>
     </div>
+    {/if}
   {/if}
 </div>

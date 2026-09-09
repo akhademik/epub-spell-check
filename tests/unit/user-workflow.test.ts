@@ -121,7 +121,7 @@ describe("Comprehensive User Action Simulation", () => {
     // 2. User inspects the error list
     const toongGroup = allDetectedErrors.find((g) => g.word === "tòong")
     expect(toongGroup).toBeDefined()
-    expect(toongGroup?.type).toBe("Dictionary")
+    expect(toongGroup?.type).toBe("UnknownWord")
 
     // 3. User views suggestions
     const suggestions = findSuggestions("xyzabc", mockDictionaries)

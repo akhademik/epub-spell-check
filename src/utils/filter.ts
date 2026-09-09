@@ -1,12 +1,13 @@
 import type { CheckSettings } from "../types/analysis"
 import type { Dictionaries } from "../types/dictionary"
-import type { ErrorGroup } from "../types/errors"
+import type { ErrorGroup, ErrorType } from "../types/errors"
 
 export function getFilteredErrors(
   allDetectedErrors: ErrorGroup[],
   whitelist: string[] | string,
   checkSettings: CheckSettings,
-  dictionaries: Dictionaries
+  dictionaries: Dictionaries,
+  enabledTypes?: Set<ErrorType>
 ): ErrorGroup[] {
   const whitelistArray = Array.isArray(whitelist)
     ? whitelist
@@ -20,6 +21,9 @@ export function getFilteredErrors(
     // 0. Resolved errors (already fixed by user)
     if (group.resolved) return false
 
+    // 0b. Type filter (multi-toggle error types)
+    if (enabledTypes && !enabledTypes.has(group.type)) return false
+
     const lowerWord = group.word.toLowerCase()
 
     // 1. Whitelist filter (always filters out ignored words)
@@ -28,7 +32,6 @@ export function getFilteredErrors(
     // 2. Custom dictionary & Names dictionary (always filters out valid custom abbreviations & names)
     if (
       dictionaries.custom.has(group.word) ||
-      dictionaries.custom.has(lowerWord) ||
       (dictionaries.names &&
         (dictionaries.names.has(group.word) ||
           dictionaries.names.has(lowerWord)))

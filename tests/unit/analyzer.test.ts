@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it } from "vitest"
 import type { Dictionaries } from "../../src/types/dictionary"
 import type { ErrorInstance } from "../../src/types/errors"
 import {
+  clearSuggestionCache,
   findSuggestions,
   findTieredSuggestions,
   groupErrors
@@ -21,7 +22,7 @@ describe("Analyzer Module", () => {
         {
           word: "họp",
           originalWord: "họp",
-          type: "Dictionary",
+          type: "UnknownWord",
           reason: "Không có trong từ điển tiếng Việt",
           context: {
             originalParagraph: "họp hành",
@@ -35,7 +36,7 @@ describe("Analyzer Module", () => {
         {
           word: "tÔi",
           originalWord: "tÔi",
-          type: "Uppercase",
+          type: "CaseError",
           reason: "Lỗi viết hoa",
           context: {
             originalParagraph: "tÔi đi học",
@@ -49,7 +50,7 @@ describe("Analyzer Module", () => {
         {
           word: "họp",
           originalWord: "họp",
-          type: "Dictionary",
+          type: "UnknownWord",
           reason: "Không có trong từ điển tiếng Việt",
           context: {
             originalParagraph: "đi họp",
@@ -72,6 +73,9 @@ describe("Analyzer Module", () => {
   })
 
   describe("Suggestions Generation", () => {
+    beforeEach(() => {
+      clearSuggestionCache()
+    })
     it("should suggest close words from Vietnamese dictionary", () => {
       const suggestions = findSuggestions("họp", mockDictionaries)
       expect(suggestions.length).toBeGreaterThan(0)
@@ -102,6 +106,67 @@ describe("Analyzer Module", () => {
       }
       const tiered = findTieredSuggestions("Hymalya", customDicts)
       expect(tiered.secondary).toContain("Himalaya")
+    })
+
+    it("should prioritize canonical casing from custom dictionary (e.g. ipad -> iPad, iphone/IPHONE -> iPhone, wechat -> WeChat)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(),
+        nonVietnamese: new Set(),
+        custom: new Set(["iPad", "iPhone", "WeChat"]),
+        names: new Set()
+      }
+      expect(findTieredSuggestions("ipad", customDicts).primary[0]).toBe("iPad")
+      expect(findTieredSuggestions("iphone", customDicts).primary[0]).toBe(
+        "iPhone"
+      )
+      expect(findTieredSuggestions("IPHONE", customDicts).primary[0]).toBe(
+        "iPhone"
+      )
+      expect(findTieredSuggestions("wechat", customDicts).primary[0]).toBe(
+        "WeChat"
+      )
+      expect(findTieredSuggestions("weChat", customDicts).primary[0]).toBe(
+        "WeChat"
+      )
+    })
+
+    it("should suggest canonical casing for names (e.g. alexander -> Alexander)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set(["Alexander"])
+      }
+      expect(findTieredSuggestions("alexander", customDicts).primary[0]).toBe(
+        "Alexander"
+      )
+    })
+
+    it("should strictly limit edit distance to 1 for short words (length <= 3) to prevent garbage suggestions", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(["học", "hộp", "hoa", "hạ", "hạc"]),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set()
+      }
+      // "họp" (len 3) -> distance 1: "học" (dist 1), "hộp" (dist 1). Distance 2 words like "hạ", "hạc" should not be suggested
+      const tiered = findTieredSuggestions("họp", customDicts)
+      expect(tiered.primary).toContain("học")
+      expect(tiered.primary).toContain("hộp")
+      expect(tiered.primary).not.toContain("hạ")
+      expect(tiered.secondary).not.toContain("hạ")
+    })
+
+    it("should prioritize same base-word tone matches over random edit-distance words in structured scoring", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(["khoán", "khoang", "khó"]),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set()
+      }
+      // "khoan" -> same base word "khoán" should rank above generic edit distance words
+      const tiered = findTieredSuggestions("khoan", customDicts)
+      expect(tiered.primary[0]).toBe("khoán")
     })
 
     it("should return cached results on repeated calls", () => {

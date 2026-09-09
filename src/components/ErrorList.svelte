@@ -1,22 +1,22 @@
 <script lang="ts">
-  import { appState } from "../state.svelte"
+  import { ALL_ERROR_TYPES, appState } from "../state.svelte"
   import type { ErrorGroup, ErrorType } from "../types/errors"
 
   let searchQuery = $state("")
-  let typeFilter = $state<"all" | ErrorType>("all")
   let visibleCount = $state(30)
 
   function getDotColor(type: string): string {
     switch (type) {
+      case "UnknownWord":
       case "Dictionary":
         return "bg-rose-500 shadow-[0_0_8px_#f43f5e]"
       case "NonVietnamese":
         return "bg-blue-500 shadow-[0_0_8px_#3b82f6]"
+      case "CaseError":
       case "Uppercase":
         return "bg-amber-500 shadow-[0_0_8px_#f59e0b]"
-      case "Typo":
-        return "bg-orange-500 shadow-[0_0_8px_#f97316]"
       case "Spelling":
+      case "Typo":
         return "bg-purple-500 shadow-[0_0_8px_#a855f7]"
       case "SpecialCharacter":
         return "bg-pink-500 shadow-[0_0_8px_#ec4899]"
@@ -27,15 +27,16 @@
 
   function getBadgeLabel(type: string): string {
     switch (type) {
+      case "UnknownWord":
       case "Dictionary":
-        return "Từ điển VN"
+        return "Từ lạ (Unknown)"
       case "NonVietnamese":
         return "Ngoại ngữ"
+      case "CaseError":
       case "Uppercase":
-        return "Viết hoa"
-      case "Typo":
-        return "Typo"
+        return "Lỗi viết hoa"
       case "Spelling":
+      case "Typo":
         return "Chính tả"
       default:
         return "Ký tự lạ"
@@ -44,11 +45,6 @@
 
   const filteredList = $derived.by(() => {
     let list = [...appState.currentFilteredErrors]
-
-    // Type filter
-    if (typeFilter !== "all") {
-      list = list.filter((g) => g.type === typeFilter)
-    }
 
     // Search filter
     if (searchQuery.trim()) {
@@ -59,14 +55,35 @@
       )
     }
 
-    // Default sort by frequency count descending
-    list.sort((a, b) => b.count - a.count)
+    // Default sort by Vietnamese alphabet collation (localeCompare 'vi')
+    list.sort((a, b) =>
+      a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
+    )
 
     return list
   })
 
   // Lazy loaded slice capped at visibleCount
   const displayedErrors = $derived(filteredList.slice(0, visibleCount))
+
+  // Available types that appear in current allDetectedErrors (or standard 4 types)
+  const displayableTypes = $derived.by(() => {
+    const presentTypes = new Set(appState.allDetectedErrors.map((g) => g.type))
+    const standardTypes: ErrorType[] = [
+      "UnknownWord",
+      "NonVietnamese",
+      "CaseError",
+      "Spelling"
+    ]
+    if (presentTypes.has("SpecialCharacter")) {
+      standardTypes.push("SpecialCharacter")
+    }
+    return standardTypes
+  })
+
+  const isAllSelected = $derived(
+    ALL_ERROR_TYPES.every((t) => appState.enabledErrorTypes.has(t))
+  )
 
   function handleScroll(e: Event) {
     const target = e.target as HTMLElement
@@ -120,67 +137,39 @@
 
     <!-- Category filter tags & Sort controls -->
     <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80 flex-wrap gap-2">
-      <!-- Category Filter Pills -->
-      <div class="flex items-center gap-1 flex-wrap overflow-x-auto py-0.5">
+      <!-- Category Filter Pills (Multi-Toggle) -->
+      <div class="flex items-center gap-1.5 flex-wrap overflow-x-auto py-0.5">
         <button
           type="button"
-          onclick={() => { typeFilter = "all"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'all'
+          onclick={() => { appState.toggleAllErrorTypes(); visibleCount = 30; }}
+          class="px-2.5 py-1 rounded-lg text-xs font-medium transition-colors {isAllSelected
             ? 'bg-slate-700 text-white font-bold'
-            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
+            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-slate-700/60'}"
         >
-          Tất cả
+          {isAllSelected ? "Bỏ chọn tất cả" : "Tất cả"}
         </button>
-        <button
-          type="button"
-          onclick={() => { typeFilter = "Dictionary"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'Dictionary'
-            ? 'bg-rose-900/60 text-rose-300 border border-rose-700/60 font-bold'
-            : 'text-slate-400 hover:text-rose-300'}"
-          title="Lỗi không có trong từ điển tiếng Việt"
-        >
-          Từ điển VN
-        </button>
-        <button
-          type="button"
-          onclick={() => { typeFilter = "NonVietnamese"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'NonVietnamese'
-            ? 'bg-blue-900/60 text-blue-300 border border-blue-700/60 font-bold'
-            : 'text-slate-400 hover:text-blue-300'}"
-          title="Lỗi ngoại ngữ / từ lạ"
-        >
-          Ngoại ngữ
-        </button>
-        <button
-          type="button"
-          onclick={() => { typeFilter = "Uppercase"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'Uppercase'
-            ? 'bg-amber-900/60 text-amber-300 border border-amber-700/60 font-bold'
-            : 'text-slate-400 hover:text-amber-300'}"
-          title="Lỗi viết hoa"
-        >
-          Viết hoa
-        </button>
-        <button
-          type="button"
-          onclick={() => { typeFilter = "Typo"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'Typo'
-            ? 'bg-orange-900/60 text-orange-300 border border-orange-700/60 font-bold'
-            : 'text-slate-400 hover:text-orange-300'}"
-          title="Lỗi gõ máy typo"
-        >
-          Typo
-        </button>
-        <button
-          type="button"
-          onclick={() => { typeFilter = "Spelling"; visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {typeFilter === 'Spelling'
-            ? 'bg-purple-900/60 text-purple-300 border border-purple-700/60 font-bold'
-            : 'text-slate-400 hover:text-purple-300'}"
-          title="Sai quy tắc ngữ âm chính tả"
-        >
-          Chính tả
-        </button>
+
+        {#each displayableTypes as type (type)}
+          {@const isEnabled = appState.enabledErrorTypes.has(type)}
+          <button
+            type="button"
+            onclick={() => { appState.toggleErrorType(type); visibleCount = 30; }}
+            class="px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-150 border {isEnabled
+              ? type === 'UnknownWord'
+                ? 'bg-rose-900/60 text-rose-300 border-rose-700/60 font-bold'
+                : type === 'NonVietnamese'
+                ? 'bg-blue-900/60 text-blue-300 border-blue-700/60 font-bold'
+                : type === 'CaseError'
+                ? 'bg-amber-900/60 text-amber-300 border-amber-700/60 font-bold'
+                : type === 'Spelling'
+                ? 'bg-purple-900/60 text-purple-300 border-purple-700/60 font-bold'
+                : 'bg-pink-900/60 text-pink-300 border-pink-700/60 font-bold'
+              : 'bg-slate-900 text-slate-500 border-slate-800 hover:text-slate-300 hover:border-slate-700 opacity-60'}"
+            title={getBadgeLabel(type)}
+          >
+            {getBadgeLabel(type)}
+          </button>
+        {/each}
       </div>
     </div>
   </div>
@@ -194,11 +183,19 @@
     >
       {#if displayedErrors.length === 0}
         <div class="p-8 text-center text-slate-500 flex flex-col items-center justify-center h-full">
-          <svg class="w-12 h-12 mb-3 opacity-30 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <p class="text-base font-semibold text-slate-300">Tuyệt vời!</p>
-          <p class="text-xs mt-1 text-slate-500">Không tìm thấy lỗi chính tả nào.</p>
+          {#if appState.enabledErrorTypes.size === 0}
+            <svg class="w-12 h-12 mb-3 opacity-40 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <p class="text-base font-semibold text-slate-300">Đã tắt tất cả loại lỗi</p>
+            <p class="text-xs mt-1 text-slate-400">Bạn đã tắt hết các loại lỗi — bật lại ít nhất 1 loại để xem danh sách.</p>
+          {:else}
+            <svg class="w-12 h-12 mb-3 opacity-30 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-base font-semibold text-slate-300">Tuyệt vời!</p>
+            <p class="text-xs mt-1 text-slate-500">Không tìm thấy lỗi chính tả nào.</p>
+          {/if}
         </div>
       {:else}
         {#each displayedErrors as group (group.id)}
@@ -212,25 +209,25 @@
             <button
               type="button"
               onclick={() => handleSelect(group)}
-              class="flex items-center justify-between flex-grow px-3 py-2 text-left rounded-l-xl focus:outline-none min-w-0"
+              class="flex items-center justify-between flex-grow px-3.5 py-2.5 text-left rounded-l-xl focus:outline-none min-w-0"
             >
-              <div class="w-full flex items-center gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
-                <span class="font-serif text-base font-bold truncate {isSelected ? 'text-blue-200' : 'text-slate-200'}">
+              <div class="w-full flex items-center gap-3">
+                <span class="w-3.5 h-3.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
+                <span class="font-sans text-[20px] font-bold tracking-normal leading-tight truncate {isSelected ? 'text-blue-200' : 'text-slate-100'}">
                   {group.word}
                 </span>
-                <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800/90 text-slate-400 border border-slate-700/60 shrink-0 font-medium">
+                <span class="text-xs px-2 py-0.5 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700/70 shrink-0 font-medium">
                   {getBadgeLabel(group.type)}
                 </span>
                 {#if group.contexts.some((ctx) => ctx.resolved || appState.appliedFixes.has(appState.getInstanceKey(ctx)))}
-                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <span class="text-xs px-2 py-0.5 rounded-md bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                     <span>Đang sửa</span>
                   </span>
                 {/if}
-                <span class="ml-auto bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">
+                <span class="ml-auto bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-2.5 py-0.5 rounded-full shrink-0">
                   {group.contexts.length}
                 </span>
               </div>
