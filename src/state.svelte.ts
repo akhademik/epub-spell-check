@@ -24,9 +24,9 @@ import { logger } from "./utils/logger"
 import { analysisWorkerManager } from "./utils/worker-manager"
 
 export const ALL_ERROR_TYPES: ErrorType[] = [
-  "Dictionary",
+  "UnknownWord",
   "NonVietnamese",
-  "Uppercase",
+  "CaseError",
   "Typo",
   "Spelling",
   "SpecialCharacter"

@@ -19,9 +19,9 @@ describe("Filter Module", () => {
 
   const testGroups: ErrorGroup[] = [
     {
-      id: "người-Dictionary",
+      id: "người-UnknownWord",
       word: "người",
-      type: "Dictionary",
+      type: "UnknownWord",
       reason: "Không có trong từ điển tiếng Việt",
       count: 1,
       contexts: []
@@ -35,9 +35,9 @@ describe("Filter Module", () => {
       contexts: []
     },
     {
-      id: "ATM-Uppercase",
+      id: "ATM-CaseError",
       word: "ATM",
-      type: "Uppercase",
+      type: "CaseError",
       reason: "Lỗi viết hoa",
       count: 1,
       contexts: []
@@ -73,9 +73,9 @@ describe("Filter Module", () => {
     }
     const groups: ErrorGroup[] = [
       {
-        id: "ipad-Dictionary",
+        id: "ipad-UnknownWord",
         word: "ipad",
-        type: "Dictionary",
+        type: "UnknownWord",
         reason: "Không có trong VN dict",
         count: 1,
         contexts: []
@@ -97,7 +97,7 @@ describe("Filter Module", () => {
       { vietnamese: false, nonVietnamese: true },
       mockDictionaries
     )
-    expect(withoutVN.some((g) => g.type === "Dictionary")).toBe(false)
+    expect(withoutVN.some((g) => g.type === "UnknownWord")).toBe(false)
     expect(withoutVN.some((g) => g.type === "NonVietnamese")).toBe(true)
   })
 
@@ -117,11 +117,11 @@ describe("Filter Module", () => {
       [],
       defaultCheckSettings,
       mockDictionaries,
-      new Set(["Dictionary"])
+      new Set(["UnknownWord"])
     )
-    expect(onlyTypoAndDict.some((g) => g.type === "Dictionary")).toBe(true)
+    expect(onlyTypoAndDict.some((g) => g.type === "UnknownWord")).toBe(true)
     expect(onlyTypoAndDict.some((g) => g.type === "NonVietnamese")).toBe(false)
-    expect(onlyTypoAndDict.some((g) => g.type === "Uppercase")).toBe(false)
+    expect(onlyTypoAndDict.some((g) => g.type === "CaseError")).toBe(false)
   })
 
   it("should return empty array when enabledTypes is empty", () => {
@@ -140,7 +140,7 @@ describe("Filter Module", () => {
       {
         id: "1",
         word: "từ",
-        type: "Dictionary",
+        type: "UnknownWord",
         reason: "dict",
         count: 1,
         contexts: []
@@ -156,7 +156,7 @@ describe("Filter Module", () => {
       {
         id: "3",
         word: "sÁch",
-        type: "Uppercase",
+        type: "CaseError",
         reason: "upper",
         count: 1,
         contexts: []
@@ -204,7 +204,7 @@ describe("Filter Module", () => {
       {
         id: "1",
         word: "từ1",
-        type: "Dictionary",
+        type: "UnknownWord",
         reason: "dict",
         count: 1,
         contexts: []
@@ -227,14 +227,14 @@ describe("Filter Module", () => {
       }
     ]
 
-    // Case 1: enabledTypes has Dictionary + Typo, but vietnamese check is OFF
-    // Expected: [] because Dictionary & Typo are Vietnamese categories
+    // Case 1: enabledTypes has UnknownWord + Typo, but vietnamese check is OFF
+    // Expected: [] because UnknownWord & Typo are Vietnamese categories
     const withoutVN = getFilteredErrors(
       mixedGroups,
       [],
       { vietnamese: false, nonVietnamese: true },
       mockDictionaries,
-      new Set(["Dictionary", "Typo"])
+      new Set(["UnknownWord", "Typo"])
     )
     expect(withoutVN).toEqual([])
 
@@ -271,7 +271,7 @@ describe("Filter Module", () => {
     }
     const getItem = (k: string) => mockStorage[k] || null
 
-    const initialTypes = ["Dictionary", "Typo", "Uppercase"]
+    const initialTypes = ["UnknownWord", "Typo", "CaseError"]
     const envelope = {
       version: 1,
       data: initialTypes
@@ -283,27 +283,27 @@ describe("Filter Module", () => {
     expect(raw).not.toBeNull()
     const parsed = JSON.parse(raw as string)
     expect(parsed.version).toBe(1)
-    expect(parsed.data).toEqual(["Dictionary", "Typo", "Uppercase"])
+    expect(parsed.data).toEqual(["UnknownWord", "Typo", "CaseError"])
 
     // Verify Set reconstitution
     const reconstructedSet = new Set(parsed.data)
-    expect(reconstructedSet.has("Dictionary")).toBe(true)
+    expect(reconstructedSet.has("UnknownWord")).toBe(true)
     expect(reconstructedSet.has("Typo")).toBe(true)
-    expect(reconstructedSet.has("Uppercase")).toBe(true)
+    expect(reconstructedSet.has("CaseError")).toBe(true)
     expect(reconstructedSet.has("NonVietnamese")).toBe(false)
   })
 
   it("should sanitize and filter out invalid/corrupted error types from storage with fallback", () => {
     const ALL_ERROR_TYPES: string[] = [
-      "Dictionary",
+      "UnknownWord",
       "NonVietnamese",
-      "Uppercase",
+      "CaseError",
       "Typo",
       "Spelling",
       "SpecialCharacter"
     ]
     const corruptedSavedTypes: unknown[] = [
-      "Dictionary",
+      "UnknownWord",
       "Typo",
       "FakeType",
       "UnknownType",
@@ -318,7 +318,7 @@ describe("Filter Module", () => {
 
     const sanitizedSet = new Set(sanitized)
     expect(sanitizedSet.size).toBe(2)
-    expect(sanitizedSet.has("Dictionary")).toBe(true)
+    expect(sanitizedSet.has("UnknownWord")).toBe(true)
     expect(sanitizedSet.has("Typo")).toBe(true)
     expect(sanitizedSet.has("FakeType")).toBe(false)
 

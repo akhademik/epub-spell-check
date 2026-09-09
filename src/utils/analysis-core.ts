@@ -118,14 +118,14 @@ export function getErrorType(
   const hasInternalUpper = /\p{Ll}\p{Lu}/u.test(word)
 
   // 1. Words with 2+ uppercase letters (e.g. VIP, ATM, tÔi, PHARAOH) or camelCase
-  // Must exist in custom / abbreviation dictionary to be exempt, otherwise flagged as Uppercase error
+  // Must exist in custom / abbreviation dictionary to be exempt, otherwise flagged as CaseError
   if (upperCount >= 2 || hasInternalUpper) {
     if (dictionaries.custom.has(word)) {
       return null
     }
     if (checkSettings.vietnamese) {
       return {
-        type: "Uppercase",
+        type: "CaseError",
         reason: "Viết hoa bất thường"
       }
     }
@@ -230,7 +230,7 @@ export function getErrorType(
         return { type: "Spelling", reason: "Sai quy tắc c" }
     }
 
-    return { type: "Dictionary", reason: "Không có trong VN dict" }
+    return { type: "UnknownWord", reason: "Không có trong VN dict" }
   }
 
   return null

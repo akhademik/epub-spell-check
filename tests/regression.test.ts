@@ -110,13 +110,13 @@ describe("Regression Safety Net", () => {
       expect(typoError?.reason).toBe("Gõ máy (Typo)")
     })
 
-    it("accurately flags unknown words like tòong as Dictionary error", () => {
+    it("accurately flags unknown words like tòong as UnknownWord error", () => {
       const error = getErrorType(
         "tòong",
         mockDictionaries,
         defaultCheckSettings
       )
-      expect(error?.type).toBe("Dictionary")
+      expect(error?.type).toBe("UnknownWord")
     })
   })
 

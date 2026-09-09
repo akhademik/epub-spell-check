@@ -13,20 +13,26 @@ Một công cụ web hiện đại, nhanh chóng và mạnh mẽ để phát hi�
   - **4. Từ điển Viết tắt & Tuỳ chỉnh (`custom-dict.txt` - ~260 từ):** Nhận diện các từ viết tắt kỹ thuật, tổ chức, số La Mã (VIP, ATM, DNA, FBI, CIA, NKVD, GPU, XIX, XXI,...).
 - **Cơ chế kiểm tra thông minh & Khử trùng tuyệt đối:**
   - **Soát lỗi Case-Insensitive:** Tên riêng (`Jeans`, `Olive`, `Alexander`) hay chữ thường (`jeans`, `olive`, `alexander`) đều được nhận diện hợp lệ không phân biệt hoa thường.
-  - **Quy tắc bắt lỗi viết hoa (≥ 2 chữ in hoa):** Các từ viết hoa bất thường (do gõ nhầm CapsLock `tÔi`, `sÁch`) sẽ được phát hiện chính xác, trừ khi nằm trong từ điển viết tắt (`custom-dict.txt`).
+  - **Quy tắc bắt lỗi viết hoa bất thường (`CaseError`):** Các từ viết hoa bất thường do gõ nhầm CapsLock/Shift (`tÔi`, `sÁch`, `VIệT`) sẽ được phát hiện chính xác, trừ khi nằm trong từ điển viết tắt (`custom-dict.txt`).
   - **Miễn nhiễm dấu thanh mới & cũ:** Hỗ trợ song song cả 2 phong cách đặt dấu thanh (`hòa`/`hoà`, `hóa`/`hoá`, `thủy`/`thuỷ`, `khỏe`/`khoẻ`,...) mà không báo lỗi giả.
-  - **Lỗi Tiếng Việt:** Phân loại rõ ràng từ không có trong từ điển tiếng Việt, lỗi gõ máy typo (`aa`, `ee`, `oo`), lỗi sai quy tắc phụ âm chính tả (`ngh`/`ng`, `gh`/`g`, `k`/`c`).
+  - **Hệ thống 6 nhóm lỗi chuẩn hóa:**
+    1. `UnknownWord`: Từ lạ không xác định được trong từ điển tiếng Việt.
+    2. `NonVietnamese`: Từ ngoại ngữ hoặc chứa ký tự ngoại ngữ (`f, j, w, z`, dấu lược `'`).
+    3. `CaseError`: Lỗi viết hoa bất thường hoặc camelCase không thuộc từ điển tuỳ chỉnh.
+    4. `Typo`: Lỗi gõ máy lặp phím Telex/VNI (`aa`, `ee`, `oo`, `dd`,...).
+    5. `Spelling`: Lỗi sai quy tắc phụ âm tiếng Việt (`ngh`/`ng`, `gh`/`g`, `k`/`c`).
+    6. `SpecialCharacter`: Ký tự rác Unicode, ký tự điều khiển hoặc artifact OCR.
 - **Thứ tự Ưu tiên Phân loại & Đối chiếu (Dictionary Precedence):**
   - Quá trình kiểm tra và phân loại từ ngữ tuân theo quy tắc ưu tiên chính thức:
-    $$\text{CUSTOM} \rightarrow \text{NAMES} \rightarrow \text{NON-VN} \rightarrow \text{VN} \rightarrow \text{SPELLING RULES} \rightarrow \text{UNKNOWN}$$
+    $$\text{CUSTOM} \rightarrow \text{NAMES} \rightarrow \text{NON-VN} \rightarrow \text{VN} \rightarrow \text{SPELLING RULES} \rightarrow \text{UNKNOWN WORD}$$
     1. **CUSTOM (Viết tắt/Ký hiệu):** Ưu tiên tuyệt đối, bao gồm từ viết tắt nhiều chữ hoa và thuật ngữ đặc biệt.
     2. **NAMES (Tên riêng/Địa danh):** Nhận diện tên riêng không phân biệt hoa thường.
     3. **NON-VN (Ngoại ngữ):** Nhận diện từ mượn và ngoại ngữ thông dụng.
     4. **VN (Tiếng Việt):** Đối chiếu từ vựng tiếng Việt chuẩn, hỗ trợ cả 2 phong cách đặt dấu thanh.
     5. **SPELLING RULES (Quy tắc chính tả & Typo):** Phân tích quy tắc kết hợp phụ âm (`ngh`/`ng`, `gh`/`g`, `k`/`c`) và lỗi gõ máy (`aa`, `ee`,...).
-    6. **UNKNOWN (Lỗi từ điển):** Từ không thuộc bất kỳ nhóm nào trên.
+    6. **UNKNOWN WORD (Từ lạ):** Từ không thuộc bất kỳ nhóm nào trên.
 - **Giao diện trực quan & Trải nghiệm soát lỗi tối ưu:**
-  - **Bộ lọc loại lỗi đa chọn (Multi-select Error Types Filter):** Cho phép bật/tắt linh hoạt từng nhóm lỗi (`Lỗi Tiếng Việt`, `Lỗi Viết hoa`, `Từ Ngoại ngữ/Mượn`, `Từ không xác định`) hoặc chọn nhanh "Tất cả / Bỏ chọn tất cả", tự động lưu tuỳ chọn vào `localStorage`.
+  - **Bộ lọc loại lỗi đa chọn (Multi-select Error Types Filter):** Cho phép bật/tắt linh hoạt từng nhóm lỗi (`Từ lạ`, `Lỗi viết hoa`, `Ngoại ngữ`, `Typo`, `Chính tả`, `Ký tự lạ`) hoặc chọn nhanh "Tất cả / Bỏ chọn tất cả", tự động lưu tuỳ chọn vào `localStorage`.
   - Giao diện Responsive hoàn hảo cho cả thiết bị di động và máy tính để bàn.
   - Khung xem trước ngữ cảnh (Preview Context) mở rộng, hiển thị thoáng mắt với độ giãn dòng `1.8`, làm nổi bật từ lỗi.
   - Tích hợp công cụ tra cứu tức thì 1-click trên **Wiktionary** và **Google Search**.

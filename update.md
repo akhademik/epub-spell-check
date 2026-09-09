@@ -1,260 +1,4 @@
-1. ⚠️ Pre-commit hook đang có một vấn đề lớn hơn bạn nghĩ
-
-Hiện hook chạy:
-
-pre-commit
-→ pnpm dicts:pull-from-kv
-→ wrangler kv key get × 4
-→ git add public/\*.txt
-→ commit tiếp tục
-
-Cách này đúng về mặt workflow, nhưng script hiện tại chỉ đọc wrangler.toml và lấy id bằng regex.
-
-Điều mình lo hơn là:
-
-const cmd = `npx wrangler kv key get ...`
-
-Bạn đang dùng npx trong một project mà package manager chính là pnpm.
-
-Trong package.json, toàn bộ workflow hiện tại dùng pnpm, và tsx/Wrangler workflow cũng nên nhất quán theo hướng đó.
-
-Mình đề xuất
-
-Nếu Wrangler đã là dependency của project:
-
-pnpm exec wrangler ...
-
-Nếu chưa muốn thêm Wrangler dependency, vẫn có thể giữ npx, nhưng mình thích:
-
-pnpm dlx wrangler ...
-
-hơn npx trong môi trường pnpm.
-
-Nhưng tốt nhất: kiểm tra xem Wrangler hiện được khai báo ở đâu. Nếu chưa có, mình sẽ không vội thêm dependency chỉ vì hook.
-
----
-
-2. ⚠️ Non-blocking hiện tại hơi "quá im lặng"
-
-Đây là điểm mình muốn bạn sửa.
-
-Hiện tại:
-
-} catch {
-// Non-blocking: network timeout, offline, not logged in to wrangler
-}
-
-Tức là:
-
-KV pull fail → commit vẫn thành công → nhưng developer không biết dictionary không được sync.
-
-Điều này nguy hiểm hơn việc block commit.
-
-Ví dụ:
-
-KV:
-vn-dict = 10,000 words
-
-local:
-vn-dict = 9,500 words
-
-git commit
-
-Nếu Wrangler login hết hạn, hook fail nhưng không báo gì.
-
-Sau đó bạn push commit và tưởng rằng public/ đã đồng bộ KV.
-
-Mình đề xuất behavior:
-KV sync thành công
-↓
-✓ synced
-
-KV không truy cập được
-↓
-⚠️ WARNING: KV sync skipped
-commit vẫn tiếp tục
-
-Tức là non-blocking nhưng observable.
-
-Ví dụ:
-
-⚠️ [dict-sync] Không thể đồng bộ vn-dict từ KV.
-Commit vẫn tiếp tục.
-Lý do: Wrangler authentication/network unavailable.
-
-Không cần dump stack trace.
-
-Đây là một thay đổi nhỏ nhưng rất đáng làm.
-
----
-
-3. 🔴 Quan trọng: hook đang git add nhưng chưa bảo vệ staged state
-
-Đây là edge case mình nghĩ nên xử lý.
-
-Giả sử bạn đang sửa:
-
-public/vn-dict.txt
-
-và đã stage một phần.
-
-Sau đó:
-
-git commit
-
-hook lấy KV rồi:
-
-fs.writeFileSync(...)
-git add public/vn-dict.txt
-
-=> toàn bộ file dictionary mới có thể được stage.
-
-Trong trường hợp dictionary là generated/synchronized artifact thì điều này có thể đè lên ý định staging của developer.
-
-Mình nghiêng về policy:
-
-public/\*-dict.txt là generated mirror của KV → hook có quyền cập nhật toàn bộ file.
-
-Nếu đó là chủ đích của project thì OK, nhưng phải ghi rõ trong documentation:
-
-public/\*-dict.txt không được manually edit; KV là source of truth.
-
-Hiện README đã nói chúng là static/fallback data và production ưu tiên KV, nhưng chưa nhấn đủ mạnh rằng KV là canonical source.
-
-Mình khuyên thêm:
-
-Cloudflare KV = canonical dictionary source
-public/\*-dict.txt = local/dev/fallback snapshot
-
-Cái này sẽ làm architecture rõ ràng hơn rất nhiều.
-
----
-
-4. Multi-toggle hiện tại đã đúng architecture, nhưng còn một bug UX nhỏ
-
-Phần này mình đánh giá cao thay đổi của bạn.
-
-Hiện tại:
-
-enabledErrorTypes = $state<Set<ErrorType>>(...)
-
-và:
-
-currentFilteredErrors = $derived(
-getFilteredErrors(
-...
-this.enabledErrorTypes
-)
-)
-
-Sau đó:
-
-totalErrorInstances
-totalErrorGroups
-
-đều derive từ currentFilteredErrors.
-
-=> Đây chính xác là architecture nên có.
-
----
-
-Nhưng isAllSelected có semantics hơi lạ
-
-Bạn đang dùng:
-
-ALL_ERROR_TYPES.every(
-(t) => appState.enabledErrorTypes.has(t)
-)
-
-và button:
-
-{isAllSelected ? "Bỏ chọn tất cả" : "Tất cả"}
-
-Logic này thực ra ổn.
-
-Nhưng UX:
-
-[Tất cả] [Từ điển VN] [Ngoại ngữ] [Viết hoa] ...
-
-khi chỉ bật:
-
-VN + Ngoại ngữ + Typo
-
-button hiện:
-
-Tất cả
-
-và click vào sẽ bật toàn bộ.
-
-Đúng.
-
-Nhưng khi tất cả đang bật, button:
-
-Bỏ chọn tất cả
-
-là hơi khác convention của UI filter.
-
-Mình vẫn giữ nguyên, vì nó giúp thao tác nhanh.
-
----
-
-5. Có một điểm mình muốn bổ sung vào test
-
-Test hiện tại đã có:
-
-should filter out errors whose type is not in enabledTypes
-
-và:
-
-should return empty array when enabledTypes is empty
-
-=> tốt.
-
-Nhưng còn thiếu interaction giữa các filter.
-
-Đây mới là regression test quan trọng.
-
-Ví dụ:
-
-enabledTypes = Dictionary + Typo
-checkSettings.vietnamese = false
-
-Expected:
-
-[]
-
-vì:
-
-enabledTypes
-↓
-Dictionary + Typo
-↓
-Vietnamese check OFF
-↓
-lọc tiếp
-↓
-[]
-
-Nên có test:
-
-should apply enabledTypes together with checkSettings 6. Mình cũng muốn test SpecialCharacter
-
-Trong code bạn đã chính thức đưa:
-
-ALL_ERROR_TYPES = [
-"Dictionary",
-"NonVietnamese",
-"Uppercase",
-"Typo",
-"Spelling",
-"SpecialCharacter"
-]
-
-và UI cũng dynamically thêm SpecialCharacter.
-
-Nhưng test fixture hiện tại chưa có SpecialCharacter.
-
-Mình sẽ thêm ít nhất:
+Mình đã kiểm tra lại cách project đang định nghĩa ErrorType hiện tại. Hiện có 6 loại:
 
 Dictionary
 NonVietnamese
@@ -263,179 +7,460 @@ Typo
 Spelling
 SpecialCharacter
 
-rồi test:
+Theo mình, ý tưởng phân loại hiện tại đúng hướng, nhưng tên gọi và ranh giới giữa Dictionary / Typo / Spelling chưa thật sự tối ưu. Nếu project này hướng tới một spell checker dùng lâu dài, mình sẽ chỉnh classification ngay bây giờ, trước khi dữ liệu lỗi phát triển nhiều.
 
-enabledTypes = [SpecialCharacter]
+1. Vấn đề lớn nhất: Dictionary hơi mơ hồ
 
-Expected:
+Dictionary thực chất không phải là một loại lỗi ngôn ngữ, mà là:
 
-only SpecialCharacter
-
-Điều này đảm bảo sau này thêm type mới không vô tình làm filter hỏng.
-
-7. Một vấn đề kiến trúc nhỏ: filter.ts đang có 2 tầng filter
-
-Hiện:
-
-if (enabledTypes && !enabledTypes.has(group.type)) {
-return false
-}
-
-sau đó lại:
-
-if (!checkSettings.nonVietnamese && ...)
-
-và:
-
-if (!checkSettings.vietnamese && ...)
-
-Tức là:
-
-enabledErrorTypes +
-checkSettings +
-whitelist +
-custom +
-names
-
-đều filter cùng một pipeline.
-
-Hiện tại chưa cần refactor.
-
-Nhưng về lâu dài mình sẽ đổi semantics documentation thành:
-
-enabledErrorTypes
-= UI visibility filter
-
-checkSettings
-= analysis-category enable/disable
-
-Hai cái này không cùng ý nghĩa.
+"Từ này không có trong Vietnamese dictionary."
 
 Ví dụ:
 
-Vietnamese checking = ON
-Dictionary filter = OFF
+Tôi đang đọc quyển sach rất hay.
+^^^^
 
-nghĩa là:
-
-vẫn phân tích Dictionary nhưng UI không hiển thị Dictionary.
-
-Trong khi:
-
-Vietnamese checking = OFF
-
-nghĩa là:
-
-không coi Vietnamese errors là active.
-
-Đây là distinction rất quan trọng.
-
-8. Một cải tiến mình rất khuyến nghị: reset selection khi filter làm mất current group
-
-Hiện:
-
-currentGroup = $derived.by(() => {
-if (this.currentFilteredErrors.length === 0) return null
-
-if (this.selectedGroupId) {
-const match = this.currentFilteredErrors.find(
-(g) => g.id === this.selectedGroupId
-)
-if (match) return match
-}
-
-return this.currentFilteredErrors[0]
-})
-
-Cách này không sai.
+Nếu sach không có trong dictionary → Dictionary.
 
 Nhưng:
 
-User đang chọn:
-Typo → "teh"
+Tôi đang đọc quyển sách rất hay.
 
-User tắt Typo
+thì không có lỗi.
 
-selectedGroupId vẫn giữ:
+Vấn đề là Dictionary có thể chứa rất nhiều nguyên nhân khác nhau:
 
-teh-Typo
+sach → có thể là typo
+thanhf → có thể là typo
+abcxyz → có thể là từ nước ngoài
+Nguyen → có thể là tên riêng
+OpenAI → brand
 
-currentGroup fallback sang item đầu tiên.
+Trong đó abcxyz bị bắt bởi Dictionary không có nghĩa nó là "lỗi từ điển".
 
-Nhưng state:
+Vì vậy mình đề xuất đổi:
 
-selectedGroupId
+Dictionary → UnknownWord
 
-vẫn là ID cũ.
+hoặc nếu muốn ngắn:
 
-Điều này có thể tạo những edge case khó debug sau này.
+Unknown
 
-Mình đề xuất
+Mình thích UnknownWord hơn.
 
-Khi filter thay đổi:
+Nó thể hiện chính xác:
 
-selectedGroupId không còn tồn tại
-↓
-selectedGroupId = null
-currentInstanceIndex = 0
+Hệ thống không xác định được từ này trong các dictionary hiện có.
 
-Hoặc tốt hơn nữa, làm cho currentGroup trở thành source of truth và không phụ thuộc quá nhiều vào stale selection.
+2. NonVietnamese — nên giữ
 
-Không phải blocker, nhưng nên xử lý trước khi project lớn hơn.
+Cái này khá rõ ràng.
 
-9. visibleCount hiện tại xử lý khá tốt
+Ví dụ:
 
-Mình đã kiểm tra ErrorList.svelte.
+This is a book.
+^^^^^^^^
 
-Bạn đã làm:
+hoặc:
 
-if (searchQuery.trim()) ...
+Tôi thích reading sách.
+^^^^^^^
 
-sau đó:
+→ NonVietnamese
 
-list.sort((a, b) => b.count - a.count)
+Tuy nhiên cần phân biệt:
 
-và:
+OpenAI
+GitHub
+YouTube
+ChatGPT
 
-filteredList.slice(0, visibleCount)
+không nên thành NonVietnamese nếu chúng nằm trong custom dictionary.
 
-Đồng thời mỗi lần toggle:
+Tương tự tên riêng:
 
-visibleCount = 30
+Alexander
+Parmenion
 
-và search cũng reset về 30.
+→ Names, không phải NonVietnamese.
 
-Phần này mình không đề xuất sửa.
+Tên NonVietnamese ổn.
 
-Đây là implementation đơn giản và hợp lý.
+Mình không đổi.
 
-10. Một thứ nữa nên thêm: test persistence của filter
+3. Uppercase — nên đổi tên
 
-Bạn đã làm:
+Uppercase theo nghĩa kỹ thuật chỉ có nghĩa:
 
-saveStorage(
-STORAGE_KEYS.ENABLED_ERROR_TYPES,
-Array.from(next)
-)
+chữ viết hoa.
 
-và load lại bằng:
+Nhưng lỗi thực tế của bạn có vẻ là:
 
-loadStorage<ErrorType[]>(
-STORAGE_KEYS.ENABLED_ERROR_TYPES,
-ALL_ERROR_TYPES
-)
+sử dụng chữ hoa bất thường.
 
-Đây là feature mới nhưng test hiện tại chủ yếu test getFilteredErrors, chưa test persistence.
+Ví dụ:
 
-Mình sẽ thêm test cho:
+TÔi
+^^
 
-default
-→ all enabled
+hoặc:
 
-toggle Typo
-→ Typo disabled
+VIệT
+^^
 
-reload
-→ Typo remains disabled
+hoặc:
 
-Nếu test AppStateModel khó vì Svelte 5 state runtime thì ít nhất nên có test cho helper/storage logic nếu bạn tách được.
+NguyỄn
+^^^
+
+Trong khi:
+
+NASA
+USA
+HTML
+PDF
+
+không phải lỗi.
+
+Và:
+
+iPhone
+iPad
+eBay
+GitHub
+OpenAI
+
+cũng không phải lỗi.
+
+Do đó tên tốt hơn là:
+
+AbnormalCase
+
+hoặc rõ nghĩa hơn:
+
+CaseError
+
+Mình nghiêng về CaseError.
+
+Ví dụ UI:
+
+Case Error
+VIệT → Việt
+
+thay vì:
+
+Uppercase
+VIệT
+
+Uppercase dễ khiến người dùng hiểu nhầm rằng từ viết toàn chữ hoa là lỗi.
+
+4. Typo — nên giữ, nhưng phải định nghĩa rất rõ
+
+Typo là lỗi gõ nhầm, ví dụ:
+
+ngườii → người
+quyyển → quyển
+sach → sách
+đọcj → đọc
+
+Đây là một classification rất hữu ích.
+
+Nhưng có một vấn đề:
+
+Typo và Spelling rất dễ chồng lên nhau.
+
+Ví dụ:
+
+sách → sach
+
+là:
+
+typo?
+spelling error?
+missing diacritic?
+
+Nếu không định nghĩa rõ, sau này detection engine sẽ không biết nên đưa vào loại nào.
+
+5. Spelling — mình nghĩ nên giữ, nhưng đổi ý nghĩa
+
+Mình sẽ định nghĩa:
+
+Typo
+
+= lỗi do gõ nhầm / dư / thiếu / đảo ký tự
+
+Ví dụ:
+
+người → ngừoi
+quyển → quyyển
+thành → thnah
+Spelling
+
+= từ được viết sai chính tả theo quy tắc ngôn ngữ, không đơn thuần là lỗi keyboard.
+
+Ví dụ:
+
+xử lí → xử lý
+kỉ niệm → kỷ niệm
+sử dụng → sữ dụng
+
+Hoặc các quy tắc chính tả tiếng Việt mà engine biết chắc.
+
+Điểm quan trọng là:
+
+Typo = pattern của lỗi nhập liệu
+Spelling = pattern của lỗi chính tả
+
+Nếu không có rule engine đủ mạnh để phân biệt hai loại này thì không nên cố tách.
+
+6. SpecialCharacter — nên giữ
+
+Loại này rất hữu ích cho EPUB/OCR.
+
+Ví dụ:
+
+Việt¬Nam
+^
+
+hoặc:
+
+hello�
+^
+
+hoặc những ký tự OCR rác:
+
+Tôi đang đọc sách¦
+^
+
+Các ký tự Unicode bất thường, control character, OCR artifact... nên được đưa vào nhóm này.
+
+Nhưng mình sẽ định nghĩa nó rộng hơn một chút:
+
+SpecialCharacter
+
+Ký tự không mong muốn xuất hiện trong văn bản.
+
+Ví dụ:
+
+¬
+�
+¦
+¤
+□
+
+Không nên dùng nó cho các punctuation hợp lệ:
+
+,
+.
+!
+?
+:
+;
+
+- …
+  “
+  ”
+  Classification mình đề xuất
+
+Nếu làm lại từ đầu, mình sẽ dùng:
+
+Type Ý nghĩa Ví dụ
+UnknownWord Không xác định được từ abcxyz
+NonVietnamese Từ/cụm từ không phải tiếng Việt reading
+CaseError Viết hoa/thường bất thường VIệT
+Typo Lỗi gõ nhầm ngừoi
+Spelling Lỗi chính tả sữ dụng
+SpecialCharacter Ký tự rác/bất thường sách�
+
+Đây là classification mình thấy sạch nhất cho project hiện tại.
+
+7. Nhưng mình còn đề xuất một thay đổi quan trọng hơn
+
+Không nên cố biến mọi thứ không có trong dictionary thành một ErrorType riêng.
+
+Ví dụ:
+
+Alexander
+OpenAI
+NASA
+iPhone
+
+không phải lỗi.
+
+Bạn đã có:
+
+custom dictionary
+names dictionary
+non-vn dictionary
+vn dictionary
+
+Do đó nên xem dictionary như knowledge layer, còn ErrorType là problem layer.
+
+Tức là:
+
+                 Word
+                  │
+       ┌──────────┴──────────┐
+       │                     │
+
+Known word Unknown word
+│ │
+│ ┌──────┴──────┐
+│ │ │
+OK / valid Typo? NonVietnamese?
+│
+Spelling?
+
+Đây là cách mình nghĩ architecture sẽ dễ phát triển hơn.
+
+8. Một điểm mình đặc biệt khuyên: đừng để Dictionary = "lỗi"
+
+Hiện tại type:
+
+type ErrorType =
+| "Dictionary"
+| "NonVietnamese"
+| "Uppercase"
+| "Typo"
+| "Spelling"
+| "SpecialCharacter"
+
+vẫn hơi mang tính implementation-oriented.
+
+Nếu đổi thành:
+
+type ErrorType =
+| "UnknownWord"
+| "NonVietnamese"
+| "CaseError"
+| "Typo"
+| "Spelling"
+| "SpecialCharacter"
+
+thì đọc code sẽ tự nhiên hơn:
+
+if (group.type === "UnknownWord")
+
+người đọc lập tức hiểu:
+
+Không xác định được từ.
+
+Trong khi:
+
+if (group.type === "Dictionary")
+
+sẽ phải tự hỏi:
+
+Dictionary error là lỗi gì? Dictionary thiếu từ? Sai dictionary? Hay từ sai?
+
+9. Có cần tách thêm loại nào không?
+
+Hiện tại: chưa cần.
+
+Mình không khuyên thêm 10–15 loại kiểu:
+
+MissingAccent
+ExtraCharacter
+MissingCharacter
+DuplicateCharacter
+WrongCharacter
+OCR
+ForeignName
+Brand
+Abbreviation
+...
+
+vào ErrorType.
+
+Những cái đó nên là reason/subtype, không phải top-level ErrorType.
+
+Ví dụ:
+
+Typo
+├── MissingCharacter
+├── ExtraCharacter
+├── Transposition
+└── DuplicateCharacter
+
+Spelling
+├── WrongDiacritic
+├── WrongConsonant
+└── WrongVowel
+
+SpecialCharacter
+├── OCRArtifact
+├── InvalidUnicode
+└── ControlCharacter
+
+Trong data model hiện tại bạn đã có reason?: string, nên rất thích hợp để chứa lớp thông tin chi tiết này.
+
+Ví dụ:
+
+{
+word: "ngừoi",
+type: "Typo",
+reason: "Transposition",
+suggestions: ["người"]
+}
+
+hoặc:
+
+{
+word: "sữ dụng",
+type: "Spelling",
+reason: "WrongDiacritic",
+suggestions: ["sử dụng"]
+}
+
+Như vậy UI có thể hiển thị:
+
+Typo
+Transposition
+ngừoi → người
+
+rất đẹp.
+
+10. Kết luận của mình
+
+Mình sẽ không thay đổi số lượng loại, chỉ thay đổi semantics:
+
+- Dictionary
+
+* UnknownWord
+
+  NonVietnamese
+
+- Uppercase
+
+* CaseError
+
+  Typo
+  Spelling
+  SpecialCharacter
+
+Thành:
+
+type ErrorType =
+| "UnknownWord"
+| "NonVietnamese"
+| "CaseError"
+| "Typo"
+| "Spelling"
+| "SpecialCharacter"
+
+và dùng reason làm sub-classification.
+
+Mức độ ưu tiên
+
+Nên làm ngay:
+
+Dictionary → UnknownWord
+Uppercase → CaseError
+Chuẩn hóa định nghĩa Typo vs Spelling
+Quy định reason cho từng loại
+
+Chưa cần làm:
+
+thêm nhiều ErrorType mới.
+
+Theo mình đây là điểm đáng chỉnh trước khi project ổn định, vì sau này đổi tên ErrorType sẽ ảnh hưởng state, filter, UI, tests và dữ liệu đã lưu.

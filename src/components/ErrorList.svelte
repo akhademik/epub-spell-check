@@ -7,10 +7,12 @@
 
   function getDotColor(type: string): string {
     switch (type) {
+      case "UnknownWord":
       case "Dictionary":
         return "bg-rose-500 shadow-[0_0_8px_#f43f5e]"
       case "NonVietnamese":
         return "bg-blue-500 shadow-[0_0_8px_#3b82f6]"
+      case "CaseError":
       case "Uppercase":
         return "bg-amber-500 shadow-[0_0_8px_#f59e0b]"
       case "Typo":
@@ -26,12 +28,14 @@
 
   function getBadgeLabel(type: string): string {
     switch (type) {
+      case "UnknownWord":
       case "Dictionary":
-        return "Từ điển VN"
+        return "Từ lạ (Unknown)"
       case "NonVietnamese":
         return "Ngoại ngữ"
+      case "CaseError":
       case "Uppercase":
-        return "Viết hoa"
+        return "Lỗi viết hoa"
       case "Typo":
         return "Typo"
       case "Spelling":
@@ -66,9 +70,9 @@
   const displayableTypes = $derived.by(() => {
     const presentTypes = new Set(appState.allDetectedErrors.map((g) => g.type))
     const standardTypes: ErrorType[] = [
-      "Dictionary",
+      "UnknownWord",
       "NonVietnamese",
-      "Uppercase",
+      "CaseError",
       "Typo",
       "Spelling"
     ]
@@ -152,11 +156,11 @@
             type="button"
             onclick={() => { appState.toggleErrorType(type); visibleCount = 30; }}
             class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-all duration-150 border {isEnabled
-              ? type === 'Dictionary'
+              ? type === 'UnknownWord'
                 ? 'bg-rose-900/60 text-rose-300 border-rose-700/60 font-bold'
                 : type === 'NonVietnamese'
                 ? 'bg-blue-900/60 text-blue-300 border-blue-700/60 font-bold'
-                : type === 'Uppercase'
+                : type === 'CaseError'
                 ? 'bg-amber-900/60 text-amber-300 border-amber-700/60 font-bold'
                 : type === 'Typo'
                 ? 'bg-orange-900/60 text-orange-300 border-orange-700/60 font-bold'

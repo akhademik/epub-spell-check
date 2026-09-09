@@ -1,7 +1,7 @@
 export type ErrorType =
-  | "Dictionary"
+  | "UnknownWord"
   | "NonVietnamese"
-  | "Uppercase"
+  | "CaseError"
   | "Typo"
   | "Spelling"
   | "SpecialCharacter"

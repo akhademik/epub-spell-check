@@ -22,7 +22,7 @@ describe("Analyzer Module", () => {
         {
           word: "họp",
           originalWord: "họp",
-          type: "Dictionary",
+          type: "UnknownWord",
           reason: "Không có trong từ điển tiếng Việt",
           context: {
             originalParagraph: "họp hành",
@@ -36,7 +36,7 @@ describe("Analyzer Module", () => {
         {
           word: "tÔi",
           originalWord: "tÔi",
-          type: "Uppercase",
+          type: "CaseError",
           reason: "Lỗi viết hoa",
           context: {
             originalParagraph: "tÔi đi học",
@@ -50,7 +50,7 @@ describe("Analyzer Module", () => {
         {
           word: "họp",
           originalWord: "họp",
-          type: "Dictionary",
+          type: "UnknownWord",
           reason: "Không có trong từ điển tiếng Việt",
           context: {
             originalParagraph: "đi họp",

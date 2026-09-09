@@ -85,14 +85,14 @@ describe("Smoke Tests — Critical Path Workflows", () => {
     expect(grouped.some((g) => g.word === "hòa")).toBe(false)
     expect(grouped.some((g) => g.word === "hoà")).toBe(false)
 
-    // tòong should be flagged as Dictionary error
+    // tòong should be flagged as UnknownWord error
     expect(
-      grouped.some((g) => g.word === "tòong" && g.type === "Dictionary")
+      grouped.some((g) => g.word === "tòong" && g.type === "UnknownWord")
     ).toBe(true)
 
-    // tÔi should be flagged as Uppercase error
+    // tÔi should be flagged as CaseError error
     expect(
-      grouped.some((g) => g.word === "tÔi" && g.type === "Uppercase")
+      grouped.some((g) => g.word === "tÔi" && g.type === "CaseError")
     ).toBe(true)
 
     // fqzw should be flagged as NonVietnamese error
@@ -106,7 +106,7 @@ describe("Smoke Tests — Critical Path Workflows", () => {
       {
         word: "tòong",
         originalWord: "tòong",
-        type: "Dictionary",
+        type: "UnknownWord",
         reason: "Không có trong từ điển tiếng Việt",
         context: {
           originalParagraph: "tòong",
@@ -151,7 +151,7 @@ describe("Smoke Tests — Critical Path Workflows", () => {
       { vietnamese: false, nonVietnamese: true },
       mockDictionaries
     )
-    expect(filteredVnOff.some((g) => g.type === "Dictionary")).toBe(false)
+    expect(filteredVnOff.some((g) => g.type === "UnknownWord")).toBe(false)
     expect(filteredVnOff.some((g) => g.type === "NonVietnamese")).toBe(true)
 
     // Non-Vietnamese check toggled OFF:
@@ -162,7 +162,7 @@ describe("Smoke Tests — Critical Path Workflows", () => {
       mockDictionaries
     )
     expect(filteredNonVnOff.some((g) => g.type === "NonVietnamese")).toBe(false)
-    expect(filteredNonVnOff.some((g) => g.type === "Dictionary")).toBe(true)
+    expect(filteredNonVnOff.some((g) => g.type === "UnknownWord")).toBe(true)
   })
 
   it("Smoke 3: Whitelist addition and removal flow", () => {
@@ -170,7 +170,7 @@ describe("Smoke Tests — Critical Path Workflows", () => {
       {
         word: "tòong",
         originalWord: "tòong",
-        type: "Dictionary",
+        type: "UnknownWord",
         reason: "Không có trong từ điển tiếng Việt",
         context: {
           originalParagraph: "tòong",

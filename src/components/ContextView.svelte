@@ -5,10 +5,12 @@
 
   function getDotColor(type: string): string {
     switch (type) {
+      case "UnknownWord":
       case "Dictionary":
         return "bg-rose-500 shadow-[0_0_8px_#f43f5e]"
       case "NonVietnamese":
         return "bg-blue-500 shadow-[0_0_8px_#3b82f6]"
+      case "CaseError":
       case "Uppercase":
         return "bg-amber-500 shadow-[0_0_8px_#f59e0b]"
       case "Typo":
@@ -24,10 +26,12 @@
 
   function getHighlightStyle(type: string) {
     switch (type) {
+      case "UnknownWord":
       case "Dictionary":
         return "bg-rose-500/20 text-rose-300 border-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.3)]"
       case "NonVietnamese":
         return "bg-blue-500/20 text-blue-300 border-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.3)]"
+      case "CaseError":
       case "Uppercase":
         return "bg-amber-500/20 text-amber-300 border-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.3)]"
       case "Typo":

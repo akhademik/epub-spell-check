@@ -125,13 +125,13 @@ describe("Analysis Core", () => {
       expect(error?.reason).toBe("Gõ máy (Typo)")
     })
 
-    it("should flag tòong as Dictionary error", () => {
+    it("should flag tòong as UnknownWord error", () => {
       const error = getErrorType(
         "tòong",
         mockDictionaries,
         defaultCheckSettings
       )
-      expect(error?.type).toBe("Dictionary")
+      expect(error?.type).toBe("UnknownWord")
       expect(error?.reason).toBe("Không có trong VN dict")
     })
   })
@@ -204,19 +204,19 @@ describe("Analysis Core", () => {
       // ipad is lowercase, not in VN dict
       expect(
         getErrorType("ipad", customDicts, defaultCheckSettings)?.type
-      ).toBe("Dictionary")
+      ).toBe("UnknownWord")
       // iphone is lowercase, not in VN dict
       expect(
         getErrorType("iphone", customDicts, defaultCheckSettings)?.type
-      ).toBe("Dictionary")
+      ).toBe("UnknownWord")
       // IPHONE has uppercase anomalies
       expect(
         getErrorType("IPHONE", customDicts, defaultCheckSettings)?.type
-      ).toBe("Uppercase")
+      ).toBe("CaseError")
       // weChat has internal uppercase anomaly
       expect(
         getErrorType("weChat", customDicts, defaultCheckSettings)?.type
-      ).toBe("Uppercase")
+      ).toBe("CaseError")
     })
 
     it("should always accept Names Dictionary entries (Alexander, Parmenion, Persepolis) without errors", () => {
