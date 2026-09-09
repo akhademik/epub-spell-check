@@ -115,13 +115,13 @@ describe("Analysis Core", () => {
       expect(error?.reason).toBe("Sai quy tắc ng")
     })
 
-    it("should flag typo patterns as Typo error", () => {
+    it("should flag typo patterns as Spelling error with Typo reason", () => {
       const error = getErrorType(
         "nghiênaa",
         mockDictionaries,
         defaultCheckSettings
       )
-      expect(error?.type).toBe("Typo")
+      expect(error?.type).toBe("Spelling")
       expect(error?.reason).toBe("Gõ máy (Typo)")
     })
 

@@ -13,9 +13,8 @@
       case "CaseError":
       case "Uppercase":
         return "bg-amber-500 shadow-[0_0_8px_#f59e0b]"
-      case "Typo":
-        return "bg-orange-500 shadow-[0_0_8px_#f97316]"
       case "Spelling":
+      case "Typo":
         return "bg-purple-500 shadow-[0_0_8px_#a855f7]"
       case "SpecialCharacter":
         return "bg-pink-500 shadow-[0_0_8px_#ec4899]"
@@ -34,9 +33,8 @@
       case "CaseError":
       case "Uppercase":
         return "bg-amber-500/20 text-amber-300 border-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.3)]"
-      case "Typo":
-        return "bg-orange-500/20 text-orange-300 border-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.3)]"
       case "Spelling":
+      case "Typo":
         return "bg-purple-500/20 text-purple-300 border-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.3)]"
       case "SpecialCharacter":
         return "bg-pink-500/20 text-pink-300 border-pink-500 shadow-[0_0_12px_rgba(236,72,153,0.3)]"

@@ -163,14 +163,6 @@ describe("Filter Module", () => {
       },
       {
         id: "4",
-        word: "ngươii",
-        type: "Typo",
-        reason: "typo",
-        count: 1,
-        contexts: []
-      },
-      {
-        id: "5",
         word: "nghiêng",
         type: "Spelling",
         reason: "spelling",
@@ -178,7 +170,7 @@ describe("Filter Module", () => {
         contexts: []
       },
       {
-        id: "6",
+        id: "5",
         word: "test@#$",
         type: "SpecialCharacter",
         reason: "spec",
@@ -211,9 +203,9 @@ describe("Filter Module", () => {
       },
       {
         id: "2",
-        word: "typo1",
-        type: "Typo",
-        reason: "typo",
+        word: "spelling1",
+        type: "Spelling",
+        reason: "spelling",
         count: 1,
         contexts: []
       },
@@ -227,14 +219,14 @@ describe("Filter Module", () => {
       }
     ]
 
-    // Case 1: enabledTypes has UnknownWord + Typo, but vietnamese check is OFF
-    // Expected: [] because UnknownWord & Typo are Vietnamese categories
+    // Case 1: enabledTypes has UnknownWord + Spelling, but vietnamese check is OFF
+    // Expected: [] because UnknownWord & Spelling are Vietnamese categories
     const withoutVN = getFilteredErrors(
       mixedGroups,
       [],
       { vietnamese: false, nonVietnamese: true },
       mockDictionaries,
-      new Set(["UnknownWord", "Typo"])
+      new Set(["UnknownWord", "Spelling"])
     )
     expect(withoutVN).toEqual([])
 
@@ -248,17 +240,17 @@ describe("Filter Module", () => {
     )
     expect(withoutNonVN).toEqual([])
 
-    // Case 3: enabledTypes has NonVietnamese + Typo, with nonVietnamese check OFF
-    // Expected: only Typo remains
-    const typoOnly = getFilteredErrors(
+    // Case 3: enabledTypes has NonVietnamese + Spelling, with nonVietnamese check OFF
+    // Expected: only Spelling remains
+    const spellingOnly = getFilteredErrors(
       mixedGroups,
       [],
       { vietnamese: true, nonVietnamese: false },
       mockDictionaries,
-      new Set(["NonVietnamese", "Typo"])
+      new Set(["NonVietnamese", "Spelling"])
     )
-    expect(typoOnly).toHaveLength(1)
-    expect(typoOnly[0].type).toBe("Typo")
+    expect(spellingOnly).toHaveLength(1)
+    expect(spellingOnly[0].type).toBe("Spelling")
   })
 
   it("should handle storage serialization/deserialization for enabledErrorTypes with schema envelope", () => {
@@ -271,7 +263,7 @@ describe("Filter Module", () => {
     }
     const getItem = (k: string) => mockStorage[k] || null
 
-    const initialTypes = ["UnknownWord", "Typo", "CaseError"]
+    const initialTypes = ["UnknownWord", "Spelling", "CaseError"]
     const envelope = {
       version: 1,
       data: initialTypes
@@ -283,12 +275,12 @@ describe("Filter Module", () => {
     expect(raw).not.toBeNull()
     const parsed = JSON.parse(raw as string)
     expect(parsed.version).toBe(1)
-    expect(parsed.data).toEqual(["UnknownWord", "Typo", "CaseError"])
+    expect(parsed.data).toEqual(["UnknownWord", "Spelling", "CaseError"])
 
     // Verify Set reconstitution
     const reconstructedSet = new Set(parsed.data)
     expect(reconstructedSet.has("UnknownWord")).toBe(true)
-    expect(reconstructedSet.has("Typo")).toBe(true)
+    expect(reconstructedSet.has("Spelling")).toBe(true)
     expect(reconstructedSet.has("CaseError")).toBe(true)
     expect(reconstructedSet.has("NonVietnamese")).toBe(false)
   })
@@ -298,13 +290,12 @@ describe("Filter Module", () => {
       "UnknownWord",
       "NonVietnamese",
       "CaseError",
-      "Typo",
       "Spelling",
       "SpecialCharacter"
     ]
     const corruptedSavedTypes: unknown[] = [
       "UnknownWord",
-      "Typo",
+      "Spelling",
       "FakeType",
       "UnknownType",
       123,
@@ -319,7 +310,7 @@ describe("Filter Module", () => {
     const sanitizedSet = new Set(sanitized)
     expect(sanitizedSet.size).toBe(2)
     expect(sanitizedSet.has("UnknownWord")).toBe(true)
-    expect(sanitizedSet.has("Typo")).toBe(true)
+    expect(sanitizedSet.has("Spelling")).toBe(true)
     expect(sanitizedSet.has("FakeType")).toBe(false)
 
     // Test all-invalid fallback to ALL_ERROR_TYPES

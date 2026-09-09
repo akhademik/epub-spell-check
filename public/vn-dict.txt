@@ -3603,7 +3603,6 @@ kiệu
 kilo
 kilogam
 kilomet
-kilooat
 kilô
 kilôgam
 kilôgram
@@ -3733,7 +3732,6 @@ lát
 lạt
 lati
 latin
-latinh
 latti
 lau
 làu
@@ -4015,8 +4013,6 @@ lỏng
 lõng
 lóng
 lọng
-loong
-loòng
 lóp
 lọp
 lót
@@ -4213,7 +4209,6 @@ mạc
 macgarin
 mách
 mạch
-macketinh
 macma
 macô
 macro
@@ -4443,7 +4438,6 @@ minơ
 míp
 mít
 mịt
-mittinh
 miu
 mìu
 mỉu

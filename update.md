@@ -1,466 +1,335 @@
-Mình đã kiểm tra lại cách project đang định nghĩa ErrorType hiện tại. Hiện có 6 loại:
+vì typo và spelling ko xe dịch nhìu, để tiện thì gom vào luôn có được không? với lại tôi muốn là trong error list mặc định là sort by alphabet luôn vì hiện giờ nó ko phải theo alphabet, và trong trang admin sort alphabet va khi type to search co the debounce cho do ton traffic nhung cung nen strip dấu câu đi hiện giờ trong trang admin hình như search từ là theo chính xác và case senstive đúng ko ?
 
-Dictionary
+Có. Mình đồng ý gom Typo và Spelling thành một loại Spelling trong trường hợp project của bạn chủ yếu phục vụ việc rà soát EPUB. Hai loại này về mặt UX không đem lại nhiều giá trị để người dùng phải lọc riêng.
+
+Mình sẽ đề xuất classification cuối cùng:
+
+UnknownWord
 NonVietnamese
-Uppercase
-Typo
-Spelling
-SpecialCharacter
-
-Theo mình, ý tưởng phân loại hiện tại đúng hướng, nhưng tên gọi và ranh giới giữa Dictionary / Typo / Spelling chưa thật sự tối ưu. Nếu project này hướng tới một spell checker dùng lâu dài, mình sẽ chỉnh classification ngay bây giờ, trước khi dữ liệu lỗi phát triển nhiều.
-
-1. Vấn đề lớn nhất: Dictionary hơi mơ hồ
-
-Dictionary thực chất không phải là một loại lỗi ngôn ngữ, mà là:
-
-"Từ này không có trong Vietnamese dictionary."
-
-Ví dụ:
-
-Tôi đang đọc quyển sach rất hay.
-^^^^
-
-Nếu sach không có trong dictionary → Dictionary.
-
-Nhưng:
-
-Tôi đang đọc quyển sách rất hay.
-
-thì không có lỗi.
-
-Vấn đề là Dictionary có thể chứa rất nhiều nguyên nhân khác nhau:
-
-sach → có thể là typo
-thanhf → có thể là typo
-abcxyz → có thể là từ nước ngoài
-Nguyen → có thể là tên riêng
-OpenAI → brand
-
-Trong đó abcxyz bị bắt bởi Dictionary không có nghĩa nó là "lỗi từ điển".
-
-Vì vậy mình đề xuất đổi:
-
-Dictionary → UnknownWord
-
-hoặc nếu muốn ngắn:
-
-Unknown
-
-Mình thích UnknownWord hơn.
-
-Nó thể hiện chính xác:
-
-Hệ thống không xác định được từ này trong các dictionary hiện có.
-
-2. NonVietnamese — nên giữ
-
-Cái này khá rõ ràng.
-
-Ví dụ:
-
-This is a book.
-^^^^^^^^
-
-hoặc:
-
-Tôi thích reading sách.
-^^^^^^^
-
-→ NonVietnamese
-
-Tuy nhiên cần phân biệt:
-
-OpenAI
-GitHub
-YouTube
-ChatGPT
-
-không nên thành NonVietnamese nếu chúng nằm trong custom dictionary.
-
-Tương tự tên riêng:
-
-Alexander
-Parmenion
-
-→ Names, không phải NonVietnamese.
-
-Tên NonVietnamese ổn.
-
-Mình không đổi.
-
-3. Uppercase — nên đổi tên
-
-Uppercase theo nghĩa kỹ thuật chỉ có nghĩa:
-
-chữ viết hoa.
-
-Nhưng lỗi thực tế của bạn có vẻ là:
-
-sử dụng chữ hoa bất thường.
-
-Ví dụ:
-
-TÔi
-^^
-
-hoặc:
-
-VIệT
-^^
-
-hoặc:
-
-NguyỄn
-^^^
-
-Trong khi:
-
-NASA
-USA
-HTML
-PDF
-
-không phải lỗi.
-
-Và:
-
-iPhone
-iPad
-eBay
-GitHub
-OpenAI
-
-cũng không phải lỗi.
-
-Do đó tên tốt hơn là:
-
-AbnormalCase
-
-hoặc rõ nghĩa hơn:
-
 CaseError
-
-Mình nghiêng về CaseError.
-
-Ví dụ UI:
-
-Case Error
-VIệT → Việt
-
-thay vì:
-
-Uppercase
-VIệT
-
-Uppercase dễ khiến người dùng hiểu nhầm rằng từ viết toàn chữ hoa là lỗi.
-
-4. Typo — nên giữ, nhưng phải định nghĩa rất rõ
-
-Typo là lỗi gõ nhầm, ví dụ:
-
-ngườii → người
-quyyển → quyển
-sach → sách
-đọcj → đọc
-
-Đây là một classification rất hữu ích.
-
-Nhưng có một vấn đề:
-
-Typo và Spelling rất dễ chồng lên nhau.
-
-Ví dụ:
-
-sách → sach
-
-là:
-
-typo?
-spelling error?
-missing diacritic?
-
-Nếu không định nghĩa rõ, sau này detection engine sẽ không biết nên đưa vào loại nào.
-
-5. Spelling — mình nghĩ nên giữ, nhưng đổi ý nghĩa
-
-Mình sẽ định nghĩa:
-
-Typo
-
-= lỗi do gõ nhầm / dư / thiếu / đảo ký tự
-
-Ví dụ:
-
-người → ngừoi
-quyển → quyyển
-thành → thnah
 Spelling
-
-= từ được viết sai chính tả theo quy tắc ngôn ngữ, không đơn thuần là lỗi keyboard.
-
-Ví dụ:
-
-xử lí → xử lý
-kỉ niệm → kỷ niệm
-sử dụng → sữ dụng
-
-Hoặc các quy tắc chính tả tiếng Việt mà engine biết chắc.
-
-Điểm quan trọng là:
-
-Typo = pattern của lỗi nhập liệu
-Spelling = pattern của lỗi chính tả
-
-Nếu không có rule engine đủ mạnh để phân biệt hai loại này thì không nên cố tách.
-
-6. SpecialCharacter — nên giữ
-
-Loại này rất hữu ích cho EPUB/OCR.
-
-Ví dụ:
-
-Việt¬Nam
-^
-
-hoặc:
-
-hello�
-^
-
-hoặc những ký tự OCR rác:
-
-Tôi đang đọc sách¦
-^
-
-Các ký tự Unicode bất thường, control character, OCR artifact... nên được đưa vào nhóm này.
-
-Nhưng mình sẽ định nghĩa nó rộng hơn một chút:
-
 SpecialCharacter
 
-Ký tự không mong muốn xuất hiện trong văn bản.
+Trong đó Spelling bao gồm cả:
+
+ngừoi → người // typo / đảo ký tự
+quyyển → quyển // typo / dư ký tự
+sữ dụng → sử dụng // spelling
+sach → sách // thiếu dấu
+
+Nếu cần phân biệt sâu bên trong thì vẫn dùng reason:
+
+Spelling
+├─ Transposition
+├─ MissingCharacter
+├─ ExtraCharacter
+├─ WrongDiacritic
+└─ ...
+
+Không cần expose Typo riêng trong Error List.
+
+Còn 2 yêu cầu về sort/search: mình hoàn toàn đồng ý
+
+1. Error List → mặc định alphabet
+
+Mình nghĩ đây nên là default behavior, không cần người dùng chọn.
+
+Ví dụ hiện tại phát hiện:
+
+người
+Amazon
+sách
+Apple
+bạn
+
+thì Error List nên luôn hiển thị:
+
+Amazon
+Apple
+bạn
+người
+sách
+
+Và nên sort theo localeCompare, không phải sort ASCII đơn giản, để tiếng Việt hoạt động đúng:
+
+a.word.localeCompare(b.word, "vi", {
+sensitivity: "base"
+})
+
+Như vậy:
+
+a
+á
+à
+ả
+ã
+ạ
+
+được xử lý theo collation tiếng Việt thay vì Unicode code point.
+
+Mình còn khuyên thêm một điểm
+
+Sort sau khi filter, tức pipeline:
+
+all errors
+↓
+resolved filter
+↓
+type filter
+↓
+dictionary / whitelist filter
+↓
+search filter
+↓
+alphabetical sort
+↓
+display
+
+Như vậy kết quả luôn ổn định.
+
+2. Admin dictionary search: đúng, nên cải thiện
+
+Theo mô tả của bạn, nếu hiện tại search đang kiểu:
+
+word.includes(searchTerm)
+
+thì về bản chất nó vẫn có thể case-sensitive nếu hai bên không normalize trước.
 
 Ví dụ:
 
-¬
-�
-¦
-¤
-□
-
-Không nên dùng nó cho các punctuation hợp lệ:
-
-,
-.
-!
-?
-:
-;
-
-- …
-  “
-  ”
-  Classification mình đề xuất
-
-Nếu làm lại từ đầu, mình sẽ dùng:
-
-Type Ý nghĩa Ví dụ
-UnknownWord Không xác định được từ abcxyz
-NonVietnamese Từ/cụm từ không phải tiếng Việt reading
-CaseError Viết hoa/thường bất thường VIệT
-Typo Lỗi gõ nhầm ngừoi
-Spelling Lỗi chính tả sữ dụng
-SpecialCharacter Ký tự rác/bất thường sách�
-
-Đây là classification mình thấy sạch nhất cho project hiện tại.
-
-7. Nhưng mình còn đề xuất một thay đổi quan trọng hơn
-
-Không nên cố biến mọi thứ không có trong dictionary thành một ErrorType riêng.
-
-Ví dụ:
-
-Alexander
+Dictionary:
 OpenAI
-NASA
-iPhone
 
-không phải lỗi.
+Search:
+openai
 
-Bạn đã có:
+có thể không tìm thấy.
 
-custom dictionary
-names dictionary
-non-vn dictionary
-vn dictionary
+Mình sẽ làm search theo kiểu normalized search.
 
-Do đó nên xem dictionary như knowledge layer, còn ErrorType là problem layer.
+Normalize search input
+
+Trước tiên:
+
+" Nguyễn! "
+↓
+"nguyen"
 
 Tức là:
 
-                 Word
-                  │
-       ┌──────────┴──────────┐
-       │                     │
+trim()
+lowercase
+strip dấu câu
+strip dấu tiếng Việt nếu muốn search không dấu
 
-Known word Unknown word
-│ │
-│ ┌──────┴──────┐
-│ │ │
-OK / valid Typo? NonVietnamese?
+Ví dụ:
+
+Nguyễn!
+nguyen
+NGUYỄN
+Nguyễn,
+
+→ đều match Nguyễn.
+
+Mình đặc biệt khuyên bỏ dấu tiếng Việt
+
+Đây sẽ hữu ích hơn debounce rất nhiều.
+
+Ví dụ admin dictionary có:
+
+Nguyễn
+Trần
+Đặng
+Huyễn
+
+User gõ:
+
+nguyen
+tran
+dang
+huyen
+
+vẫn tìm thấy.
+
+Có thể normalize:
+
+Nguyễn
+↓
+nguyen
+
+và search trên normalized value.
+
+3. Strip dấu câu: nên làm
+
+Ví dụ dictionary:
+
+OpenAI
+iPhone
+"hello"
+
+Search:
+
+"openai"
+
+nên match OpenAI.
+
+Nhưng mình không khuyên strip mọi non-letter character một cách mù quáng nếu dictionary của bạn có những token hợp lệ như:
+
+C++
+.NET
+Node.js
+C#
+
+Do đó tốt nhất là có một hàm normalization dùng chung, ví dụ:
+
+normalizeSearchTerm()
+
+và định nghĩa rõ nó loại bỏ punctuation nào.
+
+Nếu dictionary của project chủ yếu là single words như workflow trước của bạn, thì có thể mạnh tay hơn.
+
+4. Debounce search: nên có
+
+Đặc biệt admin dictionary search có thể query server/KV/API.
+
+Không nên:
+
+n
+ng
+ngu
+nguy
+nguye
+nguyen
+
+→ 6 requests.
+
+Nên:
+
+n
+ng
+ngu
+nguy
+nguye
+nguyen
+↓
+300ms
+↓
+1 request
+
+Mình chọn khoảng:
+
+250–300 ms
+
+là hợp lý.
+
+Nếu search hoàn toàn client-side thì debounce không giảm traffic, nhưng vẫn có thể giảm việc filter/render liên tục. Nếu search server-side thì debounce trực tiếp giảm request.
+
+5. Và mình sẽ làm search "contains", không exact
+
+Ví dụ database có:
+
+Nguyễn Văn A
+Nguyễn Văn B
+Nguyễn Văn C
+
+gõ:
+
+nguyen
+
+→ cả 3 match.
+
+Gõ:
+
+van
+
+→ cả 3 match.
+
+Gõ:
+
+NGUYỄN!
+
+→ vẫn match.
+
+Đây là UX tốt hơn nhiều cho admin.
+
+Kiến trúc search mình đề xuất
+User input
 │
-Spelling?
-
-Đây là cách mình nghĩ architecture sẽ dễ phát triển hơn.
-
-8. Một điểm mình đặc biệt khuyên: đừng để Dictionary = "lỗi"
-
-Hiện tại type:
-
-type ErrorType =
-| "Dictionary"
-| "NonVietnamese"
-| "Uppercase"
-| "Typo"
-| "Spelling"
-| "SpecialCharacter"
-
-vẫn hơi mang tính implementation-oriented.
-
-Nếu đổi thành:
-
-type ErrorType =
-| "UnknownWord"
-| "NonVietnamese"
-| "CaseError"
-| "Typo"
-| "Spelling"
-| "SpecialCharacter"
-
-thì đọc code sẽ tự nhiên hơn:
-
-if (group.type === "UnknownWord")
-
-người đọc lập tức hiểu:
-
-Không xác định được từ.
-
-Trong khi:
-
-if (group.type === "Dictionary")
-
-sẽ phải tự hỏi:
-
-Dictionary error là lỗi gì? Dictionary thiếu từ? Sai dictionary? Hay từ sai?
-
-9. Có cần tách thêm loại nào không?
-
-Hiện tại: chưa cần.
-
-Mình không khuyên thêm 10–15 loại kiểu:
-
-MissingAccent
-ExtraCharacter
-MissingCharacter
-DuplicateCharacter
-WrongCharacter
-OCR
-ForeignName
-Brand
-Abbreviation
-...
-
-vào ErrorType.
-
-Những cái đó nên là reason/subtype, không phải top-level ErrorType.
+▼
+trim
+│
+▼
+lowercase
+│
+▼
+strip punctuation
+│
+▼
+remove Vietnamese diacritics
+│
+▼
+debounce 250–300ms
+│
+▼
+contains search
+│
+▼
+alphabetical sort
 
 Ví dụ:
 
-Typo
-├── MissingCharacter
-├── ExtraCharacter
-├── Transposition
-└── DuplicateCharacter
+Input:
+" NGUYỄN! "
 
-Spelling
-├── WrongDiacritic
-├── WrongConsonant
-└── WrongVowel
+Normalize:
+"nguyen"
 
-SpecialCharacter
-├── OCRArtifact
-├── InvalidUnicode
-└── ControlCharacter
+Dictionary:
+"Nguyễn"
 
-Trong data model hiện tại bạn đã có reason?: string, nên rất thích hợp để chứa lớp thông tin chi tiết này.
+Normalize dictionary:
+"nguyen"
 
-Ví dụ:
+Result:
+MATCH ✓
+Có một điểm mình muốn tách rõ
 
-{
-word: "ngừoi",
-type: "Typo",
-reason: "Transposition",
-suggestions: ["người"]
-}
+Error List và Admin dictionary là hai loại search khác nhau.
 
-hoặc:
+Error List
 
-{
-word: "sữ dụng",
-type: "Spelling",
-reason: "WrongDiacritic",
-suggestions: ["sử dụng"]
-}
+Nên:
 
-Như vậy UI có thể hiển thị:
+alphabet mặc định
+search local
+không cần debounce nếu dữ liệu đã ở client
+case-insensitive
+có thể accent-insensitive
+Admin
 
-Typo
-Transposition
-ngừoi → người
+Nên:
 
-rất đẹp.
+debounce 250–300ms
+case-insensitive
+punctuation-insensitive
+accent-insensitive
+contains, không exact
+alphabetically sorted
+Nếu làm theo hướng này, classification + UX cuối cùng sẽ rất gọn:
+ERROR TYPES
+├── UnknownWord
+├── NonVietnamese
+├── CaseError
+├── Spelling
+└── SpecialCharacter
 
-10. Kết luận của mình
+ERROR LIST
+└── Alphabetical by default
 
-Mình sẽ không thay đổi số lượng loại, chỉ thay đổi semantics:
-
-- Dictionary
-
-* UnknownWord
-
-  NonVietnamese
-
-- Uppercase
-
-* CaseError
-
-  Typo
-  Spelling
-  SpecialCharacter
-
-Thành:
-
-type ErrorType =
-| "UnknownWord"
-| "NonVietnamese"
-| "CaseError"
-| "Typo"
-| "Spelling"
-| "SpecialCharacter"
-
-và dùng reason làm sub-classification.
-
-Mức độ ưu tiên
-
-Nên làm ngay:
-
-Dictionary → UnknownWord
-Uppercase → CaseError
-Chuẩn hóa định nghĩa Typo vs Spelling
-Quy định reason cho từng loại
-
-Chưa cần làm:
-
-thêm nhiều ErrorType mới.
-
-Theo mình đây là điểm đáng chỉnh trước khi project ổn định, vì sau này đổi tên ErrorType sẽ ảnh hưởng state, filter, UI, tests và dữ liệu đã lưu.
+ADMIN SEARCH
+├── Debounced
+├── Case-insensitive
+├── Accent-insensitive
+├── Punctuation-insensitive
+├── Contains search
+└── Alphabetical results

@@ -181,7 +181,7 @@ export function getErrorType(
   // 7. Vietnamese Typo & Spelling Rules & Vocabulary
   if (checkSettings.vietnamese) {
     if (/(aa|ee|oo|uu|ii|dd|js|kx|wt)$/i.test(lower)) {
-      return { type: "Typo", reason: "Gõ máy (Typo)" }
+      return { type: "Spelling", reason: "Gõ máy (Typo)" }
     }
 
     const isCapitalized = /^\p{Lu}/u.test(word)

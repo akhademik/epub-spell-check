@@ -15,9 +15,8 @@
       case "CaseError":
       case "Uppercase":
         return "bg-amber-500 shadow-[0_0_8px_#f59e0b]"
-      case "Typo":
-        return "bg-orange-500 shadow-[0_0_8px_#f97316]"
       case "Spelling":
+      case "Typo":
         return "bg-purple-500 shadow-[0_0_8px_#a855f7]"
       case "SpecialCharacter":
         return "bg-pink-500 shadow-[0_0_8px_#ec4899]"
@@ -36,9 +35,8 @@
       case "CaseError":
       case "Uppercase":
         return "Lỗi viết hoa"
-      case "Typo":
-        return "Typo"
       case "Spelling":
+      case "Typo":
         return "Chính tả"
       default:
         return "Ký tự lạ"
@@ -57,8 +55,10 @@
       )
     }
 
-    // Default sort by frequency count descending
-    list.sort((a, b) => b.count - a.count)
+    // Default sort by Vietnamese alphabet collation (localeCompare 'vi')
+    list.sort((a, b) =>
+      a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
+    )
 
     return list
   })
@@ -66,14 +66,13 @@
   // Lazy loaded slice capped at visibleCount
   const displayedErrors = $derived(filteredList.slice(0, visibleCount))
 
-  // Available types that appear in current allDetectedErrors (or standard 5 types)
+  // Available types that appear in current allDetectedErrors (or standard 4 types)
   const displayableTypes = $derived.by(() => {
     const presentTypes = new Set(appState.allDetectedErrors.map((g) => g.type))
     const standardTypes: ErrorType[] = [
       "UnknownWord",
       "NonVietnamese",
       "CaseError",
-      "Typo",
       "Spelling"
     ]
     if (presentTypes.has("SpecialCharacter")) {
@@ -139,11 +138,11 @@
     <!-- Category filter tags & Sort controls -->
     <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80 flex-wrap gap-2">
       <!-- Category Filter Pills (Multi-Toggle) -->
-      <div class="flex items-center gap-1 flex-wrap overflow-x-auto py-0.5">
+      <div class="flex items-center gap-1.5 flex-wrap overflow-x-auto py-0.5">
         <button
           type="button"
           onclick={() => { appState.toggleAllErrorTypes(); visibleCount = 30; }}
-          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-colors {isAllSelected
+          class="px-2.5 py-1 rounded-lg text-xs font-medium transition-colors {isAllSelected
             ? 'bg-slate-700 text-white font-bold'
             : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-slate-700/60'}"
         >
@@ -155,15 +154,13 @@
           <button
             type="button"
             onclick={() => { appState.toggleErrorType(type); visibleCount = 30; }}
-            class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-all duration-150 border {isEnabled
+            class="px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-150 border {isEnabled
               ? type === 'UnknownWord'
                 ? 'bg-rose-900/60 text-rose-300 border-rose-700/60 font-bold'
                 : type === 'NonVietnamese'
                 ? 'bg-blue-900/60 text-blue-300 border-blue-700/60 font-bold'
                 : type === 'CaseError'
                 ? 'bg-amber-900/60 text-amber-300 border-amber-700/60 font-bold'
-                : type === 'Typo'
-                ? 'bg-orange-900/60 text-orange-300 border-orange-700/60 font-bold'
                 : type === 'Spelling'
                 ? 'bg-purple-900/60 text-purple-300 border-purple-700/60 font-bold'
                 : 'bg-pink-900/60 text-pink-300 border-pink-700/60 font-bold'
@@ -212,25 +209,25 @@
             <button
               type="button"
               onclick={() => handleSelect(group)}
-              class="flex items-center justify-between flex-grow px-3 py-2 text-left rounded-l-xl focus:outline-none min-w-0"
+              class="flex items-center justify-between flex-grow px-3.5 py-2.5 text-left rounded-l-xl focus:outline-none min-w-0"
             >
-              <div class="w-full flex items-center gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
-                <span class="font-serif text-base font-bold truncate {isSelected ? 'text-blue-200' : 'text-slate-200'}">
+              <div class="w-full flex items-center gap-3">
+                <span class="w-3.5 h-3.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
+                <span class="font-sans text-[20px] font-bold tracking-normal leading-tight truncate {isSelected ? 'text-blue-200' : 'text-slate-100'}">
                   {group.word}
                 </span>
-                <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800/90 text-slate-400 border border-slate-700/60 shrink-0 font-medium">
+                <span class="text-xs px-2 py-0.5 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700/70 shrink-0 font-medium">
                   {getBadgeLabel(group.type)}
                 </span>
                 {#if group.contexts.some((ctx) => ctx.resolved || appState.appliedFixes.has(appState.getInstanceKey(ctx)))}
-                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <span class="text-xs px-2 py-0.5 rounded-md bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                     <span>Đang sửa</span>
                   </span>
                 {/if}
-                <span class="ml-auto bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">
+                <span class="ml-auto bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-2.5 py-0.5 rounded-full shrink-0">
                   {group.contexts.length}
                 </span>
               </div>

@@ -106,7 +106,7 @@ describe("Regression Safety Net", () => {
         mockDictionaries,
         defaultCheckSettings
       )
-      expect(typoError?.type).toBe("Typo")
+      expect(typoError?.type).toBe("Spelling")
       expect(typoError?.reason).toBe("Gõ máy (Typo)")
     })
 

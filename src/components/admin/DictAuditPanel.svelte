@@ -194,30 +194,30 @@
           {/if}
         </div>
 
-        <div class="p-4 max-h-72 overflow-y-auto divide-y divide-slate-800/60 font-mono text-xs">
+        <div class="p-4 max-h-80 overflow-y-auto divide-y divide-slate-800/60 font-mono text-sm">
           {#if tierAFindings.length === 0}
             <div class="text-center py-6 text-emerald-400 font-sans">
               ✓ Tuyệt vời! Không phát hiện từ rác Tier A nào trong từ điển.
             </div>
           {:else}
             {#each tierAFindings as finding (finding.word)}
-              <div class="py-2 flex items-center justify-between gap-3">
-                <label class="flex items-center gap-2.5 cursor-pointer flex-1 min-w-0">
+              <div class="py-2.5 flex items-center justify-between gap-3">
+                <label class="flex items-center gap-3 cursor-pointer flex-1 min-w-0">
                   <input
                     type="checkbox"
                     checked={selectedTierAWords.has(finding.word)}
                     onchange={() => toggleTierAWord(finding.word)}
-                    class="rounded border-slate-700 text-rose-600 focus:ring-0 bg-slate-950"
+                    class="w-4 h-4 rounded border-slate-700 text-rose-600 focus:ring-0 bg-slate-950"
                   />
-                  <span class="font-bold text-rose-300 truncate">{finding.word}</span>
-                  <span class="text-[11px] text-slate-500 font-sans truncate">
+                  <span class="font-sans text-[20px] font-semibold text-rose-300 leading-tight truncate">{finding.word}</span>
+                  <span class="text-xs text-slate-400 font-sans truncate">
                     ({finding.reasons.join(", ")})
                   </span>
                 </label>
                 <button
                   type="button"
                   onclick={() => handleDeleteSingleWord(finding.word)}
-                  class="px-2 py-0.5 text-[10px] text-rose-400 hover:text-rose-200 border border-rose-900/60 rounded"
+                  class="px-2.5 py-1 text-xs text-rose-400 hover:text-rose-200 border border-rose-900/60 rounded-lg hover:bg-rose-950/40 transition-colors"
                 >
                   Xóa
                 </button>
@@ -239,24 +239,24 @@
           <span class="text-xs text-slate-400">Xem xét và xóa thủ công từng từ</span>
         </div>
 
-        <div class="p-4 max-h-72 overflow-y-auto divide-y divide-slate-800/60 font-mono text-xs">
+        <div class="p-4 max-h-80 overflow-y-auto divide-y divide-slate-800/60 font-mono text-sm">
           {#if tierBFindings.length === 0}
             <div class="text-center py-6 text-slate-400 font-sans">
               Không có từ nào thuộc danh sách nghi vấn Tier B.
             </div>
           {:else}
             {#each tierBFindings as finding (finding.word)}
-              <div class="py-2 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-2 flex-1 min-w-0">
-                  <span class="font-bold text-amber-300 truncate">{finding.word}</span>
-                  <span class="text-[11px] text-slate-500 font-sans truncate">
+              <div class="py-2.5 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 flex-1 min-w-0">
+                  <span class="font-sans text-[20px] font-semibold text-amber-300 leading-tight truncate">{finding.word}</span>
+                  <span class="text-xs text-slate-400 font-sans truncate">
                     ({finding.reasons.join(", ")})
                   </span>
                 </div>
                 <button
                   type="button"
                   onclick={() => handleDeleteSingleWord(finding.word)}
-                  class="px-2 py-0.5 text-[10px] text-rose-400 hover:text-rose-200 border border-rose-900/60 rounded shrink-0"
+                  class="px-2.5 py-1 text-xs text-rose-400 hover:text-rose-200 border border-rose-900/60 rounded-lg hover:bg-rose-950/40 transition-colors shrink-0"
                 >
                   Xóa từ này
                 </button>
@@ -292,17 +292,17 @@
                       type="button"
                       onclick={() => handleDeleteSingleWord(cw.word)}
                       title={`Bấm để xóa từ "${cw.word}"`}
-                      class="px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 {cw.suggestion === 'keep'
+                      class="px-3.5 py-1.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2 {cw.suggestion === 'keep'
                         ? 'border border-emerald-500/60 text-emerald-300 bg-emerald-950/30'
                         : cw.suggestion === 'delete'
                         ? 'border border-rose-500/60 text-rose-300 bg-rose-950/30'
                         : 'border border-slate-700 text-slate-300 bg-slate-900'}"
                     >
-                      <span>{cw.word}</span>
+                      <span class="font-sans text-[20px] font-semibold leading-tight">{cw.word}</span>
                       {#if cw.suggestion === "keep"}
-                        <span class="text-[10px] text-emerald-400 font-sans">✓ giữ</span>
+                        <span class="text-xs text-emerald-400 font-sans">✓ giữ</span>
                       {:else if cw.suggestion === "delete"}
-                        <span class="text-[10px] text-rose-400 font-sans">✕ xóa</span>
+                        <span class="text-xs text-rose-400 font-sans">✕ xóa</span>
                       {/if}
                     </button>
                   {/each}

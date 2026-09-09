@@ -27,7 +27,6 @@ export const ALL_ERROR_TYPES: ErrorType[] = [
   "UnknownWord",
   "NonVietnamese",
   "CaseError",
-  "Typo",
   "Spelling",
   "SpecialCharacter"
 ]

@@ -243,7 +243,6 @@ Hesse
 Hohenzollern
 Hongrie
 Hougomont
-HTTPS
 Hulpe
 Hurepoix
 HVAC
@@ -484,7 +483,6 @@ Sèvres
 Sibérie
 Sisteron
 SLR
-SMERSH
 SMES
 Smohain
 SMS

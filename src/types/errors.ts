@@ -2,7 +2,6 @@ export type ErrorType =
   | "UnknownWord"
   | "NonVietnamese"
   | "CaseError"
-  | "Typo"
   | "Spelling"
   | "SpecialCharacter"
 
