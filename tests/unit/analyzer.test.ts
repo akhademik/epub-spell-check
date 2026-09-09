@@ -169,6 +169,81 @@ describe("Analyzer Module", () => {
       expect(tiered.primary[0]).toBe("khoán")
     })
 
+    it("should include đ candidate (e.g. duong -> đường) when baseDistance <= 1 (Task 1.1)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(["đường", "dương", "đương", "đoàn"]),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set()
+      }
+      const tiered = findTieredSuggestions("duong", customDicts)
+      const allSuggestions = [...tiered.primary, ...tiered.secondary]
+      expect(allSuggestions).toContain("đường")
+    })
+
+    it("should prioritize same base-word tone completion over different base words (Task 1.2)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(["trường", "ruồng", "ruộng", "trưởng", "trương"]),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set()
+      }
+      const tiered = findTieredSuggestions("truong", customDicts)
+      expect(tiered.primary).toContain("trường")
+      // Verify "trường" is in primary and comes before any different base words in secondary
+      expect(tiered.primary.indexOf("trường")).toBeGreaterThanOrEqual(0)
+    })
+
+    it("should accurately suggest corrections for no-diacritic typos (Task 1.3)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set([
+          "học",
+          "đường",
+          "dương",
+          "trường",
+          "người",
+          "chuyện",
+          "thương",
+          "hộp",
+          "ruộng"
+        ]),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set()
+      }
+
+      const noDiacriticCases = [
+        { input: "hoc", expected: "học" },
+        { input: "duong", expected: "đường" },
+        { input: "truong", expected: "trường" },
+        { input: "nguoi", expected: "người" },
+        { input: "chuyen", expected: "chuyện" },
+        { input: "thuong", expected: "thương" }
+      ]
+
+      for (const { input, expected } of noDiacriticCases) {
+        const tiered = findTieredSuggestions(input, customDicts)
+        const allSuggestions = [...tiered.primary, ...tiered.secondary]
+        expect(
+          allSuggestions,
+          `Expected suggestion for "${input}" to contain "${expected}"`
+        ).toContain(expected)
+      }
+    })
+
+    it("should use word frequency as tie-breaker for equal score candidates (Task 4.2)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set(["trường", "trưởng", "trương", "trượng"]),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set()
+      }
+      // "truong" has equal edit distance & base distance to all four candidates
+      // "trường" has higher frequency weight, so it should rank #1
+      const tiered = findTieredSuggestions("truong", customDicts)
+      expect(tiered.primary[0]).toBe("trường")
+    })
+
     it("should return cached results on repeated calls", () => {
       const first = findSuggestions("họp", mockDictionaries)
       const second = findSuggestions("họp", mockDictionaries)

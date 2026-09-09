@@ -11,6 +11,7 @@ import type {
 } from "../types/errors"
 import { getBaseWord, levenshteinDistance } from "./analysis-core"
 import { buildIndexedDictionary } from "./dictionary"
+import { getWordFrequency } from "./vn-frequency"
 
 // In-session suggestion memoization cache
 const suggestionCache = new Map<string, string[]>()
@@ -181,52 +182,74 @@ export function findTieredSuggestions(
 
       const baseDictWord = baseWordCache?.get(dictWord) ?? getBaseWord(dictLow)
 
-      // 1. Calculate full distance with dynamic threshold
-      const fullDistance = levenshteinDistance(low, dictLow, maxAllowedDistance)
-      if (fullDistance > maxAllowedDistance) {
-        // Short words strictly limited to distance 1
-        if (low.length <= 3) continue
-
-        // For longer words, only consider if base words are identical (e.g. multi-tone differences)
-        const baseDistance = levenshteinDistance(baseLow, baseDictWord, 1)
-        if (baseDistance > 1) continue
-      }
-
+      // Calculate base distance
       const baseDistance = levenshteinDistance(
         baseLow,
         baseDictWord,
         maxAllowedDistance
       )
 
+      // If base words are close (baseDistance <= 1, e.g. missing 'đ' or same base syllable),
+      // allow fullDistance up to 4 so multi-tone and d->đ words are not prematurely discarded
+      let fullDistance: number
+      if (baseDistance <= 1) {
+        fullDistance = levenshteinDistance(low, dictLow, 4)
+      } else {
+        fullDistance = levenshteinDistance(low, dictLow, maxAllowedDistance)
+        if (fullDistance > maxAllowedDistance) {
+          continue
+        }
+      }
+
+      // Short words (length <= 3) filtering:
+      // Strictly limit to baseDistance <= 1 and fullDistance <= 1, or same base word with fullDistance <= 2
+      if (low.length <= 3) {
+        if (baseDistance > 1) continue
+        if (baseDistance === 1 && fullDistance > 1) continue
+        if (fullDistance > 2) continue
+      }
+
       // Filter out garbage suggestions for 4-5 char words with distance 2 and different base words
       if (low.length <= 5 && fullDistance >= 2 && baseDistance > 1) {
         continue
       }
 
-      // Structured Scoring Hierarchy:
-      // - Same base word, distance 1 (highest confidence typo/tone): score 5..20
-      // - Base distance <= 1 AND full distance <= 1 (1-character edit): score 10..35
-      // - Same base word, distance 2: score 20..40
-      // - Broader distance <= 2: score 35..75
+      // Structured Scoring Hierarchy (Non-overlapping Tiers):
+      // - Tier 1 (10..39): Same base word (baseDistance === 0)
+      //     * fullDistance === 1: score 10..25 (Primary)
+      //     * fullDistance >= 2: score 20..39 (Primary)
+      // - Tier 2 (40..55): 1-char typo edit (baseDistance === 1 && fullDistance === 1) (Primary)
+      // - Tier 3 (60..85): d<->đ and multi-tone candidates (baseDistance <= 1 && fullDistance >= 2) (Secondary)
+      // - Tier 4 (100..150): Broader distance <= 2 with different base words (Secondary)
       if (baseDistance === 0 && fullDistance === 1) {
-        const score = priorityWeight * 5 + 5
+        const score = 10 + priorityWeight * 5
         addCandidate(primaryCandidatesMap, dictWord, score)
-      } else if (baseDistance <= 1 && fullDistance <= 1) {
-        const score = priorityWeight * 8 + baseDistance * 8 + fullDistance * 4
+      } else if (baseDistance === 0 && fullDistance >= 2) {
+        const score = 20 + priorityWeight * 5 + fullDistance
         addCandidate(primaryCandidatesMap, dictWord, score)
-      } else if (baseDistance === 0 && fullDistance === 2) {
-        const score = priorityWeight * 8 + 20
+      } else if (baseDistance === 1 && fullDistance === 1) {
+        const score = 40 + priorityWeight * 5
+        addCandidate(primaryCandidatesMap, dictWord, score)
+      } else if (baseDistance <= 1 && fullDistance >= 2) {
+        const score = 60 + priorityWeight * 5 + fullDistance
         addCandidate(secondaryCandidatesMap, dictWord, score)
       } else if (fullDistance <= 2) {
-        const score = priorityWeight * 12 + baseDistance * 6 + fullDistance * 5
+        const score =
+          100 + priorityWeight * 10 + baseDistance * 5 + fullDistance
         addCandidate(secondaryCandidatesMap, dictWord, score)
       }
     }
   }
 
-  // Populate primary suggestions deterministically sorted by score
+  // Populate primary suggestions deterministically sorted by score, tie-broken by word frequency
   const sortedPrimary = Array.from(primaryCandidatesMap.values()).sort(
-    (a, b) => a.score - b.score
+    (a, b) => {
+      if (a.score !== b.score) return a.score - b.score
+      const freqA = getWordFrequency(a.word)
+      const freqB = getWordFrequency(b.word)
+      if (freqA !== freqB) return freqB - freqA
+      return a.word.localeCompare(b.word, "vi")
+    }
   )
   for (const c of sortedPrimary) {
     if (primarySet.size >= MAX_PRIMARY_SUGGESTION_COUNT) break
@@ -237,9 +260,15 @@ export function findTieredSuggestions(
     }
   }
 
-  // Populate secondary suggestions deterministically sorted by score
+  // Populate secondary suggestions deterministically sorted by score, tie-broken by word frequency
   const sortedSecondary = Array.from(secondaryCandidatesMap.values()).sort(
-    (a, b) => a.score - b.score
+    (a, b) => {
+      if (a.score !== b.score) return a.score - b.score
+      const freqA = getWordFrequency(a.word)
+      const freqB = getWordFrequency(b.word)
+      if (freqA !== freqB) return freqB - freqA
+      return a.word.localeCompare(b.word, "vi")
+    }
   )
   for (const c of sortedSecondary) {
     if (secondarySet.size >= MAX_SECONDARY_SUGGESTION_COUNT) break

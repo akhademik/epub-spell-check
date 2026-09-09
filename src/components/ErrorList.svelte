@@ -20,6 +20,8 @@
         return "bg-purple-500 shadow-[0_0_8px_#a855f7]"
       case "SpecialCharacter":
         return "bg-pink-500 shadow-[0_0_8px_#ec4899]"
+      case "ContextConfusion":
+        return "bg-cyan-500 shadow-[0_0_8px_#06b6d4]"
       default:
         return "bg-slate-400 shadow-[0_0_8px_#94a3b8]"
     }
@@ -38,6 +40,8 @@
       case "Spelling":
       case "Typo":
         return "Chính tả"
+      case "ContextConfusion":
+        return "Ngữ cảnh"
       default:
         return "Ký tự lạ"
     }
@@ -73,7 +77,8 @@
       "UnknownWord",
       "NonVietnamese",
       "CaseError",
-      "Spelling"
+      "Spelling",
+      "ContextConfusion"
     ]
     if (presentTypes.has("SpecialCharacter")) {
       standardTypes.push("SpecialCharacter")
@@ -163,6 +168,8 @@
                 ? 'bg-amber-900/60 text-amber-300 border-amber-700/60 font-bold'
                 : type === 'Spelling'
                 ? 'bg-purple-900/60 text-purple-300 border-purple-700/60 font-bold'
+                : type === 'ContextConfusion'
+                ? 'bg-cyan-900/60 text-cyan-300 border-cyan-700/60 font-bold'
                 : 'bg-pink-900/60 text-pink-300 border-pink-700/60 font-bold'
               : 'bg-slate-900 text-slate-500 border-slate-800 hover:text-slate-300 hover:border-slate-700 opacity-60'}"
             title={getBadgeLabel(type)}

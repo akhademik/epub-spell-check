@@ -4,6 +4,7 @@ export type ErrorType =
   | "CaseError"
   | "Spelling"
   | "SpecialCharacter"
+  | "ContextConfusion"
 
 export interface ErrorInstance {
   id?: string

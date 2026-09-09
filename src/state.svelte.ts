@@ -28,7 +28,8 @@ export const ALL_ERROR_TYPES: ErrorType[] = [
   "NonVietnamese",
   "CaseError",
   "Spelling",
-  "SpecialCharacter"
+  "SpecialCharacter",
+  "ContextConfusion"
 ]
 
 const STORAGE_KEYS = {

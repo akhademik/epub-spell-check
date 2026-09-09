@@ -7,6 +7,7 @@ import {
   getErrorType,
   WORD_REGEX
 } from "../utils/analysis-core"
+import { scanContextualErrors } from "../utils/context-confusion"
 
 interface WorkerMessage {
   type?: "init" | "analyze"
@@ -95,6 +96,18 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
             type: errorInfo.type,
             reason: errorInfo.reason
           })
+        }
+      }
+
+      if (checkSettings?.vietnamese !== false) {
+        const contextualErrors = scanContextualErrors(text, {
+          paragraphIndex,
+          chapterIndex: chapterStartIndex,
+          filePath: paragraph.filePath,
+          blockId: paragraph.id
+        })
+        if (contextualErrors.length > 0) {
+          allErrors.push(...contextualErrors)
         }
       }
     }
