@@ -292,4 +292,34 @@ describe("Filter Module", () => {
     expect(reconstructedSet.has("Uppercase")).toBe(true)
     expect(reconstructedSet.has("NonVietnamese")).toBe(false)
   })
+
+  it("should sanitize and filter out invalid/corrupted error types from storage", () => {
+    const ALL_ERROR_TYPES = [
+      "Dictionary",
+      "NonVietnamese",
+      "Uppercase",
+      "Typo",
+      "Spelling",
+      "SpecialCharacter"
+    ]
+    const corruptedSavedTypes = [
+      "Dictionary",
+      "Typo",
+      "FakeType",
+      "UnknownType",
+      123,
+      null
+    ]
+
+    const sanitized = corruptedSavedTypes.filter(
+      (type): type is (typeof ALL_ERROR_TYPES)[number] =>
+        typeof type === "string" && ALL_ERROR_TYPES.includes(type as any)
+    )
+
+    const sanitizedSet = new Set(sanitized)
+    expect(sanitizedSet.size).toBe(2)
+    expect(sanitizedSet.has("Dictionary")).toBe(true)
+    expect(sanitizedSet.has("Typo")).toBe(true)
+    expect(sanitizedSet.has("FakeType" as any)).toBe(false)
+  })
 })

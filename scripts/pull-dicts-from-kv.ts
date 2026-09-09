@@ -55,22 +55,26 @@ async function main() {
       const remoteContent = execSync(cmd, {
         encoding: "utf8",
         stdio: ["pipe", "pipe", "pipe"],
-        timeout: 15000
+        timeout: 5000
       })
 
       // Normalize line endings
       const normLocal = localContent.replace(/\r\n/g, "\n").trim()
       const normRemote = remoteContent.replace(/\r\n/g, "\n").trim()
 
-      if (normRemote && normLocal !== normRemote) {
-        fs.writeFileSync(localFilePath, `${normRemote}\n`, "utf8")
+      if (normLocal !== normRemote) {
+        fs.writeFileSync(
+          localFilePath,
+          normRemote ? `${normRemote}\n` : "",
+          "utf8"
+        )
         try {
           execSync(`git add "${DICT_TO_FILE[dict]}"`, { stdio: "ignore" })
         } catch {
           /* ignore */
         }
         const localWords = normLocal ? normLocal.split("\n").length : 0
-        const remoteWords = normRemote.split("\n").length
+        const remoteWords = normRemote ? normRemote.split("\n").length : 0
         const diff = remoteWords - localWords
         const sign = diff >= 0 ? `+${diff}` : `${diff}`
         console.log(

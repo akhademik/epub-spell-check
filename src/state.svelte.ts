@@ -137,7 +137,7 @@ export class AppStateModel {
       loadStorage<ErrorType[]>(
         STORAGE_KEYS.ENABLED_ERROR_TYPES,
         ALL_ERROR_TYPES
-      )
+      ).filter((type) => ALL_ERROR_TYPES.includes(type))
     )
   )
 
