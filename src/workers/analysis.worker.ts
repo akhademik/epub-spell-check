@@ -7,6 +7,11 @@ import {
   getErrorType,
   WORD_REGEX
 } from "../utils/analysis-core"
+import {
+  loadCompoundIndex,
+  resolveOverlappingErrors,
+  scanDynamicCompoundErrors
+} from "../utils/compound-detector"
 import { scanContextualErrors } from "../utils/context-confusion"
 
 interface WorkerMessage {
@@ -26,6 +31,8 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     if (data.dictionaries) {
       cachedDictionaries = data.dictionaries
     }
+    // Pre-warm compound index
+    await loadCompoundIndex()
     return
   }
 
@@ -50,8 +57,11 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   }
 
   const activeDicts = cachedDictionaries
-  const allErrors: ErrorInstance[] = []
+  const rawErrors: ErrorInstance[] = []
   let totalWordCount = 0
+
+  // Ensure compound index is loaded
+  const compoundIndex = await loadCompoundIndex()
 
   const totalParagraphs = textBlocks.length
 
@@ -79,7 +89,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
           const endIndex = startIndex + originalWord.length
           const instanceId = `${paragraph.id || paragraphIndex}-${startIndex}-${endIndex}`
 
-          allErrors.push({
+          rawErrors.push({
             id: instanceId,
             word: originalWord,
             originalWord,
@@ -100,6 +110,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       }
 
       if (checkSettings?.vietnamese !== false) {
+        // 1. Curated Contextual / Hardcoded Rules (Highest priority)
         const contextualErrors = scanContextualErrors(text, {
           paragraphIndex,
           chapterIndex: chapterStartIndex,
@@ -107,7 +118,25 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
           blockId: paragraph.id
         })
         if (contextualErrors.length > 0) {
-          allErrors.push(...contextualErrors)
+          rawErrors.push(...contextualErrors)
+        }
+
+        // 2. Dynamic Underthesea Compound Errors (Fuzzy compound typos)
+        if (compoundIndex && compoundIndex.exactSet.size > 0) {
+          const dynamicCompoundErrors = scanDynamicCompoundErrors(
+            text,
+            compoundIndex,
+            {
+              paragraphIndex,
+              chapterIndex: chapterStartIndex,
+              filePath: paragraph.filePath,
+              blockId: paragraph.id
+            },
+            activeDicts
+          )
+          if (dynamicCompoundErrors.length > 0) {
+            rawErrors.push(...dynamicCompoundErrors)
+          }
         }
       }
     }
@@ -123,9 +152,12 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     })
   }
 
+  // Resolve overlaps: compound/contextual errors suppress overlapping token-level errors
+  const finalErrors = resolveOverlappingErrors(rawErrors)
+
   self.postMessage({
     type: "complete",
-    errors: allErrors,
+    errors: finalErrors,
     totalWords: totalWordCount
   })
 }
