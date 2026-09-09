@@ -26,43 +26,76 @@ async function main() {
 
   const lines = rawContent.split(/\r?\n/)
   const compoundWords = new Set<string>()
+  const singleWords = new Set<string>()
 
   for (const line of lines) {
     const trimmed = line.trim()
     if (!trimmed) continue
+    let wordText: string | undefined
+
     try {
       const parsed = JSON.parse(trimmed) as { text?: string }
       if (parsed.text) {
-        const text = parsed.text.trim().normalize("NFC")
-        // Filter valid Vietnamese compound phrases (at least 2 words, without punctuation/numbers)
-        if (
-          text.includes(" ") &&
-          !/[\d@#$%^&*()_+=[\]{};:'",.<>?/\\|~`]/.test(text)
-        ) {
-          compoundWords.add(text.toLowerCase())
-        }
+        wordText = parsed.text.trim().normalize("NFC")
       }
     } catch {
-      // plain text line fallback
-      if (
-        trimmed.includes(" ") &&
-        !/[\d@#$%^&*()_+=[\]{};:'",.<>?/\\|~`]/.test(trimmed)
-      ) {
-        compoundWords.add(trimmed.toLowerCase().normalize("NFC"))
-      }
+      wordText = trimmed.normalize("NFC")
+    }
+
+    if (!wordText || /[\d@#$%^&*()_+=[\]{};:'",.<>?/\\|~`]/.test(wordText)) {
+      continue
+    }
+
+    const lower = wordText.toLowerCase()
+    if (lower.includes(" ")) {
+      compoundWords.add(lower)
+    } else {
+      singleWords.add(lower)
     }
   }
 
-  const sortedList = Array.from(compoundWords).sort((a, b) =>
+  const sortedCompoundList = Array.from(compoundWords).sort((a, b) =>
     a.localeCompare(b, "vi")
   )
-  console.log(
-    `Extracted ${sortedList.length} unique Vietnamese compound words.`
+  const sortedSingleList = Array.from(singleWords).sort((a, b) =>
+    a.localeCompare(b, "vi")
   )
 
-  const outPath = path.resolve(process.cwd(), "public/underthesea-words.txt")
-  fs.writeFileSync(outPath, `${sortedList.join("\n")}\n`, "utf8")
-  console.log("Wrote to:", outPath)
+  console.log(
+    `Extracted ${sortedCompoundList.length} unique Vietnamese compound words.`
+  )
+  console.log(
+    `Extracted ${sortedSingleList.length} unique Vietnamese single words.`
+  )
+
+  const outCompoundPath = path.resolve(
+    process.cwd(),
+    "public/underthesea-words.txt"
+  )
+  fs.writeFileSync(
+    outCompoundPath,
+    `${sortedCompoundList.join("\n")}\n`,
+    "utf8"
+  )
+  console.log("Wrote compounds to:", outCompoundPath)
+
+  const outSingleTxtPath = path.resolve(
+    process.cwd(),
+    "src/data/underthesea-single-words.txt"
+  )
+  fs.writeFileSync(outSingleTxtPath, `${sortedSingleList.join("\n")}\n`, "utf8")
+  console.log("Wrote single words TXT to:", outSingleTxtPath)
+
+  const outSingleJsonPath = path.resolve(
+    process.cwd(),
+    "src/data/underthesea-single-words.json"
+  )
+  fs.writeFileSync(
+    outSingleJsonPath,
+    JSON.stringify(sortedSingleList, null, 2),
+    "utf8"
+  )
+  console.log("Wrote single words JSON to:", outSingleJsonPath)
 }
 
 main().catch((err) => {

@@ -1445,7 +1445,7 @@
       "file_type": "code",
       "norm_label": "findcompoundsuggestions()",
       "source_file": "src/utils/context-confusion.ts",
-      "source_location": "L447"
+      "source_location": "L441"
     },
     {
       "id": "src_utils_context_confusion_isknowncompound",
@@ -1457,7 +1457,7 @@
       "file_type": "code",
       "norm_label": "isknowncompound()",
       "source_file": "src/utils/context-confusion.ts",
-      "source_location": "L435"
+      "source_location": "L429"
     },
     {
       "id": "src_utils_context_confusion_loadundertheseacompounds",
@@ -1469,7 +1469,7 @@
       "file_type": "code",
       "norm_label": "loadundertheseacompounds()",
       "source_file": "src/utils/context-confusion.ts",
-      "source_location": "L408"
+      "source_location": "L402"
     },
     {
       "id": "src_utils_context_confusion_scancontextualerrors",
@@ -1481,7 +1481,7 @@
       "file_type": "code",
       "norm_label": "scancontextualerrors()",
       "source_file": "src/utils/context-confusion.ts",
-      "source_location": "L335"
+      "source_location": "L329"
     },
     {
       "id": "scripts_pull_dicts_from_kv_getnamespaceid",
@@ -2489,7 +2489,7 @@
       "file_type": "code",
       "norm_label": "clearreferencedictionarycache()",
       "source_file": "src/utils/reference-dict.ts",
-      "source_location": "L60"
+      "source_location": "L68"
     },
     {
       "id": "src_utils_reference_dict_getbundledreferencedictionarysync",
@@ -2501,7 +2501,7 @@
       "file_type": "code",
       "norm_label": "getbundledreferencedictionarysync()",
       "source_file": "src/utils/reference-dict.ts",
-      "source_location": "L67"
+      "source_location": "L75"
     },
     {
       "id": "src_utils_reference_dict_loadreferencedictionary",
@@ -2513,7 +2513,7 @@
       "file_type": "code",
       "norm_label": "loadreferencedictionary()",
       "source_file": "src/utils/reference-dict.ts",
-      "source_location": "L17"
+      "source_location": "L19"
     },
     {
       "id": "src_utils_vn_frequency_getwordfrequency",
@@ -14401,7 +14401,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/context-confusion.ts",
-      "source_location": "L335",
+      "source_location": "L329",
       "weight": 1.0
     },
     {
@@ -14412,7 +14412,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/context-confusion.ts",
-      "source_location": "L408",
+      "source_location": "L402",
       "weight": 1.0
     },
     {
@@ -14423,7 +14423,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/context-confusion.ts",
-      "source_location": "L435",
+      "source_location": "L429",
       "weight": 1.0
     },
     {
@@ -14434,7 +14434,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/context-confusion.ts",
-      "source_location": "L447",
+      "source_location": "L441",
       "weight": 1.0
     },
     {
@@ -15028,7 +15028,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/reference-dict.ts",
-      "source_location": "L17",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -15039,7 +15039,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/reference-dict.ts",
-      "source_location": "L60",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -15050,7 +15050,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/reference-dict.ts",
-      "source_location": "L67",
+      "source_location": "L75",
       "weight": 1.0
     },
     {
@@ -16675,5 +16675,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "5d8622f9bb09953f50c1077d52457b513a47f533"
+  "built_at_commit": "183b7830f006f912f2466a8efb83118e8019ef6b"
 }

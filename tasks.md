@@ -1,11 +1,31 @@
-# Task List v2: Cải thiện logic soát lỗi tiếng Việt — epub-spell-check
+# Task List v3: Cải thiện logic soát lỗi tiếng Việt — epub-spell-check
+
+Cập nhật sau khi review commit `183b783` (đã pull, cài đặt, chạy 143/143 test pass, verify thêm bằng data thật).
 
 Cập nhật sau khi review nhánh `develop` (commit `5d8622f`). P0, P2, P3 và phần lớn P1 đã xong.
 Chi tiết hoá phần còn lại (2.2 / 2.3) theo hướng: fetch từ điển tham chiếu → đối chiếu chéo → gắn flag trong Admin.
 
 ---
 
-## ✅ Đã hoàn thành (verify bằng test + probe thực tế, 134/134 test pass)
+## 🔴 P0-mới — Fix từ đợt review commit `183b783` (impact cao, phát hiện qua chạy thử data thật)
+
+- [x] **6.1 — Giảm nhiễu Tier C (hiện đang flag oan 21.2% từ điển)**
+  - Đã verify: chạy `scanDictionaryCrossReference` trên `vn-dict.txt` thật (8357 từ) → **1773 từ bị flag Tier C**, soát mẫu thấy đa số false positive (`cafe`, `campuchia`, `boa`, `cave`, `alô`, `bs`... đều là từ/từ vay mượn/viết tắt thật, không phải rác), gợi ý thay thế đi kèm cũng vô nghĩa vì hunspell-vi chỉ 6711 từ, quá nhỏ để làm baseline phủ định 1 mình.
+  - Fix: sửa `scripts/build-underthesea-dict.ts` để xuất thêm file thứ 2 chứa **entry đơn âm** (hiện đang bị lọc bỏ do điều kiện `text.includes(" ")`), rồi dùng `hunspell ∪ underthesea-single-words` làm reference set cho Tier C thay vì chỉ hunspell.
+  - Test cần thêm: chạy lại tỉ lệ flag trên `vn-dict.txt` thật, xác nhận tỉ lệ false positive giảm đáng kể (mẫu test: `cafe`, `boa`, `alô`, `campuchia` không còn bị flag).
+
+- [x] **6.2 — Xoá rule confusable sai: `bão hoà` → `bão hòa`**
+  - Vị trí: `src/utils/context-confusion.ts`, rule có `wrongPhrase: "bão hoà"`.
+  - Vấn đề: `hoà`/`hòa` không phải 2 từ khác nhau, chỉ là 2 kiểu đặt dấu cũ/mới của cùng 1 từ — đã verify `getAlternateToneStyle("hoà")` trả về `"hòa"`, tức hệ thống đã tự công nhận 2 dạng này tương đương ở chỗ khác. Rule này sẽ báo sai cho người gõ đúng chính tả kiểu dấu cũ.
+  - Giữ nguyên rule `bảo hoà` → `bão hòa` (rule khác, đúng, vì đây là lỗi hỏi/ngã thật giữa `bảo` và `bão`).
+
+- [x] **6.3 — Đồng bộ nguồn reference dict giữa runtime và build-time**
+  - `src/utils/reference-dict.ts` (chạy lúc runtime) chỉ fetch remote `vi-DauMoi.dic`, trong khi `scripts/fetch-reference-dict.ts` (build snapshot offline) merge cả `DauCu` lẫn `DauMoi`.
+  - Khi remote fetch runtime thành công một phần, code hiện tại không merge thêm với bundled snapshot đầy đủ hơn → tập tham chiếu lúc chạy thật hẹp hơn lúc audit offline. Cần sửa để runtime luôn merge remote + bundled, hoặc fetch cả 2 file `.dic` giống script offline.
+
+---
+
+## ✅ Đã hoàn thành (verify bằng test + probe thực tế)
 
 - [x] 1.1 — Sửa hard filter loại nhầm ứng viên đúng (`analyzer.ts`)
 - [x] 1.2 — Tách tier điểm rõ ràng, không chồng lấn (`analyzer.ts`)

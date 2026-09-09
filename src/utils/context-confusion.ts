@@ -243,12 +243,6 @@ export const CONFUSABLE_RULES: ConfusableRule[] = [
     severity: "always_wrong"
   },
   {
-    wrongPhrase: "bão hoà",
-    correctPhrase: "bão hòa",
-    reason: "Dùng từ theo ngữ cảnh: 'bão hòa' (trạng thái bão hòa)",
-    severity: "context_dependent"
-  },
-  {
     wrongPhrase: "bảo hoà",
     correctPhrase: "bão hòa",
     reason: "Sai chính tả: đúng chuẩn là 'bão hòa'",

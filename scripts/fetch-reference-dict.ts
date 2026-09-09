@@ -52,6 +52,27 @@ async function main() {
   for (const w of dauCuWords) mergedSet.add(w)
   for (const w of dauMoiWords) mergedSet.add(w)
 
+  // Also include underthesea single words if available
+  const undertheseaSinglePath = path.resolve(
+    process.cwd(),
+    "src/data/underthesea-single-words.json"
+  )
+  if (fs.existsSync(undertheseaSinglePath)) {
+    try {
+      const undertheseaWords = JSON.parse(
+        fs.readFileSync(undertheseaSinglePath, "utf8")
+      ) as string[]
+      for (const w of undertheseaWords) {
+        if (typeof w === "string" && w.trim()) {
+          mergedSet.add(w.trim().normalize("NFC"))
+        }
+      }
+      console.log(`- underthesea-single: ${undertheseaWords.length}`)
+    } catch (err) {
+      console.warn("Could not read underthesea-single-words.json:", err)
+    }
+  }
+
   const sortedList = Array.from(mergedSet).sort((a, b) =>
     a.localeCompare(b, "vi")
   )

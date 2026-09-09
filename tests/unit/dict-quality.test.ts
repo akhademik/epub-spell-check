@@ -261,5 +261,16 @@ describe("Dictionary Quality & Garbage Detection Module", () => {
       expect(refDict.size).toBeGreaterThan(0)
       clearReferenceDictionaryCache()
     })
+
+    it("verifies loanwords and modern words (cafe, boa, alô, campuchia) are present in merged reference (Task 6.1)", async () => {
+      const { loadReferenceDictionary } = await import(
+        "../../src/utils/reference-dict"
+      )
+      const refDict = await loadReferenceDictionary()
+
+      const loanwords = ["cafe", "boa", "alô", "campuchia"]
+      const findings = scanDictionaryCrossReference("vn", loanwords, refDict)
+      expect(findings.length).toBe(0)
+    })
   })
 })
