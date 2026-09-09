@@ -228,6 +228,104 @@ export const CONFUSABLE_RULES: ConfusableRule[] = [
     reason:
       "Dùng từ theo ngữ cảnh: 'nghe phong thanh' (nghe tin đồn thoáng qua)",
     severity: "context_dependent"
+  },
+  {
+    wrongPhrase: "bất chắc",
+    correctPhrase: "bất trắc",
+    reason: "Sai chính tả: đúng chuẩn là 'bất trắc' (tình huống bất ngờ)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "bàn dao",
+    correctPhrase: "bàn giao",
+    reason:
+      "Sai từ vựng: đúng chuẩn là 'bàn giao' (chuyển giao công việc/tài sản)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "bão hoà",
+    correctPhrase: "bão hòa",
+    reason: "Dùng từ theo ngữ cảnh: 'bão hòa' (trạng thái bão hòa)",
+    severity: "context_dependent"
+  },
+  {
+    wrongPhrase: "bảo hoà",
+    correctPhrase: "bão hòa",
+    reason: "Sai chính tả: đúng chuẩn là 'bão hòa'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "bêu diếu",
+    correctPhrase: "bêu riếu",
+    reason: "Sai chính tả: đúng chuẩn là 'bêu riếu'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chân châu",
+    correctPhrase: "trân châu",
+    reason: "Sai từ vựng: đúng chuẩn là 'trân châu' (hạt trân châu, ngọc quý)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chây lười",
+    correctPhrase: "trây lười",
+    reason: "Sai chính tả: đúng chuẩn là 'trây lười' (lười biếng)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chót dại",
+    correctPhrase: "trót dại",
+    reason: "Sai chính tả: đúng chuẩn là 'trót dại' (lỡ lầm)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chưng bày",
+    correctPhrase: "trưng bày",
+    reason: "Sai từ vựng: đúng chuẩn là 'trưng bày' (triển lãm)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "trương mục",
+    correctPhrase: "chương mục",
+    reason:
+      "Dùng từ theo ngữ cảnh: 'chương mục' (mục lục) hoặc 'trương mục' (tài khoản)",
+    severity: "context_dependent"
+  },
+  {
+    wrongPhrase: "co dãn",
+    correctPhrase: "co giãn",
+    reason: "Sai chính tả: đúng chuẩn là 'co giãn'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "khoắc khoải",
+    correctPhrase: "khắc khoải",
+    reason: "Sai chính tả: đúng chuẩn là 'khắc khoải'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "khập khiển",
+    correctPhrase: "khập khiễng",
+    reason: "Sai chính tả: đúng chuẩn là 'khập khiễng'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chấp vá",
+    correctPhrase: "chắp vá",
+    reason: "Sai từ vựng: 'chắp vá' thay vì 'chấp vá'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "giãy dụa",
+    correctPhrase: "giãy giụa",
+    reason: "Sai chính tả: đúng chuẩn là 'giãy giụa'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "dãy dụa",
+    correctPhrase: "giãy giụa",
+    reason: "Sai chính tả: đúng chuẩn là 'giãy giụa'",
+    severity: "always_wrong"
   }
 ]
 
@@ -299,4 +397,108 @@ export function scanContextualErrors(
   }
 
   return errors
+}
+
+let cachedCompoundWords: Set<string> | null = null
+
+/**
+ * Loads the Underthesea Vietnamese compound words dictionary from /underthesea-words.txt.
+ * Cached in memory during session.
+ */
+export async function loadUndertheseaCompounds(): Promise<Set<string>> {
+  if (cachedCompoundWords && cachedCompoundWords.size > 0) {
+    return cachedCompoundWords
+  }
+
+  const set = new Set<string>()
+  try {
+    const res = await fetch("/underthesea-words.txt")
+    if (res.ok) {
+      const text = await res.text()
+      const lines = text.split(/\r?\n/)
+      for (const line of lines) {
+        const trimmed = line.trim().toLowerCase().normalize("NFC")
+        if (trimmed) set.add(trimmed)
+      }
+    }
+  } catch {
+    /* fallback */
+  }
+
+  cachedCompoundWords = set
+  return set
+}
+
+/**
+ * Checks whether a 2-3 word phrase is a recognized Vietnamese compound in Underthesea dictionary.
+ */
+export function isKnownCompound(
+  phrase: string,
+  compoundDict?: Set<string>
+): boolean {
+  const dict = compoundDict ?? cachedCompoundWords
+  if (!dict || dict.size === 0) return false
+  return dict.has(phrase.trim().toLowerCase().normalize("NFC"))
+}
+
+/**
+ * Finds candidate compound corrections from underthesea dictionary by testing phonetic variations.
+ */
+export function findCompoundSuggestions(
+  phrase: string,
+  compoundDict?: Set<string>
+): string[] {
+  const dict = compoundDict ?? cachedCompoundWords
+  if (!dict || dict.size === 0) return []
+
+  const low = phrase.trim().toLowerCase().normalize("NFC")
+  const suggestions: string[] = []
+
+  // Check known confusable rule suggestions first
+  for (const rule of CONFUSABLE_RULES) {
+    if (rule.wrongPhrase.toLowerCase() === low) {
+      suggestions.push(rule.correctPhrase)
+    }
+  }
+
+  // Phonetic variant swaps (s<->x, d<->gi, tr<->ch, l<->n)
+  const swapPairs: [string, string][] = [
+    ["s", "x"],
+    ["x", "s"],
+    ["d", "gi"],
+    ["gi", "d"],
+    ["tr", "ch"],
+    ["ch", "tr"],
+    ["l", "n"],
+    ["n", "l"]
+  ]
+
+  const words = low.split(/\s+/)
+  if (words.length >= 2 && words.length <= 4) {
+    for (const [from, to] of swapPairs) {
+      // Test replacing in first word
+      if (words[0].startsWith(from)) {
+        const candidate = [
+          to + words[0].slice(from.length),
+          ...words.slice(1)
+        ].join(" ")
+        if (dict.has(candidate) && !suggestions.includes(candidate)) {
+          suggestions.push(candidate)
+        }
+      }
+      // Test replacing in second word
+      if (words[1].startsWith(from)) {
+        const candidate = [
+          words[0],
+          to + words[1].slice(from.length),
+          ...words.slice(2)
+        ].join(" ")
+        if (dict.has(candidate) && !suggestions.includes(candidate)) {
+          suggestions.push(candidate)
+        }
+      }
+    }
+  }
+
+  return suggestions
 }

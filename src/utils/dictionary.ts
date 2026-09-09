@@ -4,7 +4,7 @@ import type {
   DictionaryStatus,
   IndexedDictionary
 } from "../types/dictionary"
-import { getBaseWord } from "./analysis-core"
+import { getBaseWordWithoutD } from "./analysis-core"
 import { getCache, setCache } from "./indexed-db"
 import { logger } from "./logger"
 
@@ -23,7 +23,7 @@ export function buildIndexedDictionary(
       byLength.set(len, bucket)
     }
     bucket.push(word)
-    baseWordCache.set(word, getBaseWord(word))
+    baseWordCache.set(word, getBaseWordWithoutD(word))
   }
 
   return {

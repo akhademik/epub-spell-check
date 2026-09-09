@@ -20,14 +20,21 @@
   let isAuditing = $state(false)
   let selectedTierAWords = $state<Set<string>>(new Set())
   let stagedDeletions = $state<Set<string>>(new Set())
+  let stagedAdditions = $state<Set<string>>(new Set())
   let isSyncing = $state(false)
   let ignoredClusterIds = $state<Set<string>>(new Set())
+  let ignoredTierCWords = $state<Set<string>>(new Set())
 
   const tierAFindings = $derived(
     auditData?.garbage.filter((g) => g.tier === "A" && !stagedDeletions.has(g.word)) ?? []
   )
   const tierBFindings = $derived(
     auditData?.garbage.filter((g) => g.tier === "B" && !stagedDeletions.has(g.word)) ?? []
+  )
+  const tierCFindings = $derived(
+    auditData?.referenceFindings?.filter(
+      (g) => !stagedDeletions.has(g.word) && !ignoredTierCWords.has(g.word)
+    ) ?? []
   )
   const activeClusters = $derived(
     auditData?.duplicateClusters
@@ -42,7 +49,9 @@
   async function runAudit() {
     isAuditing = true
     ignoredClusterIds = new Set()
+    ignoredTierCWords = new Set()
     stagedDeletions = new Set()
+    stagedAdditions = new Set()
     try {
       auditData = await fetchDictionaryAudit(
         activeDict,
@@ -103,8 +112,31 @@
     appState.showToast(`Đã xếp "${word}" vào hàng đợi xóa (chưa lưu lên Cloudflare).`, "info")
   }
 
+  function handleKeepTierC(word: string) {
+    const next = new Set(ignoredTierCWords)
+    next.add(word)
+    ignoredTierCWords = next
+    appState.showToast(`Đã giữ lại từ "${word}" (đánh dấu đã review).`, "info")
+  }
+
+  function handleReplaceTierC(word: string, replacement: string) {
+    const nextDel = new Set(stagedDeletions)
+    nextDel.add(word)
+    stagedDeletions = nextDel
+
+    const nextAdd = new Set(stagedAdditions)
+    nextAdd.add(replacement)
+    stagedAdditions = nextAdd
+
+    appState.showToast(
+      `Đã xếp thay thế "${word}" bằng "${replacement}" vào hàng đợi đồng bộ.`,
+      "info"
+    )
+  }
+
   function discardStagedDeletions() {
     stagedDeletions = new Set()
+    stagedAdditions = new Set()
     const tierAWords = (auditData?.garbage.filter((g) => g.tier === "A") || []).map(
       (g) => g.word
     )
@@ -113,22 +145,32 @@
   }
 
   async function handleSyncToCloudflare() {
-    if (stagedDeletions.size === 0) return
+    if (stagedDeletions.size === 0 && stagedAdditions.size === 0) return
     isSyncing = true
     try {
-      const words = Array.from(stagedDeletions)
-      const success = await appState.addWordsToDictionary(
-        activeDict,
-        words.join("\n"),
-        appState.dictAdminToken,
-        "remove"
-      )
-      if (success) {
-        stagedDeletions = new Set()
-        selectedTierAWords = new Set()
-        await runAudit()
-        onAuditApplied?.()
+      if (stagedDeletions.size > 0) {
+        const words = Array.from(stagedDeletions)
+        await appState.addWordsToDictionary(
+          activeDict,
+          words.join("\n"),
+          appState.dictAdminToken,
+          "remove"
+        )
       }
+      if (stagedAdditions.size > 0) {
+        const words = Array.from(stagedAdditions)
+        await appState.addWordsToDictionary(
+          activeDict,
+          words.join("\n"),
+          appState.dictAdminToken,
+          "add"
+        )
+      }
+      stagedDeletions = new Set()
+      stagedAdditions = new Set()
+      selectedTierAWords = new Set()
+      await runAudit()
+      onAuditApplied?.()
     } finally {
       isSyncing = false
     }
@@ -407,6 +449,76 @@
           {/if}
         </div>
       </div>
+
+      <!-- Khối 4: Đối Chiếu Từ Điển Tham Chiếu (Tier C) -->
+      {#if activeDict === "vn"}
+        <div class="rounded-2xl bg-slate-900 border border-purple-900/40 shadow-xl overflow-hidden">
+          <div class="p-4 bg-purple-950/20 border-b border-purple-900/40 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+              <h4 class="text-sm font-bold text-purple-200">
+                Khối 4: Đối Chiếu Từ Điển Tham Chiếu (Tier C) — {tierCFindings.length} từ
+              </h4>
+            </div>
+            <span class="text-xs text-slate-400">Từ không có trong Hunspell vi (Cần duyệt thủ công)</span>
+          </div>
+
+          <div class="p-4 max-h-96 overflow-y-auto divide-y divide-slate-800/60 font-mono text-sm">
+            {#if tierCFindings.length === 0}
+              <div class="text-center py-6 text-slate-400 font-sans text-xs">
+                Không phát hiện từ nào thiếu trong từ điển tham chiếu chuẩn.
+              </div>
+            {:else}
+              {#each tierCFindings as finding (finding.word)}
+                <div class="py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2.5 flex-wrap">
+                      <span class="font-sans text-[20px] font-semibold text-purple-300 leading-tight truncate">{finding.word}</span>
+                      {#if finding.suggestion}
+                        <span class="inline-flex items-center gap-1 text-xs font-sans px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                          Gợi ý: <strong>{finding.suggestion}</strong> (khoảng cách {finding.distance})
+                        </span>
+                      {/if}
+                    </div>
+                    <p class="text-xs text-slate-500 font-sans mt-0.5">
+                      {finding.reasons.join(", ")}
+                    </p>
+                  </div>
+
+                  <div class="flex items-center gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onclick={() => handleKeepTierC(finding.word)}
+                      class="px-2.5 py-1 text-xs font-medium text-emerald-400 hover:text-emerald-200 border border-emerald-900/60 rounded-lg hover:bg-emerald-950/40 transition-colors"
+                      title="Giữ lại từ này (đánh dấu đã review, không flag lại)"
+                    >
+                      ✓ Giữ
+                    </button>
+                    <button
+                      type="button"
+                      onclick={() => stageSingleDeletion(finding.word)}
+                      class="px-2.5 py-1 text-xs font-medium text-rose-400 hover:text-rose-200 border border-rose-900/60 rounded-lg hover:bg-rose-950/40 transition-colors"
+                      title="Xếp từ này vào hàng đợi xóa"
+                    >
+                      ✕ Xóa
+                    </button>
+                    {#if finding.suggestion}
+                      <button
+                        type="button"
+                        onclick={() => handleReplaceTierC(finding.word, finding.suggestion!)}
+                        class="px-2.5 py-1 text-xs font-bold text-white bg-purple-600 hover:bg-purple-500 rounded-lg transition-colors shadow"
+                        title={`1-click thay thế "${finding.word}" bằng "${finding.suggestion}"`}
+                      >
+                        Thay bằng "{finding.suggestion}"
+                      </button>
+                    {/if}
+                  </div>
+                </div>
+              {/each}
+            {/if}
+          </div>
+        </div>
+      {/if}
     </div>
   {/if}
 </div>

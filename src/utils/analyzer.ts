@@ -9,8 +9,9 @@ import type {
   ErrorInstance,
   TieredSuggestions
 } from "../types/errors"
-import { getBaseWord, levenshteinDistance } from "./analysis-core"
+import { getBaseWordWithoutD, levenshteinDistance } from "./analysis-core"
 import { buildIndexedDictionary } from "./dictionary"
+import { getBundledReferenceDictionarySync } from "./reference-dict"
 import { getWordFrequency } from "./vn-frequency"
 
 // In-session suggestion memoization cache
@@ -66,7 +67,7 @@ export function findTieredSuggestions(
   }
 
   const low = normWord.toLowerCase()
-  const baseLow = getBaseWord(low)
+  const baseLow = getBaseWordWithoutD(low)
   const primarySet = new Set<string>()
   const secondarySet = new Set<string>()
   const seenLower = new Set<string>()
@@ -138,6 +139,14 @@ export function findTieredSuggestions(
     }
   ]
 
+  const referenceDict = getBundledReferenceDictionarySync()
+  if (referenceDict && referenceDict.size > 0) {
+    dictSources.push({
+      dict: referenceDict,
+      priorityWeight: 4
+    })
+  }
+
   // Dynamic distance threshold based on word length to avoid garbage suggestions on short words
   const maxAllowedDistance = low.length <= 3 ? 1 : 2
   const minLen = Math.max(1, low.length - maxAllowedDistance)
@@ -180,7 +189,8 @@ export function findTieredSuggestions(
         continue
       }
 
-      const baseDictWord = baseWordCache?.get(dictWord) ?? getBaseWord(dictLow)
+      const baseDictWord =
+        baseWordCache?.get(dictWord) ?? getBaseWordWithoutD(dictLow)
 
       // Calculate base distance
       const baseDistance = levenshteinDistance(

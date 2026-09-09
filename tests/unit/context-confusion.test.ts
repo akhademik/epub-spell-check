@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest"
 import {
   CONFUSABLE_RULES,
+  findCompoundSuggestions,
+  isKnownCompound,
+  loadUndertheseaCompounds,
   scanContextualErrors
 } from "../../src/utils/context-confusion"
 
@@ -84,6 +87,30 @@ describe("Context Confusion Module (N-Gram Spelling & Collocation)", () => {
     it("handles empty or short input gracefully", () => {
       expect(scanContextualErrors("", { paragraphIndex: 0 })).toEqual([])
       expect(scanContextualErrors("a", { paragraphIndex: 0 })).toEqual([])
+    })
+  })
+
+  describe("Underthesea Compound Words & Dynamic Suggestions", () => {
+    const mockCompounds = new Set([
+      "sử dụng",
+      "chẩn đoán",
+      "sáp nhập",
+      "thái độ"
+    ])
+
+    it("identifies known compounds in dictionary", () => {
+      expect(isKnownCompound("sử dụng", mockCompounds)).toBe(true)
+      expect(isKnownCompound("xử dụng", mockCompounds)).toBe(false)
+    })
+
+    it("generates phonetic suggestions using compound dictionary", () => {
+      const suggestions = findCompoundSuggestions("xử dụng", mockCompounds)
+      expect(suggestions).toContain("sử dụng")
+    })
+
+    it("loads underthesea compounds without error", async () => {
+      const compounds = await loadUndertheseaCompounds()
+      expect(compounds).toBeDefined()
     })
   })
 })

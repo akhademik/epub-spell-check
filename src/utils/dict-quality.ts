@@ -1,4 +1,4 @@
-import { levenshteinDistance } from "./analysis-core"
+import { getAlternateToneStyle, levenshteinDistance } from "./analysis-core"
 import { isRepeatedUnit, validateDictionaryWord } from "./dict-validator"
 
 export type DictName = "vn" | "names" | "non-vn" | "custom"
@@ -8,6 +8,15 @@ export interface GarbageFinding {
   dictName: DictName
   tier: "A" | "B"
   reasons: string[]
+}
+
+export interface ReferenceFinding {
+  word: string
+  dictName: DictName
+  tier: "C"
+  reasons: string[]
+  suggestion?: string
+  distance?: number
 }
 
 export interface DuplicateClusterWord {
@@ -37,6 +46,7 @@ export interface AuditTiming {
 export interface AuditResult {
   garbage: GarbageFinding[]
   duplicateClusters: DuplicateCluster[]
+  referenceFindings?: ReferenceFinding[]
   timing?: AuditTiming
 }
 
@@ -446,12 +456,94 @@ export function detectFuzzyDuplicates(
 }
 
 /**
+ * Cross-references words in a dictionary (e.g. 'vn') against a reference baseline (e.g. Hunspell vi).
+ * Words missing from the reference dictionary are flagged as Tier C for manual review.
+ * Computes closest candidate (Levenshtein distance <= 2) as a replacement recommendation.
+ */
+export function scanDictionaryCrossReference(
+  dictName: DictName,
+  words: string[],
+  referenceWords: Set<string>,
+  ignoredWords: Set<string> = new Set()
+): ReferenceFinding[] {
+  if (dictName !== "vn" || referenceWords.size === 0) return []
+
+  // Pre-index reference words by length for rapid Levenshtein lookup
+  const byLength = new Map<number, string[]>()
+  for (const w of referenceWords) {
+    const len = w.length
+    let bucket = byLength.get(len)
+    if (!bucket) {
+      bucket = []
+      byLength.set(len, bucket)
+    }
+    bucket.push(w)
+  }
+
+  const findings: ReferenceFinding[] = []
+
+  for (const rawWord of words) {
+    const word = rawWord.trim().normalize("NFC")
+    if (!word || ignoredWords.has(word)) continue
+
+    const low = word.toLowerCase()
+    const altTone = getAlternateToneStyle(low)
+
+    const isInReference =
+      referenceWords.has(word) ||
+      referenceWords.has(low) ||
+      (altTone !== null && referenceWords.has(altTone))
+
+    if (!isInReference) {
+      // Find closest suggestion with edit distance <= 2
+      let bestSuggestion: string | undefined
+      let minDistance = 999
+
+      const minLen = Math.max(1, low.length - 2)
+      const maxLen = low.length + 2
+
+      for (let l = minLen; l <= maxLen; l++) {
+        const bucket = byLength.get(l)
+        if (!bucket) continue
+        for (const candidate of bucket) {
+          const candLow = candidate.toLowerCase()
+          const dist = levenshteinDistance(
+            low,
+            candLow,
+            Math.min(2, minDistance)
+          )
+          if (dist <= 2 && dist < minDistance) {
+            minDistance = dist
+            bestSuggestion = candidate
+            if (dist === 1) break
+          }
+        }
+        if (minDistance === 1) break
+      }
+
+      findings.push({
+        word,
+        dictName,
+        tier: "C",
+        reasons: ["Không có trong từ điển tham chiếu chuẩn (Hunspell vi)"],
+        suggestion: bestSuggestion,
+        distance: minDistance <= 2 ? minDistance : undefined
+      })
+    }
+  }
+
+  return findings
+}
+
+/**
  * Runs a complete audit on a dictionary with single-pass garbage scan and performance metrics.
  */
 export function auditDictionary(
   dictName: DictName,
   words: string[],
-  ignoredPairs: Set<string> = new Set()
+  ignoredPairs: Set<string> = new Set(),
+  referenceWords?: Set<string>,
+  ignoredReferenceWords: Set<string> = new Set()
 ): AuditResult {
   const startTime = performance.now()
   const timingCollector: Partial<AuditTiming> = {}
@@ -470,11 +562,23 @@ export function auditDictionary(
     timingCollector
   )
 
+  // 3. Cross-reference Audit (Tier C)
+  let referenceFindings: ReferenceFinding[] | undefined
+  if (referenceWords && referenceWords.size > 0 && dictName === "vn") {
+    referenceFindings = scanDictionaryCrossReference(
+      dictName,
+      words,
+      referenceWords,
+      ignoredReferenceWords
+    )
+  }
+
   timingCollector.totalMs = Math.round(performance.now() - startTime)
 
   return {
     garbage,
     duplicateClusters,
+    referenceFindings,
     timing: {
       garbageScanMs: timingCollector.garbageScanMs ?? 0,
       indexBuildMs: timingCollector.indexBuildMs ?? 0,

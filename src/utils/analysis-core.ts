@@ -303,6 +303,13 @@ export function getBaseWord(word: string): string {
   return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
 }
 
+export function getBaseWordWithoutD(word: string): string {
+  return word
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[đĐ]/g, (m) => (m === "Đ" ? "D" : "d"))
+}
+
 /**
  * Adapt the casing of replacementWord to match the casing style of originalWord:
  * - ALL UPPERCASE: "HELLO" -> "WORLD"

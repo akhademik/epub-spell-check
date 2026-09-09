@@ -181,6 +181,25 @@ describe("Analyzer Module", () => {
       expect(allSuggestions).toContain("đường")
     })
 
+    it("should place đ candidates like 'đường' in top primary suggestions for 'duong' (Task 1.4)", () => {
+      const customDicts: Dictionaries = {
+        vietnamese: new Set([
+          "đường",
+          "dương",
+          "buông",
+          "cuồng",
+          "tuồng",
+          "đương"
+        ]),
+        nonVietnamese: new Set(),
+        custom: new Set(),
+        names: new Set()
+      }
+      const tiered = findTieredSuggestions("duong", customDicts)
+      expect(tiered.primary).toContain("đường")
+      expect(tiered.primary.indexOf("đường")).toBeLessThanOrEqual(3)
+    })
+
     it("should prioritize same base-word tone completion over different base words (Task 1.2)", () => {
       const customDicts: Dictionaries = {
         vietnamese: new Set(["trường", "ruồng", "ruộng", "trưởng", "trương"]),
