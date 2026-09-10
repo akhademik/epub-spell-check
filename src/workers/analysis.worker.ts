@@ -8,11 +8,9 @@ import {
   WORD_REGEX
 } from "../utils/analysis-core"
 import {
-  loadCompoundIndex,
   resolveOverlappingErrors,
-  scanDynamicCompoundErrors
-} from "../utils/compound-detector"
-import { scanContextualErrors } from "../utils/context-confusion"
+  scanContextualErrors
+} from "../utils/context-confusion"
 
 interface WorkerMessage {
   type?: "init" | "analyze"
@@ -31,8 +29,6 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     if (data.dictionaries) {
       cachedDictionaries = data.dictionaries
     }
-    // Pre-warm compound index
-    await loadCompoundIndex()
     return
   }
 
@@ -59,9 +55,6 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   const activeDicts = cachedDictionaries
   const rawErrors: ErrorInstance[] = []
   let totalWordCount = 0
-
-  // Ensure compound index is loaded
-  const compoundIndex = await loadCompoundIndex()
 
   const totalParagraphs = textBlocks.length
 
@@ -110,7 +103,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       }
 
       if (checkSettings?.vietnamese !== false) {
-        // 1. Curated Contextual / Hardcoded Rules (Highest priority)
+        // Curated Contextual / Hardcoded Rules (human-reviewed, high precision)
         const contextualErrors = scanContextualErrors(text, {
           paragraphIndex,
           chapterIndex: chapterStartIndex,
@@ -119,24 +112,6 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         })
         if (contextualErrors.length > 0) {
           rawErrors.push(...contextualErrors)
-        }
-
-        // 2. Dynamic Underthesea Compound Errors (Fuzzy compound typos)
-        if (compoundIndex && compoundIndex.exactSet.size > 0) {
-          const dynamicCompoundErrors = scanDynamicCompoundErrors(
-            text,
-            compoundIndex,
-            {
-              paragraphIndex,
-              chapterIndex: chapterStartIndex,
-              filePath: paragraph.filePath,
-              blockId: paragraph.id
-            },
-            activeDicts
-          )
-          if (dynamicCompoundErrors.length > 0) {
-            rawErrors.push(...dynamicCompoundErrors)
-          }
         }
       }
     }
@@ -152,7 +127,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     })
   }
 
-  // Resolve overlaps: compound/contextual errors suppress overlapping token-level errors
+  // Resolve overlaps: curated contextual errors suppress overlapping token-level errors
   const finalErrors = resolveOverlappingErrors(rawErrors)
 
   self.postMessage({

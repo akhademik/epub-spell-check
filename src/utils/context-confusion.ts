@@ -320,6 +320,112 @@ export const CONFUSABLE_RULES: ConfusableRule[] = [
     correctPhrase: "giãy giụa",
     reason: "Sai chính tả: đúng chuẩn là 'giãy giụa'",
     severity: "always_wrong"
+  },
+
+  // Additional high-confidence always-wrong pairs (no legitimate alternate meaning)
+  {
+    wrongPhrase: "chân trọng",
+    correctPhrase: "trân trọng",
+    reason: "Sai chính tả: đúng chuẩn là 'trân trọng' (bày tỏ sự tôn trọng)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "trân thành",
+    correctPhrase: "chân thành",
+    reason: "Sai chính tả: đúng chuẩn là 'chân thành' (thật lòng)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "công hiến",
+    correctPhrase: "cống hiến",
+    reason: "Sai chính tả: đúng chuẩn là 'cống hiến' (đóng góp, dâng hiến)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "giữ dội",
+    correctPhrase: "dữ dội",
+    reason: "Sai chính tả: đúng chuẩn là 'dữ dội' (mạnh mẽ, ác liệt)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "sát xao",
+    correctPhrase: "sát sao",
+    reason: "Sai chính tả: đúng chuẩn là 'sát sao' (theo dõi chặt chẽ)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "sơ xài",
+    correctPhrase: "sơ sài",
+    reason: "Sai chính tả: đúng chuẩn là 'sơ sài' (qua loa, đại khái)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỹ luật",
+    correctPhrase: "kỷ luật",
+    reason: "Sai chính tả: đúng chuẩn là 'kỷ luật' (quy tắc, nề nếp)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỹ niệm",
+    correctPhrase: "kỷ niệm",
+    reason: "Sai chính tả: đúng chuẩn là 'kỷ niệm' (ghi nhớ, hoài niệm)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỷ thuật",
+    correctPhrase: "kỹ thuật",
+    reason: "Sai chính tả: đúng chuẩn là 'kỹ thuật' (technique)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỷ năng",
+    correctPhrase: "kỹ năng",
+    reason: "Sai chính tả: đúng chuẩn là 'kỹ năng' (skill)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỹ nguyên",
+    correctPhrase: "kỷ nguyên",
+    reason: "Sai chính tả: đúng chuẩn là 'kỷ nguyên' (era, thời đại)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỹ yếu",
+    correctPhrase: "kỷ yếu",
+    reason: "Sai chính tả: đúng chuẩn là 'kỷ yếu' (tập san lưu niệm)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "vất vã",
+    correctPhrase: "vất vả",
+    reason: "Sai chính tả: đúng chuẩn là 'vất vả' (khó nhọc)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "trí ân",
+    correctPhrase: "tri ân",
+    reason: "Sai chính tả: đúng chuẩn là 'tri ân' (bày tỏ lòng biết ơn)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "che dấu",
+    correctPhrase: "che giấu",
+    reason:
+      "Sai từ vựng: 'giấu' (động từ, che giấu) khác với 'dấu' (danh từ, dấu vết/dấu hiệu)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "dấu diếm",
+    correctPhrase: "giấu diếm",
+    reason:
+      "Sai từ vựng: 'giấu' (động từ, che giấu) khác với 'dấu' (danh từ, dấu vết/dấu hiệu)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chia rẻ",
+    correctPhrase: "chia rẽ",
+    reason: "Sai chính tả: đúng chuẩn là 'chia rẽ' (làm mất đoàn kết)",
+    severity: "always_wrong"
   }
 ]
 
@@ -393,106 +499,71 @@ export function scanContextualErrors(
   return errors
 }
 
-let cachedCompoundWords: Set<string> | null = null
-
 /**
- * Loads the Underthesea Vietnamese compound words dictionary from /underthesea-words.txt.
- * Cached in memory during session.
+ * Resolves overlaps between token-level errors and curated ContextConfusion errors.
+ * A longer / earlier-sorted curated match wins, and any token-level error whose span
+ * is fully covered by a kept curated match is suppressed (it's the same mistake,
+ * already explained by the curated rule).
  */
-export async function loadUndertheseaCompounds(): Promise<Set<string>> {
-  if (cachedCompoundWords && cachedCompoundWords.size > 0) {
-    return cachedCompoundWords
-  }
+export function resolveOverlappingErrors(
+  errors: ErrorInstance[]
+): ErrorInstance[] {
+  if (errors.length <= 1) return errors
 
-  const set = new Set<string>()
-  try {
-    const res = await fetch("/underthesea-words.txt")
-    if (res.ok) {
-      const text = await res.text()
-      const lines = text.split(/\r?\n/)
-      for (const line of lines) {
-        const trimmed = line.trim().toLowerCase().normalize("NFC")
-        if (trimmed) set.add(trimmed)
+  // Separate curated contextual errors vs token-level errors
+  const contextErrors = errors.filter((e) => e.type === "ContextConfusion")
+  const otherErrors = errors.filter((e) => e.type !== "ContextConfusion")
+
+  if (contextErrors.length === 0) return errors
+
+  // Deduplicate overlapping context errors (longer span wins)
+  const sortedContext = [...contextErrors].sort((a, b) => {
+    const lenA = a.context.endIndex - a.context.startIndex
+    const lenB = b.context.endIndex - b.context.startIndex
+    return lenB - lenA
+  })
+
+  const keptContext: ErrorInstance[] = []
+  for (const c of sortedContext) {
+    const overlaps = keptContext.some((existing) => {
+      if (
+        c.context.paragraphIndex !== existing.context.paragraphIndex ||
+        c.context.filePath !== existing.context.filePath
+      ) {
+        return false
       }
-    }
-  } catch {
-    /* fallback */
-  }
-
-  cachedCompoundWords = set
-  return set
-}
-
-/**
- * Checks whether a 2-3 word phrase is a recognized Vietnamese compound in Underthesea dictionary.
- */
-export function isKnownCompound(
-  phrase: string,
-  compoundDict?: Set<string>
-): boolean {
-  const dict = compoundDict ?? cachedCompoundWords
-  if (!dict || dict.size === 0) return false
-  return dict.has(phrase.trim().toLowerCase().normalize("NFC"))
-}
-
-/**
- * Finds candidate compound corrections from underthesea dictionary by testing phonetic variations.
- */
-export function findCompoundSuggestions(
-  phrase: string,
-  compoundDict?: Set<string>
-): string[] {
-  const dict = compoundDict ?? cachedCompoundWords
-  if (!dict || dict.size === 0) return []
-
-  const low = phrase.trim().toLowerCase().normalize("NFC")
-  const suggestions: string[] = []
-
-  // Check known confusable rule suggestions first
-  for (const rule of CONFUSABLE_RULES) {
-    if (rule.wrongPhrase.toLowerCase() === low) {
-      suggestions.push(rule.correctPhrase)
+      return (
+        c.context.startIndex < existing.context.endIndex &&
+        c.context.endIndex > existing.context.startIndex
+      )
+    })
+    if (!overlaps) {
+      keptContext.push(c)
     }
   }
 
-  // Phonetic variant swaps (s<->x, d<->gi, tr<->ch, l<->n)
-  const swapPairs: [string, string][] = [
-    ["s", "x"],
-    ["x", "s"],
-    ["d", "gi"],
-    ["gi", "d"],
-    ["tr", "ch"],
-    ["ch", "tr"],
-    ["l", "n"],
-    ["n", "l"]
-  ]
+  // Filter other errors that overlap with any keptContext error
+  const keptOther = otherErrors.filter((tok) => {
+    const isCovered = keptContext.some((ctx) => {
+      if (
+        tok.context.paragraphIndex !== ctx.context.paragraphIndex ||
+        tok.context.filePath !== ctx.context.filePath
+      ) {
+        return false
+      }
+      return (
+        tok.context.startIndex >= ctx.context.startIndex &&
+        tok.context.endIndex <= ctx.context.endIndex
+      )
+    })
+    return !isCovered
+  })
 
-  const words = low.split(/\s+/)
-  if (words.length >= 2 && words.length <= 4) {
-    for (const [from, to] of swapPairs) {
-      // Test replacing in first word
-      if (words[0].startsWith(from)) {
-        const candidate = [
-          to + words[0].slice(from.length),
-          ...words.slice(1)
-        ].join(" ")
-        if (dict.has(candidate) && !suggestions.includes(candidate)) {
-          suggestions.push(candidate)
-        }
-      }
-      // Test replacing in second word
-      if (words[1].startsWith(from)) {
-        const candidate = [
-          words[0],
-          to + words[1].slice(from.length),
-          ...words.slice(2)
-        ].join(" ")
-        if (dict.has(candidate) && !suggestions.includes(candidate)) {
-          suggestions.push(candidate)
-        }
-      }
+  // Return combined errors sorted by paragraph and startIndex
+  return [...keptContext, ...keptOther].sort((a, b) => {
+    if (a.context.paragraphIndex !== b.context.paragraphIndex) {
+      return a.context.paragraphIndex - b.context.paragraphIndex
     }
-  }
-
-  return suggestions
+    return a.context.startIndex - b.context.startIndex
+  })
 }
