@@ -70,7 +70,7 @@ async function main() {
 
   const outCompoundPath = path.resolve(
     process.cwd(),
-    "public/underthesea-words.txt"
+    "scripts/data/underthesea-words.txt"
   )
   fs.writeFileSync(
     outCompoundPath,

@@ -104,7 +104,7 @@ function generateInitialConsonantVariants(syllable: string): string[] {
 async function main() {
   const compoundPath = path.resolve(
     process.cwd(),
-    "public/underthesea-words.txt"
+    "scripts/data/underthesea-words.txt"
   )
   if (!fs.existsSync(compoundPath)) {
     console.error(`Not found: ${compoundPath}`)
