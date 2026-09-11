@@ -216,7 +216,6 @@ Akkad
 Akkadian
 Akron
 Akutui
-Alabama
 Aladdin
 Alalykin
 Alamo
@@ -227,13 +226,10 @@ Alane
 Alanna
 Alantis
 Alanus
-Alaska
 Alasnam
 Alaysius
 Alba
 Alban
-Albania
-Albany
 Albert
 Alberta
 Albertine
@@ -244,7 +240,6 @@ Albina
 Albinus
 Albion
 Albrecht
-Albuquerque
 Alcatraz
 Alceste
 Alchemiae
@@ -313,8 +308,6 @@ Alfreda
 Alfredo
 Algar
 Algénib
-Algeria
-Algerie
 Algernon
 Algerre
 Alhabbal
@@ -384,7 +377,6 @@ Alpheus
 Alphonse
 Alpilles
 Alpo
-Alps
 Alrecht
 Alsace
 Alsloot
@@ -458,7 +450,6 @@ Amphion
 Amphipolis
 Amphoterus
 Amsel
-Amsterdam
 Amtrak
 Amulet
 Amun
@@ -473,7 +464,6 @@ Anakin
 Anakyndaraxes
 Analytique
 Anatole
-Anatolia
 Anaxarchus
 Anaximenes
 Anaxippus
@@ -482,12 +472,10 @@ Anbusson
 Anchiale
 Ancus
 Ancyra
-Andaman
 Andeen
 Anders
 Andersen
 Anderson
-Andes
 Andey
 Andi
 Andover
@@ -532,7 +520,6 @@ Angie
 Anglebury
 Anglia
 Anglo
-Angola
 Angstrom
 Anguilla
 Angus
@@ -695,7 +682,6 @@ Aretha
 Arezzo
 Argaeus
 Argead
-Argentina
 Argentine
 Argo
 Argonauts
@@ -737,7 +723,6 @@ Aristote
 Aristotle
 Arjuna
 Arkadyev
-Arkansas
 Arken
 Arkudah
 Arla
@@ -751,7 +736,6 @@ Arletta
 Arlette
 Arlie
 Arline
-Arlington
 Arlo
 Arlyne
 Armageddon
@@ -760,7 +744,6 @@ Armanda
 Armando
 Armani
 Armanos
-Armenia
 Armida
 Arminda
 Armitage
@@ -848,7 +831,6 @@ Ashoka
 Ashton
 Ashur
 Ashworth
-Asia
 Asian
 Asinius
 Askew
@@ -861,9 +843,7 @@ Assad
 Assaf
 Assamaian
 Assan
-Assisi
 Assy
-Assyria
 Assyrie
 Astaroth
 Astarte
@@ -893,8 +873,6 @@ Athenophanes
 Atia
 Atizyes
 Atkinson
-Atlanta
-Atlantic
 Atlantis
 Atlat
 Atrebates
@@ -955,15 +933,12 @@ Auschwitz
 Austen
 Austerlitz
 Austin
-Australia
-Austria
 Autariatae
 Autorashasta
 Autronius
 Autry
 Auvergne
 Auximum
-Avalon
 Avaricum
 Avarino
 Avaris
@@ -978,7 +953,6 @@ Avesta
 Avester
 Aveyron
 Avicenna
-Avignon
 Avigon
 Avil
 Avila
@@ -1021,8 +995,6 @@ Babeuf
 Babich
 Babineau
 Babuskin
-Babylon
-Babylonia
 Babylonie
 Bacardi
 Bacbouc
@@ -1047,7 +1019,6 @@ Bagnolet
 Bagoas
 Bagration
 Bahader
-Bahamas
 Bahariya
 Bahman
 Bahome
@@ -1106,8 +1077,6 @@ Banderovtsy
 Bandler
 Bandy
 Bangalore
-Bangladesh
-Bangor
 Banisteriopsis
 Bannerman
 Bannister
@@ -1133,7 +1102,6 @@ Barbra
 Barca
 Barcani
 Barcarolle
-Barcelona
 Barclay
 Bard
 Bardiya
@@ -1215,7 +1183,6 @@ Baudelaire
 Baudoyer
 Baumgarten
 Baumgartens
-Bavaria
 Baville
 Baxter
 Bayard
@@ -1284,9 +1251,7 @@ Beetle
 Beetlejuice
 Beeton
 Behram
-Beijing
 Beinecke
-Beirut
 Bekins
 Bela
 Belaya
@@ -1294,8 +1259,6 @@ Belenus
 Belfast
 Belgae
 Belgica
-Belgium
-Belgrade
 Belgravia
 Belinda
 Belinsky
@@ -1373,7 +1336,6 @@ Beris
 Berkeley
 Berkowitz
 Berkshire
-Berlin
 Berliner
 Bermondsey
 Bernadette
@@ -1678,10 +1640,8 @@ Bosporus
 Bossuet
 Bostan
 Bostane
-Boston
 Boswell
 Botnie
-Botswana
 Botticelli
 Botzaris
 Boubekir
@@ -1778,7 +1738,6 @@ Braven
 Bravissimo
 Bravo
 Braxin
-Brazil
 Brazos
 Breana
 Breann
@@ -1909,7 +1868,6 @@ Bruno
 Brunswick
 Brunton
 Brural
-Brussels
 Brute
 Bruttia
 Brutus
@@ -1939,12 +1897,10 @@ Buckingham
 Bucksport
 Bucky
 Buda
-Budapest
 Buddinger
 Buddy
 Budenny
 Buena
-Buenos
 Buffalo
 Bufford
 Buffy
@@ -2096,7 +2052,6 @@ Cambalu
 Cambemell
 Camberwell
 Cambri
-Cambridge
 Cambridgeshire
 Cambronne
 Cambyse
@@ -2136,7 +2091,6 @@ Canopy
 Cant
 Cantabrigiensis
 Cantal
-Canterbury
 Cantlemere
 Cantore
 Cantori
@@ -2545,7 +2499,6 @@ Chex
 Cheyenne
 Chianti
 Chiara
-Chicago
 Chichen
 Chick
 Chicken
@@ -2557,12 +2510,10 @@ Chihuly
 Child
 Childress
 Childs
-Chile
 Chillianwallah
 Chilly
 Chiltern
 Chimney
-China
 Chinburg
 Chinche
 Chinese
@@ -2822,11 +2773,9 @@ Colln
 Collora
 Colloredo
 Colomb
-Colombia
 Colombo
 Colonel
 Colonna
-Colorado
 Colossus
 Colt
 Colton
@@ -2869,7 +2818,6 @@ Conk
 Conklin
 Conley
 Connassez
-Connecticut
 Connelly
 Connetable
 Connie
@@ -2907,7 +2855,6 @@ Cooper
 Coors
 Coos
 Copacabana
-Copenhagen
 Copernicus
 Cophte
 Copperfield
@@ -3086,7 +3033,6 @@ Crittenden
 Crivelli
 Crixus
 Croat
-Croatia
 Crocala
 Crocker
 Crockett
@@ -3127,7 +3073,6 @@ Crystle
 Ctesias
 Cthulhu
 Cuards
-Cuba
 Cubbins
 Cubitt
 Cuco
@@ -3218,14 +3163,12 @@ Dale
 Dalene
 Dalet
 Dalí
-Dallas
 Dallemagne
 Dallin
 Dalstroi
 Dalton
 Daltrey
 Damas
-Damascus
 Damasippe
 Damask
 Damery
@@ -3590,7 +3533,6 @@ Destinée
 Destiny
 Deterding
 Detra
-Detroit
 Detterick
 Deuce
 Deul
@@ -3675,7 +3617,6 @@ Digger
 Digit
 Digital
 Digna
-Dijon
 Dike
 Dildo
 Dildos
@@ -3764,7 +3705,6 @@ Dixie
 Dixieland
 Dixon
 Dizzy
-Djibouti
 Dmitri
 Dmitriyev
 Dmitrovsk
@@ -4144,7 +4084,6 @@ Edgeware
 Edgware
 Edie
 Edimbourg
-Edinburgh
 Edison
 Edit
 Edited
@@ -4401,7 +4340,6 @@ Enfant
 Enfield
 Engelbert
 Engels
-England
 Englischer
 Engstrom
 Enid
@@ -4981,7 +4919,6 @@ Frampton
 Fran
 Francaise
 Française
-France
 Frances
 Francesca
 Francesco
@@ -5004,7 +4941,6 @@ Frangois
 Frank
 Franke
 Frankenstein
-Frankfurt
 Frankie
 Frankl
 Frankland
@@ -5361,7 +5297,6 @@ Gerizim
 Germain
 German
 Germanicus
-Germany
 Géronte
 Gerri
 Gerry
@@ -5397,7 +5332,6 @@ Giauhare
 Gibbons
 Gibbs
 Gibney
-Gibraltar
 Gibson
 Gichy
 Gidding
@@ -6212,7 +6146,6 @@ Hillstrom
 Hillview
 Hilma
 Hilton
-Himalaya
 Himalayan
 Himalayas
 Hina
@@ -6534,9 +6467,7 @@ Inca
 Incantationibus
 Increase
 Incroyable
-India
 Indian
-Indiana
 Indianapolis
 Indianola
 Indians
@@ -6608,10 +6539,7 @@ Iraida
 Irak
 Irakly
 Irama
-Iran
-Iraq
 Iraqi
-Ireland
 Irena
 Irene
 Irina
@@ -6670,7 +6598,6 @@ Isola
 Isonomy
 Isonzo
 Ispahan
-Israel
 Israël
 Israeli
 Issac
@@ -6679,7 +6606,6 @@ Issus
 Istanbul
 Ister
 Italian
-Italy
 Itobad
 Iturbide
 Itza
@@ -6831,7 +6757,6 @@ Janssonius
 January
 Janus
 Janyce
-Japan
 Jardil
 Jared
 Jarod
@@ -6953,7 +6878,6 @@ Jerrod
 Jerrold
 Jerry
 Jersey
-Jerusalem
 Jérusalem
 Jeshua
 Jesrad
@@ -7087,7 +7011,6 @@ Jonsson
 Joong
 Joppa
 Jordaens
-Jordan
 Jordanie
 Jordon
 Jorge
@@ -7206,7 +7129,6 @@ Kabat
 Kabbala
 Kabbalah
 Kabbalistic
-Kabul
 Kacey
 Kaci
 Kacie
@@ -7351,7 +7273,6 @@ Kasar
 Kasem
 Kasey
 Kasha
-Kashmir
 Kasi
 Kasie
 Kasimugaura
@@ -7495,7 +7416,6 @@ Kent
 Kenton
 Kentucky
 Kenworth
-Kenya
 Kepler
 Kera
 Kerble
@@ -7725,7 +7645,6 @@ Kopeck
 Koran
 Korb
 Korchagin
-Korea
 Korean
 Korey
 Kori
@@ -7998,7 +7917,6 @@ Lannister
 Lanora
 Lansdowne
 Laomedon
-Laos
 Lapangcho
 Lapham
 Laphroaig
@@ -8157,7 +8075,6 @@ Leatherhead
 Leave
 Leaves
 Leaving
-Lebanon
 Lebedev
 Lebel
 Leblanc
@@ -8348,7 +8265,6 @@ Libbie
 Libbit
 Libby
 Liberator
-Liberia
 Liberov
 Libert
 Liberty
@@ -8480,7 +8396,6 @@ Lombardo
 Lomond
 Lona
 Londa
-London
 Lone
 Lonely
 Longa
@@ -8903,7 +8818,6 @@ Malaga
 Malaviya
 Malawi
 Malay
-Malaysia
 Malcolm
 Malcom
 Malden
@@ -8941,7 +8855,6 @@ Malone
 Malorie
 Malory
 Malplaquet
-Malta
 Malte
 Maltese
 Malthus
@@ -9672,7 +9585,6 @@ Metternich
 Meunier
 Mexborough
 Mexican
-Mexico
 Meyer
 Meyerbeer
 Meyers
@@ -9745,7 +9657,6 @@ Mikolajczyk
 Mikov
 Mila
 Milagro
-Milan
 Milano
 Milazzo
 Milburn
@@ -10058,7 +9969,6 @@ Mortuary
 Morty
 Mosa
 Mosasor
-Moscow
 Mose
 Moser
 Moses
@@ -10158,7 +10068,6 @@ Muzak
 My
 Myadec
 Myakotin
-Myanmar
 Mycenae
 Mycroft
 Myers
@@ -10357,7 +10266,6 @@ Némorin
 Nệnh
 Neoptolemus
 Neosporin
-Nepal
 Nepomuk
 Nepos
 Neptune
@@ -10460,7 +10368,6 @@ Nifty
 Nigel
 Nigella
 Niger
-Nigeria
 Nightingale
 Nightmare
 Nihar
@@ -10565,7 +10472,6 @@ Northumberland
 Northwestern
 Northwoods
 Norton
-Norway
 Norwich
 Norwood
 Nosala
@@ -10939,7 +10845,6 @@ Paige
 Paine
 Paiute
 Pajol
-Pakistan
 Pakra
 Palafox
 Palatine
@@ -10949,7 +10854,6 @@ Palchinsky
 Palen
 Palerme
 Palermo
-Palestine
 Palfrey
 Pali
 Palin
@@ -11027,7 +10931,6 @@ Parfenych
 Pari
 Paridelle
 Parigots
-Paris
 Parish
 Parisienne
 Parisii
@@ -11526,7 +11429,6 @@ Pokeno
 Pokerizer
 Pokey
 Pokrovsky
-Poland
 Polaroid
 Poldhu
 Polesye
@@ -11602,7 +11504,6 @@ Portleigh
 Porto
 Portsdown
 Portsmouth
-Portugal
 Porus
 Poseidon
 Posidonius
@@ -12317,7 +12218,6 @@ Romaine
 Roman
 Romana
 Romance
-Romania
 Romano
 Romanoff
 Romanov
@@ -12495,7 +12395,6 @@ Rusov
 Russa
 Russel
 Russell
-Russia
 Russian
 Russkaya
 Russkiye
@@ -12859,7 +12758,6 @@ Scooter
 Scorsese
 Scotch
 Scotlamd
-Scotland
 Scoto
 Scotsman
 Scott
@@ -13350,7 +13248,6 @@ Sinai
 Sinatra
 Sinclair
 Sindbad
-Singapore
 Singleford
 Singleton
 Sinope
@@ -13600,7 +13497,6 @@ Sozialärztliche
 Sp
 SpaceX
 Spad
-Spain
 Spalding
 Spangled
 Spaniel
@@ -14060,7 +13956,6 @@ Taina
 Taira
 Taisha
 Taishet
-Taiwan
 Tajikistan
 Tajuana
 Takahashi
@@ -14793,7 +14688,6 @@ Turgot
 Turin
 Turk
 Turkestan
-Turkey
 Turkish
 Turkmenia
 Turner
@@ -14860,7 +14754,6 @@ Ugolin
 Újezd
 Úklid
 Ukraina
-Ukraine
 Ukrainia
 Uktha
 Ulan
@@ -14918,7 +14811,6 @@ Uris
 Uritsky
 Ursula
 Ursule
-Uruguay
 Uruk
 Urumchi
 Usain
@@ -15066,7 +14958,6 @@ Venelli
 Venessa
 Veneti
 Venetta
-Venezuela
 Veniamin
 Venice
 Venificiis
@@ -15399,13 +15290,11 @@ Warren
 Warrender
 Warrington
 Warrior
-Warsaw
 Warszawa
 Wartha
 Waschau
 Wash
 Washam
-Washington
 Washita
 Washoe
 Wason
@@ -15468,7 +15357,6 @@ Wellbutrin
 Wellenmechanlk
 Weller
 Welles
-Wellington
 Wells
 Welsh
 Welt
@@ -15858,7 +15746,6 @@ Yoda
 Yogurt
 Yoid
 Yoko
-Yokohama
 Yokubovich
 Yolanda
 Yolande
@@ -15938,7 +15825,6 @@ Zander
 Zandra
 Zanguebar
 Zantout
-Zanzibar
 Zappa
 Zara
 Zaragoza
@@ -16052,7 +15938,6 @@ Zukav
 Zuko
 Zulu
 Zur
-Zurich
 Zurny
 Zustante
 Zutritt
