@@ -1,6 +1,5 @@
 Aage
 Aaron
-Ab
 Abaddon
 Abakan
 Abakumov
@@ -26,7 +25,6 @@ Abermarle
 Abernetty
 Abez
 Abhandlungen
-Abide
 Abie
 Abiezer
 Abiff
@@ -70,12 +68,10 @@ Acierno
 Ackerman
 Acme
 Acorn
-Acquired
 Acro
 Acropolis
 Actium
 Acton
-Actualization
 Adah
 Adair
 Adalia
@@ -114,7 +110,6 @@ Adipowers
 Adirondacks
 Adler
 Admetus
-Administration
 Admova
 Adndna
 Adolf
@@ -133,9 +128,6 @@ Adrien
 Adriene
 Adrin
 Aduatuci
-Advancement
-Adventures
-Adventuresses
 Aedui
 Aegae
 Aegea
@@ -156,7 +148,6 @@ Afranius
 Africans
 Africanus
 Afton
-Again
 Agamemnon
 Agatha
 Agathe
@@ -172,12 +163,10 @@ Agnew
 Agnus
 Agocseo
 Agodsed
-Agony
 Agora
 Agra
 Agrania
 Agranov
-Agreement
 Agriania
 Agrippa
 Agris
@@ -206,14 +195,9 @@ Aimé
 Aimee
 Ainge
 Ainstree
-Aircraft
 Airdyne
 Airedale
-Airlines
-Airplane
 Airstream
-Airways
-Airy
 Aisha
 Aishach
 Aisne
@@ -243,7 +227,6 @@ Alane
 Alanna
 Alantis
 Alanus
-Alarme
 Alaska
 Alasnam
 Alaysius
@@ -364,9 +347,6 @@ Allahabad
 Allan
 Allardyce
 Allée
-Allegiance
-Allegro
-Alleluia
 Allen
 Allena
 Allene
@@ -380,7 +360,6 @@ Allison
 Allman
 Allobroges
 Allobrogian
-Allons
 Allsopp
 Allyn
 Allyson
@@ -455,9 +434,6 @@ Amélie
 America
 Americain
 Americaine
-American
-Americana
-Americans
 Ames
 Amesbury
 Amesson
@@ -495,10 +471,7 @@ Anacostia
 Anahita
 Anakin
 Anakyndaraxes
-Analogy
-Analytics
 Analytique
-Anarchists
 Anatole
 Anatolia
 Anaxarchus
@@ -555,6 +528,7 @@ Angewandte
 Angeyeena
 Angiae
 Angie
+Ănglê
 Anglebury
 Anglia
 Anglo
@@ -568,8 +542,6 @@ Anibal
 Anichkov
 Anichkova
 Anika
-Anima
-Animage
 Anisa
 Anisha
 Anissa
@@ -599,7 +571,6 @@ Annmarie
 Anno
 Annunziata
 Annunzio
-Anonymous
 Anrberley
 Anri
 Ansel
@@ -656,9 +627,6 @@ Appia
 Appian
 Appledore
 Appleton
-Appropriations
-April
-Aptitude
 Aquaman
 Aquila
 Aquinas
@@ -683,13 +651,13 @@ Arakhsamna
 Aral
 Aram
 Aramaic
+Arập
 Arapahoe
 Ararat
 Arat
 Arata
 Arathron
 Araxes
-Arập
 Arbaugh
 Arbeit
 Arbela
@@ -703,16 +671,12 @@ Archdale
 Archelaus
 Archengel
 Archer
-Archers
-Archery
 Archias
 Archibald
 Archie
 Archilochus
 Archimedes
-Archipelago
 Architecrural
-Architecture
 Architeuthis
 Arctic
 Arcturus
@@ -842,10 +806,8 @@ Artemisia
 Artenton
 Artforum
 Arthur
-Artichoke
 Artie
 Artinfo
-Artisan
 Artur
 Arturo
 Artz
@@ -900,8 +862,6 @@ Assaf
 Assamaian
 Assan
 Assisi
-Associates
-Association
 Assy
 Assyria
 Assyrie
@@ -909,14 +869,11 @@ Astaroth
 Astarte
 Astarté
 Aster
-Asteroid
 Aston
 Astoria
 Astraea
 Astrid
 Astrodome
-Astronomia
-Astronomica
 Astros
 Astyages
 Aswan
@@ -925,7 +882,6 @@ Atala
 Atalanta
 Atar
 Atari
-Atavism
 Athelney
 Athena
 Athenaeus
@@ -986,8 +942,6 @@ Auld
 Auletes
 Aulus
 Aundrea
-Aunt
-Aunty
 Aura
 Aurelia
 Aurelio
@@ -1007,7 +961,6 @@ Autariatae
 Autorashasta
 Autronius
 Autry
-Autumn
 Auvergne
 Auximum
 Avalon
@@ -1024,7 +977,6 @@ Aves
 Avesta
 Avester
 Aveyron
-Aviation
 Avicenna
 Avignon
 Avigon
@@ -1056,7 +1008,6 @@ Azucena
 Azur
 Azzie
 Azzolini
-Ănglê
 Baal
 Baba
 Bababech
@@ -1078,9 +1029,6 @@ Bacbouc
 Bacchae
 Bacchus
 Bach
-Bachelor
-Backwater
-Baconian
 Bactine
 Bactria
 Baculus
@@ -1142,7 +1090,6 @@ Balkar
 Ballarat
 Ballard
 Ballinger
-Ballroom
 Balmoral
 Balsora
 Baltic
@@ -1162,7 +1109,6 @@ Bangalore
 Bangladesh
 Bangor
 Banisteriopsis
-Bankers
 Bannerman
 Bannister
 Bannon
@@ -1233,8 +1179,6 @@ Barts
 Baryat
 Barzhenov
 Barzil
-Baseline
-Basement
 Basil
 Basile
 Basilio
@@ -1292,8 +1236,6 @@ Beano
 Beantown
 Bearsford
 Beas
-Beasts
-Beater
 Beatle
 Beatrice
 Beatriz
@@ -1341,7 +1283,6 @@ Beethoven
 Beetle
 Beetlejuice
 Beeton
-Behavioural
 Behram
 Beijing
 Beinecke
@@ -1522,7 +1463,6 @@ Biddell
 Biddle
 Biddles
 Bieil
-Bienvenue
 Biff
 Biggers
 Biggin
@@ -1535,12 +1475,10 @@ Bilbo
 Bilha
 Bili
 Billah
-Billboard
 Billett
 Billi
 Billie
 Billings
-Billionaires
 Billy
 Billye
 Biloxi
@@ -2066,7 +2004,6 @@ Busch
 Bushman
 Bushmen
 Bushmills
-Business
 Busiris
 Butch
 Butte
@@ -2185,7 +2122,6 @@ Canarsie
 Canary
 Canaveral
 Cancún
-Candidate
 Candide
 Candoori
 Candy
@@ -2220,11 +2156,8 @@ Captain
 Capua
 Capus
 Caravaggio
-Caravan
 Carbonari
-Carbonic
 Carbuncle
-Cardboard
 Carderock
 Carella
 Carere
@@ -2288,9 +2221,6 @@ Carrefour
 Carrel
 Carrey
 Carrie
-Carried
-Carrier
-Carries
 Carrington
 Carriton
 Carrol
@@ -2452,6 +2382,7 @@ Ceylon
 Cezanne
 Cézanne
 Chabotarayev
+Chắccô
 Chad
 Chaeronea
 Chafée
@@ -2476,7 +2407,6 @@ Champlain
 Champs
 Chana
 Chanaan
-Chance
 Chances
 Chanda
 Chandieu
@@ -2488,8 +2418,6 @@ Chanell
 Chaney
 Change
 Changed
-Changes
-Channel
 Chantal
 Chantay
 Chantays
@@ -2508,7 +2436,6 @@ Chariot
 Charis
 Charise
 Charita
-Charity
 Charla
 Charlemagne
 Charles
@@ -2534,8 +2461,9 @@ Chaseborough
 Chasidy
 Chasity
 Chaska
-Chassis
+Château
 Chateaubriand
+Châtelet
 Chatham
 Chatty
 Chaucer
@@ -2550,9 +2478,6 @@ Chavdarov
 Chavehavadze
 Chaya
 Chayanov
-Chắccô
-Château
-Châtelet
 Cheapside
 Chebotaryev
 Chechen
@@ -2612,12 +2537,12 @@ Chesterton
 Chet
 Chetkhovsky
 Chetverukin
+Chệu
 Chevelu
 Chevrolet
 Chevrus
 Chex
 Cheyenne
-Chệu
 Chianti
 Chiara
 Chicago
@@ -2630,7 +2555,6 @@ Chieko
 Chiho
 Chihuly
 Child
-Children
 Childress
 Childs
 Chile
@@ -2688,7 +2612,6 @@ Christian
 Christie
 Christina
 Christine
-Christmas
 Christoffel
 Christophe
 Christopher
@@ -2709,7 +2632,6 @@ Chumm
 Chụng
 Chuo
 Chupenyev
-Church
 Churchill
 Chuzzlewit
 Ciampino
@@ -2746,7 +2668,6 @@ Cisalpine
 Ciss
 Cissy
 Cistercian
-Citation
 Cité
 Citeau
 Citgo
@@ -2758,7 +2679,6 @@ Citroen
 Citroën
 City
 Ciudad
-Civilization
 Civita
 Clacton
 Clair
@@ -2813,7 +2733,6 @@ Cleomenes
 Cleopatra
 Cléopâtre
 Cleora
-Clerical
 Cleta
 Clétofis
 Cletus
@@ -2825,7 +2744,6 @@ Cliburn
 Cliff
 Clifford
 Clifton
-Climax
 Clint
 Clinton
 Clio
@@ -2880,7 +2798,6 @@ Coker
 Colbert
 Colby
 Colchis
-Cold
 Coldharbour
 Coldstream
 Cole
@@ -2926,40 +2843,33 @@ Comet
 Comitatus
 Comme
 Commen
-Commerce
-Commercial
-Commission
 Commius
 Commodore
 Commonwealth
 Communications
 Cómo
 Comori
-Companion
-Compromise
 Compton
 Comum
 Concerto
 Concha
 Concorde
 Concordia
-Conditioning
 Condorcet
 Conduit
 Conet
 Coney
-Conference
 Confessions
 Confirmed
 Congo
 Congrio
+Côngtennơ
 Conjectural
 Conk
 Conklin
 Conley
 Connassez
 Connecticut
-Connection
 Connelly
 Connetable
 Connie
@@ -2982,7 +2892,6 @@ Constantine
 Constantino
 Constantinople
 Consuela
-Contents
 Continental
 Contra
 Conveigh
@@ -3053,12 +2962,9 @@ Cornvall
 Cornwall
 Corolla
 Corona
-Coroner
 Coronet
 Corot
-Corporation
 Corral
-Corrections
 Correggio
 Corridor
 Corrie
@@ -3083,6 +2989,7 @@ Cossutia
 Costa
 Costello
 Costenza
+Côte
 Cotinussa
 Cotta
 Cottages
@@ -3108,10 +3015,9 @@ Cowboys
 Cowper
 Coxon
 Coyote
-Côngtennơ
-Côte
 Crabbe
 Crabby
+Crắc
 Cracker
 Craddock
 Craftsman
@@ -3129,7 +3035,6 @@ Craven
 Crawford
 Cray
 Crayola
-Crắc
 Crébillon
 Crédeville
 Crédit
@@ -3161,7 +3066,6 @@ Crimée
 Crimmercrock
 Crimson
 Cris
-Crisis
 Crispin
 Criss
 Crissy
@@ -3176,7 +3080,6 @@ Cristina
 Cristo
 Cristoforo
 Cristy
-Criterion
 Critodemus
 Critognatus
 Crittenden
@@ -3345,12 +3248,10 @@ Dandamis
 Dandux
 Dandy
 Dane
+Danêk
 Danelle
 Danette
-Danêk
-Danger
 Dangerfield
-Dangerous
 Dangla
 Danhasch
 Dani
@@ -3479,7 +3380,6 @@ Deane
 Deann
 Deanna
 Deanne
-Debate
 Debbi
 Debbie
 Debbins
@@ -3494,8 +3394,6 @@ Deborah
 Debra
 Debrah
 Debroah
-Debt
-Debug
 Debussy
 Debut
 Decameron
@@ -3559,8 +3457,6 @@ Delbourgo
 Delcie
 Delco
 Delena
-Delete
-Deleted
 Deleuze
 Delfina
 Delfines
@@ -3643,13 +3539,10 @@ Denver
 Deon
 Deonna
 Département
-Department
 DePaul
 Deposito
-Depository
 Depp
 Deppeson
-Depression
 Depressive
 Deptford
 Déra
@@ -3695,8 +3588,6 @@ Dessolles
 Destin
 Destinée
 Destiny
-Destruction
-Detective
 Deterding
 Detra
 Detroit
@@ -3704,7 +3595,6 @@ Detterick
 Deuce
 Deul
 Deutsche
-Development
 Devereaux
 Deville
 Devin
@@ -3778,8 +3668,6 @@ Dietz
 Dieu
 Diff
 Differ
-Difference
-Different
 Diffs
 Diffusion
 Digest
@@ -3835,26 +3723,19 @@ Dios
 Dioxin
 Diploma
 Direct
-Direction
-Directory
 Dirham
 Dirisko
 Dirk
 Dirt
 Dirty
 Disable
-Disappearance
 Disc
-Disclosure
 Disco
 Discovered
-Discovery
 Discs
 Discuss
-Disease
 Dish
 Dishes
-Disinformation
 Disk
 Disks
 Dismas
@@ -3865,9 +3746,6 @@ Display
 Dispos
 Dispute
 Dist
-Distance
-Distant
-District
 Dite
 Ditto
 Diva
@@ -3879,7 +3757,6 @@ Divide
 Divided
 Divina
 Divine
-Diving
 Divnich
 Divorce
 Divx
@@ -4115,8 +3992,8 @@ Dubrow
 Dubuque
 Ducane
 Duchamp
-Duchess
 Duchêne
+Duchess
 Duclos
 Dudinka
 Dudley
@@ -4272,10 +4149,6 @@ Edison
 Edit
 Edited
 Edith
-Editing
-Edition
-Editor
-Editors
 Edizioni
 Edmond
 Edmonton
@@ -4354,9 +4227,7 @@ Elease
 Electra
 Electric
 Electrolux
-Electronics
 Elektra
-Elementals
 Elena
 Elene
 Eleni
@@ -4482,7 +4353,6 @@ Emelina
 Emeline
 Emely
 Emerald
-Emergency
 Emeril
 Emerita
 Emerson
@@ -4531,7 +4401,6 @@ Enfant
 Enfield
 Engelbert
 Engels
-Engineer
 England
 Englischer
 Engstrom
@@ -4546,7 +4415,6 @@ Enquirer
 Enrique
 Enslin
 Entendu
-Enterprise
 Entiendes
 Eolie
 Eomiahe
@@ -4723,8 +4591,6 @@ Everland
 EverReady
 Evershead
 Every
-Everything
-Everywhere
 Evette
 Evia
 Evian
@@ -4742,14 +4608,9 @@ Excedrin
 Excelmans
 Excusez
 Excutive
-Executive
-Exercises
 Exeter
 Exode
 Exodus
-Expedition
-Explorer
-Express
 Extracorporeal
 Exxon
 Ey
@@ -5104,7 +4965,6 @@ Fouché
 Fouke
 Foulard
 Foulmire
-Foundation
 Founding
 Fountains
 Fouquier
@@ -5178,7 +5038,6 @@ Fredric
 Freebody
 Freebsd
 Freeda
-Freedom
 Freely
 Freeman
 Freemantle
@@ -5194,7 +5053,6 @@ Fremantle
 Fremont
 French
 Frequency
-Frequently
 Frère
 Frères
 Fréron
@@ -5255,8 +5113,6 @@ Fulton
 Fulvia
 Fulworth
 Fumoto
-Function
-Fundamental
 Funicello
 Funyuns
 Furies
@@ -5450,11 +5306,7 @@ Gena
 Genaro
 Gendelman
 Gendron
-General
-Generic
-Genes
 Genesis
-Genetic
 Geneva
 Genève
 Genevie
@@ -5477,7 +5329,6 @@ Geoffrey
 Geoffroy
 Geoghan
 Geogory
-Geographic
 Geogri
 Georg
 George
@@ -5538,11 +5389,11 @@ Ghazi
 Gherkin
 Giacomo
 Giafar
+Giấng
 Gianna
 Giant
 Giants
 Giauhare
-Giấng
 Gibbons
 Gibbs
 Gibney
@@ -5796,7 +5647,6 @@ Grayce
 Graziella
 Grazioso
 Greal
-Great
 Greathed
 Grecian
 Greeley
@@ -6183,6 +6033,7 @@ Haywood
 Hayworth
 Hazel
 Hazzard
+Hế
 Hearst
 Heath
 Heather
@@ -6327,7 +6178,6 @@ Hewitt
 HewlettPackard
 Hewson
 Hexlite
-Hế
 Hhvn
 Hiaasen
 Hiam
@@ -6504,9 +6354,9 @@ Hosea
 Hoskins
 Hosmer
 Hosokawa
-Hospital
 Hostess
 Hotan
+Hôtel
 Hotmes
 Hotspur
 Hottentot
@@ -6533,7 +6383,6 @@ Howie
 Howland
 Howth
 Hoyer
-Hôtel
 Hp
 Huacaya
 Huáscar
@@ -6641,8 +6490,8 @@ Ignacio
 Igor
 Iguvium
 Ihmen
-Ihop
 Ihồi
+Ihop
 Ikebukuro
 Ikey
 Ikon
@@ -6671,11 +6520,6 @@ Ilse
 Ilya
 Ilych
 Ilyich
-Image
-Images
-Imagination
-Imagine
-Imaging
 Imaus
 Imelda
 Imeon
@@ -6709,9 +6553,6 @@ Infeld
 Infemo
 Infinite
 Infinito
-Influence
-Influences
-Information
 Informburo
 Inga
 Ingal
@@ -6729,16 +6570,12 @@ Innocents
 Inoshin
 Inoue
 Instability
-Institute
 Inta
 Intelligencer
 Intemet
 Intensivniki
 Interlaken
-Internal
-International
 Interpol
-Interviews
 Intimate
 Intimations
 Intourist
@@ -7105,9 +6942,9 @@ Jerkoff
 Jerlene
 Jerold
 Jerome
+Jérôme
 Jeromy
 Jéronimo
-Jérôme
 Jerrell
 Jerri
 Jerrica
@@ -7282,9 +7119,6 @@ Josué
 Joubert
 Jouët
 Jourdan
-Journal
-Journals
-Journey
 Jovan
 Jovita
 Jowaki
@@ -7718,13 +7552,13 @@ Kiana
 Kiara
 Kidd
 Kidnap
+Kiển
 Kierkegaard
 Kieseritzki
 Kieseritzky
 Kiesha
 Kieth
 Kiev
-Kiển
 Kihote
 Kiid
 Kilburn
@@ -7866,12 +7700,14 @@ Kolpakov
 Koltsov
 Kolupayev
 Kolyma
+Kôlyma
 Kombed
 Kombo
 Komik
 Kominform
 Komintern
 Kondratyev
+Kông
 Kongs
 Konig
 Königin
@@ -7902,6 +7738,7 @@ Kortney
 Kory
 Koryta
 Korzukhin
+Kôsaryêna
 Kosciusko
 Kosher
 Kosior
@@ -7916,16 +7753,13 @@ Kotlas
 Kotlyarevsky
 Koto
 Kotov
+Kôtvich
 Kovach
 Koverchenko
 Kovno
 Kovsharov
 Kozdera
 Kozyrev
-Kôlyma
-Kông
-Kôsaryêna
-Kôtvich
 Kr
 Krabs
 Kraft
@@ -8059,7 +7893,6 @@ Labe
 LaBerger
 Laberius
 Labienus
-Laboratory
 Laburnum
 Lacenaire
 Lacey
@@ -8153,7 +7986,6 @@ Langlahan
 Langley
 Langmere
 Langtry
-Language
 Languedoc
 Lani
 Lanice
@@ -8315,7 +8147,6 @@ Lear
 Learjet
 Learn
 Learned
-Learning
 Leary
 Lease
 Leasing
@@ -8382,6 +8213,7 @@ Lemmos
 Lemonade
 Lemuel
 Lena
+Lêna
 Lenard
 Lend
 Lender
@@ -8483,6 +8315,7 @@ Leverton
 Levesque
 Levi
 Lévi
+Lêvi
 Levificus
 Levina
 Levinson
@@ -8499,8 +8332,6 @@ Lewiston
 Lexapro
 Lexie
 Lexington
-Lêna
-Lêvi
 Lh
 Lhama
 Lhamo
@@ -8529,7 +8360,6 @@ Lidya
 Liege
 Liège
 Lieutenant
-Lifetime
 Lifts
 Likem
 Likhochev
@@ -9130,8 +8960,6 @@ Mamoun
 Mamurra
 Manage
 Managed
-Management
-Manager
 Manaos
 Manche
 Manchester
@@ -9182,13 +9010,9 @@ Mantle
 Mantoue
 Mantrayàna
 Mantua
-Manual
-Manuals
 Manuel
 Manuela
 Manurhin
-Manuscript
-Manuscripts
 Manx
 Many
 Manz
@@ -9318,7 +9142,6 @@ Marked
 Marker
 Markers
 Market
-Marketing
 Markets
 Markham
 Marking
@@ -9455,7 +9278,6 @@ Matches
 Mate
 Mateo
 Mater
-Material
 Matgaret
 Math
 Matha
@@ -9538,7 +9360,6 @@ Maxime
 Maximilian
 Maximilien
 Maximo
-Maximum
 Maximus
 Maxin
 Maxine
@@ -9739,7 +9560,6 @@ Melvin
 Melvina
 Melynda
 Melzi
-Membership
 Membrane
 Memento
 Memnon
@@ -10044,15 +9864,12 @@ Misp
 Miss
 Missed
 Missile
-Missing
-Mission
 Mississipi
 Mississippi
 Missouf
 Missoula
 Missouri
 Missy
-Mistake
 Misterogers
 Misti
 Mistie
@@ -10117,7 +9934,6 @@ Moldavia
 Moldavite
 Moldow
 Mole
-Molecular
 Molesey
 Molière
 Moline
@@ -10254,6 +10070,7 @@ Mossard
 Mossbridge
 Mostanser
 Mosul
+Môtar
 Motorola
 Motown
 Motrin
@@ -10273,7 +10090,6 @@ Mozart
 Mozell
 Mozella
 Mozelle
-Môtar
 Mrcs
 Ms
 MsOH
@@ -10538,6 +10354,7 @@ Nelson
 Nemi
 Nemo
 Némorin
+Nệnh
 Neoptolemus
 Neosporin
 Nepal
@@ -10585,8 +10402,6 @@ Newhaven
 Newman
 Newmarket
 Newsboy
-Newsletter
-Newspaper
 Newsweek
 Newswire
 Newt
@@ -10594,7 +10409,6 @@ Newton
 Newtons
 Newtonuus
 Nezavírati
-Nệnh
 Nf
 Ng
 Ngangla
@@ -10694,6 +10508,7 @@ Noboru
 Nobuko
 Nobuo
 Noburo
+Nôcách
 Nodier
 Noelia
 Noella
@@ -10787,7 +10602,6 @@ Novoslobodskaya
 Novrogod
 Novy
 Noyon
-Nôcách
 Nsemoh
 Nubia
 Nucléaire
@@ -10801,10 +10615,6 @@ Nuits
 Nuke
 Null
 Nulli
-Number
-Numbers
-Numeral
-Numeric
 Numidia
 Nunez
 Nunn
@@ -10943,7 +10753,6 @@ Oolla
 Opal
 Openshaw
 Oper
-Operational
 Ophelia
 Opis
 Oporto
@@ -10975,7 +10784,6 @@ Orestes
 Orestis
 Oretha
 Orfèvres
-Organization
 Organizzata
 Organizzatore
 Orgetorix
@@ -11083,7 +10891,6 @@ Ouvre
 Ovals
 Ovaltine
 Overton
-Overview
 Oviedo
 Ovral
 Ovril
@@ -11182,6 +10989,7 @@ Pancras
 Pancreas
 Panda
 Pandolfino
+Pằng
 Panhellenism
 Panicum
 Pankhursts
@@ -11255,7 +11063,6 @@ Pascal
 Pasquale
 Passaic
 Passarge
-Passenger
 Passetto
 Passos
 Pasternak
@@ -11330,7 +11137,6 @@ Pavlova
 Pawnee
 Paws
 Pawtucket
-Pằng
 Pcpj
 Peabody
 Peach
@@ -11457,7 +11263,6 @@ Perseus
 Pershing
 Pershore
 Persie
-Personal
 Perspex
 Peruvian
 Perviz
@@ -11677,7 +11482,6 @@ Plantagenet
 Plantard
 Planters
 Plataea
-Platform
 Plath
 Platinum
 Platnérská
@@ -11905,22 +11709,18 @@ Productions
 Prof
 Professionnel
 Progress
-Projects
 Projekt
 Prokofiev
 Prokopovich
 Prometheus
 Promparty
 Proosia
-Property
 Prospekt
 Prosper
 Prospero
 Proteas
-Protection
 Protesilaus
 Proteus
-Protocol
 Proust
 Prouvaire
 Provence
@@ -12102,8 +11902,8 @@ Raisa
 Raisin
 Raiton
 Rajputana
-Rakovski
 Rakôvskây
+Rakovski
 Raleigh
 Ralov
 Ralph
@@ -12296,12 +12096,9 @@ Reptilia
 Republic
 République
 Requefort
-Research
 Reshety
-Response
 Ressa
 Ressovsky
-Restaurant
 Restif
 Resuscitation
 Reszke
@@ -12501,6 +12298,7 @@ Roland
 Rolanda
 Rolande
 Rolando
+Rôle
 Rolex
 Rolf
 Rolfe
@@ -12658,7 +12456,6 @@ Rozanne
 Rozansky
 Rozella
 Rozsas
-Rôle
 Rube
 Rubegake
 Ruben
@@ -12905,8 +12702,8 @@ Santones
 Santoro
 Santos
 Sanuki
-Saouy
 Saône
+Saouy
 Sapropel
 Sapropelite
 Saqqara
@@ -13054,8 +12851,6 @@ Schwartz
 Schweizer
 Schwindt
 Schwinn
-Sciences
-Scientific
 Scipio
 Scipion
 Scollay
@@ -13088,7 +12883,6 @@ Scythie
 Seal
 Seaman
 Sean
-Searchers
 Searles
 Sears
 Seattle
@@ -13513,7 +13307,6 @@ Siggers
 Sigisbert
 Sigisihond
 Sigmund
-Signature
 Signet
 Signor
 Sigourney
@@ -13671,7 +13464,6 @@ Sobral
 Soccer
 Sochi
 Social
-Society
 Socin
 Socket
 Socks
@@ -13684,7 +13476,6 @@ Sodome
 Sofa
 Sofia
 Soft
-Software
 Soganlik
 Sogde
 Sogdiana
@@ -13720,7 +13511,6 @@ Solovetshy
 Solovetsky
 Solovyer
 Solovyev
-Solutions
 Solve
 Solved
 Solving
@@ -13742,6 +13532,7 @@ Sominex
 Sommer
 Sonata
 Sondra
+Sộng
 Songs
 Sonia
 Sonic
@@ -13794,8 +13585,6 @@ Sound
 Sounds
 Soup
 Sour
-Source
-Sources
 Sousa
 South
 Southampton
@@ -13808,7 +13597,6 @@ Souza
 Sovetskaya
 Soviet
 Sozialärztliche
-Sộng
 Sp
 SpaceX
 Spad
@@ -13920,7 +13708,6 @@ Stampnell
 Stan
 Stanchfield
 Stand
-Standard
 Standpipe
 Stands
 Stanford
@@ -13955,11 +13742,7 @@ Starrett
 Starry
 Stars
 Starsky
-Start
-Started
-Starter
 StarTribune
-Starts
 Startup
 Stasi
 Stasia
@@ -14087,7 +13870,6 @@ Struzhinsky
 Strymon
 Stuart
 Studebaker
-Students
 Studley
 Stugley
 Stuka
@@ -14448,7 +14230,6 @@ Teabing
 Teaneck
 Teasdale
 Tebetu
-Technical
 Technics
 Techvelopment
 Tectosages
@@ -14468,7 +14249,6 @@ Telegraph
 Telekinesis
 Télémaque
 Telepathy
-Television
 Teller
 Telly
 Telma
@@ -14553,9 +14333,7 @@ Teutones
 Texaco
 Texarkana
 Texas
-Text
 Textile
-Texts
 Texture
 Thackeray
 Thad
@@ -14651,8 +14429,8 @@ Thurii
 Thuringia
 Thursday
 Thurston
-Thuỷ
 Thứu
+Thuỷ
 Thymondas
 Tiana
 Tianna
@@ -14756,7 +14534,12 @@ Today
 Todd
 Toddler
 Todman
+Tôikhông
+Tôilà
 Toilettes
+Tôimuốn
+Tôirất
+Tôithật
 Tokarev
 Tokay
 Toledo
@@ -14850,11 +14633,6 @@ Townley
 Toya
 Toyo
 Tozier
-Tôikhông
-Tôilà
-Tôimuốn
-Tôirất
-Tôithật
 Tq
 Tracee
 Tracey
@@ -14865,7 +14643,6 @@ Tracy
 Tradik
 Trailor
 Trailways
-Training
 Trajan
 Tralles
 Trance
@@ -14875,7 +14652,6 @@ Trans
 Transcendent
 Transference
 Transit
-Transport
 Transylvania
 Transzendentalphilosophie
 Trantridge
@@ -15112,8 +14888,6 @@ Unitarian
 Univer
 Universal
 Universalist
-University
-Unknown
 Unswoorth
 Unsworth
 Unterstutzung
@@ -15167,7 +14941,7 @@ Uxellodunum
 Uxii
 Uz
 Uzbak
-Vacation
+Vâ
 Vachel
 Vaclam
 Václav
@@ -15226,6 +15000,7 @@ Vaneyev
 Vanga
 Vango
 Vanguard
+Vănhọc
 Vania
 Vanino
 Vanish
@@ -15259,8 +15034,6 @@ Vauxhall
 Vavilov
 Vawr
 Vaya
-Vănhọc
-Vâ
 Vecchia
 Veda
 Vedanta
@@ -15452,7 +15225,6 @@ Visita
 Vissarionovich
 Vista
 Vistula
-Visualization
 Vita
 Vitale
 Vitalyevna
@@ -15619,12 +15391,10 @@ Warburg
 Warburton
 Ward
 Wardlaw
-Warehouse
 Warfare
 Warfield
 Warhol
 Warner
-Warning
 Warren
 Warrender
 Warrington
@@ -15664,7 +15434,6 @@ Wayne
 Waze
 Wcsh
 Weald
-Weapons
 Wear
 Wearhouse
 Weatherbury
@@ -15693,7 +15462,6 @@ Weisskopf
 Weizak
 Welbeck
 Welch
-Welcome
 Welk
 Wellbridge
 Wellbutrin
@@ -15916,7 +15684,6 @@ Wollensak
 Wolves
 Woman
 Wombwell
-Women
 Wonder
 Wonderland
 Wonders
@@ -15961,13 +15728,9 @@ Wrestling
 Wright
 Wrightsville
 Wrigley
-Writer
-Writers
-Writing
 Writings
 Wroclaw
 Wrok
-Wrong
 Wu
 Wulffen
 Wullschlager
@@ -15995,8 +15758,8 @@ Xenophon
 Xerox
 Xerxes
 Xiao
-Xiaomi
 Xiăo
+Xiaomi
 Xiomara
 Xoet
 Xona
@@ -16056,7 +15819,6 @@ Yates
 Yathrib
 Yauna
 Yayoda
-Years
 Yeats
 Yébor
 Yeets
@@ -16064,6 +15826,7 @@ Yegorov
 Yekaterina
 Yekaterinodar
 Yelena
+Yêlêna
 Yelizaveta
 Yelizavetgrad
 Yell
@@ -16088,7 +15851,6 @@ Yevgenyia
 Yevrashkin
 Yezepov
 Yezhov
-Yêlêna
 Yiddish
 Ying
 Yippee
@@ -16118,7 +15880,6 @@ Yoshiko
 Youghal
 Young
 Youngman
-Your
 Yoxley
 Yoyd
 Yucatán
@@ -16269,6 +16030,7 @@ Zoller
 Zöllner
 Zoloft
 Zomig
+Zônboudipo
 Zone
 Zonegran
 Zones
@@ -16281,7 +16043,6 @@ Zorro
 Zoubianis
 Zouch
 Zouman
-Zônboudipo
 Zrcadlové
 Zsozersky
 Zu
