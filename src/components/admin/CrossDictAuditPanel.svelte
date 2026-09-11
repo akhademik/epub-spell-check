@@ -85,7 +85,8 @@
       const activeOccurrences = f.occurrences.filter(
         (occ) => !stagedDeletions.get(occ.dictName)?.has(occ.exactWord)
       )
-      return activeOccurrences.length >= 2
+      const activeDicts = new Set(activeOccurrences.map((occ) => occ.dictName))
+      return activeDicts.size >= 2
     })
 
     if (matchTypeFilter !== "all") {
@@ -642,7 +643,7 @@
 
                     <!-- Occurrences Badges -->
                     <div class="flex items-center gap-1.5 flex-wrap">
-                      {#each finding.occurrences as occ (occ.dictName + occ.exactWord)}
+                      {#each finding.occurrences as occ (`${occ.dictName}:${occ.exactWord}`)}
                         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-sans rounded-lg border {dictBadgeColor(occ.dictName)}">
                           <strong>{dictLabel(occ.dictName)}</strong>: "{occ.exactWord}"
                           <button
@@ -670,14 +671,14 @@
               <!-- Quick Action Resolution Buttons -->
               <div class="flex items-center gap-2 flex-wrap shrink-0">
                 <span class="text-xs text-slate-500 font-sans mr-1">Chỉ giữ ở:</span>
-                {#each finding.occurrences as occ (occ.dictName)}
+                {#each Array.from(new Set(finding.occurrences.map((o) => o.dictName))) as targetDict (targetDict)}
                   <button
                     type="button"
-                    onclick={() => keepOnlyInDict(finding, occ.dictName)}
-                    class="px-2.5 py-1 text-xs font-semibold rounded-lg border transition-all hover:scale-105 shadow-sm {dictBadgeColor(occ.dictName)}"
-                    title={`Chỉ giữ lại ở ${dictLabel(occ.dictName)} và xóa khỏi các từ điển khác`}
+                    onclick={() => keepOnlyInDict(finding, targetDict)}
+                    class="px-2.5 py-1 text-xs font-semibold rounded-lg border transition-all hover:scale-105 shadow-sm {dictBadgeColor(targetDict)}"
+                    title={`Chỉ giữ lại ở ${dictLabel(targetDict)} và xóa khỏi các từ điển khác`}
                   >
-                    ✓ {occ.dictName.toUpperCase()}
+                    ✓ {targetDict.toUpperCase()}
                   </button>
                 {/each}
 

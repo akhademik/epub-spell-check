@@ -1,3 +1,10 @@
+import {
+  auditDictionary,
+  type CrossDictAuditResult,
+  detectCrossDictDuplicates
+} from "./dict-quality"
+import { loadReferenceDictionary } from "./reference-dict"
+
 export type DictSourceName = "vn" | "non-vn" | "custom" | "names"
 
 export interface DictUpdateResult {
@@ -234,9 +241,7 @@ export async function fetchDictionaryAudit(
   }
 
   // Fallback for local development if Cloudflare Functions are not running
-  const details = await fetchDictionaryDetails(dictName)
-  const { auditDictionary } = await import("./dict-quality")
-  const { loadReferenceDictionary } = await import("./reference-dict")
+  const details = await fetchDictionaryDetails(dictName, token)
   const referenceWords =
     dictName === "vn" ? await loadReferenceDictionary() : undefined
   return auditDictionary(dictName, details.words, new Set(), referenceWords)
@@ -269,8 +274,7 @@ export async function ignoreDuplicatePair(
   }
 }
 
-export type CrossDictAuditResponse =
-  import("./dict-quality").CrossDictAuditResult
+export type CrossDictAuditResponse = CrossDictAuditResult
 
 export async function fetchCrossDictAudit(
   token?: string
@@ -282,7 +286,6 @@ export async function fetchCrossDictAudit(
     fetchDictionaryDetails("custom", token)
   ])
 
-  const { detectCrossDictDuplicates } = await import("./dict-quality")
   return detectCrossDictDuplicates({
     vn: Array.isArray(vn?.words) ? vn.words : [],
     names: Array.isArray(names?.words) ? names.words : [],
