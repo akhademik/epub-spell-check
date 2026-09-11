@@ -202,15 +202,12 @@ Frankfurt
 Frigidaire
 GABA
 Gatorade
-gdp
 GEM
 Germany
 Gibraltar
 GIF
 GitHub
 GitLab
-gmt
-gnp
 Googleplex
 GoPro
 GPA
@@ -228,10 +225,8 @@ HCM
 Hewlett
 HewlettPackard
 Himalaya
-hlv
 Honda
 HTML
-htx
 HVAC
 I
 IBM
