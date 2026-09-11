@@ -36,7 +36,7 @@
   <input
     bind:this={fileInputElement}
     type="file"
-    accept=".epub"
+    accept=".epub,.txt,.md,.markdown"
     class="hidden"
     onchange={handleFileSelected}
   />
@@ -69,10 +69,22 @@
     </div>
 
     <h2 class="text-2xl font-bold text-slate-100 mb-2">
-      Kéo & thả tệp <span class="text-blue-400">.epub</span> vào đây
+      Kéo & thả tệp <span class="text-blue-400">.epub</span>, <span class="text-emerald-400">.txt</span> hoặc <span class="text-purple-400">.md</span> vào đây
     </h2>
-   
+    <p class="text-sm text-slate-400 max-w-md">
+      Hỗ trợ kiểm tra chính tả toàn diện, sửa nhanh các lỗi và xuất lại tệp đã sửa đúng định dạng gốc.
+    </p>
 
-
+    <div class="flex items-center gap-2 mt-6">
+      <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/30">
+        EPUB Sách
+      </span>
+      <span class="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+        Văn bản TXT
+      </span>
+      <span class="px-3 py-1 text-xs font-semibold rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">
+        Markdown MD
+      </span>
+    </div>
   </button>
 </div>

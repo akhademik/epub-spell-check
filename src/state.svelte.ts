@@ -21,6 +21,10 @@ import { parseEpub } from "./utils/epub-parser"
 import { applyFixesAndRepack, type FixInstruction } from "./utils/epub-writer"
 import { getFilteredErrors } from "./utils/filter"
 import { logger } from "./utils/logger"
+import {
+  applyFixesToTextOrMarkdown,
+  parseTextOrMarkdown
+} from "./utils/text-parser"
 import { analysisWorkerManager } from "./utils/worker-manager"
 
 export const ALL_ERROR_TYPES: ErrorType[] = [
@@ -173,6 +177,14 @@ export class AppStateModel {
   toasts = $state<ToastNotification[]>([])
 
   // Derived Values
+  fileType = $derived.by(() => {
+    if (!this.originalFile) return "EPUB"
+    const name = this.originalFile.name.toLowerCase()
+    if (name.endsWith(".md") || name.endsWith(".markdown")) return "MD"
+    if (name.endsWith(".txt")) return "TXT"
+    return "EPUB"
+  })
+
   currentFilteredErrors = $derived(
     getFilteredErrors(
       this.allDetectedErrors,
@@ -702,7 +714,7 @@ export class AppStateModel {
 
   async exportFixedEpub(): Promise<void> {
     if (!this.originalFile) {
-      this.showToast("Không tìm thấy tệp EPUB gốc để xuất.", "error")
+      this.showToast("Không tìm thấy tệp gốc để xuất.", "error")
       return
     }
 
@@ -711,9 +723,14 @@ export class AppStateModel {
       return
     }
 
+    const isEpub = this.originalFile.name.toLowerCase().endsWith(".epub")
+    const isMd =
+      this.originalFile.name.toLowerCase().endsWith(".md") ||
+      this.originalFile.name.toLowerCase().endsWith(".markdown")
+
     this.isProcessing = true
     this.progressPercent = 30
-    this.progressStatus = "Đang áp dụng các sửa đổi vào tệp EPUB..."
+    this.progressStatus = `Đang áp dụng các sửa đổi vào tệp ${this.fileType}...`
 
     try {
       // Build FixInstruction[] from appliedFixes
@@ -736,29 +753,41 @@ export class AppStateModel {
       }
 
       this.progressPercent = 60
-      this.progressStatus = "Đang đóng gói lại tệp EPUB..."
+      this.progressStatus = `Đang tạo tệp ${this.fileType} đã sửa...`
 
-      const blob = await applyFixesAndRepack(this.originalFile, fixInstructions)
+      let blob: Blob
+      let ext = "epub"
+
+      if (isEpub) {
+        blob = await applyFixesAndRepack(this.originalFile, fixInstructions)
+        ext = "epub"
+      } else {
+        blob = await applyFixesToTextOrMarkdown(
+          this.originalFile,
+          fixInstructions
+        )
+        ext = isMd ? "md" : "txt"
+      }
 
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
       const title = this.currentBookTitle
         ? sanitizeFilename(this.currentBookTitle)
-        : "book"
-      a.download = `${title}-da-sua.epub`
+        : "document"
+      a.download = `${title}-da-sua.${ext}`
       a.click()
       URL.revokeObjectURL(url)
 
       this.isProcessing = false
       this.showToast(
-        `Đã xuất EPUB với ${fixInstructions.length} sửa đổi thành công!`,
+        `Đã xuất tệp ${this.fileType} với ${fixInstructions.length} sửa đổi thành công!`,
         "success"
       )
     } catch (err) {
       this.isProcessing = false
-      logger.error("Error exporting fixed EPUB:", err)
-      this.showToast("Lỗi khi đóng gói và xuất file EPUB.", "error")
+      logger.error(`Error exporting fixed ${this.fileType}:`, err)
+      this.showToast(`Lỗi khi đóng gói và xuất file ${this.fileType}.`, "error")
     }
   }
 
@@ -784,8 +813,13 @@ export class AppStateModel {
   }
 
   async handleFile(file: File) {
-    if (!file.name.endsWith(".epub")) {
-      this.showToast("Vui lòng chọn file .epub", "error")
+    const lowerName = file.name.toLowerCase()
+    const isEpub = lowerName.endsWith(".epub")
+    const isTxt = lowerName.endsWith(".txt")
+    const isMd = lowerName.endsWith(".md") || lowerName.endsWith(".markdown")
+
+    if (!isEpub && !isTxt && !isMd) {
+      this.showToast("Vui lòng chọn file .epub, .txt hoặc .md", "error")
       return
     }
 
@@ -793,21 +827,27 @@ export class AppStateModel {
     this.originalFile = file
     this.isProcessing = true
     this.progressPercent = 5
-    this.progressStatus = "Đang đọc tệp EPUB..."
+    this.progressStatus = `Đang đọc tệp ${file.name}...`
 
     try {
-      const epubContent: EpubContent = await parseEpub(
-        file,
-        (progress, status) => {
+      let content: EpubContent
+
+      if (isEpub) {
+        content = await parseEpub(file, (progress, status) => {
           this.progressPercent = progress
           this.progressStatus = status
-        }
-      )
+        })
+      } else {
+        content = await parseTextOrMarkdown(file, (progress, status) => {
+          this.progressPercent = progress
+          this.progressStatus = status
+        })
+      }
 
-      this.currentBookTitle = epubContent.metadata.title
-      this.currentBookAuthor = epubContent.metadata.author
-      this.currentCoverUrl = epubContent.metadata.coverUrl
-      this.loadedTextContent = epubContent.textBlocks
+      this.currentBookTitle = content.metadata.title
+      this.currentBookAuthor = content.metadata.author
+      this.currentCoverUrl = content.metadata.coverUrl
+      this.loadedTextContent = content.textBlocks
 
       this.progressPercent = 60
       this.progressStatus = "Đang khởi tạo bộ phân tích chính tả..."
@@ -827,7 +867,7 @@ export class AppStateModel {
 
       // Run analysis in Web Worker via AnalysisWorkerManager
       const { errors, totalWords } = await analysisWorkerManager.analyze(
-        epubContent.textBlocks,
+        content.textBlocks,
         rawDicts,
         rawCheckSettings,
         (progress, message) => {
@@ -841,7 +881,7 @@ export class AppStateModel {
 
       if (this.currentFilteredErrors.length > 0) {
         this.selectedGroupId = this.currentFilteredErrors[0].id
-        this.showToast("Đã tải xong sách và phát hiện các lỗi.", "success")
+        this.showToast("Đã tải xong văn bản và phát hiện các lỗi.", "success")
       } else {
         this.showToast(
           "Tuyệt vời! Không phát hiện lỗi chính tả nào.",
@@ -850,8 +890,8 @@ export class AppStateModel {
       }
     } catch (err: unknown) {
       this.isProcessing = false
-      logger.error("Error processing EPUB file:", err)
-      let errorMessage = "Có lỗi xảy ra trong quá trình xử lý tệp EPUB."
+      logger.error("Error processing file:", err)
+      let errorMessage = "Có lỗi xảy ra trong quá trình xử lý tệp."
       if (err instanceof Error) {
         errorMessage = err.message
       }

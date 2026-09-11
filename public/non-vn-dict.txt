@@ -1,5 +1,4 @@
 ab
-abel
 abide
 ability
 able
@@ -193,7 +192,6 @@ aleph
 alert
 alerts
 aleshia
-alessandro
 alessia
 alethia
 alexandre
@@ -429,7 +427,6 @@ aptitude
 apxe
 aqua
 aquatic
-ar
 ara
 arabic
 arbor
@@ -572,7 +569,6 @@ aunt
 aunty
 aurea
 aus
-australia
 author
 authorized
 authors
@@ -819,7 +815,6 @@ bequest
 beret
 béret
 berge
-bermuda
 berna
 beside
 besides
@@ -1213,7 +1208,6 @@ cachee
 cachée
 cacten
 cactus
-cad
 cadeau
 cadmium
 caduceus
@@ -1238,7 +1232,6 @@ calgary
 calib
 calibre
 caliente
-california
 calip
 caliph
 calista
@@ -1280,7 +1273,6 @@ camping
 camps
 campus
 cams
-canada
 canal
 canapé
 cancel
@@ -1430,7 +1422,6 @@ caviar
 cayenne
 cayman
 cc
-ccd
 cdna
 ce
 cedar
@@ -1621,7 +1612,6 @@ cleared
 clearly
 clef
 clementia
-cleopatra
 clepsydra
 clerical
 clerk
@@ -1912,7 +1902,6 @@ cowboy
 cox
 coyote
 cp
-cpu
 cr
 crack
 cracker
@@ -1979,7 +1968,6 @@ css
 cst
 ctrl
 cuaroa
-cuba
 cube
 cubic
 cuc
@@ -2094,7 +2082,6 @@ death
 deathbed
 deaths
 debate
-debian
 debt
 debug
 dec
@@ -2151,7 +2138,6 @@ dengan
 denial
 denied
 denim
-denmark
 dénouement
 dense
 density
@@ -2230,7 +2216,6 @@ dioxide
 dioxin
 direction
 directory
-dirham
 disappearance
 disclosure
 discovery
@@ -2355,7 +2340,6 @@ dryer
 ds
 dual
 dubai
-dublin
 duck
 dude
 due
@@ -2552,7 +2536,6 @@ episode
 epoxy
 epsilon
 epson
-eq
 equal
 equally
 equation
@@ -2619,10 +2602,8 @@ eugena
 eund
 eur
 euro
-europe
 euros
 eusebia
-euv
 euwv
 ev
 everything
@@ -2785,7 +2766,6 @@ favory
 favour
 favourite
 fax
-fd
 fe
 fear
 fears
@@ -2847,7 +2827,6 @@ fibre
 fiction
 fiddle
 fiddlewood
-fide
 field
 fields
 fiesta
@@ -2958,7 +2937,6 @@ flights
 fling
 flip
 flo
-florida
 florin
 florua
 flu
@@ -3140,7 +3118,6 @@ gains
 gala
 galantamine
 galen
-galena
 galileo
 galina
 gallery
@@ -3192,7 +3169,6 @@ gelatin
 gelato
 gelignite
 gelusil
-gem
 gemmata
 gendarmerie
 gender
@@ -3201,7 +3177,6 @@ general
 generic
 genes
 genetic
-geneva
 genius
 genome
 genova
@@ -3234,7 +3209,6 @@ ghz
 giant
 gidget
 giebt
-gif
 gift
 gifts
 gig
@@ -3368,7 +3342,6 @@ great
 greater
 greatly
 greco
-greece
 greek
 green
 greene
@@ -3497,7 +3470,6 @@ have
 having
 havre
 haw
-hawaii
 hawk
 hazard
 hazards
@@ -3582,7 +3554,6 @@ het
 hetaira
 heure
 heuristic
-hewlett
 hey
 hg
 hibernation
@@ -3625,7 +3596,6 @@ hitachi
 hits
 hitting
 hiv
-hk
 hmm
 hnn
 hobbies
@@ -3650,7 +3620,6 @@ holley
 holli
 hollie
 hollow
-hollywood
 holtzinger
 holy
 home
@@ -3718,7 +3687,6 @@ hrs
 hryvnia
 hs
 hsiu
-html
 http
 hua
 hub
@@ -3841,7 +3809,6 @@ indexed
 indexes
 indices
 indie
-indonesia
 indoor
 induced
 induces
@@ -3888,7 +3855,6 @@ insulin
 insured
 intake
 integer
-intel
 intend
 intense
 intent
@@ -3936,7 +3902,6 @@ isle
 ism
 ismael
 isoenzym
-israel
 isreal
 issn
 issue
@@ -3993,7 +3958,6 @@ jo
 jockey
 jocular
 jocund
-jordan
 journal
 journals
 journey
@@ -4040,7 +4004,6 @@ karaoke
 karat
 karate
 kareen
-kazakhstan
 kazan
 keen
 keep
@@ -4055,7 +4018,6 @@ keli
 kelkoo
 kelle
 kellee
-kelvin
 kept
 kermit
 kernel
@@ -4256,7 +4218,6 @@ lazuli
 lazy
 lb
 lbs
-lcd
 ld
 learning
 leben
@@ -4307,7 +4268,6 @@ librada
 library
 libris
 libs
-libya
 licence
 license
 licking
@@ -4341,7 +4301,6 @@ limo
 limousine
 linen
 lingua
-linux
 lion
 lions
 lipid
@@ -4425,7 +4384,6 @@ loops
 loose
 lopez
 lord
-los
 loser
 losing
 loss
@@ -4524,17 +4482,14 @@ maricón
 marimo
 mark
 marketing
-markka
 marmalade
 marque
 marshmallow
 martialis
-marxist
 marxit
 mascara
 maser
 massage
-mastic
 mastiff
 matcha
 material
@@ -5046,9 +5001,7 @@ nummos
 nur
 nura
 nv
-nvidia
 nw
-ny
 nyc
 nyla
 nz
@@ -5104,7 +5057,6 @@ often
 oftobit
 og
 oh
-ohio
 ohm
 ohrpanav
 oil
@@ -5187,7 +5139,6 @@ orleans
 oro
 ortega
 ortiz
-os
 osaka
 ossie
 others
@@ -5241,7 +5192,6 @@ pace
 pachinko
 pack
 package
-packard
 packed
 packet
 packets
@@ -5340,7 +5290,6 @@ pasta
 paste
 pastel
 pasty
-patent
 pater
 paterfamilias
 patients
@@ -5358,11 +5307,9 @@ payment
 payroll
 pays
 paz
-pc
 pci
 pcs
 pct
-pd
 pdas
 pdf
 pdt
@@ -5400,7 +5347,6 @@ peoples
 pepper
 peppermint
 pepperoni
-pepsi
 pequeño
 percent
 percocet
@@ -5643,7 +5589,6 @@ polyurethane
 polyvitamin
 pomerium
 pomp
-pompeii
 pond
 pontiac
 pontifex
@@ -5710,7 +5655,6 @@ ppc
 ppm
 prada
 praefectus
-prague
 prairie
 praise
 praised
@@ -6236,7 +6180,6 @@ rivka
 riyal
 rizzo
 rj
-rl
 rm
 rn
 rna
@@ -6354,7 +6297,6 @@ saccharos
 sacred
 saddam
 saddle
-sadi
 safari
 safe
 safely
@@ -6387,7 +6329,6 @@ salue
 salutes
 saman
 sammitch
-samovar
 samurai
 sanchez
 sand
@@ -6484,7 +6425,6 @@ scoring
 scorpione
 scot
 scotia
-scotland
 scout
 scrabble
 scratch
@@ -6860,13 +6800,10 @@ soltara
 solution
 solutions
 somebody
-sonata
 sonate
-sonnet
 soong
 sophora
 soprano
-sos
 sot
 sots
 source
@@ -7118,7 +7055,6 @@ sunni
 sunrise
 sunset
 sup
-supde
 super
 superb
 supply
@@ -7150,7 +7086,6 @@ suspect
 sussex
 susy
 suv
-suy
 suyato
 sv
 sven
@@ -7184,7 +7119,6 @@ syria
 sys
 system
 systems
-t
 taarovot
 table
 tableau
@@ -7192,7 +7126,6 @@ tables
 tablet
 tablets
 tabs
-tabu
 tabula
 tackle
 taco
@@ -7205,12 +7138,10 @@ tag
 tagged
 tags
 taiga
-taka
 take
 taken
 takes
 taking
-tala
 talawas
 tale
 talent
@@ -7227,7 +7158,6 @@ tampon
 tananh
 tangerine
 tango
-tanh
 tank
 tanks
 tannic
@@ -7239,7 +7169,6 @@ tapes
 tar
 tarantella
 tardes
-tareh
 taren
 target
 targets
@@ -7257,7 +7186,6 @@ tax
 taxes
 taxi
 tayna
-tb
 tba
 tc
 tcp
@@ -7286,7 +7214,6 @@ telesma
 teletyp
 teletype
 television
-telex
 tell
 telling
 tells
@@ -7334,10 +7261,8 @@ text
 texts
 tête
 tf
-th
 thailand
 thanatology
-thanh
 thank
 thanks
 that
@@ -7362,7 +7287,6 @@ thesis
 theta
 theu
 they
-thia
 thick
 thing
 things
@@ -7371,10 +7295,7 @@ thinks
 third
 thirty
 this
-thoa
-thoai
 thoan
-thoang
 thongs
 those
 thou
@@ -7394,7 +7315,6 @@ throw
 thrown
 throws
 thru
-thua
 thumb
 thumbs
 thunder
@@ -7404,7 +7324,6 @@ thus
 thuvien
 thuy
 thy
-tia
 tian
 ticket
 tickets
@@ -7439,20 +7358,12 @@ titled
 titles
 tits
 titten
-tivi
 tj
-tl
 tlacenka
 tm
 tn
-toa
-toan
-toang
-toanh
 tobacco
 tobago
-toe
-toen
 toga
 together
 togo
@@ -7485,7 +7396,6 @@ toolbar
 toolbox
 toolkit
 tools
-toong
 tooth
 topic
 topics
@@ -7524,9 +7434,7 @@ toxic
 toy
 toyota
 toys
-tp
 tppo
-tr
 trac
 trace
 trachoma
@@ -7535,7 +7443,6 @@ tracked
 trackpad
 trackpoint
 tracks
-tracom
 tract
 tractor
 trade
@@ -7554,7 +7461,6 @@ trained
 trainer
 training
 trains
-tranh
 transistor
 transport
 trap
@@ -7616,15 +7522,10 @@ truffle
 trumpet
 trust
 truth
-truy
 try
-ts
 tsamba
 tt
 ttay
-tua
-tuabin
-tuavit
 tughrik
 tuiles
 tulip
@@ -7637,9 +7538,7 @@ turn
 turtle
 tuvalu
 tuxedo
-tuy
 tuyet
-tuyn
 tuynen
 twain
 tweed
@@ -7649,12 +7548,10 @@ twenty
 twins
 twitter
 two
-ty
 type
 typewriters
 typo
 uar
-ub
 ubuntu
 uchi
 ugolovniki
@@ -7664,7 +7561,6 @@ ulrich
 ulrike
 ultima
 umbrella
-umo
 uncle
 under
 underdrawer
@@ -7688,7 +7584,6 @@ upon
 upsilon
 urani
 uranium
-urea
 url
 us
 usd
@@ -7696,19 +7591,13 @@ use
 usha
 usually
 ut
-uy
 uytky
 uzi
-v
 vacation
 vaccin
 vacxin
-vali
 valium
-vals
 vampire
-vanh
-vani
 vanilla
 vanita
 vannesa
@@ -7724,7 +7613,6 @@ vato
 vatu
 vazquez
 vctvegroup
-vecni
 vector
 vehicle
 vella
@@ -7800,7 +7688,6 @@ vivant
 vivo
 vn
 vni
-voan
 vodka
 volfram
 volkswagen
@@ -7815,11 +7702,9 @@ vowel
 vox
 voyons
 voyute
-vp
 vrah
 vrai
 vs
-vua
 vulgate
 vuna
 w
@@ -7944,15 +7829,12 @@ wushu
 www
 wynell
 wynona
-x
-xanh
 xatanh
 xelulo
 xemina
 xenon
 xenti
 xerenat
-xia
 xibecnetic
 xilanh
 xilip
@@ -7961,18 +7843,10 @@ ximpozium
 xinhan
 xita
 xn
-xoa
-xoan
-xoang
-xoay
 xochitl
-xoe
-xoen
 xolenoit
 xonat
-xua
 xupap
-xuy
 xuya
 xuynh
 xy

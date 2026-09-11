@@ -17,7 +17,6 @@ Alipay
 Alps
 Altoid
 Altoids
-Am
 Amazon
 Amorphophallus
 Amsterdam
@@ -205,7 +204,6 @@ Gatorade
 GEM
 Germany
 Gibraltar
-GIF
 GitHub
 GitLab
 Googleplex
@@ -226,13 +224,10 @@ Hewlett
 HewlettPackard
 Himalaya
 Honda
-HTML
 HVAC
-I
 IBM
 ICMP
 ICU
-ID
 IED
 II
 III
@@ -389,7 +384,6 @@ NPC
 NPR
 NSA
 NSAID
-Nvidia
 NVIDIA
 nxb
 NXB
@@ -402,13 +396,10 @@ Odéon
 OFAC
 OGPU
 Oise
-OK
 OLP
-OM
 OPEC
 OpenAI
 Oreo
-OS
 OSHA
 OTT
 Packard
@@ -418,10 +409,8 @@ Pan
 PanAm
 Paris
 PayPal
-PC
 PCB
 PD
-PDF
 Pepsi
 PET
 PIN
@@ -448,7 +437,6 @@ Raytheon
 RCA
 Renault
 RFID
-RL
 Rogaine
 Rolex
 rom
@@ -471,7 +459,6 @@ sim
 Singapore
 SLR
 SMES
-SMS
 SMSC
 Snapchat
 SNCF
@@ -484,17 +471,14 @@ SpaghettiOs
 Spain
 Spire
 Starbucks
-stt
 Subaru
 SUV
 Sweden
 Switzerland
 Syria
 Taiwan
-tand
 Taobao
 Tarse
-tbt
 TCM
 tcn
 TCN
@@ -502,7 +486,6 @@ TCP
 tcty
 TCVN
 tcyttg
-tdtt
 Texaco
 THAAD
 Thailand
@@ -514,8 +497,6 @@ toefl
 Tokyo
 Toyota
 Trivago
-ttl
-tts
 Tunisia
 Turkey
 tv
@@ -548,7 +529,6 @@ UZSI
 Vaseline
 vat
 VC
-vcd
 VCR
 Venezuela
 Verizon
@@ -561,12 +541,9 @@ vip
 VIP
 Visa
 VISA
-vks
-vnch
 Volvo
 VR
 VS
-vtv
 VW
 VX
 Walmart
