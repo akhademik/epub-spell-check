@@ -2,7 +2,10 @@
 // GET  /api/dict/:name/audit        -> runs scanDictionaryForGarbage and fuzzy duplicates
 // POST /api/dict/:name/audit/ignore -> saves ignored duplicate pair into dict:{name}:ignored-pairs
 
-import { auditDictionary, type DictName } from "../../../src/utils/dict-quality"
+import {
+  auditDictionary,
+  type DictName
+} from "../../../../src/utils/dict-quality"
 
 interface KVNamespace {
   get(key: string): Promise<string | null>

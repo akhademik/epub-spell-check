@@ -4,6 +4,7 @@ import {
   createPairKey,
   detectFuzzyDuplicates,
   getVowelRatio,
+  scanDictionaryCrossReference,
   scanDictionaryForGarbage
 } from "../../src/utils/dict-quality"
 
@@ -206,6 +207,70 @@ describe("Dictionary Quality & Garbage Detection Module", () => {
       expect(result.timing?.totalMs).toBeGreaterThanOrEqual(0)
       expect(result.timing?.garbageScanMs).toBeGreaterThanOrEqual(0)
       expect(result.timing?.candidateCount).toBeGreaterThanOrEqual(0)
+    })
+
+    it("includes Tier C cross-reference findings when referenceWords are provided", () => {
+      const words = ["học", "nhửng"]
+      const referenceWords = new Set(["học", "những"])
+      const result = auditDictionary("vn", words, new Set(), referenceWords)
+      expect(result.referenceFindings).toBeDefined()
+      expect(result.referenceFindings?.length).toBe(1)
+      expect(result.referenceFindings?.[0].word).toBe("nhửng")
+      expect(result.referenceFindings?.[0].tier).toBe("C")
+      expect(result.referenceFindings?.[0].suggestion).toBe("những")
+    })
+  })
+
+  describe("scanDictionaryCrossReference (Tier C)", () => {
+    it("flags words missing from reference baseline and finds closest suggestion", () => {
+      const words = ["học", "nhửng", "sách"]
+      const referenceWords = new Set(["học", "những", "sách"])
+      const findings = scanDictionaryCrossReference("vn", words, referenceWords)
+
+      expect(findings.length).toBe(1)
+      expect(findings[0].word).toBe("nhửng")
+      expect(findings[0].tier).toBe("C")
+      expect(findings[0].suggestion).toBe("những")
+      expect(findings[0].distance).toBe(1)
+    })
+
+    it("recognizes alternate tone style placements as valid in reference", () => {
+      const words = ["hòa"]
+      const referenceWords = new Set(["hoà"]) // old style
+      const findings = scanDictionaryCrossReference("vn", words, referenceWords)
+      expect(findings.length).toBe(0)
+    })
+
+    it("ignores words present in ignoredWords set", () => {
+      const words = ["nhửng"]
+      const referenceWords = new Set(["những"])
+      const ignored = new Set(["nhửng"])
+      const findings = scanDictionaryCrossReference(
+        "vn",
+        words,
+        referenceWords,
+        ignored
+      )
+      expect(findings.length).toBe(0)
+    })
+
+    it("loads and clears reference dictionary cache cleanly", async () => {
+      const { loadReferenceDictionary, clearReferenceDictionaryCache } =
+        await import("../../src/utils/reference-dict")
+      const refDict = await loadReferenceDictionary()
+      expect(refDict.size).toBeGreaterThan(0)
+      clearReferenceDictionaryCache()
+    })
+
+    it("verifies transliterated loanwords (alô, cà-phê, bê-tông, sô-cô-la) are present in reference dataset", async () => {
+      const { loadReferenceDictionary } = await import(
+        "../../src/utils/reference-dict"
+      )
+      const refDict = await loadReferenceDictionary()
+
+      const loanwords = ["alô", "cà-phê", "bê-tông", "sô-cô-la"]
+      const findings = scanDictionaryCrossReference("vn", loanwords, refDict)
+      expect(findings.length).toBe(0)
     })
   })
 })

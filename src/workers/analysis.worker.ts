@@ -7,6 +7,10 @@ import {
   getErrorType,
   WORD_REGEX
 } from "../utils/analysis-core"
+import {
+  resolveOverlappingErrors,
+  scanContextualErrors
+} from "../utils/context-confusion"
 
 interface WorkerMessage {
   type?: "init" | "analyze"
@@ -49,7 +53,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   }
 
   const activeDicts = cachedDictionaries
-  const allErrors: ErrorInstance[] = []
+  const rawErrors: ErrorInstance[] = []
   let totalWordCount = 0
 
   const totalParagraphs = textBlocks.length
@@ -78,7 +82,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
           const endIndex = startIndex + originalWord.length
           const instanceId = `${paragraph.id || paragraphIndex}-${startIndex}-${endIndex}`
 
-          allErrors.push({
+          rawErrors.push({
             id: instanceId,
             word: originalWord,
             originalWord,
@@ -97,6 +101,19 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
           })
         }
       }
+
+      if (checkSettings?.vietnamese !== false) {
+        // Curated Contextual / Hardcoded Rules (human-reviewed, high precision)
+        const contextualErrors = scanContextualErrors(text, {
+          paragraphIndex,
+          chapterIndex: chapterStartIndex,
+          filePath: paragraph.filePath,
+          blockId: paragraph.id
+        })
+        if (contextualErrors.length > 0) {
+          rawErrors.push(...contextualErrors)
+        }
+      }
     }
 
     const progress = Math.min(
@@ -110,9 +127,12 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     })
   }
 
+  // Resolve overlaps: curated contextual errors suppress overlapping token-level errors
+  const finalErrors = resolveOverlappingErrors(rawErrors)
+
   self.postMessage({
     type: "complete",
-    errors: allErrors,
+    errors: finalErrors,
     totalWords: totalWordCount
   })
 }

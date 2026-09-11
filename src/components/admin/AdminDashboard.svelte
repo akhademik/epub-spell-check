@@ -10,6 +10,7 @@
   import { appState } from "../../state.svelte"
   import AddWordsForm from "./AddWordsForm.svelte"
   import DictAuditPanel from "./DictAuditPanel.svelte"
+  import CrossDictAuditPanel from "./CrossDictAuditPanel.svelte"
 
   const DICT_TABS: { id: DictSourceName; label: string; badge: string; color: string; bg: string }[] = [
     { id: "vn", label: "1. Tiếng Việt", badge: "VN", color: "text-emerald-400 border-emerald-500", bg: "bg-emerald-500/10 text-emerald-300" },
@@ -19,6 +20,7 @@
   ]
 
   let mainSection = $state<"manage" | "audit">("manage")
+  let auditMode = $state<"single" | "cross">("single")
   let activeTab = $state<DictSourceName>("vn")
   let authStatus = $state<AuthStatusResponse>({
     authenticated: false,
@@ -190,26 +192,26 @@
       {#if authStatus.authenticated}
         <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-medium">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Đã xác thực Token (Session)</span>
+          <span>Đã xác thực Token</span>
+        </div>
+
+        <!-- Token config input on top right for easy edit when authenticated -->
+        <div class="flex items-center gap-1.5 bg-slate-950/60 p-1 rounded-xl border border-slate-800">
+          <input
+            type="password"
+            bind:value={tokenInput}
+            placeholder="Mã Token (ADMIN_TOKEN)"
+            class="px-2.5 py-1 text-xs bg-transparent border-0 text-slate-200 focus:outline-none font-mono w-36 sm:w-44"
+          />
+          <button
+            type="button"
+            onclick={handleSaveToken}
+            class="px-2.5 py-1 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors"
+          >
+            Áp dụng
+          </button>
         </div>
       {/if}
-
-      <!-- Token config input on top right for easy edit -->
-      <div class="flex items-center gap-1.5 bg-slate-950/60 p-1 rounded-xl border border-slate-800">
-        <input
-          type="password"
-          bind:value={tokenInput}
-          placeholder="Mã Token (ADMIN_TOKEN)"
-          class="px-2.5 py-1 text-xs bg-transparent border-0 text-slate-200 focus:outline-none font-mono w-36 sm:w-44"
-        />
-        <button
-          type="button"
-          onclick={handleSaveToken}
-          class="px-2.5 py-1 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors"
-        >
-          Áp dụng
-        </button>
-      </div>
     </div>
   </div>
 
@@ -287,26 +289,61 @@
 
     {#if mainSection === "audit"}
       <div class="space-y-4">
-        <!-- Dict Tabs for Audit -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {#each DICT_TABS as tab (tab.id)}
-            <button
-              type="button"
-              onclick={() => handleTabChange(tab.id)}
-              class="flex flex-col items-start p-3 rounded-2xl border text-left transition-all {activeTab === tab.id
-                ? `${tab.color} bg-slate-900 shadow-lg`
-                : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'}"
-            >
-              <span class="text-xs font-bold tracking-wider uppercase mb-1">{tab.badge}</span>
-              <span class="text-sm font-semibold text-slate-100">{tab.label.split(". ")[1]}</span>
-            </button>
-          {/each}
+        <!-- Audit Mode Sub-Tabs -->
+        <div class="flex items-center gap-2 bg-slate-950 p-1 rounded-2xl border border-slate-800 text-xs w-fit">
+          <button
+            type="button"
+            onclick={() => (auditMode = "single")}
+            class="px-4 py-2 rounded-xl font-bold transition-all flex items-center gap-2 {auditMode === 'single'
+              ? 'bg-amber-600 text-white shadow-lg shadow-amber-900/40'
+              : 'text-slate-400 hover:text-slate-200'}"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <span>Kiểm Tra Từng Từ Điển (Single-Dict)</span>
+          </button>
+          <button
+            type="button"
+            onclick={() => (auditMode = "cross")}
+            class="px-4 py-2 rounded-xl font-bold transition-all flex items-center gap-2 {auditMode === 'cross'
+              ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/40'
+              : 'text-slate-400 hover:text-slate-200'}"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            <span>Kiểm Tra Trùng Lặp Chéo (Cross-Dict Overlap)</span>
+          </button>
         </div>
 
-        <DictAuditPanel
-          activeDict={activeTab}
-          onAuditApplied={() => loadDictionaryWords(activeTab)}
-        />
+        {#if auditMode === "single"}
+          <!-- Dict Tabs for Single Audit -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {#each DICT_TABS as tab (tab.id)}
+              <button
+                type="button"
+                onclick={() => handleTabChange(tab.id)}
+                class="flex flex-col items-start p-3 rounded-2xl border text-left transition-all {activeTab === tab.id
+                  ? `${tab.color} bg-slate-900 shadow-lg`
+                  : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'}"
+              >
+                <span class="text-xs font-bold tracking-wider uppercase mb-1">{tab.badge}</span>
+                <span class="text-sm font-semibold text-slate-100">{tab.label.split(". ")[1]}</span>
+              </button>
+            {/each}
+          </div>
+
+          <DictAuditPanel
+            activeDict={activeTab}
+            onAuditApplied={() => loadDictionaryWords(activeTab)}
+          />
+        {:else}
+          <!-- Cross-Dict Audit Panel (All 4 Dicts) -->
+          <CrossDictAuditPanel
+            onAuditApplied={() => loadDictionaryWords(activeTab)}
+          />
+        {/if}
       </div>
     {:else}
       <!-- Main 2-Column Layout (Streamlined List Layout) -->

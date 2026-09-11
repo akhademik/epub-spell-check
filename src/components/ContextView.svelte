@@ -18,6 +18,8 @@
         return "bg-purple-500 shadow-[0_0_8px_#a855f7]"
       case "SpecialCharacter":
         return "bg-pink-500 shadow-[0_0_8px_#ec4899]"
+      case "ContextConfusion":
+        return "bg-cyan-500 shadow-[0_0_8px_#06b6d4]"
       default:
         return "bg-slate-400 shadow-[0_0_8px_#94a3b8]"
     }
@@ -38,6 +40,8 @@
         return "bg-purple-500/20 text-purple-300 border-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.3)]"
       case "SpecialCharacter":
         return "bg-pink-500/20 text-pink-300 border-pink-500 shadow-[0_0_12px_rgba(236,72,153,0.3)]"
+      case "ContextConfusion":
+        return "bg-cyan-500/20 text-cyan-300 border-cyan-500 shadow-[0_0_12px_rgba(6,182,212,0.3)]"
       default:
         return "bg-slate-500/20 text-slate-300 border-slate-500"
     }
@@ -117,8 +121,19 @@
       return s
     }
 
+    const instanceSuggestions = (
+      group.suggestions ||
+      currentContext?.suggestions ||
+      group.contexts[0]?.suggestions ||
+      []
+    ).map(formatWord)
+
+    const primaryCombined = Array.from(
+      new Set([...instanceSuggestions, ...raw.primary.map(formatWord)])
+    )
+
     return {
-      primary: raw.primary.map(formatWord),
+      primary: primaryCombined,
       secondary: raw.secondary.map(formatWord)
     }
   })

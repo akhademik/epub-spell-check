@@ -1,4 +1,4 @@
-import { levenshteinDistance } from "./analysis-core"
+import { getAlternateToneStyle, levenshteinDistance } from "./analysis-core"
 import { isRepeatedUnit, validateDictionaryWord } from "./dict-validator"
 
 export type DictName = "vn" | "names" | "non-vn" | "custom"
@@ -8,6 +8,15 @@ export interface GarbageFinding {
   dictName: DictName
   tier: "A" | "B"
   reasons: string[]
+}
+
+export interface ReferenceFinding {
+  word: string
+  dictName: DictName
+  tier: "C"
+  reasons: string[]
+  suggestion?: string
+  distance?: number
 }
 
 export interface DuplicateClusterWord {
@@ -37,6 +46,7 @@ export interface AuditTiming {
 export interface AuditResult {
   garbage: GarbageFinding[]
   duplicateClusters: DuplicateCluster[]
+  referenceFindings?: ReferenceFinding[]
   timing?: AuditTiming
 }
 
@@ -446,12 +456,94 @@ export function detectFuzzyDuplicates(
 }
 
 /**
+ * Cross-references words in a dictionary (e.g. 'vn') against a reference baseline (e.g. Hunspell vi).
+ * Words missing from the reference dictionary are flagged as Tier C for manual review.
+ * Computes closest candidate (Levenshtein distance <= 2) as a replacement recommendation.
+ */
+export function scanDictionaryCrossReference(
+  dictName: DictName,
+  words: string[],
+  referenceWords: Set<string>,
+  ignoredWords: Set<string> = new Set()
+): ReferenceFinding[] {
+  if (dictName !== "vn" || referenceWords.size === 0) return []
+
+  // Pre-index reference words by length for rapid Levenshtein lookup
+  const byLength = new Map<number, string[]>()
+  for (const w of referenceWords) {
+    const len = w.length
+    let bucket = byLength.get(len)
+    if (!bucket) {
+      bucket = []
+      byLength.set(len, bucket)
+    }
+    bucket.push(w)
+  }
+
+  const findings: ReferenceFinding[] = []
+
+  for (const rawWord of words) {
+    const word = rawWord.trim().normalize("NFC")
+    if (!word || ignoredWords.has(word)) continue
+
+    const low = word.toLowerCase()
+    const altTone = getAlternateToneStyle(low)
+
+    const isInReference =
+      referenceWords.has(word) ||
+      referenceWords.has(low) ||
+      (altTone !== null && referenceWords.has(altTone))
+
+    if (!isInReference) {
+      // Find closest suggestion with edit distance <= 2
+      let bestSuggestion: string | undefined
+      let minDistance = 999
+
+      const minLen = Math.max(1, low.length - 2)
+      const maxLen = low.length + 2
+
+      for (let l = minLen; l <= maxLen; l++) {
+        const bucket = byLength.get(l)
+        if (!bucket) continue
+        for (const candidate of bucket) {
+          const candLow = candidate.toLowerCase()
+          const dist = levenshteinDistance(
+            low,
+            candLow,
+            Math.min(2, minDistance)
+          )
+          if (dist <= 2 && dist < minDistance) {
+            minDistance = dist
+            bestSuggestion = candidate
+            if (dist === 1) break
+          }
+        }
+        if (minDistance === 1) break
+      }
+
+      findings.push({
+        word,
+        dictName,
+        tier: "C",
+        reasons: ["Không có trong từ điển tham chiếu chuẩn (Hunspell vi)"],
+        suggestion: bestSuggestion,
+        distance: minDistance <= 2 ? minDistance : undefined
+      })
+    }
+  }
+
+  return findings
+}
+
+/**
  * Runs a complete audit on a dictionary with single-pass garbage scan and performance metrics.
  */
 export function auditDictionary(
   dictName: DictName,
   words: string[],
-  ignoredPairs: Set<string> = new Set()
+  ignoredPairs: Set<string> = new Set(),
+  referenceWords?: Set<string>,
+  ignoredReferenceWords: Set<string> = new Set()
 ): AuditResult {
   const startTime = performance.now()
   const timingCollector: Partial<AuditTiming> = {}
@@ -470,11 +562,23 @@ export function auditDictionary(
     timingCollector
   )
 
+  // 3. Cross-reference Audit (Tier C)
+  let referenceFindings: ReferenceFinding[] | undefined
+  if (referenceWords && referenceWords.size > 0 && dictName === "vn") {
+    referenceFindings = scanDictionaryCrossReference(
+      dictName,
+      words,
+      referenceWords,
+      ignoredReferenceWords
+    )
+  }
+
   timingCollector.totalMs = Math.round(performance.now() - startTime)
 
   return {
     garbage,
     duplicateClusters,
+    referenceFindings,
     timing: {
       garbageScanMs: timingCollector.garbageScanMs ?? 0,
       indexBuildMs: timingCollector.indexBuildMs ?? 0,
@@ -485,5 +589,173 @@ export function auditDictionary(
       fuzzyScanMs: timingCollector.fuzzyScanMs ?? 0,
       totalMs: timingCollector.totalMs ?? 0
     }
+  }
+}
+
+export interface CrossDictOccurrence {
+  dictName: DictName
+  exactWord: string
+}
+
+export interface CrossDictDuplicateFinding {
+  word: string
+  lowerWord: string
+  occurrences: CrossDictOccurrence[]
+  matchType: "exact" | "case_variation"
+  suggestion?: {
+    recommendedDict: DictName
+    reason: string
+  }
+}
+
+export interface CrossDictAuditResult {
+  findings: CrossDictDuplicateFinding[]
+  totalWordsScanned: number
+  dictCounts: Record<DictName, number>
+  timingMs: number
+}
+
+export function createCrossDictPairKey(
+  word: string,
+  dictA: DictName,
+  dictB: DictName
+): string {
+  const [dA, dB] = [dictA, dictB].sort()
+  return `${word.toLowerCase().trim()}:${dA}|${dB}`
+}
+
+const ACRONYM_RE = /^[A-Z0-9]{2,6}$/
+const TITLECASE_SINGLE_RE = /^\p{Lu}\p{Ll}+$/u
+const NON_VN_CHARS_RE = /[fjwzFJWZ]/
+
+/**
+ * Detects words appearing across multiple dictionaries (cross-dictionary duplicate/overlap).
+ * Analyzes exact matches and case variations, providing smart dictionary assignment recommendations.
+ */
+export function detectCrossDictDuplicates(
+  dictMap: Record<DictName, string[]>,
+  ignoredKeys: Set<string> = new Set()
+): CrossDictAuditResult {
+  const startTime = performance.now()
+  const dictCounts: Record<DictName, number> = {
+    vn: 0,
+    names: 0,
+    "non-vn": 0,
+    custom: 0
+  }
+
+  let totalWordsScanned = 0
+  const lowerMap = new Map<string, CrossDictOccurrence[]>()
+
+  for (const [dictKey, words] of Object.entries(dictMap) as [
+    DictName,
+    string[]
+  ][]) {
+    const uniqueInDict = new Set(words.map((w) => w.trim()).filter(Boolean))
+    dictCounts[dictKey] = uniqueInDict.size
+    totalWordsScanned += uniqueInDict.size
+
+    for (const w of uniqueInDict) {
+      const lower = w.toLowerCase().normalize("NFC")
+      let list = lowerMap.get(lower)
+      if (!list) {
+        list = []
+        lowerMap.set(lower, list)
+      }
+      list.push({ dictName: dictKey, exactWord: w })
+    }
+  }
+
+  const findings: CrossDictDuplicateFinding[] = []
+
+  for (const [lowerWord, occurrences] of lowerMap.entries()) {
+    // Only flag if word appears in 2 or more distinct dictionaries
+    const dicts = Array.from(new Set(occurrences.map((o) => o.dictName)))
+    if (dicts.length < 2) continue
+
+    // Check if ignored
+    let isAllIgnored = true
+    for (let i = 0; i < dicts.length; i++) {
+      for (let j = i + 1; j < dicts.length; j++) {
+        const key = createCrossDictPairKey(lowerWord, dicts[i], dicts[j])
+        if (!ignoredKeys.has(key)) {
+          isAllIgnored = false
+          break
+        }
+      }
+      if (!isAllIgnored) break
+    }
+    if (isAllIgnored) continue
+
+    const exactWords = Array.from(new Set(occurrences.map((o) => o.exactWord)))
+    const matchType: "exact" | "case_variation" =
+      exactWords.length === 1 ? "exact" : "case_variation"
+
+    // Representative display word (prefer TitleCase or exact word with diacritics)
+    const primaryWord =
+      exactWords.find(
+        (w) => TITLECASE_SINGLE_RE.test(w) || ACRONYM_RE.test(w)
+      ) ?? exactWords[0]
+
+    // Smart heuristic recommendation
+    let suggestion: CrossDictDuplicateFinding["suggestion"]
+
+    const inVn = occurrences.find((o) => o.dictName === "vn")
+    const inNonVn = occurrences.find((o) => o.dictName === "non-vn")
+    const inNames = occurrences.find((o) => o.dictName === "names")
+    const inCustom = occurrences.find((o) => o.dictName === "custom")
+
+    if (VN_EXCLUSIVE_RE.test(primaryWord) && inVn) {
+      suggestion = {
+        recommendedDict: "vn",
+        reason: "Chứa dấu / ký tự tiếng Việt chuẩn (nên giữ ở Tiếng Việt)"
+      }
+    } else if (inCustom && ACRONYM_RE.test(inCustom.exactWord)) {
+      suggestion = {
+        recommendedDict: "custom",
+        reason: "Từ viết tắt / ký hiệu viết hoa toàn bộ (nên giữ ở Custom)"
+      }
+    } else if (
+      inNames &&
+      TITLECASE_SINGLE_RE.test(inNames.exactWord) &&
+      inNonVn &&
+      !TITLECASE_SINGLE_RE.test(inNonVn.exactWord)
+    ) {
+      // e.g. "Caterpillar" in names vs "caterpillar" in non-vn
+      // If common noun like animals/objects -> non-vn, if proper name -> names
+      suggestion = {
+        recommendedDict: "non-vn",
+        reason:
+          "Nếu là danh từ chung thì nên để ở Non-VN (chữ thường); nếu là tên riêng thì giữ ở Names"
+      }
+    } else if (inVn && inNonVn && !NON_VN_CHARS_RE.test(lowerWord)) {
+      suggestion = {
+        recommendedDict: "vn",
+        reason: "Từ đồng âm có nghĩa trong tiếng Việt (khuyên giữ ở Tiếng Việt)"
+      }
+    }
+
+    findings.push({
+      word: primaryWord,
+      lowerWord,
+      occurrences,
+      matchType,
+      suggestion
+    })
+  }
+
+  // Sort findings: exact matches first, then alphabetically
+  findings.sort((a, b) => {
+    if (a.matchType !== b.matchType) {
+      return a.matchType === "exact" ? -1 : 1
+    }
+    return a.lowerWord.localeCompare(b.lowerWord, "vi")
+  })
+
+  return {
+    findings,
+    totalWordsScanned,
+    dictCounts,
+    timingMs: Math.round(performance.now() - startTime)
   }
 }

@@ -167,6 +167,14 @@ export interface DictAuditResponse {
     }[]
     confidence: "high" | "low"
   }[]
+  referenceFindings?: {
+    word: string
+    dictName: DictSourceName
+    tier: "C"
+    reasons: string[]
+    suggestion?: string
+    distance?: number
+  }[]
   timing?: {
     garbageScanMs: number
     indexBuildMs: number
@@ -205,7 +213,10 @@ export async function fetchDictionaryAudit(
   // Fallback for local development if Cloudflare Functions are not running
   const details = await fetchDictionaryDetails(dictName)
   const { auditDictionary } = await import("./dict-quality")
-  return auditDictionary(dictName, details.words)
+  const { loadReferenceDictionary } = await import("./reference-dict")
+  const referenceWords =
+    dictName === "vn" ? await loadReferenceDictionary() : undefined
+  return auditDictionary(dictName, details.words, new Set(), referenceWords)
 }
 
 /**
@@ -233,4 +244,29 @@ export async function ignoreDuplicatePair(
   } catch {
     return true
   }
+}
+
+export type CrossDictAuditResponse =
+  import("./dict-quality").CrossDictAuditResult
+
+/**
+ * Fetches all 4 dictionaries and runs cross-dictionary overlap audit.
+ */
+export async function fetchCrossDictAudit(
+  _token?: string
+): Promise<CrossDictAuditResponse> {
+  const [vn, names, nonVn, custom] = await Promise.all([
+    fetchDictionaryDetails("vn"),
+    fetchDictionaryDetails("names"),
+    fetchDictionaryDetails("non-vn"),
+    fetchDictionaryDetails("custom")
+  ])
+
+  const { detectCrossDictDuplicates } = await import("./dict-quality")
+  return detectCrossDictDuplicates({
+    vn: vn.words,
+    names: names.words,
+    "non-vn": nonVn.words,
+    custom: custom.words
+  })
 }

@@ -4,7 +4,7 @@ import type {
   DictionaryStatus,
   IndexedDictionary
 } from "../types/dictionary"
-import { getBaseWord } from "./analysis-core"
+import { getBaseWordWithoutD } from "./analysis-core"
 import { getCache, setCache } from "./indexed-db"
 import { logger } from "./logger"
 
@@ -23,7 +23,7 @@ export function buildIndexedDictionary(
       byLength.set(len, bucket)
     }
     bucket.push(word)
-    baseWordCache.set(word, getBaseWord(word))
+    baseWordCache.set(word, getBaseWordWithoutD(word))
   }
 
   return {
@@ -214,7 +214,9 @@ export async function loadDictionaries(): Promise<{
     for (const word of nonVnRes.split(/\r?\n/)) {
       const cleanWord = word.trim().toLowerCase()
       if (cleanWord) {
-        dictionaries.nonVietnamese.add(cleanWord)
+        for (const token of cleanWord.split(/\s+/)) {
+          if (token) dictionaries.nonVietnamese.add(token)
+        }
       }
     }
     status.isNonVietnameseLoaded = true
@@ -226,7 +228,9 @@ export async function loadDictionaries(): Promise<{
     for (const word of customRes.split(/\r?\n/)) {
       const cleanWord = word.trim()
       if (cleanWord) {
-        dictionaries.custom.add(cleanWord)
+        for (const token of cleanWord.split(/\s+/)) {
+          if (token) dictionaries.custom.add(token)
+        }
       }
     }
     status.isCustomLoaded = true
@@ -238,8 +242,12 @@ export async function loadDictionaries(): Promise<{
     for (const word of namesRes.split(/\r?\n/)) {
       const cleanWord = word.trim()
       if (cleanWord) {
-        dictionaries.names.add(cleanWord)
-        dictionaries.names.add(cleanWord.toLowerCase())
+        for (const token of cleanWord.split(/\s+/)) {
+          if (token) {
+            dictionaries.names.add(token)
+            dictionaries.names.add(token.toLowerCase())
+          }
+        }
       }
     }
     status.isNamesLoaded = true
