@@ -4,10 +4,14 @@
 
 ---
 
-## 🔒 1. Quy tắc Quản lý Gói & Git Hooks (Package Manager & Git Hooks)
+## 🔒 1. Quy tắc Quản lý Gói, Từ Điển & Git Hooks (Package Manager & Dict Sync)
 
 - **CHỈ ĐƯỢC DÙNG `pnpm`** (Tuyệt đối không dùng `npm` hoặc `yarn`).
 - Luôn tuân thủ lockfile `pnpm-lock.yaml`.
+- **Quy trình chuẩn khi chỉnh sửa/dọn dẹp từ điển (`vn`, `non-vn`, `custom`, `names`)**:
+  1. **Bước 1 (Bắt buộc)**: Luôn chạy `pnpm dicts:pull-from-kv` để tải dữ liệu mới nhất từ Cloudflare KV về máy, tránh ghi đè các từ đã được dọn trên KV.
+  2. **Bước 2**: Chỉnh sửa/phân loại từ điển ở local (`public/*.txt`).
+  3. **Bước 3**: Đồng bộ ngược lên Cloudflare KV bằng `pnpm dicts:push-to-kv`.
 - **Git Hooks tự động (`simple-git-hooks`)**:
   - Tự động chạy `pnpm dicts:pull-from-kv` trước mỗi commit để đồng bộ từ điển mới nhất từ Cloudflare KV về `public/` (chạy non-blocking).
 

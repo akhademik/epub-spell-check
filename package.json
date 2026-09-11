@@ -19,6 +19,7 @@
     "test:watch": "vitest",
     "dicts:clean": "tsx scripts/clean-dicts.ts",
     "dicts:pull-from-kv": "tsx scripts/pull-dicts-from-kv.ts",
+    "dicts:push-to-kv": "./scripts/seed-kv.sh ab6a4a72cbf2462f8d8b1074e44db5e7 --remote",
     "postinstall": "simple-git-hooks"
   },
   "simple-git-hooks": {

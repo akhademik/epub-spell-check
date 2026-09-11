@@ -190,26 +190,26 @@
       {#if authStatus.authenticated}
         <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-medium">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Đã xác thực Token (Session)</span>
+          <span>Đã xác thực Token</span>
+        </div>
+
+        <!-- Token config input on top right for easy edit when authenticated -->
+        <div class="flex items-center gap-1.5 bg-slate-950/60 p-1 rounded-xl border border-slate-800">
+          <input
+            type="password"
+            bind:value={tokenInput}
+            placeholder="Mã Token (ADMIN_TOKEN)"
+            class="px-2.5 py-1 text-xs bg-transparent border-0 text-slate-200 focus:outline-none font-mono w-36 sm:w-44"
+          />
+          <button
+            type="button"
+            onclick={handleSaveToken}
+            class="px-2.5 py-1 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors"
+          >
+            Áp dụng
+          </button>
         </div>
       {/if}
-
-      <!-- Token config input on top right for easy edit -->
-      <div class="flex items-center gap-1.5 bg-slate-950/60 p-1 rounded-xl border border-slate-800">
-        <input
-          type="password"
-          bind:value={tokenInput}
-          placeholder="Mã Token (ADMIN_TOKEN)"
-          class="px-2.5 py-1 text-xs bg-transparent border-0 text-slate-200 focus:outline-none font-mono w-36 sm:w-44"
-        />
-        <button
-          type="button"
-          onclick={handleSaveToken}
-          class="px-2.5 py-1 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors"
-        >
-          Áp dụng
-        </button>
-      </div>
     </div>
   </div>
 

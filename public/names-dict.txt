@@ -1279,7 +1279,6 @@ Belva
 Belyayev
 Belzebuth
 Bénac
-Benadryl
 Benares
 Bénarès
 Benbow
@@ -1372,7 +1371,6 @@ Bessarabia
 Bessie
 Bessus
 Besty
-Betadine
 Betelgeuse
 Beth
 Bethany
@@ -3107,7 +3105,6 @@ Cyclades
 Cyclist
 Cyclopides
 Cydnus
-Cymbalta
 Cyna
 Cyndy
 Cynthia
@@ -3858,7 +3855,6 @@ Downey
 Downing
 Downs
 Dowson
-Doxepin
 Doyarenko
 Doyle
 Doyon
@@ -3873,7 +3869,6 @@ Dragnet
 Dragonsky
 Drake
 Drakes
-Dramamine
 Drangiana
 Draper
 Drawings
@@ -4126,7 +4121,6 @@ Elana
 Elane
 Elanor
 Elatae
-Elavil
 Elba
 Elbert
 Elburz
@@ -4300,7 +4294,6 @@ Emsworth
 Enable
 Enabled
 Enables
-Enbrel
 Encephalopathy
 Enchiridion
 Encino
@@ -4423,7 +4416,6 @@ Esther
 Estonin
 Estremavilla
 Estrin
-Etanercept
 Etats
 Etchison
 Ethan
@@ -5196,7 +5188,6 @@ Geller
 Gelnar
 Gelnarova
 Gelu
-Gelusil
 Gelzer
 Gema
 Gemini
@@ -6348,7 +6339,6 @@ Hydaspes
 Hyde
 Hydraotes
 Hydro
-Hydrochloride
 Hydromist
 Hydrox
 Hyksos
@@ -9373,7 +9363,6 @@ Melantrichova
 Melany
 Melas
 Mélas
-Melatonin
 Melba
 Melbourne
 Melbury
@@ -9519,10 +9508,8 @@ Metals
 Metcalf
 Metekhi
 Metellus
-Methane
 Methone
 Methuselah
-Methylenedioxymethamphetamin
 Methymna
 MetLife
 Metropole
@@ -9575,7 +9562,6 @@ Midian
 Midland
 Midlands
 Midnight
-Midol
 Midtown
 Midwest
 Miesha
@@ -9815,7 +9801,6 @@ Mongoose
 Monica
 Monika
 Monique
-Monistat
 Monk
 Monmartre
 Monnie
@@ -10233,7 +10218,6 @@ Nettlecombe
 Neufeld
 Neuroimaging
 Neuroinformatics
-Neurontin
 Neurotech
 Neutonuus
 Neuve
@@ -10437,7 +10421,6 @@ Noviodunum
 Novitsky
 Novius
 Novo
-Novocain
 Novocherkaask
 Novocherkassk
 Novorossisk
@@ -10749,7 +10732,6 @@ Oxfordshire
 Oxshott
 Oxus
 Oxyartes
-Oxycontin
 Oxygenation
 Ozark
 Ozell
@@ -11057,8 +11039,6 @@ Perception
 Percevel
 Percheron
 Percival
-Percocet
-Percodan
 Percote
 Percy
 Perdiccas
@@ -11122,7 +11102,6 @@ Petersheld
 Peterson
 Petesbourg
 Petey
-Pethidine
 Petie
 Petisis
 Petits
@@ -12118,7 +12097,6 @@ Roginsky
 Roguet
 Roha
 Rohan
-Rohypnol
 Roisin
 Rokossovsky
 Rolaids
@@ -12713,8 +12691,6 @@ Sebastian
 Sébastien
 Secaucus
 Sechi
-Secobarbital
-Seconal
 Secrects
 Secundus
 Sedaka
@@ -12769,7 +12745,6 @@ Semitic
 Semper
 Sempill
 Semple
-Semtex
 Semyonov
 Senators
 Senchenko
@@ -14776,7 +14751,6 @@ Valerius
 Valery
 Valéry
 Valhalla
-Valium
 Valjean
 Valkyrie
 Valladolid
@@ -14814,7 +14788,6 @@ Vanities
 Vanna
 Vanness
 Vanquisher
-VapoRub
 Varangia
 Vargas
 Variety
@@ -14960,7 +14933,6 @@ Vicki
 Vickie
 Vicks
 Vicky
-Vicodin
 Victo
 Victor
 Victoria
@@ -15261,7 +15233,6 @@ Welbeck
 Welch
 Welk
 Wellbridge
-Wellbutrin
 Wellenmechanlk
 Weller
 Welles
@@ -15560,8 +15531,6 @@ Xp
 Xuan
 Xuông
 Xxoo
-Xylitol
-Xylocaine
 Yabuli
 Yabulu
 Yadoga
