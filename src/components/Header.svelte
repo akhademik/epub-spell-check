@@ -26,7 +26,7 @@
         <h1 class="text-xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
           Soát Lỗi Chính Tả        
         </h1>
-        <div class="text-xs font-medium text-slate-400">EPUB tiếng Việt</div>
+        <div class="text-xs font-medium text-slate-400">EPUB / TXT / MD tiếng Việt</div>
       </div>
     </div>
 
@@ -101,18 +101,18 @@
       </button>
 
       {#if appState.loadedTextContent.length > 0}
-        <!-- Export Fixed EPUB Button -->
+        <!-- Export Fixed Document Button -->
         {#if appState.appliedFixes.size > 0}
           <button
             type="button"
             onclick={() => appState.exportFixedEpub()}
             class="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold text-white transition-all rounded-xl shadow-lg bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/40 animate-pulse hover:animate-none"
-            title="Tải về tệp EPUB đã được sửa các lỗi chính tả"
+            title={`Tải về tệp ${appState.fileType} đã được sửa các lỗi chính tả`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <span>Xuất EPUB ({appState.appliedFixes.size})</span>
+            <span>Xuất {appState.fileType} ({appState.appliedFixes.size})</span>
           </button>
         {/if}
 
