@@ -112,6 +112,15 @@
     appState.showToast(`Đã xếp "${word}" vào hàng đợi xóa (chưa lưu lên Cloudflare).`, "info")
   }
 
+  function stageClusterAllDeletions(cluster: DictAuditResponse["duplicateClusters"][0]) {
+    const next = new Set(stagedDeletions)
+    for (const cw of cluster.words) {
+      next.add(cw.word)
+    }
+    stagedDeletions = next
+    appState.showToast(`Đã xếp xóa tất cả ${cluster.words.length} từ trong cụm vào hàng đợi xóa.`, "info")
+  }
+
   function handleKeepTierC(word: string) {
     const next = new Set(ignoredTierCWords)
     next.add(word)
@@ -437,13 +446,23 @@
                   {/each}
                 </div>
 
-                <button
-                  type="button"
-                  onclick={() => handleIgnoreCluster(cluster)}
-                  class="px-2.5 py-1 text-xs text-slate-400 hover:text-slate-200 border border-slate-700/80 rounded-lg transition-colors shrink-0"
-                >
-                  Không phải trùng, bỏ qua
-                </button>
+                <div class="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onclick={() => stageClusterAllDeletions(cluster)}
+                    class="px-2.5 py-1 text-xs font-semibold text-rose-400 hover:text-rose-200 border border-rose-900/60 rounded-lg hover:bg-rose-950/40 transition-colors"
+                    title={`Xóa tất cả ${cluster.words.length} từ trong cụm này`}
+                  >
+                    ✕ Xóa cả cụm ({cluster.words.length})
+                  </button>
+                  <button
+                    type="button"
+                    onclick={() => handleIgnoreCluster(cluster)}
+                    class="px-2.5 py-1 text-xs text-slate-400 hover:text-slate-200 border border-slate-700/80 rounded-lg transition-colors"
+                  >
+                    Bỏ qua
+                  </button>
+                </div>
               </div>
             {/each}
           {/if}

@@ -21,6 +21,7 @@
   let matchTypeFilter = $state<"all" | "exact" | "case_variation">("all")
   let dictPairFilter = $state<string>("all")
   let ignoredWords = $state<Set<string>>(new Set())
+  let selectedFindings = $state<Set<string>>(new Set())
   let stagedDeletions = $state<Map<DictSourceName, Set<string>>>(
     new Map([
       ["vn", new Set()],
@@ -43,6 +44,7 @@
   async function runCrossAudit() {
     isAuditing = true
     ignoredWords = new Set()
+    selectedFindings = new Set()
     stagedDeletions = new Map([
       ["vn", new Set()],
       ["names", new Set()],
@@ -108,6 +110,24 @@
     return list
   })
 
+  function toggleSelectFinding(lowerWord: string) {
+    const next = new Set(selectedFindings)
+    if (next.has(lowerWord)) {
+      next.delete(lowerWord)
+    } else {
+      next.add(lowerWord)
+    }
+    selectedFindings = next
+  }
+
+  function toggleSelectAll() {
+    if (selectedFindings.size === visibleFindings.length && visibleFindings.length > 0) {
+      selectedFindings = new Set()
+    } else {
+      selectedFindings = new Set(visibleFindings.map((f) => f.lowerWord))
+    }
+  }
+
   function stageDeleteFromDict(dictName: DictSourceName, exactWord: string) {
     const nextMap = new Map(stagedDeletions)
     const set = new Set(nextMap.get(dictName))
@@ -130,10 +150,63 @@
     appState.showToast(`Chỉ giữ "${finding.word}" trong [${keepDict.toUpperCase()}], xếp xóa ở các từ điển khác.`, "info")
   }
 
+  function deleteAllOccurrences(finding: CrossDictDuplicateFinding) {
+    const nextMap = new Map(stagedDeletions)
+    for (const occ of finding.occurrences) {
+      const set = new Set(nextMap.get(occ.dictName))
+      set.add(occ.exactWord)
+      nextMap.set(occ.dictName, set)
+    }
+    stagedDeletions = nextMap
+    const nextSelected = new Set(selectedFindings)
+    nextSelected.delete(finding.lowerWord)
+    selectedFindings = nextSelected
+    appState.showToast(`Đã xếp xóa hoàn toàn "${finding.word}" khỏi TẤT CẢ các từ điển.`, "info")
+  }
+
+  function bulkDeleteAllSelected() {
+    if (selectedFindings.size === 0) return
+    const nextMap = new Map(stagedDeletions)
+    const selectedList = visibleFindings.filter((f) => selectedFindings.has(f.lowerWord))
+
+    for (const finding of selectedList) {
+      for (const occ of finding.occurrences) {
+        const set = new Set(nextMap.get(occ.dictName))
+        set.add(occ.exactWord)
+        nextMap.set(occ.dictName, set)
+      }
+    }
+    stagedDeletions = nextMap
+    selectedFindings = new Set()
+    appState.showToast(`Đã xếp xóa ${selectedList.length} từ khỏi TẤT CẢ các từ điển.`, "info")
+  }
+
+  function bulkKeepOnlyInDict(targetDict: DictSourceName) {
+    if (selectedFindings.size === 0) return
+    const nextMap = new Map(stagedDeletions)
+    const selectedList = visibleFindings.filter((f) => selectedFindings.has(f.lowerWord))
+
+    for (const finding of selectedList) {
+      for (const occ of finding.occurrences) {
+        if (occ.dictName !== targetDict) {
+          const set = new Set(nextMap.get(occ.dictName))
+          set.add(occ.exactWord)
+          nextMap.set(occ.dictName, set)
+        }
+      }
+    }
+    stagedDeletions = nextMap
+    selectedFindings = new Set()
+    appState.showToast(`Đã xếp chỉ giữ ${selectedList.length} từ trong [${targetDict.toUpperCase()}], xóa khỏi các từ điển còn lại.`, "info")
+  }
+
   function ignoreFinding(lowerWord: string) {
     const next = new Set(ignoredWords)
     next.add(lowerWord)
     ignoredWords = next
+    const nextSelected = new Set(selectedFindings)
+    nextSelected.delete(lowerWord)
+    selectedFindings = nextSelected
     appState.showToast(`Đã bỏ qua từ "${lowerWord}".`, "info")
   }
 
@@ -168,6 +241,7 @@
         ["non-vn", new Set()],
         ["custom", new Set()]
       ])
+      selectedFindings = new Set()
       await runCrossAudit()
       onAuditApplied?.()
     } finally {
@@ -437,6 +511,73 @@
           CUSTOM ⟷ VN
         </button>
       </div>
+
+      <!-- Bulk Actions Bar when items are selected -->
+      {#if visibleFindings.length > 0}
+        <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-slate-800/80">
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              onclick={toggleSelectAll}
+              class="px-2.5 py-1 text-xs text-slate-300 hover:text-white bg-slate-800 rounded-lg border border-slate-700"
+            >
+              {selectedFindings.size === visibleFindings.length && visibleFindings.length > 0
+                ? "Bỏ chọn tất cả"
+                : `Chọn tất cả (${visibleFindings.length})`}
+            </button>
+            {#if selectedFindings.size > 0}
+              <span class="text-xs text-indigo-300 font-semibold">
+                Đã chọn {selectedFindings.size} từ
+              </span>
+            {/if}
+          </div>
+
+          {#if selectedFindings.size > 0}
+            <div class="flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                onclick={bulkDeleteAllSelected}
+                class="px-3 py-1 text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 rounded-lg transition-colors shadow flex items-center gap-1.5"
+                title="Xóa tất cả các từ đã chọn khỏi MỌI từ điển"
+              >
+                ✕ Xóa khỏi TẤT CẢ từ điển ({selectedFindings.size})
+              </button>
+              <button
+                type="button"
+                onclick={() => bulkKeepOnlyInDict("vn")}
+                class="px-2.5 py-1 text-xs font-semibold text-emerald-300 bg-emerald-950/40 border border-emerald-500/40 hover:bg-emerald-900/50 rounded-lg transition-colors"
+                title="Chỉ giữ ở Tiếng Việt, xóa ở các từ điển khác"
+              >
+                Chỉ giữ VN
+              </button>
+              <button
+                type="button"
+                onclick={() => bulkKeepOnlyInDict("names")}
+                class="px-2.5 py-1 text-xs font-semibold text-amber-300 bg-amber-950/40 border border-amber-500/40 hover:bg-amber-900/50 rounded-lg transition-colors"
+                title="Chỉ giữ ở Tên riêng, xóa ở các từ điển khác"
+              >
+                Chỉ giữ NAMES
+              </button>
+              <button
+                type="button"
+                onclick={() => bulkKeepOnlyInDict("non-vn")}
+                class="px-2.5 py-1 text-xs font-semibold text-blue-300 bg-blue-950/40 border border-blue-500/40 hover:bg-blue-900/50 rounded-lg transition-colors"
+                title="Chỉ giữ ở Ngoại ngữ, xóa ở các từ điển khác"
+              >
+                Chỉ giữ NON-VN
+              </button>
+              <button
+                type="button"
+                onclick={() => bulkKeepOnlyInDict("custom")}
+                class="px-2.5 py-1 text-xs font-semibold text-purple-300 bg-purple-950/40 border border-purple-500/40 hover:bg-purple-900/50 rounded-lg transition-colors"
+                title="Chỉ giữ ở Tuỳ chỉnh, xóa ở các từ điển khác"
+              >
+                Chỉ giữ CUSTOM
+              </button>
+            </div>
+          {/if}
+        </div>
+      {/if}
     </div>
 
     <!-- Findings Cards List -->
@@ -448,7 +589,7 @@
             Danh Sách Từ Trùng Lặp Chéo — {visibleFindings.length} từ hiển thị
           </h4>
         </div>
-        <span class="text-xs text-slate-400">Chọn từ điển chuẩn để dọn dẹp các từ điển còn lại</span>
+        <span class="text-xs text-slate-400">Chọn từ điển chuẩn hoặc bấm "✕ Xóa tất cả" để loại bỏ từ sai</span>
       </div>
 
       <div class="p-4 max-h-[700px] overflow-y-auto space-y-3 font-mono text-sm">
@@ -463,39 +604,49 @@
         {:else}
           {#each visibleFindings.slice(0, 150) as finding (finding.lowerWord)}
             <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:border-slate-700 transition-colors">
-              <div class="flex-1 min-w-0 space-y-1.5">
-                <div class="flex items-center gap-3 flex-wrap">
-                  <span class="font-sans text-[22px] font-bold text-white leading-tight">{finding.word}</span>
-                  <span class="px-2 py-0.5 text-[11px] font-sans rounded-md {finding.matchType === 'exact'
-                    ? 'bg-rose-500/10 text-rose-300 border border-rose-500/20'
-                    : 'bg-amber-500/10 text-amber-300 border border-amber-500/20'}">
-                    {finding.matchType === 'exact' ? 'Trùng chính xác' : 'Biến thể hoa/thường'}
-                  </span>
+              <div class="flex items-start gap-3 flex-1 min-w-0">
+                <!-- Checkbox -->
+                <input
+                  type="checkbox"
+                  checked={selectedFindings.has(finding.lowerWord)}
+                  onchange={() => toggleSelectFinding(finding.lowerWord)}
+                  class="w-4 h-4 mt-1 rounded border-slate-700 text-indigo-600 focus:ring-0 bg-slate-950 cursor-pointer"
+                />
 
-                  <!-- Occurrences Badges -->
-                  <div class="flex items-center gap-1.5 flex-wrap">
-                    {#each finding.occurrences as occ (occ.dictName + occ.exactWord)}
-                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-sans rounded-lg border {dictBadgeColor(occ.dictName)}">
-                        <strong>{dictLabel(occ.dictName)}</strong>: "{occ.exactWord}"
-                        <button
-                          type="button"
-                          onclick={() => stageDeleteFromDict(occ.dictName, occ.exactWord)}
-                          class="ml-1 text-rose-400 hover:text-rose-200 font-bold"
-                          title={`Xóa riêng khỏi ${occ.dictName.toUpperCase()}`}
-                        >
-                          ✕
-                        </button>
-                      </span>
-                    {/each}
+                <div class="space-y-1.5 flex-1 min-w-0">
+                  <div class="flex items-center gap-3 flex-wrap">
+                    <span class="font-sans text-[22px] font-bold text-white leading-tight">{finding.word}</span>
+                    <span class="px-2 py-0.5 text-[11px] font-sans rounded-md {finding.matchType === 'exact'
+                      ? 'bg-rose-500/10 text-rose-300 border border-rose-500/20'
+                      : 'bg-amber-500/10 text-amber-300 border border-amber-500/20'}">
+                      {finding.matchType === 'exact' ? 'Trùng chính xác' : 'Biến thể hoa/thường'}
+                    </span>
+
+                    <!-- Occurrences Badges -->
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      {#each finding.occurrences as occ (occ.dictName + occ.exactWord)}
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-sans rounded-lg border {dictBadgeColor(occ.dictName)}">
+                          <strong>{dictLabel(occ.dictName)}</strong>: "{occ.exactWord}"
+                          <button
+                            type="button"
+                            onclick={() => stageDeleteFromDict(occ.dictName, occ.exactWord)}
+                            class="ml-1 text-rose-400 hover:text-rose-200 font-bold"
+                            title={`Xóa riêng khỏi ${occ.dictName.toUpperCase()}`}
+                          >
+                            ✕
+                          </button>
+                        </span>
+                      {/each}
+                    </div>
                   </div>
-                </div>
 
-                {#if finding.suggestion}
-                  <p class="text-xs text-indigo-300/90 font-sans flex items-center gap-1.5 pt-0.5">
-                    <span>💡</span>
-                    <span><strong>Gợi ý:</strong> {finding.suggestion.reason}</span>
-                  </p>
-                {/if}
+                  {#if finding.suggestion}
+                    <p class="text-xs text-indigo-300/90 font-sans flex items-center gap-1.5 pt-0.5">
+                      <span>💡</span>
+                      <span><strong>Gợi ý:</strong> {finding.suggestion.reason}</span>
+                    </p>
+                  {/if}
+                </div>
               </div>
 
               <!-- Quick Action Resolution Buttons -->
@@ -511,6 +662,17 @@
                     ✓ {occ.dictName.toUpperCase()}
                   </button>
                 {/each}
+
+                <!-- XÓA TẤT CẢ TỪ NÀY KHỎI MỌI TỪ ĐIỂN -->
+                <button
+                  type="button"
+                  onclick={() => deleteAllOccurrences(finding)}
+                  class="px-2.5 py-1 text-xs font-bold text-rose-400 hover:text-rose-200 border border-rose-900/60 rounded-lg hover:bg-rose-950/40 transition-colors font-sans"
+                  title={`Xóa hoàn toàn "${finding.word}" khỏi TẤT CẢ các từ điển`}
+                >
+                  ✕ Xóa tất cả
+                </button>
+
                 <button
                   type="button"
                   onclick={() => ignoreFinding(finding.lowerWord)}

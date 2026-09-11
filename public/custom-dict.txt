@@ -25,7 +25,6 @@ Amtrak
 Anatolia
 Andaman
 Andes
-Angeles
 Angola
 ANPE
 Argentina
@@ -115,7 +114,6 @@ CIA
 cif
 Citroen
 Citroën
-clb
 cmt
 cnc
 CNN
@@ -142,7 +140,6 @@ ct
 ctcp
 CTE
 CTR
-cty
 Cuba
 CVS
 Daimler

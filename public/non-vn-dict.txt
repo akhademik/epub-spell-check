@@ -197,6 +197,7 @@ alessandro
 alessia
 alethia
 alexandre
+alfalfa
 algebra
 algol
 algorithm
@@ -220,12 +221,12 @@ alleluia
 allemand
 allergy
 allied
-allô
 allons
 allow
 allowed
 allows
 alloy
+allô
 almanac
 almanach
 almost
@@ -255,6 +256,7 @@ amateur
 amazeant
 amazing
 amazon
+ambergris
 amberly
 ambien
 ambient
@@ -343,7 +345,6 @@ anglea
 angorit
 angry
 angst
-anh
 anima
 animage
 animal
@@ -554,6 +555,7 @@ attacks
 attempt
 attend
 attract
+aubergines
 auburn
 auckland
 auction
@@ -665,7 +667,6 @@ band
 bands
 bangbus
 bangkok
-banh
 banjo
 bank
 bankers
@@ -711,7 +712,6 @@ basin
 basis
 basket
 baskets
-basoi
 bat
 bata
 batch
@@ -726,7 +726,6 @@ battle
 bauer
 bayou
 bazaar
-bazan
 bazooka
 bbs
 bbw
@@ -835,7 +834,6 @@ between
 beyond
 bg
 bhutan
-bia
 bianchi
 bias
 bibi
@@ -844,7 +842,6 @@ biblia
 bichquy
 bicycle
 bid
-bida
 bidder
 bidding
 bids
@@ -883,6 +880,7 @@ bios
 biphenyls
 birch
 bird
+birdhouse
 birdie
 birds
 birgit
@@ -947,12 +945,13 @@ blow
 blowing
 blowjob
 blu
+bluebell
+bluebird
 blues
 bluetooth
 blvd
 blythe
 bm
-boa
 board
 boards
 boat
@@ -992,6 +991,7 @@ bonsevich
 bonsoir
 boob
 boobs
+boogie
 book
 booker
 booking
@@ -1060,6 +1060,7 @@ brave
 breach
 bread
 break
+breakfast
 breaks
 breast
 breasts
@@ -1097,6 +1098,7 @@ brontosaurus
 bronwyn
 bronze
 brookwood
+broom
 brother
 brougham
 brought
@@ -1111,9 +1113,7 @@ brumeux
 brunei
 brush
 brutal
-bs
 bt
-bua
 bubble
 bucks
 budda
@@ -1197,11 +1197,11 @@ c
 caapi
 cab
 cabaret
+cabbage
 cabin
 cabinet
 cable
 cables
-cacao
 cacbin
 cacbon
 cacbonat
@@ -1219,7 +1219,6 @@ cadmium
 caduceus
 caesaries
 caesus
-cafe
 café
 cafein
 caffein
@@ -1279,7 +1278,6 @@ campbell
 campesino
 camping
 camps
-campuchia
 campus
 cams
 canada
@@ -1299,7 +1297,6 @@ candle
 candles
 candra
 candyce
-canh
 canhkina
 canke
 cannabis
@@ -1429,7 +1426,6 @@ causes
 causing
 caution
 cavat
-cave
 caviar
 cayenne
 cayman
@@ -1489,7 +1485,6 @@ champagne
 chance
 changes
 changzheng
-chanh
 channel
 chant
 chaos
@@ -1521,6 +1516,7 @@ checks
 cheddar
 cheers
 cheese
+cheeseburger
 cheesecake
 chef
 chengbaobaby
@@ -1532,7 +1528,7 @@ chest
 chevalier
 chevy
 chez
-chia
+chicken
 chicory
 chier
 chiffon
@@ -1542,6 +1538,7 @@ chili
 chink
 chino
 chinos
+chips
 chit
 chlor
 chlorat
@@ -1550,8 +1547,6 @@ chloroform
 chlorur
 chlorure
 choa
-choai
-choang
 chocolate
 choice
 choices
@@ -1668,7 +1663,6 @@ cloudy
 clubs
 clue
 cluster
-cm
 cms
 cn
 cnet
@@ -1839,7 +1833,6 @@ cooking
 cooldown
 cooler
 cooling
-coong
 cop
 cope
 copfa
@@ -1855,6 +1848,7 @@ corda
 cordite
 cordoba
 core
+corgi
 cork
 corn
 corner
@@ -1916,10 +1910,12 @@ covers
 cow
 cowboy
 cox
+coyote
 cp
 cpu
 cr
 crack
+cracker
 cradle
 craft
 crafts
@@ -1982,16 +1978,15 @@ cs
 css
 cst
 ctrl
-cua
 cuaroa
 cuba
 cube
 cubic
 cuc
+cucumber
 cuisine
 cujes
 cul
-culi
 culit
 culon
 culong
@@ -2013,7 +2008,6 @@ curiae
 curiata
 curiosity
 curious
-curoa
 currach
 current
 cursor
@@ -2028,7 +2022,6 @@ customs
 cute
 cuts
 cutting
-cy
 cyanide
 cyber
 cybernetic
@@ -2046,7 +2039,6 @@ cyrstal
 cythia
 cz
 czar
-d
 dacia
 dack
 dad
@@ -2071,7 +2063,6 @@ damit
 damn
 danger
 dangerous
-danh
 danseuse
 dapes
 daphine
@@ -2107,7 +2098,6 @@ debian
 debt
 debug
 dec
-deca
 decade
 decades
 decal
@@ -2116,7 +2106,6 @@ decem
 decent
 deception
 déchiffreuse
-deci
 decibel
 decide
 decided
@@ -2263,10 +2252,6 @@ dk
 dl
 dm
 dns
-doa
-doan
-doanh
-dobra
 dock
 docs
 doctor
@@ -2287,6 +2272,7 @@ doll
 dollar
 dollars
 dolls
+dolphin
 domain
 domains
 dome
@@ -2388,6 +2374,7 @@ dumas
 dumb
 dumdum
 dump
+dumpster
 dunum
 duo
 dura
@@ -2489,6 +2476,7 @@ electronics
 elegant
 element
 elementals
+elephantine
 eleutheria
 elevazione
 eleven
@@ -2638,7 +2626,6 @@ ethnic
 ethylen
 ethylene
 eto
-être
 etsuko
 etylen
 eu
@@ -2719,6 +2706,7 @@ eye
 eyed
 eyes
 ez
+être
 f
 fa
 fabio
@@ -2863,6 +2851,7 @@ ferronnière
 ferry
 festival
 fetish
+fettuccini
 fever
 few
 fewer
@@ -2926,9 +2915,12 @@ finite
 finland
 finnish
 fire
+fireball
 fired
+fireflies
 firefox
 firenze
+firepit
 fires
 firm
 firms
@@ -3257,12 +3249,14 @@ gewohnt
 gg
 gh
 ghana
+gherkin
 ghita
 ghost
 ghz
 gi
 gialai
 gianh
+giant
 gidget
 giebt
 gif
@@ -3279,6 +3273,7 @@ gile
 gilgul
 gimel
 gin
+ginger
 gioong
 giordano
 giorgia
@@ -3366,7 +3361,6 @@ governors
 gp
 gpl
 gr
-grâce
 grad
 grade
 grades
@@ -3397,6 +3391,7 @@ graveyard
 gravity
 grazie
 grazyna
+grâce
 great
 greater
 greatly
@@ -3784,6 +3779,7 @@ hull
 human
 humans
 humberger
+hummingbirds
 humor
 hunchback
 hundred
@@ -4194,7 +4190,9 @@ kiosk
 kippa
 kiss
 kissing
+kitchen
 kitsune
+kiwi
 kizzie
 kizzy
 klara
@@ -4393,6 +4391,7 @@ leipzig
 leisure
 lek
 lemon
+lemonade
 lempira
 leninit
 lenition
@@ -4576,6 +4575,7 @@ lua
 luchadoms
 luchadoras
 ludi
+luggage
 lunge
 lunkah
 luru
@@ -4666,6 +4666,7 @@ marketing
 markka
 marmalade
 marque
+marshmallow
 martialis
 marxist
 marxit
@@ -4812,6 +4813,7 @@ milimol
 milites
 mille
 milyy
+minestrone
 mini
 minister
 minny
@@ -4863,6 +4865,7 @@ moments
 moms
 monday
 mongolia
+mongoose
 monistat
 monitor
 monkey
@@ -4916,6 +4919,7 @@ mountain
 mounted
 mounts
 mous
+mouse
 mousie
 mousse
 mousseline
@@ -4971,6 +4975,7 @@ muscle
 muscles
 museum
 museums
+mushroom
 music
 musical
 muslim
@@ -5068,6 +5073,7 @@ net
 neta
 netflix
 netherlands
+nettle
 network
 neumann
 neural
@@ -5210,7 +5216,6 @@ notices
 notify
 notion
 notre
-nôtre
 nougat
 nous
 nov
@@ -5222,6 +5227,7 @@ novocaine
 novus
 nowhere
 nozdryov
+nôtre
 np
 nq
 nr
@@ -5253,6 +5259,7 @@ oak
 oaks
 oanh
 oasis
+oatmeal
 ob
 obdulia
 obéah
@@ -5476,6 +5483,7 @@ pale
 palm
 palmira
 pamphlet
+pancakes
 pandora
 pane
 panel
@@ -5593,6 +5601,7 @@ pencil
 pendant
 pending
 penguin
+penguins
 penicillin
 penis
 pens
@@ -5602,6 +5611,7 @@ pentium
 people
 peoples
 pepper
+peppermint
 pepperoni
 pepsi
 pequeño
@@ -6063,6 +6073,7 @@ pulled
 pulling
 pulse
 pump
+pumpkinhead
 pumps
 punch
 punk
@@ -6148,6 +6159,7 @@ quyen
 quylat
 r
 rabbit
+raccoon
 race
 racer
 races
@@ -6179,6 +6191,7 @@ rainer
 raise
 raised
 raises
+raisin
 raising
 ralf
 rally
@@ -6429,6 +6442,7 @@ riding
 riel
 rien
 rif
+rifle
 right
 rights
 rigor
@@ -6499,6 +6513,7 @@ roster
 rosy
 rotary
 roto
+rottweiler
 rouge
 rough
 roughly
@@ -6630,6 +6645,7 @@ sarape
 sardine
 sarissa
 sas
+sassafras
 satan
 satanh
 satanova
@@ -6930,6 +6946,7 @@ showing
 shown
 showroom
 shows
+shrike
 shuffle
 sia
 sibilat
@@ -7023,6 +7040,7 @@ skip
 skirt
 skirts
 sku
+skull
 sky
 skye
 skype
@@ -7143,6 +7161,7 @@ split
 spoke
 spoken
 sponsor
+spoon
 sport
 sports
 spot
@@ -7248,6 +7267,7 @@ strand
 strange
 strap
 strasbourg
+straw
 stream
 streamer
 streams
@@ -7448,7 +7468,9 @@ talking
 talks
 talkshow
 tall
+tampon
 tananh
+tangerine
 tango
 tanh
 tank
@@ -7549,13 +7571,13 @@ testing
 testosterone
 tests
 tetanos
-tête
 tetracyclin
 tetracycline
 tetracyline
 tetrahydrocannabinol
 text
 texts
+tête
 tf
 th
 thailand
@@ -7687,6 +7709,8 @@ tokyo
 tolar
 told
 toll
+tomato
+tomatoes
 tomorrow
 tone
 toner
@@ -7833,6 +7857,7 @@ trouve
 trouvent
 trouvez
 true
+truffle
 trumpet
 trust
 truth
@@ -7854,6 +7879,7 @@ turbin
 turbulence
 turkmenistan
 turn
+turtle
 tuvalu
 tuxedo
 tuy
@@ -7882,6 +7908,7 @@ ukulele
 ulrich
 ulrike
 ultima
+umbrella
 umo
 uncle
 under
@@ -7924,6 +7951,7 @@ vacxin
 vali
 valium
 vals
+vampire
 vanh
 vani
 vanilla
@@ -8089,6 +8117,7 @@ wenn
 werden
 were
 wh
+whale
 what
 wheels
 when
@@ -8126,13 +8155,16 @@ windsor
 wire
 wisdom
 wish
+witch
 within
 without
 wo
 woa
 woking
+wolf
 wolfram
 wols
+wolves
 women
 won
 wonda
@@ -8210,6 +8242,7 @@ yevette
 yi
 yo
 yoga
+yogurt
 you
 your
 youtu
@@ -8237,69 +8270,3 @@ zombie
 zombies
 zoom
 zuoih
-alfalfa
-ambergris
-aubergines
-birdhouse
-bluebell
-bluebird
-boogie
-breakfast
-broom
-cabbage
-cheeseburger
-chicken
-chips
-corgi
-coyote
-cracker
-cucumber
-dolphin
-dumpster
-elephantine
-fettuccini
-fireball
-fireflies
-firepit
-gherkin
-giant
-ginger
-hummingbirds
-kitchen
-kiwi
-lemonade
-luggage
-marshmallow
-minestrone
-mongoose
-mouse
-mushroom
-nettle
-oatmeal
-pancakes
-peppermint
-penguins
-pumpkinhead
-raccoon
-raisin
-rifle
-rottweiler
-sassafras
-shrike
-skull
-spoon
-straw
-tangerine
-tampon
-tomato
-tomatoes
-truffle
-turtle
-umbrella
-vampire
-whale
-witch
-wolf
-wolves
-yogurt
-
