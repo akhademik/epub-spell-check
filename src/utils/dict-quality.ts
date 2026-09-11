@@ -651,7 +651,8 @@ export function detectCrossDictDuplicates(
     DictName,
     string[]
   ][]) {
-    const uniqueInDict = new Set(words.map((w) => w.trim()).filter(Boolean))
+    const list = Array.isArray(words) ? words : []
+    const uniqueInDict = new Set(list.map((w) => w.trim()).filter(Boolean))
     dictCounts[dictKey] = uniqueInDict.size
     totalWordsScanned += uniqueInDict.size
 
