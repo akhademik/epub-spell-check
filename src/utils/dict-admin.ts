@@ -245,3 +245,28 @@ export async function ignoreDuplicatePair(
     return true
   }
 }
+
+export type CrossDictAuditResponse =
+  import("./dict-quality").CrossDictAuditResult
+
+/**
+ * Fetches all 4 dictionaries and runs cross-dictionary overlap audit.
+ */
+export async function fetchCrossDictAudit(
+  _token?: string
+): Promise<CrossDictAuditResponse> {
+  const [vn, names, nonVn, custom] = await Promise.all([
+    fetchDictionaryDetails("vn"),
+    fetchDictionaryDetails("names"),
+    fetchDictionaryDetails("non-vn"),
+    fetchDictionaryDetails("custom")
+  ])
+
+  const { detectCrossDictDuplicates } = await import("./dict-quality")
+  return detectCrossDictDuplicates({
+    vn: vn.words,
+    names: names.words,
+    "non-vn": nonVn.words,
+    custom: custom.words
+  })
+}
