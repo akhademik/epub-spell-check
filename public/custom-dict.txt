@@ -19,6 +19,7 @@ Altoid
 Altoids
 Am
 Amazon
+Amorphophallus
 Amsterdam
 Amtrak
 Anatolia
@@ -42,6 +43,7 @@ ATM
 Australia
 Austria
 Avalon
+Avengers
 Avignon
 Babylon
 Babylonia
@@ -60,6 +62,7 @@ bch
 bchtw
 bct
 BDNF
+Bearsford
 Beijing
 Beirut
 Belgium
@@ -121,6 +124,7 @@ cnxh
 Coca
 Coca-Cola
 CocaCola
+Cockney
 Cola
 Colombia
 Colorado
@@ -311,15 +315,15 @@ MacBook
 macOS
 Malaysia
 Malta
-MasterCard
 Mastercard
+MasterCard
 Mazda
 MC
 McDonald's
 McDonalds
 MDMA
-MedStar
 Medstar
+MedStar
 Mercedes
 Mexico
 MGB
@@ -414,6 +418,7 @@ OLP
 OM
 OPEC
 OpenAI
+Oreo
 OS
 OSHA
 OTT
@@ -472,6 +477,7 @@ RPM
 RTD
 RTL
 Russia
+Saladmaster
 Samsung
 SBB
 scn
