@@ -1,19 +1,10 @@
 import referenceJson from "../data/reference-vn.json"
-import { logger } from "./logger"
-
-const REMOTE_REFERENCE_DAUMOI_URL =
-  "https://raw.githubusercontent.com/1ec5/hunspell-vi/main/dictionaries/vi-DauMoi.dic"
-const REMOTE_REFERENCE_DAUCU_URL =
-  "https://raw.githubusercontent.com/1ec5/hunspell-vi/main/dictionaries/vi-DauCu.dic"
 
 let cachedReferenceWords: Set<string> | null = null
 
 /**
- * Loads the Vietnamese reference dictionary.
- * Resolution strategy:
- * 1. Returns in-memory cache if already loaded in this session.
- * 2. Attempts to fetch from remote GitHub repository (both DauMoi and DauCu).
- * 3. Merges with bundled reference dataset in src/data/reference-vn.json.
+ * Loads the curated Vietnamese reference dictionary.
+ * Uses the local bundled dataset in src/data/reference-vn.json.
  * Cached in-memory during the session and can be cleared at any time.
  */
 export async function loadReferenceDictionary(): Promise<Set<string>> {
@@ -23,33 +14,6 @@ export async function loadReferenceDictionary(): Promise<Set<string>> {
 
   const wordsSet = new Set<string>()
 
-  // 1. Try remote fetch for both DauMoi and DauCu
-  try {
-    const [dauMoiRes, dauCuRes] = await Promise.all([
-      fetch(REMOTE_REFERENCE_DAUMOI_URL),
-      fetch(REMOTE_REFERENCE_DAUCU_URL)
-    ])
-
-    for (const res of [dauMoiRes, dauCuRes]) {
-      if (res.ok) {
-        const text = await res.text()
-        const lines = text.split(/\r?\n/)
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i].trim()
-          if (!line || (i === 0 && /^\d+$/.test(line))) continue
-          const word = line.split("/")[0].trim().normalize("NFC")
-          if (word) wordsSet.add(word)
-        }
-      }
-    }
-  } catch (err) {
-    logger.warn(
-      "Remote reference dict fetch failed, using bundled dataset:",
-      err
-    )
-  }
-
-  // 2. Always merge with local bundled dataset to guarantee full coverage (including underthesea single words)
   if (Array.isArray(referenceJson)) {
     for (const w of referenceJson) {
       if (typeof w === "string" && w.trim()) {

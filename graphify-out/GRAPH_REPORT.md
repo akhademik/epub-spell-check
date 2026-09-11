@@ -4,31 +4,31 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 522 nodes · 907 edges · 30 communities (22 shown, 3 thin omitted)
+- 518 nodes · 900 edges · 29 communities (21 shown, 3 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e67f28e0`
+- Built from commit: `cc7c2953`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - state.svelte.ts
-- analyzer.ts
+- analysis-core.ts
 - EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION
 - dict-quality.ts
 - AppStateModel
-- epub-parser.ts
+- analyzer.ts
 - devDependencies
 - biome.json
 - scripts
+- epub-parser.ts
 - compilerOptions
-- utils/dictionary.ts
 - audit.ts
 - merge-dicts.ts
-- DictAuditPanel.svelte
 - [name].ts
+- DictAuditPanel.svelte
 - 🧱 2. Kiến trúc Hệ Thống Kiểm Thử 4 Tầng (4-Tier Testing Strategy)
 - knip.json
 - auth-status.ts
@@ -36,7 +36,6 @@
 - pull-dicts-from-kv.ts
 - AnalysisWorkerManager
 - Soát lỗi chính tả EPUB (Tiếng Việt)
-- fetch-reference-dict.ts
 - login.ts
 - seed-kv.sh
 
@@ -48,9 +47,9 @@
 5. `CheckSettings` - 14 edges
 6. `compilerOptions` - 14 edges
 7. `ErrorInstance` - 13 edges
-8. `Logger` - 13 edges
+8. `Logger` - 12 edges
 9. `onRequestGet()` - 11 edges
-10. `findTieredSuggestions()` - 10 edges
+10. `saveStorage()` - 10 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `applyFixesAndRepack()` --references--> `jszip`  [EXTRACTED]
@@ -61,37 +60,37 @@
   scripts/clean-dicts.ts → src/utils/dict-quality.ts
 - `runAudit()` --calls--> `fetchDictionaryAudit()`  [EXTRACTED]
   src/components/admin/DictAuditPanel.svelte → src/utils/dict-admin.ts
-- `tieredSuggestions` --calls--> `findTieredSuggestions()`  [EXTRACTED]
-  src/components/ContextView.svelte → src/utils/analyzer.ts
+- `scanDictionaryCrossReference()` --calls--> `getAlternateToneStyle()`  [EXTRACTED]
+  src/utils/dict-quality.ts → src/utils/analysis-core.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (30 total, 3 thin omitted)
+## Communities (29 total, 3 thin omitted)
 
 ### Community 0 - "state.svelte.ts"
 Cohesion: 0.05
-Nodes (36): contextSegments, currentAppliedWord, customFixInput, isCurrentInstanceResolved, isTitleCase(), isUpperCase(), tieredSuggestions, CONTEXT_LENGTH_CHARS (+28 more)
+Nodes (37): contextSegments, currentAppliedWord, customFixInput, isCurrentInstanceResolved, isTitleCase(), isUpperCase(), tieredSuggestions, CONTEXT_LENGTH_CHARS (+29 more)
 
-### Community 1 - "analyzer.ts"
-Cohesion: 0.11
-Nodes (36): MAX_PRIMARY_SUGGESTION_COUNT, MAX_SECONDARY_SUGGESTION_COUNT, MAX_SUGGESTION_COUNT, CheckSettings, Dictionaries, Dictionary, DictionaryStatus, IndexedDictionary (+28 more)
+### Community 1 - "analysis-core.ts"
+Cohesion: 0.14
+Nodes (27): CheckSettings, Dictionaries, Dictionary, DictionaryStatus, TextContentBlock, ErrorGroup, ErrorType, AppState (+19 more)
 
 ### Community 2 - "EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION"
 Cohesion: 0.05
 Nodes (41): 10. PDF → EPUB USER FLOW, 11. EPUB EDITOR E2E, 12. EPUB CLEANER E2E, 13. EPUB VALIDATOR E2E, 14. IMAGE PROCESSING E2E, 15. WORKER TESTING, 16. REGRESSION TEST, 17. OUTPUT FILE VALIDATION (+33 more)
 
 ### Community 3 - "dict-quality.ts"
-Cohesion: 0.10
+Cohesion: 0.09
 Nodes (34): ALL_DICTS, backupAndWrite(), CliOptions, DICT_TO_FILE, getNamespaceIdFromWrangler(), main(), parseArgs(), readDictContent() (+26 more)
 
 ### Community 4 - "AppStateModel"
-Cohesion: 0.12
-Nodes (3): AppStateModel, sanitizeFilename(), saveStorage()
+Cohesion: 0.11
+Nodes (6): AppStateModel, sanitizeFilename(), saveStorage(), ErrorInstance, clearSuggestionCache(), updateDictionaryWords()
 
-### Community 5 - "epub-parser.ts"
-Cohesion: 0.12
-Nodes (14): BookMetadata, EpubContent, extractLeafTextElements(), LEAF_BLOCK_SELECTOR, parseEpub(), parseHtmlOrXml(), applyFixesAndRepack(), applyFixesToDocument() (+6 more)
+### Community 5 - "analyzer.ts"
+Cohesion: 0.11
+Nodes (23): MAX_PRIMARY_SUGGESTION_COUNT, MAX_SECONDARY_SUGGESTION_COUNT, IndexedDictionary, TieredSuggestions, getBaseWordWithoutD(), findSuggestions(), findTieredSuggestions(), suggestionCache (+15 more)
 
 ### Community 6 - "devDependencies"
 Cohesion: 0.07
@@ -105,13 +104,13 @@ Nodes (27): noSvgWithoutTitle, source, assist, actions, files, includes, formatt
 Cohesion: 0.07
 Nodes (26): jszip, dependencies, jszip, name, private, scripts, build, check (+18 more)
 
-### Community 9 - "compilerOptions"
+### Community 9 - "epub-parser.ts"
+Cohesion: 0.15
+Nodes (13): BookMetadata, EpubContent, extractLeafTextElements(), LEAF_BLOCK_SELECTOR, parseEpub(), parseHtmlOrXml(), applyFixesAndRepack(), applyFixesToDocument() (+5 more)
+
+### Community 10 - "compilerOptions"
 Cohesion: 0.08
 Nodes (23): DOM, DOM.Iterable, ES2022, src/**/*.d.ts, src/**/*.js, src/**/*.svelte, src/**/*.ts, compilerOptions (+15 more)
-
-### Community 10 - "utils/dictionary.ts"
-Cohesion: 0.19
-Nodes (15): DICTIONARY_VERSION, getBaseWordWithoutD(), findTieredSuggestions(), buildIndexedDictionary(), dictCacheKey(), fetchDictContent(), fetchLocalDict(), getDictionary() (+7 more)
 
 ### Community 11 - "audit.ts"
 Cohesion: 0.24
@@ -121,13 +120,13 @@ Nodes (14): ALLOWED_NAMES, auditCacheKey(), auditVersionKey(), contentKey(), Env
 Cohesion: 0.21
 Nodes (13): deduplicateAndSort(), formatMergeStats(), mergeDictFiles(), MergeStats, mergeWords(), parseDictMarkdown(), repeatedUnitSpan(), SECTION_TO_FILE (+5 more)
 
-### Community 13 - "DictAuditPanel.svelte"
-Cohesion: 0.13
-Nodes (8): activeClusters, handleIgnoreCluster(), handleSyncToCloudflare(), runAudit(), tierAFindings, tierBFindings, tierCFindings, ignoreDuplicatePair()
-
-### Community 14 - "[name].ts"
+### Community 13 - "[name].ts"
 Cohesion: 0.29
 Nodes (11): ALLOWED_NAMES, contentKey(), Env, isAuthenticated(), jsonResponse(), KVNamespace, onRequestGet(), onRequestPost() (+3 more)
+
+### Community 14 - "DictAuditPanel.svelte"
+Cohesion: 0.15
+Nodes (6): activeClusters, handleSyncToCloudflare(), runAudit(), tierAFindings, tierBFindings, tierCFindings
 
 ### Community 15 - "🧱 2. Kiến trúc Hệ Thống Kiểm Thử 4 Tầng (4-Tier Testing Strategy)"
 Cohesion: 0.15
@@ -153,10 +152,6 @@ Nodes (6): ALL_DICTS, DICT_TO_FILE, DictName, getNamespaceId(), main(), IMPORTAN
 Cohesion: 0.40
 Nodes (4): Cấu trúc từ điển (`public/`), Phát triển & Kiểm thử, Soát lỗi chính tả EPUB (Tiếng Việt), Tính năng chính
 
-### Community 22 - "fetch-reference-dict.ts"
-Cohesion: 0.83
-Nodes (3): fetchDicFile(), main(), parseHunspellDic()
-
 ## Knowledge Gaps
 - **195 isolated node(s):** `PersistedContainer`, `AuthStatusResponse`, `DictAuditResponse`, `DictDetailResponse`, `DictUpdateResult` (+190 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 229 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
@@ -166,16 +161,16 @@ Nodes (3): fetchDicFile(), main(), parseHunspellDic()
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `applyFixesAndRepack()` connect `epub-parser.ts` to `state.svelte.ts`, `scripts`, `AppStateModel`?**
-  _High betweenness centrality (0.128) - this node is a cross-community bridge._
+  _High betweenness centrality (0.130) - this node is a cross-community bridge._
 - **Why does `jszip` connect `scripts` to `epub-parser.ts`?**
-  _High betweenness centrality (0.123) - this node is a cross-community bridge._
+  _High betweenness centrality (0.125) - this node is a cross-community bridge._
 - **What connects `PersistedContainer`, `AuthStatusResponse`, `DictAuditResponse` to the rest of the system?**
   _195 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `state.svelte.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.05384150030248034 - nodes in this community are weakly interconnected._
-- **Should `analyzer.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05201636469900643 - nodes in this community are weakly interconnected._
+- **Should `analysis-core.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.13742071881606766 - nodes in this community are weakly interconnected._
 - **Should `EBOOK-TOOLS — FULL REGRESSION TESTING INSTRUCTION` be split into smaller, more focused modules?**
   _Cohesion score 0.047619047619047616 - nodes in this community are weakly interconnected._
 - **Should `dict-quality.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.09743589743589744 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09358974358974359 - nodes in this community are weakly interconnected._
