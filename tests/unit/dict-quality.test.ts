@@ -262,13 +262,13 @@ describe("Dictionary Quality & Garbage Detection Module", () => {
       clearReferenceDictionaryCache()
     })
 
-    it("verifies loanwords and modern words (cafe, boa, alô, campuchia) are present in merged reference (Task 6.1)", async () => {
+    it("verifies transliterated loanwords (alô, cà-phê, bê-tông, sô-cô-la) are present in reference dataset", async () => {
       const { loadReferenceDictionary } = await import(
         "../../src/utils/reference-dict"
       )
       const refDict = await loadReferenceDictionary()
 
-      const loanwords = ["cafe", "boa", "alô", "campuchia"]
+      const loanwords = ["alô", "cà-phê", "bê-tông", "sô-cô-la"]
       const findings = scanDictionaryCrossReference("vn", loanwords, refDict)
       expect(findings.length).toBe(0)
     })
