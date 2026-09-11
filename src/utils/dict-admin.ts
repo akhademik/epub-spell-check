@@ -1,3 +1,10 @@
+import {
+  auditDictionary,
+  type CrossDictAuditResult,
+  detectCrossDictDuplicates
+} from "./dict-quality"
+import { loadReferenceDictionary } from "./reference-dict"
+
 export type DictSourceName = "vn" | "non-vn" | "custom" | "names"
 
 export interface DictUpdateResult {
@@ -69,39 +76,62 @@ export async function checkAuthStatus(
   }
 }
 
-/**
- * Fetches the full dictionary word list as an array along with metadata.
- */
 export async function fetchDictionaryDetails(
-  dictName: DictSourceName
+  dictName: DictSourceName,
+  token?: string
 ): Promise<DictDetailResponse> {
-  const res = await fetch(`/api/dict/${dictName}?format=json`, {
-    headers: {
-      accept: "application/json"
-    }
-  })
+  const headers: Record<string, string> = {
+    accept: "application/json"
+  }
+  if (token?.trim()) {
+    headers.authorization = `Bearer ${token.trim()}`
+  }
 
-  if (res.ok) {
-    const contentType = res.headers.get("content-type")
-    if (contentType?.includes("application/json")) {
-      return (await res.json()) as DictDetailResponse
+  try {
+    const res = await fetch(`/api/dict/${dictName}?format=json`, { headers })
+    if (res.ok) {
+      const contentType = res.headers.get("content-type")
+      if (contentType?.includes("application/json")) {
+        const data = (await res.json()) as DictDetailResponse
+        if (data && Array.isArray(data.words)) {
+          return data
+        }
+      }
     }
+  } catch {
+    /* fallback to local static dict file */
   }
 
   // Fallback if API only returned plain text (e.g. static server / fallback)
-  const textRes = await fetch(`/${dictName}-dict.txt`)
-  const text = await textRes.text()
-  const words = text
-    .split(/\r?\n/)
-    .map((w) => w.trim())
-    .filter(Boolean)
-    .sort((a, b) => a.localeCompare(b, "vi"))
+  try {
+    const textRes = await fetch(`/${dictName}-dict.txt`)
+    if (textRes.ok) {
+      const contentType = textRes.headers.get("content-type")
+      if (!contentType?.includes("text/html")) {
+        const text = await textRes.text()
+        const words = text
+          .split(/\r?\n/)
+          .map((w) => w.trim())
+          .filter(Boolean)
+          .sort((a, b) => a.localeCompare(b, "vi"))
+
+        return {
+          name: dictName,
+          totalCount: words.length,
+          updatedAt: new Date().toISOString(),
+          words
+        }
+      }
+    }
+  } catch {
+    /* fallback to empty */
+  }
 
   return {
     name: dictName,
-    totalCount: words.length,
+    totalCount: 0,
     updatedAt: new Date().toISOString(),
-    words
+    words: []
   }
 }
 
@@ -211,9 +241,7 @@ export async function fetchDictionaryAudit(
   }
 
   // Fallback for local development if Cloudflare Functions are not running
-  const details = await fetchDictionaryDetails(dictName)
-  const { auditDictionary } = await import("./dict-quality")
-  const { loadReferenceDictionary } = await import("./reference-dict")
+  const details = await fetchDictionaryDetails(dictName, token)
   const referenceWords =
     dictName === "vn" ? await loadReferenceDictionary() : undefined
   return auditDictionary(dictName, details.words, new Set(), referenceWords)
@@ -246,27 +274,22 @@ export async function ignoreDuplicatePair(
   }
 }
 
-export type CrossDictAuditResponse =
-  import("./dict-quality").CrossDictAuditResult
+export type CrossDictAuditResponse = CrossDictAuditResult
 
-/**
- * Fetches all 4 dictionaries and runs cross-dictionary overlap audit.
- */
 export async function fetchCrossDictAudit(
-  _token?: string
+  token?: string
 ): Promise<CrossDictAuditResponse> {
   const [vn, names, nonVn, custom] = await Promise.all([
-    fetchDictionaryDetails("vn"),
-    fetchDictionaryDetails("names"),
-    fetchDictionaryDetails("non-vn"),
-    fetchDictionaryDetails("custom")
+    fetchDictionaryDetails("vn", token),
+    fetchDictionaryDetails("names", token),
+    fetchDictionaryDetails("non-vn", token),
+    fetchDictionaryDetails("custom", token)
   ])
 
-  const { detectCrossDictDuplicates } = await import("./dict-quality")
   return detectCrossDictDuplicates({
-    vn: vn.words,
-    names: names.words,
-    "non-vn": nonVn.words,
-    custom: custom.words
+    vn: Array.isArray(vn?.words) ? vn.words : [],
+    names: Array.isArray(names?.words) ? names.words : [],
+    "non-vn": Array.isArray(nonVn?.words) ? nonVn.words : [],
+    custom: Array.isArray(custom?.words) ? custom.words : []
   })
 }

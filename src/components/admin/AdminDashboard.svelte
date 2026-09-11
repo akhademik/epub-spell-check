@@ -73,7 +73,7 @@
     selectedWords = new Set()
     deleteConfirmWord = null
     try {
-      currentDictData = await fetchDictionaryDetails(dict)
+      currentDictData = await fetchDictionaryDetails(dict, appState.dictAdminToken)
     } catch (err) {
       appState.showToast(
         err instanceof Error ? err.message : "Lỗi khi tải danh sách từ",

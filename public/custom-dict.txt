@@ -280,7 +280,6 @@ Kindle
 Kleenex
 Korea
 Kroger
-ktt
 KTX
 Laos
 LCD
@@ -365,7 +364,6 @@ NATO
 Navarre
 NBA
 NBC
-ncs
 Neosporin
 Nepal
 Nespresso
@@ -391,7 +389,6 @@ NPC
 NPR
 NSA
 NSAID
-nsnd
 Nvidia
 NVIDIA
 nxb
@@ -427,7 +424,6 @@ PD
 PDF
 Pepsi
 PET
-pgs
 PIN
 PKU
 PNG
@@ -443,10 +439,7 @@ Pringles
 Pristiq
 Prius
 pt
-ptcs
-pts
 ptsc
-ptth
 QR
 RadioShack
 ram
@@ -472,11 +465,8 @@ Russia
 Saladmaster
 Samsung
 SBB
-scn
 Scotland
 Sennheiser
-sgk
-shtt
 sim
 Singapore
 SLR
