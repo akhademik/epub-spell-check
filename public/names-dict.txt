@@ -611,7 +611,6 @@ Aquinas
 Aquitaine
 Aquitani
 Aquitania
-Ar
 Arab
 Arabella
 Arabia
@@ -2034,7 +2033,6 @@ Cambyse
 Cambyses
 Camden
 Camelot
-Camera
 Camford
 Camiach
 Campan
@@ -2767,7 +2765,6 @@ Cómo
 Comori
 Compton
 Comum
-Concerto
 Concha
 Concorde
 Concordia
@@ -3618,7 +3615,6 @@ Dionne
 Dionysius
 Dionysus
 Dios
-Dioxin
 Diploma
 Direct
 Dirham
@@ -4176,7 +4172,6 @@ Ellie
 Ellington
 Elliot
 Elliott
-Ellipse
 Ellis
 Ellsworth
 Elly
@@ -4522,7 +4517,6 @@ Fagnart
 Fagon
 Fahey
 Fahne
-Fahrenheit
 Fain
 Fairbairn
 Fairbank
@@ -4653,7 +4647,6 @@ Ferrier
 Ferris
 Fess
 Feste
-Festival
 Festschrift
 Feta
 Feud
@@ -4764,7 +4757,6 @@ Floria
 Florian
 Florida
 Florimond
-Florin
 Florine
 Florist
 Florrie
@@ -4818,7 +4810,6 @@ Forger
 Forgery
 Forgettum
 Forli
-Formaldehyd
 Formation
 Formiae
 Forrest
@@ -5713,7 +5704,6 @@ Hallo
 Hallorann
 Halloween
 Halo
-Halogen
 Halsey
 Halsinge
 Halsingland
@@ -5804,7 +5794,6 @@ Harley
 Harloy
 Harmenszoon
 Harmodius
-Harmonica
 Harmonice
 Harmony
 Harold
@@ -6093,7 +6082,6 @@ Hitler
 Hittile
 Hittite
 Hiwi
-Hk
 Hl
 Hm
 Hobart
@@ -7078,7 +7066,6 @@ Kalinnikov
 Kalisha
 Kalishxa
 Kalita
-Kalium
 Kallie
 Kalmyk
 Kalorama
@@ -7132,9 +7119,7 @@ Karakorum
 Karakozov
 Karamazov
 Karan
-Karaoke
 Karasik
-Karate
 Karatedo
 Karbe
 Kareem
@@ -7412,7 +7397,6 @@ Kimbery
 Kimbra
 Kimi
 Kimiko
-Kimono
 Kinderman
 Kindersley
 Kindi
@@ -8847,7 +8831,6 @@ Mara
 Maranda
 Marans
 Marat
-Marathon
 Marathus
 Marazeula
 Marbank
@@ -8965,7 +8948,6 @@ Markets
 Markham
 Marking
 Markita
-Markka
 Markos
 Marks
 Markson
@@ -9042,7 +9024,6 @@ Marvel
 Marvin
 Marvis
 Marxand
-Marxist
 Mary
 Marya
 Maryam
@@ -9074,7 +9055,6 @@ Masoud
 Mass
 Massachu
 Massachusetts
-Massage
 Massalia
 Massensik
 Massiach
@@ -9085,7 +9065,6 @@ Massive
 Masson
 Master
 Masters
-Mastic
 Mata
 Matakana
 Match
@@ -10853,7 +10832,6 @@ Patch
 Patches
 Patek
 Patel
-Patent
 Patents
 Patersons
 Path
@@ -11493,7 +11471,6 @@ Prouvaire
 Provence
 Proverbs
 Providence
-Province
 Prudence
 Prudhomme
 Prusias
@@ -12098,7 +12075,6 @@ Ronni
 Ronnie
 Ronny
 Ronson
-Rontgen
 Roofbeam
 Roone
 Roosevelt
@@ -12311,7 +12287,6 @@ Sadako
 Sadder
 Saddler
 Sade
-Sadi
 Sadie
 Sadler
 Sadye
@@ -12401,7 +12376,6 @@ Samoa
 Samochodów
 Samos
 Samothrace
-Samovar
 Sample
 Samples
 Sampson
@@ -12621,7 +12595,6 @@ Scotty
 Scouse
 Scowcroft
 Scowrer
-Scrabble
 Scribner
 Scribonius
 Scrip
@@ -12686,7 +12659,6 @@ Selo
 Semcor
 Semge
 Semidubye
-Seminar
 Seminoff
 Semiramis
 Sémire
@@ -13279,7 +13251,6 @@ Songs
 Sonia
 Sonic
 Sonja
-Sonnet
 Sonnez
 Sonny
 Sons

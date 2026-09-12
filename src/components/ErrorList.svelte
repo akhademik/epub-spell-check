@@ -2,7 +2,6 @@
   import { ALL_ERROR_TYPES, appState } from "../state.svelte"
   import type { ErrorGroup, ErrorType } from "../types/errors"
 
-  let searchQuery = $state("")
   let visibleCount = $state(30)
 
   function getDotColor(type: string): string {
@@ -47,25 +46,7 @@
     }
   }
 
-  const filteredList = $derived.by(() => {
-    let list = [...appState.currentFilteredErrors]
-
-    // Search filter
-    if (searchQuery.trim()) {
-      const q = searchQuery.trim().toLowerCase()
-      list = list.filter(
-        (g) =>
-          g.word.toLowerCase().includes(q) || g.reason.toLowerCase().includes(q)
-      )
-    }
-
-    // Default sort by Vietnamese alphabet collation (localeCompare 'vi')
-    list.sort((a, b) =>
-      a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
-    )
-
-    return list
-  })
+  const filteredList = $derived(appState.currentFilteredErrors)
 
   // Lazy loaded slice capped at visibleCount
   const displayedErrors = $derived(filteredList.slice(0, visibleCount))
@@ -108,6 +89,29 @@
     event.stopPropagation()
     appState.ignoreAndAdvance(group.word, group.id)
   }
+
+  // Auto-scroll selected item to vertical center when navigating
+  let listContainer: HTMLElement | undefined = $state()
+
+  $effect(() => {
+    const selectedId = appState.currentGroup?.id
+    if (!selectedId || !listContainer) return
+
+    // Find the index of the selected item in the filtered list
+    const index = filteredList.findIndex((g) => g.id === selectedId)
+    if (index >= 0 && index >= visibleCount) {
+      visibleCount = Math.min(filteredList.length, index + 30)
+    }
+
+    // Scroll selected element into vertical center of the list smoothly
+    setTimeout(() => {
+      if (!listContainer) return
+      const el = listContainer.querySelector(`[data-group-id="${selectedId}"]`) as HTMLElement | null
+      if (el) {
+        el.scrollIntoView({ block: "center", behavior: "smooth" })
+      }
+    }, 0)
+  })
 </script>
 
 <div class="flex flex-col h-full max-h-full min-h-0 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
@@ -127,7 +131,7 @@
         </svg>
         <input
           type="text"
-          bind:value={searchQuery}
+          bind:value={appState.errorSearchQuery}
           oninput={() => (visibleCount = 30)}
           placeholder="Tìm từ lỗi..."
           class="w-full pl-9 pr-3 py-1.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
@@ -184,6 +188,7 @@
   <!-- Error Items List with Strictly Bounded Height, Soft Scrolling, and Bottom Padding -->
   <div class="relative flex-1 min-h-0 overflow-hidden">
     <div
+      bind:this={listContainer}
       class="h-full overflow-y-auto p-3 pb-24 space-y-1.5 overscroll-contain scroll-smooth"
       onscroll={handleScroll}
       tabindex="-1"
@@ -208,8 +213,9 @@
         {#each displayedErrors as group (group.id)}
           {@const isSelected = appState.currentGroup?.id === group.id}
           <div
+            data-group-id={group.id}
             class="flex items-stretch w-full rounded-xl transition-all duration-150 border {isSelected
-              ? 'bg-blue-950/60 border-blue-600 shadow-md shadow-blue-950/50'
+              ? 'bg-blue-900/40 border-blue-500 ring-2 ring-blue-500/50 shadow-lg shadow-blue-950/80 scale-[1.01]'
               : 'bg-slate-950/40 border-slate-800/80 hover:bg-slate-800/60 hover:border-slate-700'}"
           >
             <!-- Select Button -->
@@ -220,10 +226,10 @@
             >
               <div class="w-full flex items-center gap-3">
                 <span class="w-3.5 h-3.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
-                <span class="font-sans text-[20px] font-bold tracking-normal leading-tight truncate {isSelected ? 'text-blue-200' : 'text-slate-100'}">
+                <span class="font-sans text-[20px] font-bold tracking-normal leading-tight truncate {isSelected ? 'text-blue-100 font-extrabold' : 'text-slate-100'}">
                   {group.word}
                 </span>
-                <span class="text-xs px-2 py-0.5 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700/70 shrink-0 font-medium">
+                <span class="text-xs px-2 py-0.5 rounded-md {isSelected ? 'bg-blue-950 text-blue-200 border border-blue-700' : 'bg-slate-800/90 text-slate-300 border border-slate-700/70'} shrink-0 font-medium">
                   {getBadgeLabel(group.type)}
                 </span>
                 {#if group.contexts.some((ctx) => ctx.resolved || appState.appliedFixes.has(appState.getInstanceKey(ctx)))}
@@ -234,7 +240,7 @@
                     <span>Đang sửa</span>
                   </span>
                 {/if}
-                <span class="ml-auto bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-2.5 py-0.5 rounded-full shrink-0">
+                <span class="ml-auto {isSelected ? 'bg-blue-800 text-blue-100 border-blue-600' : 'bg-slate-800 text-slate-300 border-slate-700'} border text-xs font-bold px-2.5 py-0.5 rounded-full shrink-0">
                   {group.contexts.length}
                 </span>
               </div>

@@ -1,6 +1,25 @@
 <script lang="ts">
   import { appState } from "../state.svelte"
+
+  let fileInputElement: HTMLInputElement | undefined = $state()
+
+  function handleFileSelected(event: Event) {
+    const target = event.target as HTMLInputElement
+    const file = target.files?.[0]
+    if (file) {
+      appState.handleFile(file)
+    }
+    target.value = ""
+  }
 </script>
+
+<input
+  bind:this={fileInputElement}
+  type="file"
+  accept=".epub,.txt,.md,.markdown"
+  class="hidden"
+  onchange={handleFileSelected}
+/>
 
 <header class="sticky top-0 z-30 border-b shadow-md bg-slate-900/95 backdrop-blur border-slate-800">
   <div class="flex flex-wrap items-center justify-between max-w-7xl gap-4 px-4 py-3 mx-auto">
@@ -78,26 +97,12 @@
         class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all {appState.currentView === 'admin'
           ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-900/30'
           : 'text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 border-slate-700'}"
-        title="Mở bảng điều khiển quản trị từ điển"
+        title="Mở bảng điều khiển Admin"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
-        <span>{appState.currentView === "admin" ? "Đang Quản Trị" : "Quản Trị Từ Điển"}</span>
-      </button>
-
-      <!-- Settings Button -->
-      <button
-        type="button"
-        onclick={() => appState.openModal("settings")}
-        class="p-2 transition-colors rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 relative"
-        title="Cấu hình soát lỗi"
-        aria-label="Cấu hình"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
+        <span>{appState.currentView === "admin" ? "Đang Quản Trị" : "Admin"}</span>
       </button>
 
       {#if appState.loadedTextContent.length > 0}
@@ -106,7 +111,7 @@
           <button
             type="button"
             onclick={() => appState.exportFixedEpub()}
-            class="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold text-white transition-all rounded-xl shadow-lg bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/40 animate-pulse hover:animate-none"
+            class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white transition-all rounded-xl shadow-md bg-emerald-600 hover:bg-emerald-500 border border-emerald-500 shadow-emerald-900/30 animate-pulse hover:animate-none"
             title={`Tải về tệp ${appState.fileType} đã được sửa các lỗi chính tả`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -120,7 +125,7 @@
         <button
           type="button"
           onclick={() => appState.exportErrors()}
-          class="flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium text-slate-300 transition-colors rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700"
+          class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white transition-colors rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700"
           title="Tải về danh sách tất cả các từ lỗi"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -129,11 +134,12 @@
           <span class="hidden sm:inline">Xuất lỗi</span>
         </button>
 
-        <!-- Reset Button -->
+        <!-- Choose Another File Button (Direct File Browser) -->
         <button
           type="button"
-          onclick={() => appState.resetApp()}
-          class="flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium text-white transition-colors bg-blue-600 rounded-xl shadow-lg hover:bg-blue-500 shadow-blue-900/20"
+          onclick={() => fileInputElement?.click()}
+          class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white transition-colors bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md border border-blue-500 shadow-blue-900/30"
+          title="Chọn tệp khác để soát lỗi"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

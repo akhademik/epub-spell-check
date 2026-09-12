@@ -17,38 +17,40 @@ export function getFilteredErrors(
     whitelistArray.map((w) => w.toLowerCase().trim()).filter(Boolean)
   )
 
-  return allDetectedErrors.filter((group) => {
-    // 0. Resolved errors (already fixed by user)
-    if (group.resolved) return false
+  return allDetectedErrors
+    .filter((group) => {
+      // 0. Resolved errors (already fixed by user)
+      if (group.resolved) return false
 
-    // 0b. Type filter (multi-toggle error types)
-    if (enabledTypes && !enabledTypes.has(group.type)) return false
+      // 0b. Type filter (multi-toggle error types)
+      if (enabledTypes && !enabledTypes.has(group.type)) return false
 
-    const lowerWord = group.word.toLowerCase()
+      const lowerWord = group.word.toLowerCase()
 
-    // 1. Whitelist filter (always filters out ignored words)
-    if (whitelistSet.has(lowerWord)) return false
+      // 1. Whitelist filter (always filters out ignored words)
+      if (whitelistSet.has(lowerWord)) return false
 
-    // 2. Custom dictionary & Names dictionary (always filters out valid custom abbreviations & names)
-    if (
-      dictionaries.custom.has(group.word) ||
-      (dictionaries.names &&
-        (dictionaries.names.has(group.word) ||
-          dictionaries.names.has(lowerWord)))
-    ) {
-      return false
-    }
+      // 2. Custom dictionary & Names dictionary (always filters out valid custom abbreviations & names)
+      if (
+        dictionaries.custom.has(group.word) ||
+        (dictionaries.names &&
+          (dictionaries.names.has(group.word) ||
+            dictionaries.names.has(lowerWord)))
+      ) {
+        return false
+      }
 
-    // 3. Non-Vietnamese error toggle
-    if (!checkSettings.nonVietnamese && group.type === "NonVietnamese") {
-      return false
-    }
+      // 3. Non-Vietnamese error toggle
+      if (!checkSettings.nonVietnamese && group.type === "NonVietnamese") {
+        return false
+      }
 
-    // 4. Vietnamese error toggle (covers Dictionary, Uppercase, Typo, Spelling, SpecialCharacter)
-    if (!checkSettings.vietnamese && group.type !== "NonVietnamese") {
-      return false
-    }
+      // 4. Vietnamese error toggle (covers Dictionary, Uppercase, Typo, Spelling, SpecialCharacter)
+      if (!checkSettings.vietnamese && group.type !== "NonVietnamese") {
+        return false
+      }
 
-    return true
-  })
+      return true
+    })
+    .sort((a, b) => a.word.localeCompare(b.word, "vi", { sensitivity: "base" }))
 }
