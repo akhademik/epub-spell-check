@@ -55,7 +55,7 @@ async function main() {
       const remoteContent = execSync(cmd, {
         encoding: "utf8",
         stdio: ["pipe", "pipe", "pipe"],
-        timeout: 5000
+        timeout: 15000
       })
 
       // Normalize line endings
