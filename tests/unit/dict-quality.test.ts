@@ -131,6 +131,26 @@ describe("Dictionary Quality & Garbage Detection Module", () => {
       const tierA = findings.filter((f) => f.tier === "A")
       expect(tierA).toEqual([])
     })
+
+    it("does NOT flag valid Vietnamese 6-char words with ngh- (nghếch, nghênh, etc.) in reference dict as garbage", () => {
+      const vnWords = [
+        "nghếch",
+        "nghệch",
+        "nghênh",
+        "nghềnh",
+        "nghểnh",
+        "nghễnh",
+        "nghịch",
+        "nghinh",
+        "nghỉnh",
+        "nghĩnh"
+      ]
+      const findings = scanDictionaryForGarbage("vn", vnWords)
+      expect(findings).toEqual([])
+
+      const auditRes = auditDictionary("vn", vnWords)
+      expect(auditRes.garbage).toEqual([])
+    })
   })
 
   describe("Fuzzy Duplicate Detection & Clustering", () => {
