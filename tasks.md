@@ -1,1 +1,144 @@
-Andromeda, Asteroid, Ceres, Comet, Constellation, Earth, Galaxy, Jupiter, Mars, Mercury, Meteor, Milky, Moon, Nebula, Neptune, Orbit, Orion, Planet, Pluto, Saturn, Sirius, Solar, Star, Sun, Uranus, Venus, Abbey, Abbot, Allah, Altar, Amen, Angel, Angels, Apostle, Archbishop, Ark, Ashram, Ayatollah, Baptist, Basilica, Bible, Bishop, Brahma, Buddha, Buddhism, Buddhist, Caliph, Caliphate, Cardinal, Cathedral, Catholic, Chapel, Christ, Christian, Christianity, Church, Clergy, Convent, Covenant, Cross, Crusade, Deacon, Demon, Devil, Dharma, Diocese, Disciple, Druid, Eden, Evangelical, Faith, Friar, Genesis, Gentile, Gospel, Guru, Heaven, Hell, Holy, Imam, Incarnation, Islam, Islamic, Jehovah, Jesuit, Jesus, Jihad, Karma, Koran, Lama, Liturgy, Lucifer, Messiah, Methodist, Minister, Miracle, Mission, Missionary, Monastery, Monk, Mosque, Nirvana, Nun, Orthodox, Pagan, Papacy, Papal, Paradise, Parish, Parson, Pastor, Patriarch, Pilgrim, Pilgrimage, Pope, Prayer, Priest, Prophet, Protestant, Psalm, Purgatory, Rabbi, Ramadan, Resurrection, Saint, Salvation, Sanctuary, Satan, Scripture, Sermon, Shaman, Shrine, Sin, Synagogue, Temple, Theology, Trinity, Vatican, Vicar, Virgin, Worship, Yahweh, Zen, Algorithm, Android, App, Apple, Application, Audio, Backup, Bandwidth, Binary, Bios, Bit, Bitcoin, Bluetooth, Broadband, Browser, Bug, Byte, Cache, Chip, Chrome, Client, Cloud, Code, Computer, Cpu, Cryptography, Cyber, Database, Desktop, Digital, Disk, Domain, Download, Driver, Email, Ethernet, Fiber, File, Firewall, Firmware, Flash, Folder, Freeware, Gigabyte, Gps, Hacker, Hardware, Hosting, Html, Http, Icon, Interface, Internet, Java, Linux, Mac, Malware, Megabyte, Modem, Motherboard, Mouse, Network, Offline, Online, Operating, Pixel, Platform, Podcast, Port, Processor, Program, Protocol, Ram, Resolution, Rom, Router, Scanner, Screen, Script, Server, Silicon, Software, Spyware, Storage, Streaming, System, Tablet, Terabyte, Terminal, Trojan, Unix, Upload, Url, Usb, Virus, Web, Website, Wi-Fi, Windows, Wireless, Acid, Anatomy, Animal, Antibody, Apple, Bacteria, Bird, Blood, Bone, Brain, Cat, Cell, Chemical, Chrome, Clone, Corona, Deer, Disease, DNA, Dog, Enzyme, Fish, Flora, Flower, Forest, Fungus, Gene, Generic, Hormone, Horse, Infection, Insect, Leaf, Lion, Liver, Lung, Mammal, Marine, Medical, Medicine, Muscle, Nature, Nerve, Ocean, Organ, Pathology, Physiology, Plant, Protein, Rain, River, RNA, Root, Sea, Skeleton, Skin, Species, Stone, Tissue, Tree, Vaccine, Vein, Virus, Water, Wind, Wood, Yeast, Angle, Atom, Axis, Calculus, Calorie, Celsius, Centimeter, Chemistry, Circle, Compound, Density, Diameter, Dimension, Distance, Electron, Element, Energy, Equation, Fahrenheit, Foot, Force, Formula, Frequency, Friction, Gravity, Heat, Inch, Kilogram, Kilometer, Kinetic, Laser, Light, Liter, Logic, Mass, Mathematics, Matrix, Matter, Meter, Mile, Molecule, Motion, Neutron, Nuclear, Nucleus, Number, Optics, Orbit, Ounce, Physics, Pound, Power, Pressure, Proton, Quantum, Radius, Ratio, Relativity, Scale, Science, Second, Speed, Square, Temperature, Theory, Time, Triangle, Velocity, Volume, Wave, Weight, Yard, Action, Activity, Afternoon, Age, Agreement, Air, Alarm, Alcohol, Ambition, Analysis, Apartment, Area, Armor, Army, Art, Article, Attack, Attempt, Authority, Auto, Baby, Back, Ball, Bank, Bar, Base, Battle, Beach, Beauty, Bed, Beer, Bell, Bill, Birth, Block, Board, Boat, Body, Book, Border, Bottle, Box, Boy, Branch, Bread, Bridge, Building, Bus, Business, Butter, Button, Camp, Capital, Car, Card, Care, Case, Castle, Cause, Center, Century, Chair, Chance, Change, Channel, Character, Charge, Chart, Check, Cheese, Child, City, Class, Clock, Clothes, Club, Coast, Coffee, Color, Comfort, Command, Company, Concept, Condition, Conference, Control, Cook, Copper, Copy, Corner, Cost, Cotton, Country, Course, Court, Cover, Credit, Crime, Crisis, Crow, Crowd, Crown, Culture, Cup, Current, Curtain, Custom, Damage, Danger, Dark, Date, Daughter, Day, Death, Debt, Decision, Degree, Demand, Department, Design, Desire, Desk, Detail, Device, Diamond, Diet, Difference, Direction, Director, Disaster, Discovery, Discussion, Distance, Distribution, Division, Doctor, Document, Dollar, Door, Doubt, Drama, Dream, Dress, Drink, Driver, Duty, Early, East, Economy, Edge, Education, Effect, Effort, Election, Element, Empire, End, Enemy, Engine, Entry, Error, Event, Evidence, Example, Exchange, Existence, Experience, Expert, Fact, Factor, Factory, Family, Farm, Fashion, Fast, Fat, Father, Fear, Feature, Feeling, Field, Fight, Figure, Film, Final, Finance, Fire, Firm, Flag, Flight, Floor, Focus, Food, Force, Form, Fort, Frame, Freedom, Friend, Front, Fruit, Function, Game, Garden, Gas, Gate, General, Gift, Girl, Glass, Goal, Gold, Government, Grand, Group, Growth, Guard, Guess, Guide, Gun, Guy, Habit, Hall, Hand, Hat, Head, Health, Heart, Heat, Heavy, Height, Help, History, Hole, Home, Hope, Hospital, Hotel, Hour, House, Humor, Hunger, Ice, Idea, Image, Impact, Income, Industry, Infant, Information, Injury, Inside, Inspection, Institute, Insurance, Interest, Iron, Island, Issue, Item, Jail, Job, Joint, Journey, Judge, Juice, Jump, Justice, Key, Kick, King, Kiss, Kitchen, Knee, Knife, Knowledge, Labor, Lack, Lady, Lake, Land, Language, Law, Leader, League, Leather, Lesson, Letter, Level, Liberty, Library, Lie, Life, Lift, Light, Limit, Line, Link, List, Loan, Lock, Loss, Love, Lunch, Machine, Magazine, Mail, Major, Maker, Male, Man, Management, Manager, Map, Mark, Market, Marriage, Master, Match, Material, Meal, Meaning, Meat, Media, Member, Memory, Metal, Method, Middle, Midnight, Military, Milk, Mind, Mine, Minute, Mirror, Model, Money, Month, Morning, Mother, Motion, Motor, Mountain, Mouth, Movement, Movie, Music, Name, Nation, Native, Need, News, Night, Noise, Noon, North, Nose, Note, Notice, Novel, Object, Office, Officer, Oil, Operation, Opinion, Order, Origin, Page, Pain, Paint, Pair, Paper, Parent, Park, Part, Party, Pass, Past, Path, Pattern, Peace, Pen, Pencil, People, Period, Permit, Person, Phase, Phone, Photo, Piece, Pilot, Pipe, Pitch, Place, Plan, Plane, Plant, Plate, Play, Player, Poem, Poet, Poetry, Point, Pole, Police, Policy, Politics, Pool, Population, Port, Position, Post, Pot, Potato, Pound, Power, Practice, President, Price, Pride, Prince, Principle, Print, Prison, Prize, Problem, Process, Produce, Product, Profit, Progress, Project, Promise, Proof, Property, Proposal, Protection, Public, Purpose, Quality, Quarter, Queen, Question, Race, Radio, Rage, Railway, Range, Rank, Rate, Reason, Record, Red, Region, Relation, Relief, Religion, Report, Request, Research, Resource, Respect, Rest, Result, Return, Rice, Rich, Ride, Right, Ring, Risk, Road, Rock, Role, Roof, Room, Root, Rope, Round, Route, Row, Rule, Run, Rush, Safety, Sail, Salary, Sale, Salt, Sample, Sand, Scale, Scene, Scheme, School, Scope, Screen, Sea, Search, Season, Seat, Secret, Section, Sector, Security, Seed, Sense, Series, Service, Set, Shade, Shadow, Shape, Share, Sheep, Sheet, Shelf, Shell, Shelter, Shift, Ship, Shirt, Shock, Shoe, Shop, Shore, Short, Shot, Shoulder, Show, Side, Sight, Sign, Signal, Silence, Silver, Simple, Sir, Sister, Site, Situation, Size, Skill, Skin, Skirt, Sky, Sleep, Smoke, Snow, Society, Soil, Soldier, Solution, Son, Song, Sort, Sound, South, Space, Speaker, Speech, Speed, Spirit, Sport, Spot, Spring, Square, Staff, Stage, Standard, Star, Start, State, Station, Status, Steam, Steel, Step, Stick, Stock, Stone, Stop, Store, Storm, Story, Stranger, Street, Strike, String, Structure, Student, Studio, Study, Style, Subject, Success, Sugar, Suit, Summer, Sun, Supply, Support, Surface, Surprise, Table, Tail, Tale, Target, Task, Taste, Tax, Tea, Teacher, Team, Tear, Term, Test, Text, Theory, Thing, Thought, Threat, Ticket, Tide, Tie, Time, Title, Today, Tone, Tool, Tooth, Top, Total, Touch, Tour, Town, Track, Trade, Traffic, Train, Transport, Travel, Tree, Trend, Trial, Trip, Troop, Trouble, Truck, True, Trust, Truth, Tube, Turn, Twin, Type, Uncle, Unit, University, User, Valley, Value, Variation, Variety, Vehicle, Version, Victim, Victory, Video, View, Village, Voice, Volume, Vote, Wage, Wait, Walk, Wall, War, Warning, Waste, Watch, Water, Wave, Way, Wealth, Weapon, Weather, Wedding, Week, Weight, West, Wheel, While, White, Whole, Wife, Will, Wind, Window, Wine, Wing, Winter, Wire, Wish, Witness, Woman, Wood, Word, Work, Worker, World, Worry, Worth, Wound, Writer, Yard, Year, Youth, Zero, Zone, Ănglê, Anhbảo, Arập, Chắccô, Chệu, Chụng, Côngtennơ, Cuốì, Cụối, Duyệtra, Duynày, Giác, Giêng, Giêsu, Hã, Hàhà, Hết, Hhvn, Huvần, Huyần, Ihồi, Inâng, Kiển, Khoá, Khưu, Mátxcơva, Matxcơva, Mieunhún, Môtar, Muoi, Nàm, Nê, Nệnh, Nghĩa, Nghiềm, Nghoeo, Ngung, Nh, Nôcách, Phại, Pharaông, Phât, Phiển, Rọbin, Saái, Sộng, Sũ, Thứu, Thuỷ, Tinhte, Toọc, Tôikhông, Tôilà, Tôimuốn, Tôirất, Tôithật, Triêm, Tuyêt, Vănhọc, Vâ, Xayda, Xcốtlen, Xoet, Xôviết, Xuan, Xuông, Bh, Bj, Ccav, Cdcs, Clgt, Cmm, Cw, Db, Dcpj, Dpcj, Dy, Ef, EFree, Fc, Fcdc, Fdcpa, Fk, Ft, Hl, Hm, Hp, Ig, Kc, Kd, Klft, Klmt, Kr, KtxR, Lh, LibGen, Ltll, Lv, Lxxedoc, Lz, Mbct, Mbph, Mbsr, Mrcs, MsOH, Nd, Ndea, Nf, Ng, Nkgb, Oj, Pm, Px, Py, Pz, Qb, Qu, Rc, Rg, SBbc, Sk, Sl, Sp, SSRIs, Tbsq, Tcrry, Tk, Tlint, Tq, Tz, Usbg, Wcsh, Wmdk, Wmex, Ww, Wzon, Xp, Xxoo, Zglm, Zx.
+# Danh sách các từ không hợp lệ / sai chính tả / không có thật
+
+Tài liệu này tổng hợp toàn bộ các từ bị lỗi chính tả, lỗi gõ bàn phím (Telex), lỗi OCR hoặc các chuỗi ký tự vô nghĩa được trích xuất từ danh sách đã cung cấp.
+
+---
+
+## 1. Lỗi chính tả tiếng Anh & tiếng nước ngoài
+
+| Từ gốc trong file | Từ đúng / Ghi chú                |
+| :---------------- | :------------------------------- |
+| `amazeant`        | _amazing_ hoặc _amusement_       |
+| `anmanac`         | _almanac_                        |
+| `apphe`           | Lỗi gõ / sai chính tả            |
+| `becgamot`        | _bergamot_                       |
+| `demonstrandu`    | _demonstrandum_ (thiếu chữ 'm')  |
+| `glassblowes`     | _glassblowers_ (thiếu chữ 'r')   |
+| `humberger`       | _hamburger_                      |
+| `isreal`          | _Israel_ (tên quốc gia viết sai) |
+| `lagsana`         | _lasagna_                        |
+| `philosophirt`    | _philosophiert_ (tiếng Đức)      |
+| `poopoopie`       | Từ lóng ghép vô nghĩa            |
+| `sammitch`        | Biến âm sai của _sandwich_       |
+| `tetracyline`     | _tetracycline_ (thiếu chữ 'c')   |
+| `trolbadour`      | _troubadour_                     |
+| `unjreier`        | Lỗi chính tả tiếng Đức           |
+
+---
+
+## 2. Từ phiên âm mượn tiếng Việt viết sai quy chuẩn
+
+Các từ phiên âm tiếng nước ngoài sang tiếng Việt bị viết liền không dấu, sai chính tả hoặc thiếu gạch nối quy chuẩn:
+
+| Từ gốc trong file     | Dạng chuẩn tiếng Việt / Ghi chú                     |
+| :-------------------- | :-------------------------------------------------- |
+| `anpha`               | _alpha_ hoặc _an-pha_                               |
+| `antimon`             | _ăng-ti-moan_ hoặc _antimony_                       |
+| `antraxit`            | _an-tra-xít_ hoặc _anthracite_                      |
+| `apxe`                | _áp-xe_                                             |
+| `axetilen`            | _a-xê-ty-len_                                       |
+| `axeton`              | _a-xê-tôn_                                          |
+| `axit`                | _a-xít_ (thiếu dấu)                                 |
+| `batrui`              | _patrui_ (tuần tra)                                 |
+| `cacbin`              | _các-bin_                                           |
+| `cacbon`              | _các-bon_                                           |
+| `cacbonat`            | _các-bo-nát_                                        |
+| `cacbua`              | _các-bua_                                           |
+| `catket`              | _mũ két_ / _két-két_ (_casquette_)                  |
+| `catxet`              | _cát-xét_                                           |
+| `clorat`              | _clo-rát_                                           |
+| `clorua`              | _clo-rua_                                           |
+| `coctison`            | _coọc-ti-zon_ (_cortisone_)                         |
+| `conxoocxiom`         | Phiên âm sai dị dạng của _consortium_               |
+| `cuaroa`              | _dây cu-roa_ (_courroie_)                           |
+| `cuon`                | _cuộn_ / _cuốn_ (viết mất dấu)                      |
+| `etylen`              | _ê-ti-len_                                          |
+| `fenspat`             | _fen-spat_ (_feldspar_)                             |
+| `foocmica`            | _foóc-mi-ca_                                        |
+| `glixerin`            | _gli-xê-rin_                                        |
+| `gluxit`              | _glu-xít_                                           |
+| `hocblen`             | Phiên âm sai dị dạng của khoáng vật _hornblende_    |
+| `hocmon`              | _hoóc-môn_ (_hormone_)                              |
+| `khisinh`             | Dính chữ của _khí sinh_ hoặc viết sai của _ký sinh_ |
+| `khuyu`               | _khuỷu_ (viết mất dấu)                              |
+| `macgarin`            | _bơ magarin_                                        |
+| `macketinh`           | Phiên âm sai dị dạng của _marketing_                |
+| `macma`               | _mắc-ma_ (_magma_)                                  |
+| `macxit`              | _mác-xít_ (_marxist_)                               |
+| `manhetit`            | _manhê-tít_ (_magnetite_)                           |
+| `manheto`             | _manhê-tô_ (_magneto_)                              |
+| `maniven`             | _tay quay maniven_ (_manivelle_)                    |
+| `mayso`               | _dây may-so_                                        |
+| `mittinh`             | _mít-tinh_ (_meeting_)                              |
+| `moay`                | _moay-ơ_ (_moyeu_)                                  |
+| `photphat`            | _phốt-phát_                                         |
+| `photpho`             | _phốt-pho_                                          |
+| `photphorit`          | _phốt-pho-rít_                                      |
+| `polietylen`          | _pô-li-ê-ty-len_                                    |
+| `polime`              | _pô-li-me_                                          |
+| `polivitamin`         | _đa sinh tố_ / _pô-li-vi-ta-min_                    |
+| `quylat`              | _nắp quy-lát_ (_culasse_)                           |
+| `sacarin`             | _sắc-ca-rin_ (_saccharin_)                          |
+| `sacaroza`            | _sắc-ca-rô-za_ (_saccharose_)                       |
+| `sunfamit`            | _sun-fa-mít_                                        |
+| `sunfat`              | _sun-phát_                                          |
+| `sunfua`              | _sun-phua_                                          |
+| `tananh`              | _ta-nanh_ (_tannin_)                                |
+| `ttay`                | Lỗi gõ Telex của từ _tây_                           |
+| `tuynen`              | _tuyn-nen_                                          |
+| `vacxin`              | _vắc-xin_                                           |
+| `volfram` / `vonfram` | _von-fram_ (_wolfram_)                              |
+| `xatanh`              | _xa-tanh_ (_satin_)                                 |
+| `xelulo`              | _xen-lu-lô_ (_cellulose_)                           |
+| `xemina`              | _xê-mi-na_ (_seminar_)                              |
+| `xenti`               | _xen-ti_ (_centi_)                                  |
+| `xerenat`             | _xê-rê-nát_ (_serenade_)                            |
+| `xibecnetic`          | _xi-béc-nê-tích_ (_cybernetic_)                     |
+| `xilanh`              | _xi-lanh_                                           |
+| `xilip`               | _quần xi-líp_ (_slip_)                              |
+| `ximpozium`           | _xiêm-pô-di-um_ (_symposium_)                       |
+| `xinhan`              | _xi-nhan_ (_signal_)                                |
+| `xita`                | _đàn xi-ta_ (_sitar_)                               |
+| `xolenoit`            | _xô-lê-nô-ít_ (_solenoid_)                          |
+| `xonat`               | _xô-nát_ (_sonata_)                                 |
+| `xupap`               | _xu-páp_ (_soupape_)                                |
+
+---
+
+## 3. Lỗi gõ phím (Telex), lỗi OCR & chuỗi ký tự vô nghĩa
+
+| Ký tự lỗi      | Dự đoán nguyên nhân / Lỗi gõ                                 |
+| :------------- | :----------------------------------------------------------- |
+| `aizz`         | Từ cảm thán gõ phím tự do                                    |
+| `apacthai`     | Lỗi gõ của _apartheid_                                       |
+| `batoong`      | Lỗi gõ của _ba-toong_                                        |
+| `brrt`         | Chuỗi ký tự âm thanh                                         |
+| `bufing`       | Chuỗi ký tự vô nghĩa                                         |
+| `chengbaobaby` | Tên tài khoản / nickname mạng xã hội                         |
+| `cybgf`        | Chuỗi ký tự ngẫu nhiên                                       |
+| `dgieh`        | Chuỗi ký tự ngẫu nhiên                                       |
+| `diuec`        | Chuỗi ký tự vô nghĩa                                         |
+| `dormayvoo`    | Lỗi gõ của cụm từ tiếng Pháp _Dormez-vous_                   |
+| `feof`         | Viết tắt thuật ngữ tin học / vô nghĩa trong ngữ cảnh từ vựng |
+| `ifsogirl`     | Chuỗi ghép ngẫu nhiên                                        |
+| `m’nhum`       | Ký tự unicode lỗi gõ                                         |
+| `mahnd`        | Chuỗi ký tự vô nghĩa                                         |
+| `mottj`        | Lỗi gõ Telex của từ _một_ (`mot` + `tj`)                     |
+| `naang`        | Lỗi gõ Telex của từ _nâng_ hoặc _nàng_                       |
+| `nahf`         | Lỗi gõ Telex của từ _nhà_ (`nha` + `hf`)                     |
+| `nahich`       | Chuỗi gõ sai                                                 |
+| `ng̃`           | Lỗi ký tự 'ng' dính dấu ngã lơ lửng                          |
+| `nhh`          | Viết tắt hoặc gõ lỗi                                         |
+| `nhr`          | Viết tắt hoặc gõ lỗi                                         |
+| `oail`         | Lỗi gõ của từ _oải_                                          |
+| `pooia`        | Chuỗi ký tự vô nghĩa                                         |
+| `qingzixy`     | Tên tài khoản / chuỗi ký tự ngẫu nhiên                       |
+| `styky`        | Chuỗi ký tự vô nghĩa                                         |
+| `styzez`       | Chuỗi ký tự vô nghĩa                                         |
+| `tppo`         | Chuỗi ký tự viết tắt                                         |
+| `uytky`        | Lỗi gõ phiên âm của _uýt-ki_ (_whisky_)                      |
+| `vctvegroup`   | Tên tổ chức / chuỗi tài khoản                                |
+| `ximg`         | Chuỗi ký tự vô nghĩa                                         |
+| `xuya`         | Lỗi gõ Telex                                                 |
+| `xuynh`        | Lỗi gõ Telex                                                 |
+| `zuoih`        | Lỗi gõ Telex của từ _dưới_ hoặc _giời_                       |
