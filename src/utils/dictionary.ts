@@ -66,28 +66,23 @@ async function fetchDictContent(
   dictName: "vn" | "non-vn" | "custom" | "names",
   token?: string
 ): Promise<string> {
-  const isDev = Boolean(import.meta.env?.DEV)
-  const shouldTryApi = Boolean(token?.trim()) || isDev
-
-  if (shouldTryApi) {
-    try {
-      const headers: Record<string, string> = {}
-      if (token?.trim()) {
-        headers.authorization = `Bearer ${token.trim()}`
-      }
-      const apiRes = await fetch(`/api/dict/${dictName}`, { headers })
-      if (apiRes.ok) {
-        const contentType = apiRes.headers.get("content-type")
-        if (!contentType?.includes("text/html")) {
-          return await apiRes.text()
-        }
-      }
-    } catch (_e) {
-      logger.warn(
-        `Dict API unreachable for ${dictName}, falling back to bundled file:`,
-        _e
-      )
+  try {
+    const headers: Record<string, string> = {}
+    if (token?.trim()) {
+      headers.authorization = `Bearer ${token.trim()}`
     }
+    const apiRes = await fetch(`/api/dict/${dictName}`, { headers })
+    if (apiRes.ok) {
+      const contentType = apiRes.headers.get("content-type")
+      if (!contentType?.includes("text/html")) {
+        return await apiRes.text()
+      }
+    }
+  } catch (_e) {
+    logger.warn(
+      `Dict API unreachable for ${dictName}, falling back to bundled file:`,
+      _e
+    )
   }
 
   return await fetchLocalDict(`${dictName}-dict.txt`)
