@@ -23,8 +23,8 @@
 
 <header class="sticky top-0 z-30 border-b shadow-md bg-slate-900/95 backdrop-blur border-slate-800">
   <div class="flex flex-wrap items-center justify-between max-w-7xl gap-4 px-4 py-3 mx-auto">
-    <!-- Logo & Title -->
-    <div class="flex items-center gap-3">
+    <!-- Logo & Title (Desktop only) -->
+    <div class="hidden sm:flex items-center gap-3">
       <div class="p-2 text-white bg-blue-600 rounded-xl shadow-lg shadow-blue-900/30">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -44,8 +44,7 @@
       <div>
         <h1 class="text-xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
           Soát Lỗi Chính Tả        
-        </h1>
-        <div class="text-xs font-medium text-slate-400">EPUB / TXT / MD tiếng Việt</div>
+        </h1>      
       </div>
     </div>
 
@@ -90,11 +89,11 @@
         </svg>
       </button>
 
-      <!-- Admin Dashboard Toggle Button -->
+      <!-- Admin Dashboard Toggle Button (Desktop only) -->
       <button
         type="button"
         onclick={() => (appState.currentView = appState.currentView === "admin" ? "main" : "admin")}
-        class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all {appState.currentView === 'admin'
+        class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all {appState.currentView === 'admin'
           ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-900/30'
           : 'text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 border-slate-700'}"
         title="Mở bảng điều khiển Admin"

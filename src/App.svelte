@@ -93,7 +93,7 @@
   </main>
 
   <footer class="border-t border-slate-800/60 py-4 text-center text-xs text-slate-500">
-    Soát Lỗi Chính Tả EPUB Tiếng Việt
+    Soát Lỗi Chính Tả Tiếng Việt
   </footer>
 
   <!-- Modals -->
