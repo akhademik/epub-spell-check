@@ -170,26 +170,19 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
         </svg>
-        <span>Nhập File .txt / .md</span>
+        <span>Upload File .txt / .md</span>
       </button>
     </div>
   </div>
 
   <!-- Textarea Input -->
   <div class="space-y-2">
-    <div class="flex items-center justify-between">
-      <label for="admin-add-words" class="block text-xs font-semibold tracking-wider text-slate-400 uppercase">
-        Danh sách từ hoặc dán tệp có header:
-      </label>
-      <span class="text-[11px] text-slate-500 font-mono">
-        Hỗ trợ: ---VN---, ---NAMES---, ---NON-VN---, ---CUSTOM---
-      </span>
-    </div>
+
     <textarea
       id="admin-add-words"
       bind:value={wordsInput}
       rows="7"
-      placeholder={`Dán từ đơn giản (mỗi dòng 1 từ) HOẶC dán định dạng có phân loại:\n\n---NAMES---\nAlexander\nHà Nội\n\n---VN---\nchằng chịt\nngoằn ngoèo\n\n---NON-VN---\ninternet\nsmartphone\n\n---CUSTOM---\nAI\nVIP`}
+      placeholder={`Dán từ đơn giản (mỗi dòng 1 từ) \nHoặc định dạng có phân loại:\n\n---NAMES---\nAlexander\nHà Nội\n\n---VN---\nchằng chịt\nngoằn ngoèo\n\n---NON-VN---\ninternet\nsmartphone\n\n---CUSTOM---\nAI\nVIP`}
       class="w-full px-3.5 py-2.5 text-sm bg-slate-950/80 border border-slate-700 rounded-xl text-slate-100 font-mono resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
     ></textarea>
   </div>
