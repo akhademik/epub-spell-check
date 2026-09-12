@@ -222,7 +222,8 @@ export interface DictAuditResponse {
  */
 export async function fetchDictionaryAudit(
   dictName: DictSourceName,
-  token?: string
+  token?: string,
+  forceRefresh = true
 ): Promise<DictAuditResponse> {
   const headers: Record<string, string> = {
     accept: "application/json"
@@ -231,8 +232,9 @@ export async function fetchDictionaryAudit(
     headers.authorization = `Bearer ${token.trim()}`
   }
 
+  const query = forceRefresh ? "?refresh=true" : ""
   try {
-    const res = await fetch(`/api/dict/${dictName}/audit`, { headers })
+    const res = await fetch(`/api/dict/${dictName}/audit${query}`, { headers })
     if (res.ok) {
       return (await res.json()) as DictAuditResponse
     }

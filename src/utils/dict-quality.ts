@@ -1,5 +1,6 @@
 import { getAlternateToneStyle, levenshteinDistance } from "./analysis-core"
 import { isRepeatedUnit, validateDictionaryWord } from "./dict-validator"
+import { getBundledReferenceDictionarySync } from "./reference-dict"
 
 export type DictName = "vn" | "names" | "non-vn" | "custom"
 
@@ -81,16 +82,28 @@ export function getVowelRatio(word: string): number {
 
 /**
  * Scans a list of words in a given dictionary for garbage entries.
+ * Words existing in the reference dictionary (for 'vn' dict) are automatically verified and bypassed.
  */
 export function scanDictionaryForGarbage(
   dictName: DictName,
-  words: string[]
+  words: string[],
+  referenceWords?: Set<string>
 ): GarbageFinding[] {
   const findings: GarbageFinding[] = []
+  const refSet =
+    dictName === "vn"
+      ? (referenceWords ?? getBundledReferenceDictionarySync())
+      : undefined
 
   for (const rawWord of words) {
     const word = rawWord.trim()
     if (!word) continue
+
+    const normalizedLower = word.toLowerCase().normalize("NFC")
+    // If the word exists in the curated reference dictionary, it is verified valid -> bypass garbage scan
+    if (refSet?.has(normalizedLower)) {
+      continue
+    }
 
     const tierAReasons: string[] = []
     const tierBReasons: string[] = []
@@ -118,7 +131,15 @@ export function scanDictionaryForGarbage(
       tierAReasons.push("Độ dài bất thường (> 30 ký tự)")
     }
 
-    if (word.length >= 6 && getVowelRatio(word) < 0.2) {
+    const vowelRatio = getVowelRatio(word)
+    const isVnValidStructure =
+      dictName === "vn" && validateDictionaryWord("vn", word).status === "valid"
+
+    if (
+      !isVnValidStructure &&
+      ((word.length >= 7 && vowelRatio < 0.2) ||
+        (word.length >= 6 && vowelRatio === 0))
+    ) {
       tierAReasons.push("Tỉ lệ nguyên âm quá thấp (< 20%) trên toàn từ")
     }
 
@@ -548,9 +569,14 @@ export function auditDictionary(
   const startTime = performance.now()
   const timingCollector: Partial<AuditTiming> = {}
 
+  const resolvedRefWords =
+    dictName === "vn"
+      ? (referenceWords ?? getBundledReferenceDictionarySync())
+      : undefined
+
   // 1. Single-pass Garbage Scan
   const garbageStart = performance.now()
-  const garbage = scanDictionaryForGarbage(dictName, words)
+  const garbage = scanDictionaryForGarbage(dictName, words, resolvedRefWords)
   timingCollector.garbageScanMs = Math.round(performance.now() - garbageStart)
 
   // 2. Fuzzy Near-duplicate Detection (reusing garbage findings)

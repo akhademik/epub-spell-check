@@ -25,6 +25,8 @@ interface RequestContext {
 
 const ALLOWED_NAMES = new Set(["vn", "non-vn", "custom", "names"])
 
+const AUDIT_ENGINE_VERSION = "v2"
+
 function contentKey(name: string) {
   return `dict:${name}:content`
 }
@@ -34,11 +36,11 @@ function ignoredPairsKey(name: string) {
 }
 
 function auditCacheKey(name: string) {
-  return `dict:${name}:audit:cache`
+  return `dict:${name}:audit:cache:${AUDIT_ENGINE_VERSION}`
 }
 
 function auditVersionKey(name: string) {
-  return `dict:${name}:audit:version`
+  return `dict:${name}:audit:version:${AUDIT_ENGINE_VERSION}`
 }
 
 function updatedKey(name: string) {
@@ -88,12 +90,17 @@ export async function onRequestGet(context: RequestContext): Promise<Response> {
     )
   }
 
+  const url = new URL(context.request.url)
+  const forceRefresh =
+    url.searchParams.get("refresh") === "true" ||
+    url.searchParams.get("force") === "true"
+
   const currentUpdated =
     (await context.env.DICT_KV.get(updatedKey(name))) ?? "initial"
   const cachedVersion = await context.env.DICT_KV.get(auditVersionKey(name))
 
-  // Fast path: if dictionary hasn't changed, return cached audit result
-  if (cachedVersion && cachedVersion === currentUpdated) {
+  // Fast path: if dictionary hasn't changed and no force refresh requested, return cached audit result
+  if (!forceRefresh && cachedVersion && cachedVersion === currentUpdated) {
     const cachedData = await context.env.DICT_KV.get(auditCacheKey(name))
     if (cachedData) {
       try {
