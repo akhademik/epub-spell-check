@@ -24,8 +24,12 @@ for name in "${DICT_NAMES[@]}"; do
     continue
   fi
   echo "Seeding dict:${name}:content from ${file} ..."
-  npx wrangler kv key put "dict:${name}:content" \
+  npx --yes wrangler kv key put "dict:${name}:content" \
     --path "$file" \
+    --namespace-id "$NAMESPACE_ID" \
+    $REMOTE_FLAG
+  npx --yes wrangler kv key put "dict:${name}:updated" \
+    "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
     --namespace-id "$NAMESPACE_ID" \
     $REMOTE_FLAG
 done

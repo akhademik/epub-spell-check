@@ -90,7 +90,6 @@ Caterpillar
 CB
 CBS
 CBT
-CC
 CCD
 CCTV
 cd
@@ -118,11 +117,9 @@ cnc
 CNN
 cntb
 cnxh
-Coca
 Coca-Cola
 CocaCola
 Cockney
-Cola
 Colombia
 Colorado
 Connecticut
@@ -412,7 +409,6 @@ PayPal
 PCB
 PD
 Pepsi
-PET
 PIN
 PKU
 PNG
@@ -540,10 +536,8 @@ VIII
 vip
 VIP
 Visa
-VISA
 Volvo
 VR
-VS
 VW
 VX
 Walmart
