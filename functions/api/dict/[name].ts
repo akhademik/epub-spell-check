@@ -80,14 +80,6 @@ export async function onRequestGet(context: RequestContext): Promise<Response> {
     return jsonResponse({ error: "Unknown dictionary name" }, 404)
   }
 
-  const auth = isAuthenticated(context)
-  if (!auth.authorized) {
-    return jsonResponse(
-      { error: "Unauthorized: Vui lòng cung cấp mã ADMIN_TOKEN hợp lệ" },
-      401
-    )
-  }
-
   const content = await context.env.DICT_KV.get(contentKey(name))
   if (content === null) {
     return jsonResponse(
