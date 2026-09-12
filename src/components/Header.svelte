@@ -48,11 +48,11 @@
       </div>
     </div>
 
-    <!-- Actions & Quick Controls (Desktop: inline; Mobile: flex container with stats and action buttons) -->
-    <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-between sm:justify-end w-full sm:w-auto">
-      <!-- Active Dictionaries Indicator (Mobile: compact centered numbers; Desktop: labeled stats) -->
+    <!-- Actions & Quick Controls (Mobile: stats left, action buttons right; Desktop: inline right) -->
+    <div class="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full sm:w-auto">
+      <!-- Active Dictionaries Indicator (Mobile: align left / flex-start) -->
       <div
-        class="flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[11px] sm:text-xs font-mono text-slate-300 mx-auto sm:mx-0"
+        class="flex items-center justify-start gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[11px] sm:text-xs font-mono text-slate-300"
         title="4 tầng từ điển đang hoạt động đồng thời (Tiếng Việt + Tên riêng + Ngoại ngữ + Viết tắt)"
       >
         <span class="flex items-center gap-1 text-emerald-400">
@@ -73,8 +73,8 @@
         </span>
       </div>
 
-      <!-- Action Buttons Container -->
-      <div class="flex items-center gap-2 sm:gap-3 ml-auto sm:ml-0">
+      <!-- Action Buttons Container (Mobile: align right / flex-end) -->
+      <div class="flex items-center gap-2 sm:gap-3">
 
       <!-- Help Button -->
       <button
