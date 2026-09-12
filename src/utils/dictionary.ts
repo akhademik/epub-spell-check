@@ -66,13 +66,16 @@ async function fetchDictContent(
   dictName: "vn" | "non-vn" | "custom" | "names",
   token?: string
 ): Promise<string> {
-  if (token?.trim()) {
+  const isDev = Boolean(import.meta.env?.DEV)
+  const shouldTryApi = Boolean(token?.trim()) || isDev
+
+  if (shouldTryApi) {
     try {
-      const apiRes = await fetch(`/api/dict/${dictName}`, {
-        headers: {
-          authorization: `Bearer ${token.trim()}`
-        }
-      })
+      const headers: Record<string, string> = {}
+      if (token?.trim()) {
+        headers.authorization = `Bearer ${token.trim()}`
+      }
+      const apiRes = await fetch(`/api/dict/${dictName}`, { headers })
       if (apiRes.ok) {
         const contentType = apiRes.headers.get("content-type")
         if (!contentType?.includes("text/html")) {
@@ -91,11 +94,14 @@ async function fetchDictContent(
 }
 
 async function getDictionary(
-  dictName: "vn" | "non-vn" | "custom" | "names"
+  dictName: "vn" | "non-vn" | "custom" | "names",
+  token?: string
 ): Promise<string> {
   const isDev = Boolean(import.meta.env?.DEV)
+  const bypassCache = isDev || Boolean(token?.trim())
   const cacheKey = dictCacheKey(dictName)
-  if (!isDev) {
+
+  if (!bypassCache) {
     try {
       const cached = await getCache<{ timestamp: number; data: string }>(
         cacheKey
@@ -109,12 +115,12 @@ async function getDictionary(
     }
   } else {
     logger.info(
-      `Dev mode active: Bypassing IndexedDB cache for fresh ${dictName} dict`
+      `Bypassing IndexedDB cache for fresh ${dictName} dict (dev mode / token active)`
     )
   }
 
   logger.info(`Fetching fresh dictionary for ${dictName}`)
-  const data = await fetchDictContent(dictName)
+  const data = await fetchDictContent(dictName, token)
   try {
     await setCache(cacheKey, { timestamp: Date.now(), data })
   } catch (_e) {
@@ -139,7 +145,7 @@ export async function refreshDictionaryCache(
   }
 }
 
-export async function loadDictionaries(): Promise<{
+export async function loadDictionaries(token?: string): Promise<{
   dictionaries: Dictionaries
   status: DictionaryStatus
 }> {
@@ -162,10 +168,10 @@ export async function loadDictionaries(): Promise<{
 
   const [vnResult, nonVnResult, customResult, namesResult] =
     await Promise.allSettled([
-      getDictionary("vn"),
-      getDictionary("non-vn"),
-      getDictionary("custom"),
-      getDictionary("names")
+      getDictionary("vn", token),
+      getDictionary("non-vn", token),
+      getDictionary("custom", token),
+      getDictionary("names", token)
     ])
 
   const vnRes = vnResult.status === "fulfilled" ? vnResult.value : ""

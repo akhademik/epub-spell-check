@@ -268,9 +268,10 @@ export class AppStateModel {
   }
 
   // Methods
-  async init() {
+  async init(token?: string) {
     try {
-      const { dictionaries, status } = await loadDictionaries()
+      const effectiveToken = token?.trim() || this.dictAdminToken?.trim()
+      const { dictionaries, status } = await loadDictionaries(effectiveToken)
       this.dictionaries = dictionaries
       this.dictionaryStatus = status
       logger.info("Dictionaries loaded successfully:", status)
