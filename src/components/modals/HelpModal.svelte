@@ -49,28 +49,49 @@
 
       <div class="p-6 space-y-4 overflow-y-auto text-sm text-slate-300">
         <div>
-          <h4 class="font-bold text-white mb-1">1. Tải lên tệp EPUB</h4>
-          <p class="text-slate-400">Kéo thả tệp .epub hoặc nhấp chuột vào vùng tải tệp để bắt đầu quét toàn bộ nội dung sách.</p>
+          <h4 class="font-bold text-white mb-1">1. Tải lên tệp (EPUB, TXT, MD)</h4>
+          <p class="text-slate-400">Kéo thả tệp <span class="text-blue-400 font-mono">.epub</span>, <span class="text-emerald-400 font-mono">.txt</span> hoặc <span class="text-purple-400 font-mono">.md</span> vào vùng tải tệp hoặc nhấp nút "File khác" trên thanh tiêu đề để bắt đầu soát lỗi ngay lập tức.</p>
         </div>
 
         <div>
           <h4 class="font-bold text-white mb-1">2. Phím tắt tiện ích</h4>
-          <ul class="list-disc list-inside space-y-1 text-slate-400">
-            <li><kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">↑</kbd> / <kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">↓</kbd>: Chuyển qua lại giữa các từ bị lỗi</li>
-            <li><kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">Delete</kbd> hoặc <kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">I</kbd>: Bỏ qua từ hiện tại (thêm vào danh sách trắng) và tự động chuyển sang từ kế tiếp</li>
+          <ul class="list-disc list-inside space-y-1.5 text-slate-400">
+            <li><kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">↑</kbd> / <kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">↓</kbd>: Di chuyển qua lại giữa các từ bị lỗi (tự động highlight và cuộn canh giữa danh sách).</li>
+            <li><kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">←</kbd> / <kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">→</kbd>: Di chuyển giữa các vị trí xuất hiện (instances) của cùng một từ lỗi trên khung xem trước.</li>
+            <li><kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">Delete</kbd> hoặc <kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">I</kbd>: Bỏ qua từ hiện tại (thêm vào danh sách Whitelist) và tự động chuyển sang từ kế tiếp.</li>
+            <li><kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-200 font-mono text-xs">Esc</kbd>: Đóng modal/hướng dẫn đang mở.</li>
           </ul>
         </div>
 
         <div>
-          <h4 class="font-bold text-white mb-1">3. Quản lý Từ điển & Bỏ qua (Whitelist)</h4>
+          <h4 class="font-bold text-white mb-1">3. Hệ thống 4 tầng từ điển & Bộ lọc lỗi</h4>
           <p class="text-slate-400">
-            Ứng dụng hỗ trợ 3 tầng từ điển linh hoạt: Từ điển Tiếng Việt, Từ điển Ngoại ngữ (Anh, Pháp,...), và Từ điển Viết tắt / Từ riêng (ATM, VIP, ...). Bạn có thể bật/tắt từng từ điển trong phần Cấu hình.
+            Hệ thống tự động kích hoạt đồng thời 4 tầng từ điển: <strong>Tiếng Việt</strong>, <strong>Tên riêng & Địa danh</strong>, <strong>Ngoại ngữ & Từ mượn</strong>, và <strong>Viết tắt / Tuỳ chỉnh</strong>. Bạn có thể bật/tắt nhanh các nhóm lỗi (Từ lạ, Ngoại ngữ, Viết hoa, Chính tả, Ngữ cảnh) bằng các nút lọc phía trên danh sách từ lỗi.
           </p>
         </div>
 
         <div>
-          <h4 class="font-bold text-white mb-1">4. Sao chép gợi ý</h4>
-          <p class="text-slate-400">Nhấp chuột trực tiếp vào bất kỳ từ gợi ý nào (màu xanh lá) để tự động sao chép từ đó vào Clipboard.</p>
+          <h4 class="font-bold text-white mb-1">4. Sửa lỗi chính tả & Thay thế từ</h4>
+          <ul class="list-disc list-inside space-y-1.5 text-slate-400">
+            <li>Nhấp vào nút từ gợi ý để thay thế đúng vị trí hiện tại.</li>
+            <li>Nhấp nút <strong class="text-emerald-300 font-mono">all</strong> cạnh gợi ý để thay thế toàn bộ tất cả các vị trí xuất hiện của từ lỗi đó trong sách.</li>
+            <li>Nhập từ tuỳ chỉnh vào ô "Nhập từ thay thế khác..." nếu muốn sửa thành từ chưa có trong gợi ý.</li>
+            <li>Nhấp biểu tượng copy cạnh gợi ý để sao chép từ vào Clipboard.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-white mb-1">5. Xuất tệp đã sửa & Danh sách lỗi</h4>
+          <p class="text-slate-400">
+            Sau khi sửa, nhấp nút <strong>"Xuất [EPUB/TXT/MD]"</strong> trên thanh tiêu đề để tải về tệp hoàn chỉnh đã áp dụng sửa đổi. Bạn cũng có thể nhấp <strong>"Xuất lỗi"</strong> để tải về file text danh sách toàn bộ từ lỗi phát hiện được.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-white mb-1">6. Quản trị từ điển (Admin)</h4>
+          <p class="text-slate-400">
+            Nhấp nút <strong>Admin</strong> trên thanh tiêu đề để tra cứu, thêm mới từ vựng, kiểm tra chất lượng từ điển hoặc kiểm tra trùng lặp giữa các tầng từ điển.
+          </p>
         </div>
       </div>
 

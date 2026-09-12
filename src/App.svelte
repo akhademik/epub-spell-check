@@ -51,6 +51,18 @@
         event.preventDefault()
         appState.navigateGroup("up")
         break
+      case "ArrowLeft":
+        if (appState.currentGroup && appState.currentGroup.contexts.length > 1) {
+          event.preventDefault()
+          appState.navigateInstance("prev")
+        }
+        break
+      case "ArrowRight":
+        if (appState.currentGroup && appState.currentGroup.contexts.length > 1) {
+          event.preventDefault()
+          appState.navigateInstance("next")
+        }
+        break
       case "Delete":
       case "i":
       case "I":

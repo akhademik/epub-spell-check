@@ -162,9 +162,11 @@ export class AppStateModel {
   // Applied fixes tracking: Map<instanceId, newWord>
   appliedFixes = $state<Map<string, string>>(new Map())
 
-  // Selection & Navigation
+  // Selection, Search & Navigation
   selectedGroupId = $state<string | null>(null)
   currentInstanceIndex = $state<number>(0)
+  errorSearchQuery = $state<string>("")
+  errorSortOrder = $state<"alpha" | "count">("alpha")
 
   // UI State
   currentView = $state<"main" | "admin">("main")
@@ -185,15 +187,33 @@ export class AppStateModel {
     return "EPUB"
   })
 
-  currentFilteredErrors = $derived(
-    getFilteredErrors(
+  currentFilteredErrors = $derived.by(() => {
+    let list = getFilteredErrors(
       this.allDetectedErrors,
       this.whitelist,
       this.checkSettings,
       this.dictionaries,
       this.enabledErrorTypes
     )
-  )
+
+    if (this.errorSearchQuery.trim()) {
+      const q = this.errorSearchQuery.trim().toLowerCase()
+      list = list.filter(
+        (g) =>
+          g.word.toLowerCase().includes(q) || g.reason.toLowerCase().includes(q)
+      )
+    }
+
+    if (this.errorSortOrder === "count") {
+      list.sort((a, b) => b.contexts.length - a.contexts.length)
+    } else {
+      list.sort((a, b) =>
+        a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
+      )
+    }
+
+    return list
+  })
 
   currentGroup = $derived.by(() => {
     if (this.currentFilteredErrors.length === 0) {
@@ -806,6 +826,7 @@ export class AppStateModel {
     this.appliedFixes = new Map()
     this.selectedGroupId = null
     this.currentInstanceIndex = 0
+    this.errorSearchQuery = ""
     this.isProcessing = false
     this.progressPercent = 0
     this.progressStatus = ""
