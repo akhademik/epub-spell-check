@@ -164,8 +164,11 @@ export async function onRequestPost(
   }
 
   const pairKey = payload.pairKey?.trim()
-  if (!pairKey) {
-    return jsonResponse({ error: "Missing pairKey" }, 400)
+  if (!pairKey || pairKey.length > 100) {
+    return jsonResponse(
+      { error: "Invalid pairKey: must be non-empty and <= 100 characters" },
+      400
+    )
   }
 
   let ignoredList: string[] = []

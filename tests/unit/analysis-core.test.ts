@@ -322,4 +322,37 @@ describe("Analysis Core", () => {
       expect(matchCase("alexandaer", "Alexander")).toBe("Alexander")
     })
   })
+
+  describe("Word Extraction Boundaries & Punctuation Isolation", () => {
+    it("should correctly extract words enclosed in parentheses, brackets, and quotes", () => {
+      const text = `(sách) [học] "người" 'tiếng' “quà” «khoa» —toán—`
+      const words = Array.from(text.matchAll(WORD_REGEX), (m) => m[0])
+      expect(words).toEqual([
+        "sách",
+        "học",
+        "người",
+        "tiếng",
+        "quà",
+        "khoa",
+        "toán"
+      ])
+    })
+
+    it("should correctly handle words attached to hyphens, colons, and ellipses", () => {
+      const text = "học-sinh... sách: khoa; toán! người?"
+      const words = Array.from(text.matchAll(WORD_REGEX), (m) => m[0])
+      expect(words).toEqual(["học", "sinh", "sách", "khoa", "toán", "người"])
+    })
+
+    it("should handle Vietnamese NFC diacritics and normalize consistently", () => {
+      const nfdWord = "người" // NFD decomposed form
+      const nfcWord = nfdWord.normalize("NFC") // "người"
+      expect(
+        getErrorType(nfdWord, mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+      expect(
+        getErrorType(nfcWord, mockDictionaries, defaultCheckSettings)
+      ).toBeNull()
+    })
+  })
 })

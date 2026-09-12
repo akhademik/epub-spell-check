@@ -23,7 +23,7 @@
     "postinstall": "simple-git-hooks"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm dicts:pull-from-kv"
+    "pre-commit": "pnpm check && pnpm lint"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
