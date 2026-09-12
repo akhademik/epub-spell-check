@@ -322,7 +322,7 @@ export class AppStateModel {
         this.dictAdminToken = effectiveToken
       }
 
-      await refreshDictionaryCache(dictName)
+      await refreshDictionaryCache(dictName, effectiveToken)
       await this.init()
 
       const verb = action === "remove" ? "xóa" : "thêm"

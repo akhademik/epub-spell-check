@@ -80,6 +80,14 @@ export async function onRequestGet(context: RequestContext): Promise<Response> {
     return jsonResponse({ error: "Unknown dictionary name" }, 404)
   }
 
+  const auth = isAuthenticated(context)
+  if (!auth.authorized) {
+    return jsonResponse(
+      { error: "Unauthorized: Vui lòng cung cấp mã ADMIN_TOKEN hợp lệ" },
+      401
+    )
+  }
+
   const content = await context.env.DICT_KV.get(contentKey(name))
   if (content === null) {
     return jsonResponse(
@@ -145,12 +153,30 @@ export async function onRequestPost(
     return jsonResponse({ error: "Invalid JSON body" }, 400)
   }
 
-  const action = payload.action === "remove" ? "remove" : "add"
+  const rawAction = payload.action ?? "add"
+  if (rawAction !== "add" && rawAction !== "remove") {
+    return jsonResponse(
+      { error: "Hành động không hợp lệ. Chỉ chấp nhận 'add' hoặc 'remove'." },
+      400
+    )
+  }
+  const action = rawAction as "add" | "remove"
+
   const incoming = Array.isArray(payload.words) ? payload.words : []
-  const newWords = incoming
+  if (incoming.length > 10000) {
+    return jsonResponse(
+      { error: "Yêu cầu quá lớn. Tối đa 10,000 từ mỗi lượt cập nhật." },
+      400
+    )
+  }
+
+  const rawWords = incoming
     .filter((w): w is string => typeof w === "string")
-    .map((w) => w.trim())
-    .filter(Boolean)
+    .map((w) => w.trim().normalize("NFC"))
+    .filter((w) => Boolean(w) && w.length <= 100)
+
+  // Deduplicate incoming batch
+  const newWords = Array.from(new Set(rawWords))
 
   if (newWords.length === 0) {
     return jsonResponse({ error: "No valid words provided" }, 400)

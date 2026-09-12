@@ -155,6 +155,30 @@ export function applyFixesToDocument(
 }
 
 /**
+ * Removes duplicate attributes on the root <html> tag that may be introduced
+ * when XMLSerializer serializes a Document created by the HTML parser fallback.
+ */
+export function deduplicateRootHtmlAttributes(content: string): string {
+  return content.replace(
+    /<html(\s+[^>]*)?>/i,
+    (match: string, attrs: string | undefined) => {
+      if (!attrs) return match
+      const seen = new Set<string>()
+      const cleanedAttrs = attrs.replace(
+        /\b([a-zA-Z0-9_:-]+)="[^"]*"/g,
+        (attrMatch: string, name: string) => {
+          const lower = name.toLowerCase()
+          if (seen.has(lower)) return ""
+          seen.add(lower)
+          return ` ${attrMatch.trim()}`
+        }
+      )
+      return `<html${cleanedAttrs}>`
+    }
+  )
+}
+
+/**
  * Apply verified fix instructions to original EPUB File and return a repacked EPUB Blob.
  */
 export async function applyFixesAndRepack(
@@ -209,6 +233,9 @@ export async function applyFixesAndRepack(
         '<?xml version="1.0" encoding="utf-8"?>\n'
       updatedContent = xmlHeader + updatedContent
     }
+
+    // Deduplicate any duplicate attributes on root <html> tag introduced by HTML fallback parser
+    updatedContent = deduplicateRootHtmlAttributes(updatedContent)
 
     zip.file(filePath, updatedContent)
   }

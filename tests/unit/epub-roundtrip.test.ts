@@ -355,4 +355,152 @@ describe("EPUB Integration & Round-trip Test Matrix", () => {
 
     expect(reParsed.textBlocks[0].text).toBe("He is not here.")
   })
+
+  it("Matrix 18: EPUB2 with strict XHTML 1.1 DOCTYPE and XML declaration preserved", async () => {
+    const zip = new JSZip()
+    zip.file("mimetype", "application/epub+zip", { compression: "STORE" })
+    zip.file(
+      "META-INF/container.xml",
+      `<container><rootfiles><rootfile full-path="OEBPS/content.opf"/></rootfiles></container>`
+    )
+    zip.file(
+      "OEBPS/content.opf",
+      `<package xmlns="http://www.idpf.org/2007/opf" version="2.0"><manifest><item id="c1" href="c1.xhtml" media-type="application/xhtml+xml"/></manifest><spine><itemref idref="c1"/></spine></package>`
+    )
+    zip.file(
+      "OEBPS/c1.xhtml",
+      `<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n<html xmlns="http://www.w3.org/1999/xhtml"><head><title>EPUB2 Test</title></head><body><p>Từ sai trong sách EPUB2.</p></body></html>`
+    )
+
+    const origBlob = new Blob(
+      [await zip.generateAsync({ type: "arraybuffer" })],
+      { type: "application/epub+zip" }
+    )
+    const origFile = new File([origBlob], "epub2.epub")
+
+    const parsed = await parseEpub(origFile)
+    expect(parsed.textBlocks.length).toBe(1)
+    expect(parsed.textBlocks[0].text).toBe("Từ sai trong sách EPUB2.")
+
+    const fixes: FixInstruction[] = [
+      {
+        filePath: parsed.textBlocks[0].filePath,
+        blockId: parsed.textBlocks[0].id,
+        startIndex: 3,
+        endIndex: 6,
+        newWord: "đúng"
+      }
+    ]
+
+    const fixedBlob = await applyFixesAndRepack(origBlob, fixes)
+    const resultZip = await JSZip.loadAsync(await fixedBlob.arrayBuffer())
+    const c1Content = await resultZip.file("OEBPS/c1.xhtml")?.async("string")
+
+    expect(c1Content).toContain('<?xml version="1.0" encoding="utf-8"?>')
+    expect(c1Content).toContain("<!DOCTYPE html")
+    expect(c1Content).toContain("Từ đúng trong sách EPUB2.")
+  })
+
+  it("Matrix 19: Footnotes, ruby annotations, sup/sub, and inline elements preserved", async () => {
+    const zip = new JSZip()
+    zip.file("mimetype", "application/epub+zip", { compression: "STORE" })
+    zip.file(
+      "META-INF/container.xml",
+      `<container><rootfiles><rootfile full-path="OEBPS/content.opf"/></rootfiles></container>`
+    )
+    zip.file(
+      "OEBPS/content.opf",
+      `<package xmlns="http://www.idpf.org/2007/opf" version="3.0"><manifest><item id="c1" href="c1.xhtml" media-type="application/xhtml+xml"/></manifest><spine><itemref idref="c1"/></spine></package>`
+    )
+    zip.file(
+      "OEBPS/c1.xhtml",
+      `<?xml version="1.0" encoding="utf-8"?>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"><head><title>Special Elements</title></head><body><p>Nước H<sub>2</sub>O và E=mc<sup>2</sup> có từ saii<a epub:type="noteref" href="#fn1">1</a>.</p><p><ruby>東<rt>とう</rt>京<rt>きょう</rt></ruby> là thủ đô.</p></body></html>`
+    )
+
+    const origBlob = new Blob(
+      [await zip.generateAsync({ type: "arraybuffer" })],
+      { type: "application/epub+zip" }
+    )
+    const origFile = new File([origBlob], "special.epub")
+
+    const parsed = await parseEpub(origFile)
+    expect(parsed.textBlocks.length).toBe(2)
+    expect(parsed.textBlocks[0].text).toBe("Nước H2O và E=mc2 có từ saii1.")
+
+    // Replace "saii" (offset 24..28) -> "đúng"
+    const fixes: FixInstruction[] = [
+      {
+        filePath: parsed.textBlocks[0].filePath,
+        blockId: parsed.textBlocks[0].id,
+        startIndex: 24,
+        endIndex: 28,
+        newWord: "đúng"
+      }
+    ]
+
+    const fixedBlob = await applyFixesAndRepack(origBlob, fixes)
+    const resultZip = await JSZip.loadAsync(await fixedBlob.arrayBuffer())
+    const c1Content = await resultZip.file("OEBPS/c1.xhtml")?.async("string")
+
+    expect(c1Content).toContain("<sub>2</sub>")
+    expect(c1Content).toContain("<sup>2</sup>")
+    expect(c1Content).toContain('<a epub:type="noteref" href="#fn1">1</a>')
+    expect(c1Content).toContain("<ruby>東<rt>とう</rt>京<rt>きょう</rt></ruby>")
+    expect(c1Content).toContain("từ đúng")
+  })
+
+  it("Matrix 20: Unedited non-XHTML assets (images, CSS, fonts) and metadata are strictly preserved", async () => {
+    const zip = new JSZip()
+    zip.file("mimetype", "application/epub+zip", { compression: "STORE" })
+    zip.file(
+      "META-INF/container.xml",
+      `<container><rootfiles><rootfile full-path="OEBPS/content.opf"/></rootfiles></container>`
+    )
+    zip.file(
+      "OEBPS/content.opf",
+      `<package xmlns="http://www.idpf.org/2007/opf" version="3.0"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>Test Book</dc:title></metadata><manifest><item id="c1" href="c1.xhtml"/><item id="style" href="style.css"/><item id="img" href="cover.png"/></manifest><spine><itemref idref="c1"/></spine></package>`
+    )
+    zip.file("OEBPS/style.css", "body { font-family: serif; color: #333; }")
+    zip.file("OEBPS/cover.png", "binary-image-data-test-12345")
+    zip.file(
+      "OEBPS/c1.xhtml",
+      `<html xmlns="http://www.w3.org/1999/xhtml"><body><p>Chương 1 có từ saii.</p></body></html>`
+    )
+
+    const origBlob = new Blob(
+      [await zip.generateAsync({ type: "arraybuffer" })],
+      { type: "application/epub+zip" }
+    )
+    const origFile = new File([origBlob], "assets.epub")
+    const parsed = await parseEpub(origFile)
+
+    const fixes: FixInstruction[] = [
+      {
+        filePath: parsed.textBlocks[0].filePath,
+        blockId: parsed.textBlocks[0].id,
+        startIndex: 16,
+        endIndex: 20,
+        newWord: "đúng"
+      }
+    ]
+
+    const fixedBlob = await applyFixesAndRepack(origBlob, fixes)
+    const resultZip = await JSZip.loadAsync(await fixedBlob.arrayBuffer())
+
+    // Check that style.css, cover.png, container.xml, content.opf are identical
+    expect(await resultZip.file("OEBPS/style.css")?.async("string")).toBe(
+      "body { font-family: serif; color: #333; }"
+    )
+    expect(await resultZip.file("OEBPS/cover.png")?.async("string")).toBe(
+      "binary-image-data-test-12345"
+    )
+    expect(
+      await resultZip.file("META-INF/container.xml")?.async("string")
+    ).toBe(
+      `<container><rootfiles><rootfile full-path="OEBPS/content.opf"/></rootfiles></container>`
+    )
+    expect(await resultZip.file("mimetype")?.async("string")).toBe(
+      "application/epub+zip"
+    )
+  })
 })

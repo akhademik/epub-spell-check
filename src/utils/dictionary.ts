@@ -59,31 +59,32 @@ function dictCacheKey(dictName: string): string {
 }
 
 /**
- * Fetches dictionary content, preferring the live KV-backed API so that
- * words added through the admin panel show up without a rebuild/redeploy.
- * Falls back to the bundled `public/*.txt` file if the API is unreachable
- * (e.g. plain `vite` dev server, or the Cloudflare Function/KV is down).
+ * Fetches dictionary content. For normal usage, loads directly from local bundled files.
+ * If an admin token is provided, fetches the live KV-backed content.
  */
 async function fetchDictContent(
-  dictName: "vn" | "non-vn" | "custom" | "names"
+  dictName: "vn" | "non-vn" | "custom" | "names",
+  token?: string
 ): Promise<string> {
-  try {
-    const apiRes = await fetch(`/api/dict/${dictName}`)
-    if (apiRes.ok) {
-      const contentType = apiRes.headers.get("content-type")
-      if (!contentType?.includes("text/html")) {
-        return await apiRes.text()
+  if (token?.trim()) {
+    try {
+      const apiRes = await fetch(`/api/dict/${dictName}`, {
+        headers: {
+          authorization: `Bearer ${token.trim()}`
+        }
+      })
+      if (apiRes.ok) {
+        const contentType = apiRes.headers.get("content-type")
+        if (!contentType?.includes("text/html")) {
+          return await apiRes.text()
+        }
       }
-    } else {
+    } catch (_e) {
       logger.warn(
-        `Dict API returned ${apiRes.status} for ${dictName}, falling back to bundled file`
+        `Dict API unreachable for ${dictName}, falling back to bundled file:`,
+        _e
       )
     }
-  } catch (_e) {
-    logger.warn(
-      `Dict API unreachable for ${dictName}, falling back to bundled file:`,
-      _e
-    )
   }
 
   return await fetchLocalDict(`${dictName}-dict.txt`)
@@ -123,14 +124,14 @@ async function getDictionary(
 }
 
 /**
- * Forces a fresh fetch of one dictionary and refreshes its IndexedDB cache,
- * bypassing the TTL. Used right after the admin panel adds/removes words so
- * a subsequent `loadDictionaries()` call sees the new content immediately.
+ * Forces a fresh fetch of one dictionary and refreshes its IndexedDB cache.
+ * Used by the admin panel after modifying words with an admin token.
  */
 export async function refreshDictionaryCache(
-  dictName: "vn" | "non-vn" | "custom" | "names"
+  dictName: "vn" | "non-vn" | "custom" | "names",
+  token?: string
 ): Promise<void> {
-  const data = await fetchDictContent(dictName)
+  const data = await fetchDictContent(dictName, token)
   try {
     await setCache(dictCacheKey(dictName), { timestamp: Date.now(), data })
   } catch (_e) {
@@ -212,7 +213,7 @@ export async function loadDictionaries(): Promise<{
   // 2. Process Non-Vietnamese (English, French, Italian, Spanish, German, etc.) Dictionary
   if (nonVnRes) {
     for (const word of nonVnRes.split(/\r?\n/)) {
-      const cleanWord = word.trim().toLowerCase()
+      const cleanWord = word.trim().toLowerCase().normalize("NFC")
       if (cleanWord) {
         for (const token of cleanWord.split(/\s+/)) {
           if (token) dictionaries.nonVietnamese.add(token)
@@ -226,7 +227,7 @@ export async function loadDictionaries(): Promise<{
   // 3. Process Custom Dictionary (Abbreviations, terms)
   if (customRes) {
     for (const word of customRes.split(/\r?\n/)) {
-      const cleanWord = word.trim()
+      const cleanWord = word.trim().normalize("NFC")
       if (cleanWord) {
         for (const token of cleanWord.split(/\s+/)) {
           if (token) dictionaries.custom.add(token)
@@ -240,7 +241,7 @@ export async function loadDictionaries(): Promise<{
   // 4. Process Names Dictionary (Proper names, historical figures, places)
   if (namesRes) {
     for (const word of namesRes.split(/\r?\n/)) {
-      const cleanWord = word.trim()
+      const cleanWord = word.trim().normalize("NFC")
       if (cleanWord) {
         for (const token of cleanWord.split(/\s+/)) {
           if (token) {
