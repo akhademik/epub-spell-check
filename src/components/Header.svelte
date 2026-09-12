@@ -22,9 +22,9 @@
 />
 
 <header class="sticky top-0 z-30 border-b shadow-md bg-slate-900/95 backdrop-blur border-slate-800">
-  <div class="flex flex-wrap items-center justify-between max-w-7xl gap-4 px-4 py-3 mx-auto">
-    <!-- Logo & Title (Icon always shown, title text only on md: 768px+) -->
-    <div class="flex items-center gap-3 shrink-0">
+  <div class="flex items-center justify-between max-w-7xl gap-2 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 mx-auto">
+    <!-- Logo & Title (Hidden on mobile < sm, icon only on sm, full title on md+) -->
+    <div class="hidden sm:flex items-center gap-3 shrink-0">
       <div class="p-2 text-white bg-blue-600 rounded-xl shadow-lg shadow-blue-900/30">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -49,14 +49,14 @@
     </div>
 
     <!-- Actions & Quick Controls (Mobile: stats left, action buttons right; Desktop: inline right) -->
-    <div class="flex items-center justify-between md:justify-end gap-2 sm:gap-3 flex-1 md:flex-initial">
+    <div class="flex items-center justify-between md:justify-end gap-2 sm:gap-3 flex-1 md:flex-initial min-w-0">
       <!-- Active Dictionaries Indicator (Mobile/Medium <= 768px: color dots + counts only; Desktop md+: labeled stats) -->
       <div
-        class="flex items-center justify-start gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[11px] sm:text-xs font-mono text-slate-300 shrink-0"
+        class="flex items-center justify-start gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[10px] sm:text-xs font-mono text-slate-300 shrink-0"
         title="4 tầng từ điển đang hoạt động đồng thời (Tiếng Việt + Tên riêng + Ngoại ngữ + Viết tắt)"
       >
         <span class="flex items-center gap-1 text-emerald-400">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981]"></span>
+          <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981]"></span>
           <span><span class="hidden md:inline">VN: </span>{appState.dictionaryStatus.vietnameseWordCount > 0 ? `${(appState.dictionaryStatus.vietnameseWordCount / 1000).toFixed(0)}k` : '...'}</span>
         </span>
         <span class="text-slate-600">|</span>
@@ -73,14 +73,14 @@
         </span>
       </div>
 
-      <!-- Action Buttons Container (Mobile: align right / flex-end) -->
-      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+      <!-- Action Buttons Container (Mobile: align right / flex-end, icon-only) -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
       <!-- Help Button -->
       <button
         type="button"
         onclick={() => appState.openModal("help")}
-        class="p-2 transition-colors rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
+        class="p-1.5 sm:p-2 transition-colors rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
         title="Hướng dẫn sử dụng"
         aria-label="Hướng dẫn"
       >
@@ -110,13 +110,13 @@
           <button
             type="button"
             onclick={() => appState.exportFixedEpub()}
-            class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white transition-all rounded-xl shadow-md bg-emerald-600 hover:bg-emerald-500 border border-emerald-500 shadow-emerald-900/30 animate-pulse hover:animate-none shrink-0"
+            class="flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 text-xs font-semibold text-white transition-all rounded-xl shadow-md bg-emerald-600 hover:bg-emerald-500 border border-emerald-500 shadow-emerald-900/30 animate-pulse hover:animate-none shrink-0"
             title={`Tải về tệp ${appState.fileType} đã được sửa các lỗi chính tả`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <span>Xuất {appState.fileType} ({appState.appliedFixes.size})</span>
+            <span class="hidden sm:inline">Xuất {appState.fileType} </span><span>({appState.appliedFixes.size})</span>
           </button>
         {/if}
 
@@ -124,26 +124,28 @@
         <button
           type="button"
           onclick={() => appState.exportErrors()}
-          class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white transition-colors rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 shrink-0"
+          class="flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 text-xs font-semibold text-slate-300 hover:text-white transition-colors rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 shrink-0"
           title="Tải về danh sách tất cả các từ lỗi"
+          aria-label="Xuất lỗi"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
           </svg>
-          <span>Xuất lỗi</span>
+          <span class="hidden sm:inline">Xuất lỗi</span>
         </button>
 
         <!-- Choose Another File Button (Direct File Browser) -->
         <button
           type="button"
           onclick={() => fileInputElement?.click()}
-          class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white transition-colors bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md border border-blue-500 shadow-blue-900/30 shrink-0"
+          class="flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 text-xs font-semibold text-white transition-colors bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md border border-blue-500 shadow-blue-900/30 shrink-0"
           title="Chọn tệp khác để soát lỗi"
+          aria-label="File khác"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          <span>File khác</span>
+          <span class="hidden sm:inline">File khác</span>
         </button>
       {/if}
       </div>
