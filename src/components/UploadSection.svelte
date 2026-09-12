@@ -32,7 +32,7 @@
   }
 </script>
 
-<div class="w-full max-w-3xl mx-auto my-auto py-12 px-4 animate-fadeIn">
+<div class="w-full max-w-3xl mx-auto my-auto py-6 sm:py-12 px-4 animate-fadeIn">
   <input
     bind:this={fileInputElement}
     type="file"
@@ -47,14 +47,14 @@
     ondrop={handleDrop}
     ondragover={handleDragOver}
     ondragleave={handleDragLeave}
-    class="w-full flex flex-col items-center justify-center p-12 text-center border-2 border-dashed rounded-3xl cursor-pointer transition-all duration-300 {isDragging
+    class="w-full flex flex-col items-center justify-center p-6 sm:p-12 text-center border-2 border-dashed rounded-3xl cursor-pointer transition-all duration-300 {isDragging
       ? 'border-blue-500 bg-blue-950/30 scale-[1.01]'
       : 'border-slate-800 bg-slate-900/60 hover:bg-slate-900 hover:border-slate-700'} shadow-2xl"
   >
-    <div class="p-5 mb-6 text-blue-400 bg-blue-950/60 rounded-2xl border border-blue-800/50 shadow-inner">
+    <div class="p-3.5 sm:p-5 mb-3 sm:mb-6 text-blue-400 bg-blue-950/60 rounded-2xl border border-blue-800/50 shadow-inner">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="w-12 h-12"
+        class="w-8 h-8 sm:w-12 sm:h-12"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -68,23 +68,8 @@
       </svg>
     </div>
 
-    <h2 class="text-2xl font-bold text-slate-100 mb-2">
-      Kéo & thả tệp <span class="text-blue-400">.epub</span>, <span class="text-emerald-400">.txt</span> hoặc <span class="text-purple-400">.md</span> vào đây
+    <h2 class="text-sm sm:text-xl md:text-2xl font-medium sm:font-bold text-slate-100 mb-1 sm:mb-2">
+      Hỗ trợ file <span class="text-blue-400 font-semibold">.epub</span>, <span class="text-emerald-400 font-semibold">.txt</span> hoặc <span class="text-purple-400 font-semibold">.md</span> 
     </h2>
-    <p class="text-sm text-slate-400 max-w-md">
-      Hỗ trợ kiểm tra chính tả toàn diện, sửa nhanh các lỗi và xuất lại tệp đã sửa đúng định dạng gốc.
-    </p>
-
-    <div class="flex items-center gap-2 mt-6">
-      <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/30">
-        EPUB Sách
-      </span>
-      <span class="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-        Văn bản TXT
-      </span>
-      <span class="px-3 py-1 text-xs font-semibold rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">
-        Markdown MD
-      </span>
-    </div>
   </button>
 </div>

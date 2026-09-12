@@ -14,9 +14,9 @@
 
   const DICT_TABS: { id: DictSourceName; label: string; badge: string; color: string; bg: string }[] = [
     { id: "vn", label: "1. Tiếng Việt", badge: "VN", color: "text-emerald-400 border-emerald-500", bg: "bg-emerald-500/10 text-emerald-300" },
-    { id: "names", label: "2. Tên riêng & Địa danh", badge: "NAMES", color: "text-amber-400 border-amber-500", bg: "bg-amber-500/10 text-amber-300" },
-    { id: "non-vn", label: "3. Ngoại ngữ & Từ mượn", badge: "NON-VN", color: "text-blue-400 border-blue-500", bg: "bg-blue-500/10 text-blue-300" },
-    { id: "custom", label: "4. Viết tắt & Tuỳ chỉnh", badge: "CUSTOM", color: "text-purple-400 border-purple-500", bg: "bg-purple-500/10 text-purple-300" }
+    { id: "names", label: "2. Tên riêng", badge: "NAMES", color: "text-amber-400 border-amber-500", bg: "bg-amber-500/10 text-amber-300" },
+    { id: "non-vn", label: "3. Ngoại ngữ", badge: "NON-VN", color: "text-blue-400 border-blue-500", bg: "bg-blue-500/10 text-blue-300" },
+    { id: "custom", label: "4. Viết tắt", badge: "CUSTOM", color: "text-purple-400 border-purple-500", bg: "bg-purple-500/10 text-purple-300" }
   ]
 
   let mainSection = $state<"manage" | "audit">("manage")
@@ -179,11 +179,11 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-        Quay lại Soát Sách
+        Quay lại
       </button>
       <div class="h-4 w-px bg-slate-700"></div>
       <h2 class="text-lg font-bold text-white flex items-center gap-2">
-        <span>Admin Dashboard: Quản Lý Từ Điển</span>
+        <span>Trang Quản Lý Từ Điển</span>
       </h2>
     </div>
 
@@ -214,23 +214,18 @@
       </div>
 
       <div class="space-y-2">
-        <h3 class="text-xl font-bold text-white">Yêu Cầu Mã Token Quản Trị</h3>
-        <p class="text-xs text-slate-400 leading-relaxed">
-          Vui lòng nhập mã <strong>ADMIN_TOKEN</strong> bí mật để mở khóa bảng điều khiển quản lý và chỉnh sửa từ điển.
-        </p>
+        <h3 class="text-xl font-bold text-white">Nhập Token Quản Trị</h3>   
       </div>
 
       <!-- Token Form -->
       <div class="space-y-3 text-left">
-        <label for="admin-token-input" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-          Mã ADMIN_TOKEN (lưu tạm trong phiên):
-        </label>
+    
         <div class="flex gap-2">
           <input
             id="admin-token-input"
             type="password"
             bind:value={tokenInput}
-            placeholder="Nhập mã ADMIN_TOKEN..."
+            placeholder=""
             class="flex-1 px-3.5 py-2.5 text-sm bg-slate-950 border border-slate-700 rounded-xl text-slate-200 focus:outline-none focus:border-blue-500 font-mono"
             onkeydown={(e) => { if (e.key === "Enter") handleSaveToken() }}
           />
@@ -241,10 +236,7 @@
           >
             Mở khóa
           </button>
-        </div>
-        <p class="text-[11px] text-slate-500 italic">
-          * Token chỉ lưu trong bộ nhớ RAM của phiên làm việc hiện tại và sẽ tự động xóa khi tải lại trang.
-        </p>
+        </div>      
       </div>
     </div>
   {:else}
@@ -257,7 +249,7 @@
           ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/40'
           : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
       >
-        1. Quản Lý Từ Vựng & Thêm Mới
+        1. Quản Lý Từ Vựng
       </button>
       <button
         type="button"
@@ -266,7 +258,7 @@
           ? 'bg-amber-600 text-white shadow-lg shadow-amber-900/40'
           : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}"
       >
-        2. Kiểm Tra Chất Lượng & Dọn Rác (Audit)
+        2. Kiểm Tra Chất Lượng Từ Vựng
       </button>
     </div>
 

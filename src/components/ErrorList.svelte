@@ -222,25 +222,25 @@
             <button
               type="button"
               onclick={() => handleSelect(group)}
-              class="flex items-center justify-between flex-grow px-3.5 py-2.5 text-left rounded-l-xl focus:outline-none min-w-0"
+              class="flex items-center justify-between flex-grow px-3 py-2 text-left rounded-l-xl focus:outline-none min-w-0"
             >
-              <div class="w-full flex items-center gap-3">
-                <span class="w-3.5 h-3.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
-                <span class="font-sans text-[20px] font-bold tracking-normal leading-tight truncate {isSelected ? 'text-blue-100 font-extrabold' : 'text-slate-100'}">
+              <div class="w-full flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full shrink-0 ml-0.5 {getDotColor(group.type)}"></span>
+                <span class="font-sans text-[15px] sm:text-base font-semibold sm:font-bold tracking-normal leading-tight truncate {isSelected ? 'text-blue-100 font-bold sm:font-extrabold' : 'text-slate-100'}">
                   {group.word}
                 </span>
-                <span class="text-xs px-2 py-0.5 rounded-md {isSelected ? 'bg-blue-950 text-blue-200 border border-blue-700' : 'bg-slate-800/90 text-slate-300 border border-slate-700/70'} shrink-0 font-medium">
+                <span class="text-[11px] px-1.5 py-0.5 rounded-md {isSelected ? 'bg-blue-950 text-blue-200 border border-blue-700' : 'bg-slate-800/90 text-slate-300 border border-slate-700/70'} shrink-0 font-medium">
                   {getBadgeLabel(group.type)}
                 </span>
                 {#if group.contexts.some((ctx) => ctx.resolved || appState.appliedFixes.has(appState.getInstanceKey(ctx)))}
-                  <span class="text-xs px-2 py-0.5 rounded-md bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <span class="text-[11px] px-1.5 py-0.5 rounded-md bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 shrink-0 font-medium flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                     <span>Đang sửa</span>
                   </span>
                 {/if}
-                <span class="ml-auto {isSelected ? 'bg-blue-800 text-blue-100 border-blue-600' : 'bg-slate-800 text-slate-300 border-slate-700'} border text-xs font-bold px-2.5 py-0.5 rounded-full shrink-0">
+                <span class="ml-auto {isSelected ? 'bg-blue-800 text-blue-100 border-blue-600' : 'bg-slate-800 text-slate-300 border-slate-700'} border text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0">
                   {group.contexts.length}
                 </span>
               </div>
