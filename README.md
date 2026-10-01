@@ -173,8 +173,8 @@ pnpm build
 
 ## Trạng thái hệ thống
 
-- Cập nhật lần cuối: 2026-10-01 13:53
-- Đã hoàn thành: Khắc phục lỗi con lăn chuột (mouse wheel scroll) bị giật tâm do lazy load trong danh sách từ lỗi (`ErrorList.svelte`), bảo toàn khả năng căn giữa mượt mà khi điều hướng phím mũi tên (`ArrowUp`/`ArrowDown`).
+- Cập nhật lần cuối: 2026-10-01 14:00
+- Đã hoàn thành: Thêm 2 nút sắp xếp danh sách từ lỗi (Sắp xếp theo tên A-Z / Z-A và Sắp xếp theo số lượng nhiều-ít / ít-nhiều) nằm giữa thanh tìm kiếm và nhãn đếm tổng số lỗi.
 - Đang dở: Không có.
 - Biết trước còn thiếu / nợ kỹ thuật: Không có.
 
@@ -182,7 +182,11 @@ pnpm build
 
 ### 2026-10-01
 
+- Tính năng mới: Thêm 2 nút chuyển đổi thứ tự sắp xếp trong thanh công cụ danh sách lỗi `ErrorList`:
+  - Nút sắp xếp theo tên: luân chuyển giữa `A → Z` và `Z → A`.
+  - Nút sắp xếp theo số lượng lỗi: luân chuyển giữa `Nhiều → Ít` và `Ít → Nhiều`.
 - Sửa lỗi: Khắc phục xung đột giữa lazy loading (`visibleCount`) và `$effect` tự động cuộn giữa (`scrollIntoView({ block: "center" })`) trong `ErrorList.svelte`. Đã bọc `untrack()` và lưu vết `lastSelectedId` để chỉ cuộn giữa khi người dùng thực sự thay đổi từ được chọn.
-- Kết quả pipeline: format ✅ | lint ✅ | type ✅ | test ✅ (20/20 suites, 188/188 pass) | build ✅
-- File chính bị ảnh hưởng: `src/components/ErrorList.svelte`
+- Kết quả pipeline: format ✅ | lint ✅ | type ✅ | test ✅ (20/20 suites, 189/189 pass) | build ✅
+- File chính bị ảnh hưởng: `src/components/ErrorList.svelte`, `src/state.svelte.ts`, `src/types/errors.ts`, `tests/unit/filter.test.ts`
+
 

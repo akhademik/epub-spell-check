@@ -10,7 +10,12 @@ import {
 import type { CheckSettings } from "./types/analysis"
 import type { Dictionaries, DictionaryStatus } from "./types/dictionary"
 import type { EpubContent } from "./types/epub"
-import type { ErrorGroup, ErrorInstance, ErrorType } from "./types/errors"
+import type {
+  ErrorGroup,
+  ErrorInstance,
+  ErrorSortOrder,
+  ErrorType
+} from "./types/errors"
 import type { ReaderSettings, ToastNotification } from "./types/state"
 import { matchCase } from "./utils/analysis-core"
 import { clearSuggestionCache, groupErrors } from "./utils/analyzer"
@@ -166,7 +171,7 @@ export class AppStateModel {
   selectedGroupId = $state<string | null>(null)
   currentInstanceIndex = $state<number>(0)
   errorSearchQuery = $state<string>("")
-  errorSortOrder = $state<"alpha" | "count">("alpha")
+  errorSortOrder = $state<ErrorSortOrder>("alpha-asc")
 
   // UI State
   currentView = $state<"main" | "admin">("main")
@@ -204,8 +209,22 @@ export class AppStateModel {
       )
     }
 
-    if (this.errorSortOrder === "count") {
-      list.sort((a, b) => b.contexts.length - a.contexts.length)
+    if (this.errorSortOrder === "count-desc") {
+      list.sort(
+        (a, b) =>
+          b.contexts.length - a.contexts.length ||
+          a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
+      )
+    } else if (this.errorSortOrder === "count-asc") {
+      list.sort(
+        (a, b) =>
+          a.contexts.length - b.contexts.length ||
+          a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
+      )
+    } else if (this.errorSortOrder === "alpha-desc") {
+      list.sort((a, b) =>
+        b.word.localeCompare(a.word, "vi", { sensitivity: "base" })
+      )
     } else {
       list.sort((a, b) =>
         a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
@@ -393,6 +412,22 @@ export class AppStateModel {
     this.readerSettings.fontFamily =
       this.readerSettings.fontFamily === "serif" ? "sans-serif" : "serif"
     saveStorage(STORAGE_KEYS.READER, this.readerSettings)
+  }
+
+  toggleAlphaSort() {
+    if (this.errorSortOrder === "alpha-asc") {
+      this.errorSortOrder = "alpha-desc"
+    } else {
+      this.errorSortOrder = "alpha-asc"
+    }
+  }
+
+  toggleCountSort() {
+    if (this.errorSortOrder === "count-desc") {
+      this.errorSortOrder = "count-asc"
+    } else {
+      this.errorSortOrder = "count-desc"
+    }
   }
 
   selectGroup(group: ErrorGroup) {

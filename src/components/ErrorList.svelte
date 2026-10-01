@@ -129,9 +129,9 @@
 <div class="flex flex-col h-full max-h-full min-h-0 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
   <!-- Search, Filter & Sort Controls Header -->
   <div class="p-3 border-b border-slate-800 bg-slate-900/90 flex flex-col gap-2 shrink-0">
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1.5">
       <!-- Search Input -->
-      <div class="relative flex-1">
+      <div class="relative flex-1 min-w-[100px]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
@@ -149,6 +149,64 @@
           class="w-full pl-9 pr-3 py-1.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
         />
       </div>
+
+      <!-- Sort by Name (A-Z / Z-A) Button -->
+      <button
+        type="button"
+        onclick={() => {
+          appState.toggleAlphaSort()
+          visibleCount = 30
+        }}
+        class="flex items-center gap-1 px-2 py-1.5 rounded-xl text-xs font-medium transition-all border shrink-0 {appState.errorSortOrder === 'alpha-asc' || appState.errorSortOrder === 'alpha-desc'
+          ? 'bg-blue-900/60 text-blue-300 border-blue-600/80 font-bold shadow-sm'
+          : 'bg-slate-950/80 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'}"
+        title={appState.errorSortOrder === 'alpha-desc'
+          ? 'Sắp xếp theo tên: Z → A (Bấm để đổi A → Z)'
+          : 'Sắp xếp theo tên: A → Z (Bấm để đổi Z → A)'}
+        aria-label="Sắp xếp theo tên"
+      >
+        <span class="font-mono font-semibold">
+          {appState.errorSortOrder === 'alpha-desc' ? 'Z-A' : 'A-Z'}
+        </span>
+        {#if appState.errorSortOrder === 'alpha-desc'}
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 {appState.errorSortOrder === 'alpha-desc' ? 'text-blue-300' : 'text-slate-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+          </svg>
+        {:else}
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 {appState.errorSortOrder === 'alpha-asc' ? 'text-blue-300' : 'text-slate-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7" />
+          </svg>
+        {/if}
+      </button>
+
+      <!-- Sort by Count (Nhiều -> Ít / Ít -> Nhiều) Button -->
+      <button
+        type="button"
+        onclick={() => {
+          appState.toggleCountSort()
+          visibleCount = 30
+        }}
+        class="flex items-center gap-1 px-2 py-1.5 rounded-xl text-xs font-medium transition-all border shrink-0 {appState.errorSortOrder === 'count-desc' || appState.errorSortOrder === 'count-asc'
+          ? 'bg-blue-900/60 text-blue-300 border-blue-600/80 font-bold shadow-sm'
+          : 'bg-slate-950/80 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'}"
+        title={appState.errorSortOrder === 'count-asc'
+          ? 'Sắp xếp theo số lượng: Ít → Nhiều (Bấm để đổi Nhiều → Ít)'
+          : 'Sắp xếp theo số lượng: Nhiều → Ít (Bấm để đổi Ít → Nhiều)'}
+        aria-label="Sắp xếp theo số lượng"
+      >
+        <span class="font-medium text-[11px] sm:text-xs">
+          {appState.errorSortOrder === 'count-asc' ? 'Ít→Nhiều' : 'Nhiều→Ít'}
+        </span>
+        {#if appState.errorSortOrder === 'count-asc'}
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 {appState.errorSortOrder === 'count-asc' ? 'text-blue-300' : 'text-slate-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7" />
+          </svg>
+        {:else}
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 {appState.errorSortOrder === 'count-desc' ? 'text-blue-300' : 'text-slate-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+          </svg>
+        {/if}
+      </button>
 
       <!-- Count Badge -->
       <span class="text-xs font-mono px-2.5 py-1.5 bg-slate-800 text-slate-300 rounded-xl shrink-0 border border-slate-700 font-semibold">

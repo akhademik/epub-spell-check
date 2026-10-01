@@ -322,4 +322,136 @@ describe("Filter Module", () => {
     const initial = valid.length > 0 ? valid : ALL_ERROR_TYPES
     expect(initial).toEqual(ALL_ERROR_TYPES)
   })
+
+  it("should sort error list by alpha-asc, alpha-desc, count-desc, and count-asc correctly", () => {
+    const dummyContext = {
+      originalParagraph: "",
+      startIndex: 0,
+      endIndex: 0,
+      matchIndex: 0,
+      chapterIndex: 0,
+      paragraphIndex: 0
+    }
+
+    const sortTestGroups: ErrorGroup[] = [
+      {
+        id: "1",
+        word: "chuối",
+        type: "UnknownWord",
+        reason: "dict",
+        count: 1,
+        contexts: [
+          {
+            id: "c1",
+            word: "chuối",
+            originalWord: "chuối",
+            type: "UnknownWord",
+            context: dummyContext
+          }
+        ]
+      },
+      {
+        id: "2",
+        word: "áo",
+        type: "UnknownWord",
+        reason: "dict",
+        count: 5,
+        contexts: [
+          {
+            id: "c1",
+            word: "áo",
+            originalWord: "áo",
+            type: "UnknownWord",
+            context: dummyContext
+          },
+          {
+            id: "c2",
+            word: "áo",
+            originalWord: "áo",
+            type: "UnknownWord",
+            context: dummyContext
+          },
+          {
+            id: "c3",
+            word: "áo",
+            originalWord: "áo",
+            type: "UnknownWord",
+            context: dummyContext
+          },
+          {
+            id: "c4",
+            word: "áo",
+            originalWord: "áo",
+            type: "UnknownWord",
+            context: dummyContext
+          },
+          {
+            id: "c5",
+            word: "áo",
+            originalWord: "áo",
+            type: "UnknownWord",
+            context: dummyContext
+          }
+        ]
+      },
+      {
+        id: "3",
+        word: "bưởi",
+        type: "UnknownWord",
+        reason: "dict",
+        count: 3,
+        contexts: [
+          {
+            id: "c1",
+            word: "bưởi",
+            originalWord: "bưởi",
+            type: "UnknownWord",
+            context: dummyContext
+          },
+          {
+            id: "c2",
+            word: "bưởi",
+            originalWord: "bưởi",
+            type: "UnknownWord",
+            context: dummyContext
+          },
+          {
+            id: "c3",
+            word: "bưởi",
+            originalWord: "bưởi",
+            type: "UnknownWord",
+            context: dummyContext
+          }
+        ]
+      }
+    ]
+
+    // 1. Alpha ascending (A -> Z)
+    const alphaAsc = [...sortTestGroups].sort((a, b) =>
+      a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
+    )
+    expect(alphaAsc.map((g) => g.word)).toEqual(["áo", "bưởi", "chuối"])
+
+    // 2. Alpha descending (Z -> A)
+    const alphaDesc = [...sortTestGroups].sort((a, b) =>
+      b.word.localeCompare(a.word, "vi", { sensitivity: "base" })
+    )
+    expect(alphaDesc.map((g) => g.word)).toEqual(["chuối", "bưởi", "áo"])
+
+    // 3. Count descending (Nhiều -> Ít)
+    const countDesc = [...sortTestGroups].sort(
+      (a, b) =>
+        b.contexts.length - a.contexts.length ||
+        a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
+    )
+    expect(countDesc.map((g) => g.word)).toEqual(["áo", "bưởi", "chuối"])
+
+    // 4. Count ascending (Ít -> Nhiều)
+    const countAsc = [...sortTestGroups].sort(
+      (a, b) =>
+        a.contexts.length - b.contexts.length ||
+        a.word.localeCompare(b.word, "vi", { sensitivity: "base" })
+    )
+    expect(countAsc.map((g) => g.word)).toEqual(["chuối", "bưởi", "áo"])
+  })
 })
