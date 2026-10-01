@@ -6,6 +6,12 @@ export type ErrorType =
   | "SpecialCharacter"
   | "ContextConfusion"
 
+export type ErrorSortOrder =
+  | "alpha-asc"
+  | "alpha-desc"
+  | "count-desc"
+  | "count-asc"
+
 export interface ErrorInstance {
   id?: string
   word: string

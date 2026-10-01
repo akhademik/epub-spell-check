@@ -309,7 +309,7 @@
         >
           <span>{contextSegments.prefix}</span>
           <span
-            class="px-1.5 py-0.5 rounded-lg font-bold border underline decoration-2 underline-offset-4 {isCurrentInstanceResolved ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]' : getHighlightStyle(group.type)}"
+            class="px-1.5 py-0.5 rounded-lg font-bold border {isCurrentInstanceResolved ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]' : getHighlightStyle(group.type)}"
           >
             {isCurrentInstanceResolved && currentAppliedWord ? currentAppliedWord : contextSegments.target}
           </span>

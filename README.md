@@ -170,3 +170,28 @@ pnpm test:regression
 # Đóng gói bản phát hành Production
 pnpm build
 ```
+
+## Trạng thái hệ thống
+
+- Cập nhật lần cuối: 2026-10-01 14:42
+- Đã hoàn thành:
+  - Bỏ qua (ignore) các từ nói lắp, ngân dài, nối dấu gạch ngang (`Đi-i`, `đ -đâu`, `Đê-ê-ể`, `đợ-ợ-ợi`, `m-ã-ãi`, `t-o-i-te`) trong hội thoại/văn học, không đưa vào danh sách báo lỗi.
+  - Loại bỏ gạch chân (underline) ở từ lỗi trong khung xem trước ngữ cảnh (`ContextView.svelte`), chỉ giữ lại hiệu ứng highlight nền màu và đường viền bo tròn.
+- Đang dở: Không có.
+- Biết trước còn thiếu / nợ kỹ thuật: Không có.
+
+## Changelog
+
+### 2026-10-01
+
+- Soát lỗi văn bản: Bổ sung hàm `isHyphenConnected` trong [`src/utils/analysis-core.ts`](file:///home/hajtran/dev/epub-spell-check/src/utils/analysis-core.ts) và tích hợp vào [`src/workers/analysis.worker.ts`](file:///home/hajtran/dev/epub-spell-check/src/workers/analysis.worker.ts) để bỏ qua các từ nối dấu gạch ngang mô phỏng nói lắp/ngân dài trong hội thoại (`Đi-i`, `đ -đâu`, `Đê-ê-ể`, `đợ-ợ-ợi`, `m-ã-ãi`, `t-o-i-te`), không bắt lỗi nhầm các âm tiết tách lẻ.
+- Giao diện (UI): Loại bỏ class `underline decoration-2 underline-offset-4` khỏi từ lỗi được highlight trong khung đọc ngữ cảnh `ContextView.svelte`, giữ nguyên các hiệu ứng màu sắc và glow đặc trưng.
+- Cập nhật quy tắc: Chuẩn hóa và mở rộng danh mục quy tắc soát lỗi ngữ cảnh `CONFUSABLE_RULES` (`src/utils/context-confusion.ts`), bổ sung 25+ cặp từ sai phổ biến, khôi phục nhóm `context_dependent` và loại bỏ các trường hợp có nguy cơ False Positive.
+- Tính năng mới: Thêm 2 nút chuyển đổi thứ tự sắp xếp trong thanh công cụ danh sách lỗi `ErrorList` (`A → Z`/`Z → A` và `Nhiều → Ít`/`Ít → Nhiều`).
+- Sửa lỗi: Khắc phục xung đột giữa lazy loading (`visibleCount`) và `$effect` tự động cuộn giữa trong `ErrorList.svelte`.
+- Kết quả pipeline: format ✅ | lint ✅ | type ✅ | test ✅ (20/20 suites, 191/191 pass) | build ✅
+- File chính bị ảnh hưởng: `src/utils/analysis-core.ts`, `src/workers/analysis.worker.ts`, `src/components/ContextView.svelte`, `tests/unit/analysis-core.test.ts`
+
+
+
+

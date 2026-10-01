@@ -5,6 +5,7 @@ import type { ErrorInstance } from "../types/errors"
 import {
   ANALYSIS_CHUNK_SIZE,
   getErrorType,
+  isHyphenConnected,
   WORD_REGEX
 } from "../utils/analysis-core"
 import {
@@ -73,13 +74,18 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         if (match === null) break
 
         const originalWord = match[0]
+        const startIndex = match.index
+        const endIndex = startIndex + originalWord.length
         totalWordCount++
+
+        // Ignore hyphen-connected words (stuttering, spelling out, elongation: e.g. Đi-i, đ-đâu, Đê-ê-ể, đợ-ợ-ợi, m-ã-ãi, t-o-i-te)
+        if (isHyphenConnected(text, startIndex, endIndex)) {
+          continue
+        }
 
         const errorInfo = getErrorType(originalWord, activeDicts, checkSettings)
 
         if (errorInfo) {
-          const startIndex = match.index
-          const endIndex = startIndex + originalWord.length
           const instanceId = `${paragraph.id || paragraphIndex}-${startIndex}-${endIndex}`
 
           rawErrors.push({

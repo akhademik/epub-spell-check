@@ -5,6 +5,7 @@ import {
   getBaseWord,
   getErrorType,
   isFrontVowel,
+  isHyphenConnected,
   isY,
   levenshteinDistance,
   matchCase,
@@ -353,6 +354,67 @@ describe("Analysis Core", () => {
       expect(
         getErrorType(nfcWord, mockDictionaries, defaultCheckSettings)
       ).toBeNull()
+    })
+  })
+
+  describe("Hyphen-connected dialogue & stuttering detection (isHyphenConnected)", () => {
+    it("should accurately identify hyphen-connected stuttering, elongation, and spelling-out sequences", () => {
+      const text =
+        " — Đi-i đ -đâu!.. Đê-ê-ể người taa đợ-ợ-ợi m-ã-ãi?.. t-o-i-te"
+      const tokens: { word: string; start: number; end: number }[] = []
+
+      WORD_REGEX.lastIndex = 0
+      let match: RegExpExecArray | null
+      while (true) {
+        match = WORD_REGEX.exec(text)
+        if (match === null) break
+        tokens.push({
+          word: match[0],
+          start: match.index,
+          end: match.index + match[0].length
+        })
+      }
+
+      // Check results for each token
+      const results = tokens.map((t) => ({
+        word: t.word,
+        isHyphen: isHyphenConnected(text, t.start, t.end)
+      }))
+
+      // Hyphen-connected tokens should be true
+      expect(results.find((r) => r.word === "Đi")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "i")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "đ")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "đâu")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "Đê")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "ê")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "ể")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "đợ")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "ợ")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "ợi")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "m")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "ã")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "ãi")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "t")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "o")?.isHyphen).toBe(true)
+      expect(results.find((r) => r.word === "te")?.isHyphen).toBe(true)
+
+      // Standalone words without hyphens should be false
+      expect(results.find((r) => r.word === "người")?.isHyphen).toBe(false)
+      expect(results.find((r) => r.word === "taa")?.isHyphen).toBe(false)
+    })
+
+    it("should not flag normal clause-separating dashes as hyphen connected", () => {
+      const text = "Tôi thích đọc sách - một sở thích lâu năm."
+      const words = Array.from(text.matchAll(WORD_REGEX), (m) => ({
+        word: m[0],
+        start: m.index,
+        end: m.index + m[0].length
+      }))
+
+      for (const w of words) {
+        expect(isHyphenConnected(text, w.start, w.end)).toBe(false)
+      }
     })
   })
 })
