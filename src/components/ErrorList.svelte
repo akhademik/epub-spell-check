@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from "svelte"
   import { ALL_ERROR_TYPES, appState } from "../state.svelte"
   import type { ErrorGroup, ErrorType } from "../types/errors"
 
@@ -92,25 +93,36 @@
 
   // Auto-scroll selected item to vertical center when navigating
   let listContainer: HTMLElement | undefined = $state()
+  let lastSelectedId: string | null = null
 
   $effect(() => {
     const selectedId = appState.currentGroup?.id
-    if (!selectedId || !listContainer) return
-
-    // Find the index of the selected item in the filtered list
-    const index = filteredList.findIndex((g) => g.id === selectedId)
-    if (index >= 0 && index >= visibleCount) {
-      visibleCount = Math.min(filteredList.length, index + 30)
+    if (!selectedId || !listContainer) {
+      lastSelectedId = null
+      return
     }
 
-    // Scroll selected element into vertical center of the list smoothly
-    setTimeout(() => {
-      if (!listContainer) return
-      const el = listContainer.querySelector(`[data-group-id="${selectedId}"]`) as HTMLElement | null
-      if (el) {
-        el.scrollIntoView({ block: "center", behavior: "smooth" })
+    if (selectedId === lastSelectedId) return
+    lastSelectedId = selectedId
+
+    untrack(() => {
+      // Find the index of the selected item in the filtered list
+      const index = filteredList.findIndex((g) => g.id === selectedId)
+      if (index >= 0 && index >= visibleCount) {
+        visibleCount = Math.min(filteredList.length, index + 30)
       }
-    }, 0)
+
+      // Scroll selected element into vertical center of the list smoothly
+      setTimeout(() => {
+        if (!listContainer) return
+        const el = listContainer.querySelector(
+          `[data-group-id="${selectedId}"]`
+        ) as HTMLElement | null
+        if (el) {
+          el.scrollIntoView({ block: "center", behavior: "smooth" })
+        }
+      }, 0)
+    })
   })
 </script>
 

@@ -170,3 +170,19 @@ pnpm test:regression
 # Đóng gói bản phát hành Production
 pnpm build
 ```
+
+## Trạng thái hệ thống
+
+- Cập nhật lần cuối: 2026-10-01 13:53
+- Đã hoàn thành: Khắc phục lỗi con lăn chuột (mouse wheel scroll) bị giật tâm do lazy load trong danh sách từ lỗi (`ErrorList.svelte`), bảo toàn khả năng căn giữa mượt mà khi điều hướng phím mũi tên (`ArrowUp`/`ArrowDown`).
+- Đang dở: Không có.
+- Biết trước còn thiếu / nợ kỹ thuật: Không có.
+
+## Changelog
+
+### 2026-10-01
+
+- Sửa lỗi: Khắc phục xung đột giữa lazy loading (`visibleCount`) và `$effect` tự động cuộn giữa (`scrollIntoView({ block: "center" })`) trong `ErrorList.svelte`. Đã bọc `untrack()` và lưu vết `lastSelectedId` để chỉ cuộn giữa khi người dùng thực sự thay đổi từ được chọn.
+- Kết quả pipeline: format ✅ | lint ✅ | type ✅ | test ✅ (20/20 suites, 188/188 pass) | build ✅
+- File chính bị ảnh hưởng: `src/components/ErrorList.svelte`
+
