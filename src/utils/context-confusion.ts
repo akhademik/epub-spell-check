@@ -11,7 +11,10 @@ export interface ConfusableRule {
  * High-accuracy curated list of classic Vietnamese confusable pairs & collocations.
  */
 export const CONFUSABLE_RULES: ConfusableRule[] = [
-  // 1. Always wrong compound phrases
+  // ============================================================
+  // 1. ALWAYS WRONG (High-Confidence Deterministic Rules)
+  // ============================================================
+
   {
     wrongPhrase: "chuẩn đoán",
     correctPhrase: "chẩn đoán",
@@ -26,9 +29,9 @@ export const CONFUSABLE_RULES: ConfusableRule[] = [
   },
   {
     wrongPhrase: "sáng lạng",
-    correctPhrase: "sáng lạn",
+    correctPhrase: "xán lạn",
     reason:
-      "Sai từ vựng: đúng chuẩn là 'xán lạn' hoặc 'sáng lạn' (tương lai sáng lạn)",
+      "Sai từ vựng: đúng chuẩn là 'xán lạn' hoặc 'sáng lạn' (tương lai xán lạn)",
     severity: "always_wrong"
   },
   {
@@ -72,7 +75,7 @@ export const CONFUSABLE_RULES: ConfusableRule[] = [
   {
     wrongPhrase: "chính chu",
     correctPhrase: "chỉnh chu",
-    reason: "Sai chính tả: đúng chuẩn là 'chỉnh chu'",
+    reason: "Sai chính tả: đúng chuẩn là 'chỉn chu' hoặc 'chỉnh chu'",
     severity: "always_wrong"
   },
   {
@@ -118,13 +121,355 @@ export const CONFUSABLE_RULES: ConfusableRule[] = [
     severity: "always_wrong"
   },
   {
+    wrongPhrase: "suông sẻ",
+    correctPhrase: "suôn sẻ",
+    reason: "Sai chính tả: đúng chuẩn là 'suôn sẻ'",
+    severity: "always_wrong"
+  },
+  {
     wrongPhrase: "dè xẻn",
     correctPhrase: "dè sẻn",
     reason: "Sai chính tả: đúng chuẩn là 'dè sẻn'",
     severity: "always_wrong"
   },
+  {
+    wrongPhrase: "bất chắc",
+    correctPhrase: "bất trắc",
+    reason: "Sai chính tả: đúng chuẩn là 'bất trắc' (tình huống bất ngờ)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "bàn dao",
+    correctPhrase: "bàn giao",
+    reason:
+      "Sai từ vựng: đúng chuẩn là 'bàn giao' (chuyển giao công việc/tài sản)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "bảo hoà",
+    correctPhrase: "bão hòa",
+    reason: "Sai chính tả: đúng chuẩn là 'bão hòa'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "bêu diếu",
+    correctPhrase: "bêu riếu",
+    reason: "Sai chính tả: đúng chuẩn là 'bêu riếu'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chân châu",
+    correctPhrase: "trân châu",
+    reason: "Sai từ vựng: đúng chuẩn là 'trân châu' (hạt trân châu, ngọc quý)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chót dại",
+    correctPhrase: "trót dại",
+    reason: "Sai chính tả: đúng chuẩn là 'trót dại' (lỡ lầm)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chưng bày",
+    correctPhrase: "trưng bày",
+    reason: "Sai từ vựng: đúng chuẩn là 'trưng bày' (triển lãm)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "khoắc khoải",
+    correctPhrase: "khắc khoải",
+    reason: "Sai chính tả: đúng chuẩn là 'khắc khoải'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "khập khiển",
+    correctPhrase: "khập khiễng",
+    reason: "Sai chính tả: đúng chuẩn là 'khập khiễng'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chấp vá",
+    correctPhrase: "chắp vá",
+    reason: "Sai từ vựng: đúng chuẩn là 'chắp vá'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "giãy dụa",
+    correctPhrase: "giãy giụa",
+    reason: "Sai chính tả: đúng chuẩn là 'giãy giụa'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "dãy dụa",
+    correctPhrase: "giãy giụa",
+    reason: "Sai chính tả: đúng chuẩn là 'giãy giụa'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chân trọng",
+    correctPhrase: "trân trọng",
+    reason: "Sai chính tả: đúng chuẩn là 'trân trọng' (bày tỏ sự tôn trọng)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "trân thành",
+    correctPhrase: "chân thành",
+    reason: "Sai chính tả: đúng chuẩn là 'chân thành' (thật lòng)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "công hiến",
+    correctPhrase: "cống hiến",
+    reason: "Sai chính tả: đúng chuẩn là 'cống hiến' (đóng góp, dâng hiến)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "giữ dội",
+    correctPhrase: "dữ dội",
+    reason: "Sai chính tả: đúng chuẩn là 'dữ dội' (mạnh mẽ, ác liệt)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "sát xao",
+    correctPhrase: "sát sao",
+    reason: "Sai chính tả: đúng chuẩn là 'sát sao' (theo dõi chặt chẽ)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "sơ xài",
+    correctPhrase: "sơ sài",
+    reason: "Sai chính tả: đúng chuẩn là 'sơ sài' (qua loa, đại khái)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỹ luật",
+    correctPhrase: "kỷ luật",
+    reason: "Sai chính tả: đúng chuẩn là 'kỷ luật' (quy tắc, nề nếp)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỹ niệm",
+    correctPhrase: "kỷ niệm",
+    reason: "Sai chính tả: đúng chuẩn là 'kỷ niệm' (ghi nhớ, hoài niệm)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỷ thuật",
+    correctPhrase: "kỹ thuật",
+    reason: "Sai chính tả: đúng chuẩn là 'kỹ thuật' (technique)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỷ năng",
+    correctPhrase: "kỹ năng",
+    reason: "Sai chính tả: đúng chuẩn là 'kỹ năng' (skill)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỹ nguyên",
+    correctPhrase: "kỷ nguyên",
+    reason: "Sai chính tả: đúng chuẩn là 'kỷ nguyên' (era, thời đại)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "kỹ yếu",
+    correctPhrase: "kỷ yếu",
+    reason: "Sai chính tả: đúng chuẩn là 'kỷ yếu' (tập san lưu niệm)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "vất vã",
+    correctPhrase: "vất vả",
+    reason: "Sai chính tả: đúng chuẩn là 'vất vả' (khó nhọc)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "trí ân",
+    correctPhrase: "tri ân",
+    reason: "Sai chính tả: đúng chuẩn là 'tri ân' (bày tỏ lòng biết ơn)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "che dấu",
+    correctPhrase: "che giấu",
+    reason:
+      "Sai từ vựng: 'giấu' (động từ, che giấu) khác với 'dấu' (danh từ, dấu vết/dấu hiệu)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "dấu diếm",
+    correctPhrase: "giấu giếm",
+    reason:
+      "Sai từ vựng: 'giấu' (động từ, che giấu) khác với 'dấu' (danh từ, dấu vết/dấu hiệu)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chia rẻ",
+    correctPhrase: "chia rẽ",
+    reason: "Sai chính tả: đúng chuẩn là 'chia rẽ' (làm mất đoàn kết)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chín mùi",
+    correctPhrase: "chín muồi",
+    reason: "Sai chính tả: đúng chuẩn là 'chín muồi' (thời cơ chín muồi)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chính chắn",
+    correctPhrase: "chín chắn",
+    reason: "Sai chính tả: đúng chuẩn là 'chín chắn' (suy nghĩ chín chắn)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "chua sót",
+    correctPhrase: "chua xót",
+    reason: "Sai chính tả: đúng chuẩn là 'chua xót' (nỗi niềm chua xót)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "dư giả",
+    correctPhrase: "dư dả",
+    reason: "Sai chính tả: đúng chuẩn là 'dư dả' (tiền bạc dư dả)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "đầy ấp",
+    correctPhrase: "đầy ắp",
+    reason: "Sai chính tả: đúng chuẩn là 'đầy ắp' (tràn đầy)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "điểm xuyến",
+    correctPhrase: "điểm xuyết",
+    reason: "Sai chính tả: đúng chuẩn là 'điểm xuyết' (tô điểm, điểm xuyết)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "gian sảo",
+    correctPhrase: "gian xảo",
+    reason: "Sai chính tả: đúng chuẩn là 'gian xảo'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "hàm xúc",
+    correctPhrase: "hàm súc",
+    reason: "Sai chính tả: đúng chuẩn là 'hàm súc' (cô đọng, ý nhị)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "khắc khe",
+    correctPhrase: "khắt khe",
+    reason: "Sai chính tả: đúng chuẩn là 'khắt khe' (yêu cầu khắt khe)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "lãng mạng",
+    correctPhrase: "lãng mạn",
+    reason: "Sai chính tả: đúng chuẩn là 'lãng mạn' (romantic)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "sắc xảo",
+    correctPhrase: "sắc sảo",
+    reason: "Sai chính tả: đúng chuẩn là 'sắc sảo'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "trao chuốt",
+    correctPhrase: "trau chuốt",
+    reason: "Sai chính tả: đúng chuẩn là 'trau chuốt' (gọt giũa)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "vô vàng",
+    correctPhrase: "vô vàn",
+    reason: "Sai chính tả: đúng chuẩn là 'vô vàn' (vô vàn khó khăn)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "xuất xắc",
+    correctPhrase: "xuất sắc",
+    reason: "Sai chính tả: đúng chuẩn là 'xuất sắc'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "xúi dục",
+    correctPhrase: "xúi giục",
+    reason: "Sai chính tả: đúng chuẩn là 'xúi giục' (kích động)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "xoay sở",
+    correctPhrase: "xoay xở",
+    reason: "Sai chính tả: đúng chuẩn là 'xoay xở' (tự xoay xở)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "bánh trưng",
+    correctPhrase: "bánh chưng",
+    reason: "Sai chính tả: tên món ăn truyền thống đúng là 'bánh chưng'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "châm trước",
+    correctPhrase: "châm chước",
+    reason: "Sai từ vựng: đúng chuẩn là 'châm chước' (bỏ qua, linh động)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "liêu siêu",
+    correctPhrase: "liêu xiêu",
+    reason: "Sai chính tả: đúng chuẩn là 'liêu xiêu' (ngả nghiêng)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "sai xót",
+    correctPhrase: "sai sót",
+    reason: "Sai chính tả: đúng chuẩn là 'sai sót'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "sừng xộ",
+    correctPhrase: "sừng sộ",
+    reason: "Sai chính tả: đúng chuẩn là 'sừng sộ' (hung hăng, gây gổ)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "quá dang",
+    correctPhrase: "quá giang",
+    reason: "Sai từ vựng: đúng chuẩn là 'quá giang' (đi nhờ xe/thuyền)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "xem sét",
+    correctPhrase: "xem xét",
+    reason: "Sai chính tả: đúng chuẩn là 'xem xét' (nghiên cứu, đánh giá)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "vãng cảnh",
+    correctPhrase: "vãn cảnh",
+    reason: "Sai từ vựng: đúng chuẩn là 'vãn cảnh' (vãn cảnh chùa, ngắm cảnh)",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "lễ nhận chức",
+    correctPhrase: "lễ nhậm chức",
+    reason: "Sai từ vựng Hán-Việt: đúng chuẩn nghi lễ là 'lễ nhậm chức'",
+    severity: "always_wrong"
+  },
+  {
+    wrongPhrase: "tuyên thệ nhận chức",
+    correctPhrase: "tuyên thệ nhậm chức",
+    reason: "Sai từ vựng Hán-Việt: đúng chuẩn nghi lễ là 'tuyên thệ nhậm chức'",
+    severity: "always_wrong"
+  },
 
-  // 2. Collocation-dependent pairs (Contextual)
+  // ============================================================
+  // 2. COLLOCATION-DEPENDENT PAIRS (Contextual Collocations)
+  // ============================================================
+
   {
     wrongPhrase: "dành giật",
     correctPhrase: "giành giật",
@@ -230,202 +575,11 @@ export const CONFUSABLE_RULES: ConfusableRule[] = [
     severity: "context_dependent"
   },
   {
-    wrongPhrase: "bất chắc",
-    correctPhrase: "bất trắc",
-    reason: "Sai chính tả: đúng chuẩn là 'bất trắc' (tình huống bất ngờ)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "bàn dao",
-    correctPhrase: "bàn giao",
-    reason:
-      "Sai từ vựng: đúng chuẩn là 'bàn giao' (chuyển giao công việc/tài sản)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "bảo hoà",
-    correctPhrase: "bão hòa",
-    reason: "Sai chính tả: đúng chuẩn là 'bão hòa'",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "bêu diếu",
-    correctPhrase: "bêu riếu",
-    reason: "Sai chính tả: đúng chuẩn là 'bêu riếu'",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "chân châu",
-    correctPhrase: "trân châu",
-    reason: "Sai từ vựng: đúng chuẩn là 'trân châu' (hạt trân châu, ngọc quý)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "chây lười",
-    correctPhrase: "trây lười",
-    reason: "Sai chính tả: đúng chuẩn là 'trây lười' (lười biếng)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "chót dại",
-    correctPhrase: "trót dại",
-    reason: "Sai chính tả: đúng chuẩn là 'trót dại' (lỡ lầm)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "chưng bày",
-    correctPhrase: "trưng bày",
-    reason: "Sai từ vựng: đúng chuẩn là 'trưng bày' (triển lãm)",
-    severity: "always_wrong"
-  },
-  {
     wrongPhrase: "trương mục",
     correctPhrase: "chương mục",
     reason:
       "Dùng từ theo ngữ cảnh: 'chương mục' (mục lục) hoặc 'trương mục' (tài khoản)",
     severity: "context_dependent"
-  },
-  {
-    wrongPhrase: "co dãn",
-    correctPhrase: "co giãn",
-    reason: "Sai chính tả: đúng chuẩn là 'co giãn'",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "khoắc khoải",
-    correctPhrase: "khắc khoải",
-    reason: "Sai chính tả: đúng chuẩn là 'khắc khoải'",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "khập khiển",
-    correctPhrase: "khập khiễng",
-    reason: "Sai chính tả: đúng chuẩn là 'khập khiễng'",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "chấp vá",
-    correctPhrase: "chắp vá",
-    reason: "Sai từ vựng: 'chắp vá' thay vì 'chấp vá'",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "giãy dụa",
-    correctPhrase: "giãy giụa",
-    reason: "Sai chính tả: đúng chuẩn là 'giãy giụa'",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "dãy dụa",
-    correctPhrase: "giãy giụa",
-    reason: "Sai chính tả: đúng chuẩn là 'giãy giụa'",
-    severity: "always_wrong"
-  },
-
-  // Additional high-confidence always-wrong pairs (no legitimate alternate meaning)
-  {
-    wrongPhrase: "chân trọng",
-    correctPhrase: "trân trọng",
-    reason: "Sai chính tả: đúng chuẩn là 'trân trọng' (bày tỏ sự tôn trọng)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "trân thành",
-    correctPhrase: "chân thành",
-    reason: "Sai chính tả: đúng chuẩn là 'chân thành' (thật lòng)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "công hiến",
-    correctPhrase: "cống hiến",
-    reason: "Sai chính tả: đúng chuẩn là 'cống hiến' (đóng góp, dâng hiến)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "giữ dội",
-    correctPhrase: "dữ dội",
-    reason: "Sai chính tả: đúng chuẩn là 'dữ dội' (mạnh mẽ, ác liệt)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "sát xao",
-    correctPhrase: "sát sao",
-    reason: "Sai chính tả: đúng chuẩn là 'sát sao' (theo dõi chặt chẽ)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "sơ xài",
-    correctPhrase: "sơ sài",
-    reason: "Sai chính tả: đúng chuẩn là 'sơ sài' (qua loa, đại khái)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "kỹ luật",
-    correctPhrase: "kỷ luật",
-    reason: "Sai chính tả: đúng chuẩn là 'kỷ luật' (quy tắc, nề nếp)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "kỹ niệm",
-    correctPhrase: "kỷ niệm",
-    reason: "Sai chính tả: đúng chuẩn là 'kỷ niệm' (ghi nhớ, hoài niệm)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "kỷ thuật",
-    correctPhrase: "kỹ thuật",
-    reason: "Sai chính tả: đúng chuẩn là 'kỹ thuật' (technique)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "kỷ năng",
-    correctPhrase: "kỹ năng",
-    reason: "Sai chính tả: đúng chuẩn là 'kỹ năng' (skill)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "kỹ nguyên",
-    correctPhrase: "kỷ nguyên",
-    reason: "Sai chính tả: đúng chuẩn là 'kỷ nguyên' (era, thời đại)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "kỹ yếu",
-    correctPhrase: "kỷ yếu",
-    reason: "Sai chính tả: đúng chuẩn là 'kỷ yếu' (tập san lưu niệm)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "vất vã",
-    correctPhrase: "vất vả",
-    reason: "Sai chính tả: đúng chuẩn là 'vất vả' (khó nhọc)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "trí ân",
-    correctPhrase: "tri ân",
-    reason: "Sai chính tả: đúng chuẩn là 'tri ân' (bày tỏ lòng biết ơn)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "che dấu",
-    correctPhrase: "che giấu",
-    reason:
-      "Sai từ vựng: 'giấu' (động từ, che giấu) khác với 'dấu' (danh từ, dấu vết/dấu hiệu)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "dấu diếm",
-    correctPhrase: "giấu diếm",
-    reason:
-      "Sai từ vựng: 'giấu' (động từ, che giấu) khác với 'dấu' (danh từ, dấu vết/dấu hiệu)",
-    severity: "always_wrong"
-  },
-  {
-    wrongPhrase: "chia rẻ",
-    correctPhrase: "chia rẽ",
-    reason: "Sai chính tả: đúng chuẩn là 'chia rẽ' (làm mất đoàn kết)",
-    severity: "always_wrong"
   }
 ]
 

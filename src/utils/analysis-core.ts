@@ -5,6 +5,56 @@ import type { ErrorType } from "../types/errors"
 export const WORD_REGEX = /[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu
 export const ANALYSIS_CHUNK_SIZE = 50
 
+const HYPHEN_CHAR_CLASS = "[\\-\\u2010\\u2011\\u2012\\u2013]"
+
+const FOLLOWED_BY_HYPHEN = new RegExp(
+  `^${HYPHEN_CHAR_CLASS}\\s*[\\p{L}\\p{M}]`,
+  "u"
+)
+
+const PRECEDED_BY_HYPHEN = new RegExp(
+  `[\\p{L}\\p{M}]\\s*${HYPHEN_CHAR_CLASS}$`,
+  "u"
+)
+
+const SINGLE_LETTER_STUTTER_AFTER = new RegExp(
+  `^\\s+${HYPHEN_CHAR_CLASS}[\\p{L}\\p{M}]`,
+  "u"
+)
+
+/**
+ * Checks if a word token is part of a hyphen-connected sequence
+ * (e.g. dialogue stuttering, elongation, or spelling out: "Đi-i", "đ -đâu", "Đê-ê-ể", "đợ-ợ-ợi", "m-ã-ãi", "t-o-i-te").
+ */
+export function isHyphenConnected(
+  text: string,
+  startIndex: number,
+  endIndex: number
+): boolean {
+  if (!text || startIndex < 0 || endIndex > text.length) return false
+
+  const wordLen = endIndex - startIndex
+
+  // 1. Immediately preceded by letter + hyphen (e.g. "Đi-i", "-đâu")
+  const beforeSlice = text.slice(0, startIndex)
+  if (PRECEDED_BY_HYPHEN.test(beforeSlice)) {
+    return true
+  }
+
+  // 2. Immediately followed by hyphen + letter (e.g. "Đi-i", "Đê-ê")
+  const afterSlice = text.slice(endIndex)
+  if (FOLLOWED_BY_HYPHEN.test(afterSlice)) {
+    return true
+  }
+
+  // 3. Single-letter stutter followed by space-hyphen-word (e.g. "đ -đâu", "c -chào")
+  if (wordLen === 1 && SINGLE_LETTER_STUTTER_AFTER.test(afterSlice)) {
+    return true
+  }
+
+  return false
+}
+
 export const COMMON_CONTRACTIONS = new Set([
   "isn't",
   "aren't",

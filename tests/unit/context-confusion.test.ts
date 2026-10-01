@@ -125,7 +125,13 @@ describe("Context Confusion Module (N-Gram Spelling & Collocation)", () => {
         ["Xin trí ân những người đã giúp đỡ.", "trí ân"],
         ["Anh ta cố che dấu sự thật.", "che dấu"],
         ["Cô ấy dấu diếm mọi chuyện.", "dấu diếm"],
-        ["Tin đồn khiến hai người chia rẻ.", "chia rẻ"]
+        ["Tin đồn khiến hai người chia rẻ.", "chia rẻ"],
+        ["Thời cơ đã chín mùi.", "chín mùi"],
+        ["Họ phải tự xoay sở.", "xoay sở"],
+        ["Mong ban giám khảo châm trước.", "châm trước"],
+        ["Đến vãng cảnh ngôi chùa cổ.", "vãng cảnh"],
+        ["Tham dự lễ nhận chức sáng nay.", "lễ nhận chức"],
+        ["Chiếc áo điểm xuyến hoa văn.", "điểm xuyến"]
       ]
       for (const [text, expectedWord] of cases) {
         const errors = scanContextualErrors(text, { paragraphIndex: 0 })
