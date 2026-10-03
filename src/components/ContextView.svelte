@@ -65,19 +65,36 @@
     }
 
     const text = currentContext.context.originalParagraph
-    let matchIndex = currentContext.context.matchIndex
-    const wordLen = group.word.length
+    const targetWord =
+      currentContext.originalWord || currentContext.word || group.word
+    let matchIndex =
+      currentContext.context.matchIndex ?? currentContext.context.startIndex
+    let wordLen =
+      currentContext.context.endIndex !== undefined &&
+      currentContext.context.startIndex !== undefined &&
+      currentContext.context.endIndex > currentContext.context.startIndex
+        ? currentContext.context.endIndex - currentContext.context.startIndex
+        : targetWord.length
 
     if (
       matchIndex === undefined ||
       matchIndex < 0 ||
-      text.substring(matchIndex, matchIndex + wordLen) !== group.word
+      text
+        .substring(matchIndex, matchIndex + wordLen)
+        .localeCompare(targetWord, "vi", { sensitivity: "accent" }) !== 0
     ) {
-      matchIndex = text.indexOf(group.word)
+      // Fallback: search for exact word preserving case first, then case-insensitive
+      matchIndex = text.indexOf(targetWord)
+      if (matchIndex < 0) {
+        matchIndex = text
+          .toLowerCase()
+          .indexOf(targetWord.toLowerCase())
+      }
+      wordLen = targetWord.length
     }
 
     if (matchIndex < 0) {
-      return { prefix: "", target: group.word, suffix: "" }
+      return { prefix: "", target: targetWord, suffix: "" }
     }
 
     const start = Math.max(0, matchIndex - CONTEXT_LENGTH_CHARS)
