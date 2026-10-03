@@ -173,8 +173,9 @@ pnpm build
 
 ## Trạng thái hệ thống
 
-- Cập nhật lần cuối: 2026-10-03 13:23
+- Cập nhật lần cuối: 2026-10-03 13:53
 - Đã hoàn thành:
+  - Sửa lỗi hiển thị ngữ cảnh (Context Highlight Bug): Cập nhật `contextSegments` trong `ContextView.svelte` sử dụng `targetWord` từ `currentContext.originalWord` và so sánh không phân biệt hoa thường với `matchIndex`, ngăn chặn triệt để lỗi fallback `indexOf` làm cắt đôi từ hợp lệ (như `xa` bị cắt thành `[x] a`).
   - Khắc phục triệt để hiện tượng lệch màu/chớp theme (FOUC) & chặn render: Khai báo `<meta name="color-scheme" content="dark">`, preload/preconnect Google Fonts, nhúng trực tiếp `/src/style.css` vào thẻ `<head>` của `index.html` và thiết lập `color-scheme: dark;` cùng màu nền chuẩn `#020617` tại `:root, html, body`.
   - Cải tiến cơ chế chuyển lỗi khi bấm sửa/thay thế từ (`applyFixToInstance`, `applyFixToAllInstances`): Tự động chuyển tiếp đến từ lỗi kế tiếp trong danh sách thay vì quay trở về đầu danh sách; nếu lỗi vừa sửa là từ cuối cùng của danh sách thì tự động chuyển về từ lỗi liền trước.
 - Đang dở: Không có.
@@ -184,6 +185,9 @@ pnpm build
 
 ### 2026-10-03
 
+- Sửa lỗi hiển thị ngữ cảnh (Context Highlight Bug):
+  - Khắc phục lỗi trong [`src/components/ContextView.svelte`](file:///home/hajtran/dev/epub-spell-check/src/components/ContextView.svelte) khi đối chiếu `matchIndex` với `group.word` bị lệch hoa/thường (ví dụ lỗi chữ `X` hoa trong nhóm `x` thường khiến điều kiện so sánh nghiêm ngặt `!==` bị trượt, kích hoạt `text.indexOf("x")` tìm nhầm chữ `x` trong từ kế bên như `xa` và cắt đôi từ thành `[x] a`).
+  - Sử dụng `currentContext.originalWord` kết hợp `localeCompare` tiếng Việt và `startIndex`/`endIndex` chuẩn xác từ máy quét để luôn highlight đúng vị trí từ lỗi.
 - Giao diện & Tối ưu tải (Theme & CSS Stability):
   - Khắc phục hiện tượng theme bị lệch màu/trắng/chớp layout khi vừa mở web bằng cách thêm `<meta name="color-scheme" content="dark" />` vào [`index.html`](file:///home/hajtran/dev/epub-spell-check/index.html) (ngăn các extension Dark Reader hoặc browser tự động invert màu sai lệch).
   - Tối ưu tải font bằng `<link rel="preconnect">` và `<link rel="stylesheet">` trong `<head>`, gỡ bỏ `@import url(...)` render-blocking khỏi [`src/style.css`](file:///home/hajtran/dev/epub-spell-check/src/style.css).
@@ -191,7 +195,7 @@ pnpm build
 - Sửa đổi điều hướng lỗi: Cập nhật cơ chế chọn lỗi trong [`src/state.svelte.ts`](file:///home/hajtran/dev/epub-spell-check/src/state.svelte.ts) tại các hàm `applyFixToInstance` và `applyFixToAllInstances`. Khi người dùng bấm Thay thế (Replace) hoặc Thay thế tất cả (Replace All), hệ thống sẽ tự động chuyển sang mục lỗi tiếp theo trong danh sách đã lọc, nếu là phần tử cuối cùng thì chuyển về phần tử liền trước, không còn bị nhảy về đầu danh sách (`remaining[0]`).
 - Kiểm thử: Bổ sung bộ kiểm thử xác nhận hành vi chuyển lỗi trong [`tests/unit/user-workflow.test.ts`](file:///home/hajtran/dev/epub-spell-check/tests/unit/user-workflow.test.ts).
 - Kết quả pipeline: format ✅ | lint ✅ | type ✅ | test ✅ (20/20 suites, 192/192 pass) | knip ⚠️ (oxc-parser memory alloc limit) | build ✅ | graphify: 543 nodes, 1001 edges, 28 communities ✅
-- File chính bị ảnh hưởng: `index.html`, `src/style.css`, `src/state.svelte.ts`, `tests/unit/user-workflow.test.ts`
+- File chính bị ảnh hưởng: `src/components/ContextView.svelte`, `index.html`, `src/style.css`, `src/state.svelte.ts`, `tests/unit/user-workflow.test.ts`
 
 ### 2026-10-01
 
