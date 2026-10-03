@@ -673,13 +673,18 @@ export class AppStateModel {
       (ctx) => ctx.resolved || this.appliedFixes.has(this.getInstanceKey(ctx))
     )
     if (allResolved) {
+      const errors = this.currentFilteredErrors
+      const currentIndex = errors.findIndex((g) => g.id === parentGroup.id)
       parentGroup.resolved = true
-      // Advance to next group if needed
-      const remaining = this.currentFilteredErrors.filter(
-        (g) => g.id !== parentGroup.id
-      )
+
+      // Advance selection: move to next error, or prev if it was the last one
+      const remaining = errors.filter((g) => g.id !== parentGroup.id)
       if (remaining.length > 0) {
-        this.selectedGroupId = remaining[0].id
+        const nextIndex = Math.min(
+          currentIndex >= 0 ? currentIndex : 0,
+          remaining.length - 1
+        )
+        this.selectedGroupId = remaining[nextIndex >= 0 ? nextIndex : 0].id
         this.currentInstanceIndex = 0
       } else {
         this.selectedGroupId = null
@@ -718,6 +723,9 @@ export class AppStateModel {
       return
     }
 
+    const errors = this.currentFilteredErrors
+    const currentIndex = errors.findIndex((g) => g.id === existingGroup.id)
+
     const newApplied = new Map(this.appliedFixes)
     for (const ctx of existingGroup.contexts) {
       const key = this.getInstanceKey(ctx)
@@ -731,12 +739,14 @@ export class AppStateModel {
     this.appliedFixes = newApplied
     existingGroup.resolved = true
 
-    // Advance selection
-    const remaining = this.currentFilteredErrors.filter(
-      (g) => g.id !== existingGroup.id
-    )
+    // Advance selection: move to next error, or prev if it was the last one
+    const remaining = errors.filter((g) => g.id !== existingGroup.id)
     if (remaining.length > 0) {
-      this.selectedGroupId = remaining[0].id
+      const nextIndex = Math.min(
+        currentIndex >= 0 ? currentIndex : 0,
+        remaining.length - 1
+      )
+      this.selectedGroupId = remaining[nextIndex >= 0 ? nextIndex : 0].id
       this.currentInstanceIndex = 0
     } else {
       this.selectedGroupId = null
