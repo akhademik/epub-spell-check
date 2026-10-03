@@ -5,6 +5,7 @@ import type { ErrorInstance } from "../types/errors"
 import {
   ANALYSIS_CHUNK_SIZE,
   getErrorType,
+  isDigitConnected,
   isHyphenConnected,
   WORD_REGEX
 } from "../utils/analysis-core"
@@ -80,6 +81,11 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
         // Ignore hyphen-connected words (stuttering, spelling out, elongation: e.g. Đi-i, đ-đâu, Đê-ê-ể, đợ-ợ-ợi, m-ã-ãi, t-o-i-te)
         if (isHyphenConnected(text, startIndex, endIndex)) {
+          continue
+        }
+
+        // Ignore digit-connected words (generations, units, alphanumeric codes: e.g. 8x, 9x, 2k, 5kg, 100m, 3D, 4K, B52)
+        if (isDigitConnected(text, startIndex, endIndex)) {
           continue
         }
 

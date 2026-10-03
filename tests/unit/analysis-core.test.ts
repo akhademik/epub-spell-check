@@ -4,6 +4,7 @@ import type { Dictionaries } from "../../src/types/dictionary"
 import {
   getBaseWord,
   getErrorType,
+  isDigitConnected,
   isFrontVowel,
   isHyphenConnected,
   isY,
@@ -414,6 +415,70 @@ describe("Analysis Core", () => {
 
       for (const w of words) {
         expect(isHyphenConnected(text, w.start, w.end)).toBe(false)
+      }
+    })
+  })
+
+  describe("Digit-connected token detection (isDigitConnected)", () => {
+    it("should detect letters immediately preceded by digits (e.g. 8x, 9x, 2k, 5kg, 100m, 3D, 4K)", () => {
+      const text =
+        "Thế hệ 8x và 9x yêu thích công nghệ 4K, 3D, đi bộ 5km hoặc 100m."
+      const words = Array.from(text.matchAll(WORD_REGEX), (m) => ({
+        word: m[0],
+        start: m.index,
+        end: m.index + m[0].length
+      }))
+
+      const results = words.map((w) => ({
+        word: w.word,
+        isDigit: isDigitConnected(text, w.start, w.end)
+      }))
+
+      expect(results.find((r) => r.word === "x")?.isDigit).toBe(true)
+      expect(results.find((r) => r.word === "K")?.isDigit).toBe(true)
+      expect(results.find((r) => r.word === "D")?.isDigit).toBe(true)
+      expect(results.find((r) => r.word === "km")?.isDigit).toBe(true)
+      expect(results.find((r) => r.word === "m")?.isDigit).toBe(true)
+
+      // Regular standalone words should NOT be digit connected
+      expect(results.find((r) => r.word === "Thế")?.isDigit).toBe(false)
+      expect(results.find((r) => r.word === "hệ")?.isDigit).toBe(false)
+      expect(results.find((r) => r.word === "và")?.isDigit).toBe(false)
+      expect(results.find((r) => r.word === "yêu")?.isDigit).toBe(false)
+    })
+
+    it("should detect letters immediately followed by digits (e.g. B52, F16, A1, H2O)", () => {
+      const text = "Máy bay B52, tiêm kích F16 và công thức H2O."
+      const words = Array.from(text.matchAll(WORD_REGEX), (m) => ({
+        word: m[0],
+        start: m.index,
+        end: m.index + m[0].length
+      }))
+
+      const results = words.map((w) => ({
+        word: w.word,
+        isDigit: isDigitConnected(text, w.start, w.end)
+      }))
+
+      expect(results.find((r) => r.word === "B")?.isDigit).toBe(true)
+      expect(results.find((r) => r.word === "F")?.isDigit).toBe(true)
+      expect(results.find((r) => r.word === "H")?.isDigit).toBe(true)
+
+      // Standalone words should be false
+      expect(results.find((r) => r.word === "Máy")?.isDigit).toBe(false)
+      expect(results.find((r) => r.word === "bay")?.isDigit).toBe(false)
+    })
+
+    it("should not flag words separated from digits by spaces", () => {
+      const text = "Năm 2026 có 12 tháng và 365 ngày."
+      const words = Array.from(text.matchAll(WORD_REGEX), (m) => ({
+        word: m[0],
+        start: m.index,
+        end: m.index + m[0].length
+      }))
+
+      for (const w of words) {
+        expect(isDigitConnected(text, w.start, w.end)).toBe(false)
       }
     })
   })
