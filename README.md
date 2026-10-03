@@ -173,10 +173,9 @@ pnpm build
 
 ## Trạng thái hệ thống
 
-- Cập nhật lần cuối: 2026-10-03 13:16
+- Cập nhật lần cuối: 2026-10-03 13:23
 - Đã hoàn thành:
-  - Bỏ qua (ignore) các từ nói lắp, ngân dài, nối dấu gạch ngang (`Đi-i`, `đ -đâu`, `Đê-ê-ể`, `đợ-ợ-ợi`, `m-ã-ãi`, `t-o-i-te`) trong hội thoại/văn học, không đưa vào danh sách báo lỗi.
-  - Loại bỏ gạch chân (underline) ở từ lỗi trong khung xem trước ngữ cảnh (`ContextView.svelte`), chỉ giữ lại hiệu ứng highlight nền màu và đường viền bo tròn.
+  - Khắc phục triệt để hiện tượng lệch màu/chớp theme (FOUC) & chặn render: Khai báo `<meta name="color-scheme" content="dark">`, preload/preconnect Google Fonts, nhúng trực tiếp `/src/style.css` vào thẻ `<head>` của `index.html` và thiết lập `color-scheme: dark;` cùng màu nền chuẩn `#020617` tại `:root, html, body`.
   - Cải tiến cơ chế chuyển lỗi khi bấm sửa/thay thế từ (`applyFixToInstance`, `applyFixToAllInstances`): Tự động chuyển tiếp đến từ lỗi kế tiếp trong danh sách thay vì quay trở về đầu danh sách; nếu lỗi vừa sửa là từ cuối cùng của danh sách thì tự động chuyển về từ lỗi liền trước.
 - Đang dở: Không có.
 - Biết trước còn thiếu / nợ kỹ thuật: Không có.
@@ -185,10 +184,14 @@ pnpm build
 
 ### 2026-10-03
 
+- Giao diện & Tối ưu tải (Theme & CSS Stability):
+  - Khắc phục hiện tượng theme bị lệch màu/trắng/chớp layout khi vừa mở web bằng cách thêm `<meta name="color-scheme" content="dark" />` vào [`index.html`](file:///home/hajtran/dev/epub-spell-check/index.html) (ngăn các extension Dark Reader hoặc browser tự động invert màu sai lệch).
+  - Tối ưu tải font bằng `<link rel="preconnect">` và `<link rel="stylesheet">` trong `<head>`, gỡ bỏ `@import url(...)` render-blocking khỏi [`src/style.css`](file:///home/hajtran/dev/epub-spell-check/src/style.css).
+  - Nhúng trực tiếp stylesheet `<link rel="stylesheet" href="/src/style.css" />` trong `<head>` để trang web luôn áp dụng ngay theme Dark Slate `#020617` từ frame 0.
 - Sửa đổi điều hướng lỗi: Cập nhật cơ chế chọn lỗi trong [`src/state.svelte.ts`](file:///home/hajtran/dev/epub-spell-check/src/state.svelte.ts) tại các hàm `applyFixToInstance` và `applyFixToAllInstances`. Khi người dùng bấm Thay thế (Replace) hoặc Thay thế tất cả (Replace All), hệ thống sẽ tự động chuyển sang mục lỗi tiếp theo trong danh sách đã lọc, nếu là phần tử cuối cùng thì chuyển về phần tử liền trước, không còn bị nhảy về đầu danh sách (`remaining[0]`).
 - Kiểm thử: Bổ sung bộ kiểm thử xác nhận hành vi chuyển lỗi trong [`tests/unit/user-workflow.test.ts`](file:///home/hajtran/dev/epub-spell-check/tests/unit/user-workflow.test.ts).
 - Kết quả pipeline: format ✅ | lint ✅ | type ✅ | test ✅ (20/20 suites, 192/192 pass) | knip ⚠️ (oxc-parser memory alloc limit) | build ✅ | graphify: 543 nodes, 1001 edges, 28 communities ✅
-- File chính bị ảnh hưởng: `src/state.svelte.ts`, `tests/unit/user-workflow.test.ts`
+- File chính bị ảnh hưởng: `index.html`, `src/style.css`, `src/state.svelte.ts`, `tests/unit/user-workflow.test.ts`
 
 ### 2026-10-01
 

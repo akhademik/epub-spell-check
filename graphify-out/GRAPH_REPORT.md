@@ -59,8 +59,8 @@
   scripts/clean-dicts.ts → src/utils/dict-quality.ts
 - `includes` --extends--> `svelte`  [EXTRACTED]
   biome.json → package.json
-- `findTieredSuggestions()` --calls--> `getBundledReferenceDictionarySync()`  [EXTRACTED]
-  src/utils/analyzer.ts → src/utils/reference-dict.ts
+- `findTieredSuggestions()` --calls--> `levenshteinDistance()`  [EXTRACTED]
+  src/utils/analyzer.ts → src/utils/analysis-core.ts
 
 ## Import Cycles
 - None detected.
@@ -152,7 +152,7 @@ Cohesion: 0.40
 Nodes (4): Cấu trúc từ điển (`public/`), Phát triển & Kiểm thử, Soát lỗi chính tả EPUB (Tiếng Việt), Tính năng chính
 
 ## Knowledge Gaps
-- **202 isolated node(s):** `SectionParsedWords`, `WordValidationResult`, `AuthStatusResponse`, `CrossDictAuditResponse`, `DictAuditResponse` (+197 more)
+- **202 isolated node(s):** `AuthStatusResponse`, `CrossDictAuditResponse`, `DictAuditResponse`, `DictDetailResponse`, `DictUpdateResult` (+197 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 251 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -163,7 +163,7 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.133) - this node is a cross-community bridge._
 - **Why does `svelte` connect `biome.json` to `package.json`?**
   _High betweenness centrality (0.070) - this node is a cross-community bridge._
-- **What connects `SectionParsedWords`, `WordValidationResult`, `AuthStatusResponse` to the rest of the system?**
+- **What connects `AuthStatusResponse`, `CrossDictAuditResponse`, `DictAuditResponse` to the rest of the system?**
   _202 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `dict-quality.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.06246799795186892 - nodes in this community are weakly interconnected._

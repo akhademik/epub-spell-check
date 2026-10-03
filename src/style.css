@@ -1,4 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@400;700&display=swap");
+:root,
+html {
+  color-scheme: dark;
+  background-color: #020617;
+  color: #e2e8f0;
+}
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +11,9 @@
 
 body {
   font-family: "Noto Sans", sans-serif;
+  color-scheme: dark;
+  background-color: #020617;
+  color: #e2e8f0;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
