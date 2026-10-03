@@ -55,6 +55,33 @@ export function isHyphenConnected(
   return false
 }
 
+const PRECEDED_BY_DIGIT = /\p{N}$/u
+const FOLLOWED_BY_DIGIT = /^\p{N}/u
+
+/**
+ * Checks if a word token is attached directly to a digit
+ * (e.g. "8x", "9x", "2k", "50m", "100km", "3D", "4K", "B52", "A1").
+ */
+export function isDigitConnected(
+  text: string,
+  startIndex: number,
+  endIndex: number
+): boolean {
+  if (!text || startIndex < 0 || endIndex > text.length) return false
+
+  // 1. Immediately preceded by a digit (e.g. "8x", "9x", "5kg", "3D", "4K")
+  if (startIndex > 0 && PRECEDED_BY_DIGIT.test(text.slice(0, startIndex))) {
+    return true
+  }
+
+  // 2. Immediately followed by a digit (e.g. "A1", "B52", "F16", "H2O")
+  if (endIndex < text.length && FOLLOWED_BY_DIGIT.test(text.slice(endIndex))) {
+    return true
+  }
+
+  return false
+}
+
 export const COMMON_CONTRACTIONS = new Set([
   "isn't",
   "aren't",
